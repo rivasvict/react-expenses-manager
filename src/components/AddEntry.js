@@ -28,10 +28,10 @@ class AddEntry extends Component {
 
   handleSubmit = (event, { handleEntry, history }) => {
     event.preventDefault();
-    const ammount = this.state.ammount;
+    const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
-    if (ammount && digitMatcher.test(ammount)) {
-      handleEntry(ammount);
+    if (entry.ammount && digitMatcher.test(entry.ammount)) {
+      handleEntry(entry);
       this.navigateToDashboard(history);
     }
   }

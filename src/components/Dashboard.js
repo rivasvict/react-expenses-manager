@@ -32,21 +32,23 @@ class Dashboard extends Component {
     this.addEntry(ammount, 'outcomes');
   }
 
-  addEntry = (ammount, entryType) => {
+  addEntry = (entry, entryType) => {
     this.setState(state => {
-      const entriesToInsert = [...state.entries[entryType], ammount];
+      const entriesToInsert = [...state.entries[entryType], entry];
       const newState = _.chain({}).merge(state).merge({entries: {[entryType]: entriesToInsert}}).value();
       return newState;
     });
   };
 
   getSum = entryType => {
-    const ammounts = this.state.entries[entryType];
-    return ammounts.reduce((total, ammount) => {
-      total = parseInt(total);
-      total += parseInt(ammount);
-      return total;
-    }, 0);
+    if (this.state.entries[entryType]) {
+      const entries = this.state.entries[entryType];
+      return entries.reduce((total, entry) => {
+        total = parseInt(total);
+        total += parseInt(entry.ammount);
+        return total;
+      }, 0);
+    }
   }
 
   render() {
