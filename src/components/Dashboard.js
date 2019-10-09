@@ -25,17 +25,22 @@ class Dashboard extends Component {
   }
 
   addIncome = ammount => {
+    this.addEntry(ammount, 'incomes');
+  };
+
+  addOutcome = ammount => {
+    this.addEntry(ammount, 'outcomes');
+  }
+
+  addEntry = (ammount, entryType) => {
     this.setState(state => {
-      const incomes = [...state.entries.incomes, ammount];
-      const newState = _.chain({}).merge(state).merge({entries: {incomes}}).value();
+      const entriesToInsert = [...state.entries[entryType], ammount];
+      const newState = _.chain({}).merge(state).merge({entries: {[entryType]: entriesToInsert}}).value();
       return newState;
     });
   };
 
   getSum = entryType => {
-    if (!this.state.entries[entryType]) {
-      debugger;
-    }
     const ammounts = this.state.entries[entryType];
     return ammounts.reduce((total, ammount) => {
       total = parseInt(total);
@@ -57,7 +62,7 @@ class Dashboard extends Component {
             <AddEntry entryType='income' handleEntry={this.addIncome} />
           </Route>
           <Route path={`${this.props.match.url}add-expense`}>
-            <AddEntry entryType='outcome' />
+            <AddEntry entryType='outcome' handleEntry={this.addOutcome} />
           </Route>
         </Switch>
       </div>
