@@ -16,20 +16,21 @@ const addEntryStyle = {
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = { ammount: '' };
+    this.state = { ammount: '', description: '' };
   }
 
   handleTextChange = (event) => {
-    const value = event.currentTarget.value;
+    const { value, name } = event.currentTarget;
     this.setState(state => {
-      return { ammount: value }
+      return { [name]: value }
     })
   }
 
   handleSubmit = (event, { handleEntry, history }) => {
     event.preventDefault();
     const ammount = this.state.ammount;
-    if (ammount) {
+    const digitMatcher = /^\d+$/;
+    if (ammount && digitMatcher.test(ammount)) {
       handleEntry(ammount);
       this.navigateToDashboard(history);
     }
@@ -44,7 +45,20 @@ class AddEntry extends Component {
       <div style={addEntryStyle}>
         Add new {this.props.entryType}
         <form>
-          <input type='text' placeholder={this.props.entryType} value={this.state.ammount} onChange={this.handleTextChange}></input>
+          <input 
+            type='text'
+            name='ammount'
+            placeholder={this.props.entryType}
+            value={this.state.ammount}
+            onChange={this.handleTextChange}>
+          </input>
+          <input
+            type='text'
+            name='description'
+            placeholder='description'
+            value={this.state.description}
+            onChange={this.handleTextChange}>
+          </input>
           <button onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
           <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
         </form>
