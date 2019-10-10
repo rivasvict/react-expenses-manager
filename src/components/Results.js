@@ -11,12 +11,14 @@ function calculateTotal(income, outcome) {
   return income + outcome;
 }
 
-function Results({ incomes, outcomes }) {
+function Results({ incomes, outcomes, entries }) {
+  const incomesName = 'incomes';
+  const outcomesName = 'outcomes';
   return (
     <div style={resultsStyle}>      
-      <TotalItem name='Income' ammount={incomes} />
-      <TotalItem name='Exoepenses' ammount={outcomes}/>
-      <TotalItem name='Total' ammount={calculateTotal(incomes, outcomes)}/>
+      <TotalItem name='Income' ammount={incomes} entries={entries[incomesName]} type={incomesName} />
+      <TotalItem name='Exoepenses' ammount={-outcomes} type='outcomes' entries={entries[outcomesName]} type={outcomesName}/>
+      <TotalItem name='Total' ammount={calculateTotal(incomes, outcomes)} type='summary'/>
     </div>
   );
 }

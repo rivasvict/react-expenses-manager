@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Results from './Results';
 import AddEntry from './AddEntry';
+import EntriesSummary from './EntriesSummary';
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -54,17 +55,29 @@ class Dashboard extends Component {
   render() {
     return (
       <div style={dasahboardStyle}>
-        <Link to={`${this.props.match.url}add-income`}>Add income</Link>
-        <Results 
-          incomes={this.getSum('incomes')} 
-          outcomes={this.getSum('outcomes')}/>
-        <Link to={`${this.props.match.url}add-expense`}>Add expense</Link>
         <Switch>
+          <Route exact path={`${this.props.match.url}`}>
+            <Link to={`${this.props.match.url}add-income`}>Add income</Link>
+            <Results 
+              incomes={this.getSum('incomes')} 
+              outcomes={this.getSum('outcomes')}
+              entries={this.state.entries}/>
+            <Link to={`${this.props.match.url}add-expense`}>Add expense</Link>
+          </Route>
           <Route path={`${this.props.match.url}add-income`}>
             <AddEntry entryType='income' handleEntry={this.addIncome} />
           </Route>
           <Route path={`${this.props.match.url}add-expense`}>
             <AddEntry entryType='outcome' handleEntry={this.addOutcome} />
+          </Route>
+          <Route path='/incomes'>
+            <EntriesSummary entries={this.state.entries['incomes']} name='Incomes'/>
+          </Route>
+          <Route path='/outcomes'>
+            <EntriesSummary entries={this.state.entries['outcomes']} name='Outcomes' />
+          </Route>
+          <Route path='/summary'>
+            <EntriesSummary />
           </Route>
         </Switch>
       </div>
