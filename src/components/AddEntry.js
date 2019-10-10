@@ -16,7 +16,7 @@ const addEntryStyle = {
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = { ammount: '', description: '' };
+    this.state = { ammount: '', description: '', type: props.entryType };
   }
 
   handleTextChange = (event) => {

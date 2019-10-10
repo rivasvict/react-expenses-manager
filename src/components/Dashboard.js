@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Results from './Results';
 import AddEntry from './AddEntry';
 import EntriesSummary from './EntriesSummary';
+import Summary from './Summary';
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -77,7 +78,7 @@ class Dashboard extends Component {
             <EntriesSummary entries={this.state.entries['outcomes']} name='Outcomes' />
           </Route>
           <Route path='/summary'>
-            <EntriesSummary />
+            <Summary entries={this.state.entries} />
           </Route>
         </Switch>
       </div>

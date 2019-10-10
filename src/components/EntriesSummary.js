@@ -1,7 +1,7 @@
 import React from 'react';
 
 function GetEntriesList(entries) {
-  return entries.map((entry, key) => <li key={key}>{entry.ammount} {entry.description}</li>);
+  return entries.map((entry, key) => <li key={key}>{entry.type === 'income' ? entry.ammount : -entry.ammount} {entry.description}</li>);
 }
 
 function EntriesSummary({ entries, name }) {
