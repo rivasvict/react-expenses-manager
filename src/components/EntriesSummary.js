@@ -1,7 +1,7 @@
 import React from 'react';
 
 function GetEntriesList(entries) {
-  return entries.map((entry, key) => <li key={key}>{entry.type === 'income' ? entry.ammount : -entry.ammount} {entry.description}</li>);
+  return entries.map((entry, key) => <li key={key}>{entry.type === 'income' ? entry.ammount : -entry.ammount} {entry.description} {entry.category}</li>);
 }
 
 function EntriesSummary({ entries, name }) {
@@ -9,7 +9,7 @@ function EntriesSummary({ entries, name }) {
   return (
     <div>
       {name}<br/>
-      <ul>{entriesList.length ? entriesList : <li>0</li>}</ul>
+      <ul>{entriesList.length ? entriesList : <li>0</li>}</ul><br/>
     </div>
   );
 }

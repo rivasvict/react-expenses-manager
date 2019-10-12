@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CategorySelector from './CategorySelector';
 
 import { withRouter } from 'react-router-dom';
 
@@ -16,12 +17,12 @@ const addEntryStyle = {
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = { ammount: '', description: '', type: props.entryType };
+    this.state = props.entryModel;
   }
 
-  handleTextChange = (event) => {
+  handleInputChange = (event) => {
     const { value, name } = event.currentTarget;
-    this.setState(state => {
+    this.setState(() => {
       return { [name]: value }
     })
   }
@@ -30,7 +31,7 @@ class AddEntry extends Component {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
-    if (entry.ammount && digitMatcher.test(entry.ammount)) {
+    if (entry.ammount && digitMatcher.test(entry.ammount) && entry.category !== '') {
       handleEntry(entry);
       this.navigateToDashboard(history);
     }
@@ -50,15 +51,16 @@ class AddEntry extends Component {
             name='ammount'
             placeholder={this.props.entryType}
             value={this.state.ammount}
-            onChange={this.handleTextChange}>
+            onChange={this.handleInputChange}>
           </input>
           <input
             type='text'
             name='description'
             placeholder='description'
             value={this.state.description}
-            onChange={this.handleTextChange}>
+            onChange={this.handleInputChange}>
           </input>
+          <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={this.props.categoryOptions} />
           <button onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
           <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
         </form>

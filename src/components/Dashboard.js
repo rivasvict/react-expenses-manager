@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Results from './Results';
 import AddEntry from './AddEntry';
-import EntriesSummary from './EntriesSummary';
 import Summary from './Summary';
+import EntrySummaryWithFilter from './EntrySummaryWithFilter'
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -24,6 +24,25 @@ class Dashboard extends Component {
         outcomes: []
       }
     }
+
+    this.categoryOptions = {
+      outcome: [
+        { name: 'Food', value: 'food' },
+        { name: 'House', value: 'house' }
+      ],
+      income: [
+        { name: 'Salary', value: 'salary' },
+        { name: 'Loan', value: 'loan' }
+      ]
+    };
+  }
+
+  getEntryModel = (entryType) => {
+    return { ammount: '', description: '', type: entryType, category: '' };
+  }
+
+  getEntryCategoryOption = (entryType) => {
+    return this.categoryOptions[entryType];
   }
 
   addIncome = ammount => {
@@ -66,16 +85,16 @@ class Dashboard extends Component {
             <Link to={`${this.props.match.url}add-expense`}>Add expense</Link>
           </Route>
           <Route path={`${this.props.match.url}add-income`}>
-            <AddEntry entryType='income' handleEntry={this.addIncome} />
+            <AddEntry entryType='income' handleEntry={this.addIncome} entryModel={this.getEntryModel('income')} categoryOptions={this.getEntryCategoryOption('income')}/>
           </Route>
           <Route path={`${this.props.match.url}add-expense`}>
-            <AddEntry entryType='outcome' handleEntry={this.addOutcome} />
+            <AddEntry entryType='outcome' handleEntry={this.addOutcome} entryModel={this.getEntryModel('outcome')} categoryOptions={this.getEntryCategoryOption('outcome')}/>
           </Route>
           <Route path='/incomes'>
-            <EntriesSummary entries={this.state.entries['incomes']} name='Incomes'/>
+            <EntrySummaryWithFilter categoryOptions={this.getEntryCategoryOption('income')} entries={this.state.entries['incomes']} name='Incomes'/>
           </Route>
           <Route path='/outcomes'>
-            <EntriesSummary entries={this.state.entries['outcomes']} name='Outcomes' />
+            <EntrySummaryWithFilter categoryOptions={this.getEntryCategoryOption('outcome')} entries={this.state.entries['outcomes']} name='Outcomes'/>
           </Route>
           <Route path='/summary'>
             <Summary entries={this.state.entries} />
