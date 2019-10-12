@@ -6,6 +6,14 @@ function getSumFromEntries(entries) {
     }, 0);
 }
 
+function gerNegativeVersionOfEntries(entries) {
+    return entries.map(entry => {
+        entry.ammount = -entry.ammount;
+        return entry;
+    })
+}
+
 export {
-    getSumFromEntries
+    getSumFromEntries,
+    gerNegativeVersionOfEntries
 }

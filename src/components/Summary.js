@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {gerNegativeVersionOfEntries} from '../helpers/entriesHelper';
 import EntriesSummary from './EntriesSummary';
 
 class Summary extends Component {
@@ -13,14 +14,15 @@ class Summary extends Component {
             return { filter: value }
         });
     }
-    
+
     getFilteredEntries = filter => {
         const entriesSummary = {
             incomes: <EntriesSummary entries={this.props.entries['incomes']} name='Incomes' />,
             outcomes: <EntriesSummary entries={this.props.entries['outcomes']} name='Outcomes' />
         }
+        const outcomes = gerNegativeVersionOfEntries(this.props.entries.outcomes);
 
-        return entriesSummary[filter] || <EntriesSummary entries={[...this.props.entries.incomes, ...this.props.entries.outcomes]} name='Summary' />
+        return entriesSummary[filter] || <EntriesSummary entries={[...this.props.entries.incomes, ...outcomes]} name='Summary' />
     }
 
     render() {
