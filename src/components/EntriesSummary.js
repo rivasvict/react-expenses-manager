@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSumFromEntries } from '../helpers/entriesHelper';
 
 function GetEntriesList(entries) {
   return entries.map((entry, key) => <li key={key}>{entry.type === 'income' ? entry.ammount : -entry.ammount} {entry.description} {entry.category}</li>);
@@ -10,6 +11,7 @@ function EntriesSummary({ entries, name }) {
     <div>
       {name}<br/>
       <ul>{entriesList.length ? entriesList : <li>0</li>}</ul><br/>
+      <div>Total: {getSumFromEntries(entries)}</div>
     </div>
   );
 }

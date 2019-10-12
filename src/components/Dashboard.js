@@ -4,6 +4,7 @@ import Results from './Results';
 import AddEntry from './AddEntry';
 import Summary from './Summary';
 import EntrySummaryWithFilter from './EntrySummaryWithFilter'
+import { getSumFromEntries } from '../helpers/entriesHelper';
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -64,11 +65,7 @@ class Dashboard extends Component {
   getSum = entryType => {
     if (this.state.entries[entryType]) {
       const entries = this.state.entries[entryType];
-      return entries.reduce((total, entry) => {
-        total = parseInt(total);
-        total += parseInt(entry.ammount);
-        return total;
-      }, 0);
+      return getSumFromEntries(entries);
     }
   }
 
