@@ -46,7 +46,7 @@ class AddEntry extends Component {
       <div style={addEntryStyle}>
         Add new {this.props.entryType}
         <form>
-          <input 
+          <input
             type='text'
             name='ammount'
             placeholder={this.props.entryType}
