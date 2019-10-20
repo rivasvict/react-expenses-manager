@@ -61,7 +61,7 @@ class AddEntry extends Component {
             onChange={this.handleInputChange}>
           </input>
           <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={this.props.categoryOptions} />
-          <button onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
+          <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
           <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
         </form>
       </div>
