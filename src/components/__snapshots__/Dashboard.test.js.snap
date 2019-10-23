@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard component test Renders Dashboard component properly 1`] = `
+<div
+  style={
+    Object {
+      "alignItems": "center",
+      "display": "flex",
+      "flexDirection": "column",
+      "height": "100vh",
+      "justifyContent": "center",
+    }
+  }
+>
+  <a
+    href="/add-income"
+    onClick={[Function]}
+  >
+    Add income
+  </a>
+  <div
+    style={
+      Object {
+        "textAlign": "center",
+      }
+    }
+  >
+    <a
+      href="/incomes"
+      onClick={[Function]}
+    >
+      <div
+        style={
+          Object {
+            "border": "solid 1px black",
+            "padding": "20px 20px",
+          }
+        }
+      >
+        Income
+        <br />
+        0
+      </div>
+    </a>
+    <a
+      href="/outcomes"
+      onClick={[Function]}
+    >
+      <div
+        style={
+          Object {
+            "border": "solid 1px black",
+            "padding": "20px 20px",
+          }
+        }
+      >
+        Exoepenses
+        <br />
+        0
+      </div>
+    </a>
+    <a
+      href="/summary"
+      onClick={[Function]}
+    >
+      <div
+        style={
+          Object {
+            "border": "solid 1px black",
+            "padding": "20px 20px",
+          }
+        }
+      >
+        Total
+        <br />
+        0
+      </div>
+    </a>
+  </div>
+  <a
+    href="/add-expense"
+    onClick={[Function]}
+  >
+    Add expense
+  </a>
+</div>
+`;

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders AddLink component properly 1`] = `
+<button
+  style={
+    Object {
+      "border": 0,
+      "cursor": "pointer",
+      "padding": 0,
+    }
+  }
+>
+  A test link
+</button>
+`;

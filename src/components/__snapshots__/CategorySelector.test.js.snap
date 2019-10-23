@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders CategorySelector component properly 1`] = `
+<select
+  name="CategorySelector"
+  onChange={[MockFunction]}
+  value=""
+>
+  <option
+    value=""
+  />
+  <option
+    value="cat1"
+  >
+    Cat1
+  </option>
+  <option
+    value="cat2"
+  >
+    Cat2
+  </option>
+</select>
+`;

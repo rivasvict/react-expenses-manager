@@ -6,7 +6,7 @@ function CategorySelector({ handleChange, name, value, categoryOptions }) {
       <option value=''></option>
       {categoryOptions.map((categoryOption, key) => <option value={categoryOption.value} key={key}>{categoryOption.name}</option>)}
     </select>
-  )
-}
+  );
+};
 
 export default CategorySelector;

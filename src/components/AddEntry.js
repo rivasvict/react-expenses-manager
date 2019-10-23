@@ -45,25 +45,23 @@ class AddEntry extends Component {
     return (
       <div style={addEntryStyle}>
         Add new {this.props.entryType}
-        <form>
-          <input
-            type='text'
-            name='ammount'
-            placeholder={this.props.entryType}
-            value={this.state.ammount}
-            onChange={this.handleInputChange}>
-          </input>
-          <input
-            type='text'
-            name='description'
-            placeholder='description'
-            value={this.state.description}
-            onChange={this.handleInputChange}>
-          </input>
-          <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={this.props.categoryOptions} />
-          <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
-          <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
-        </form>
+        <input
+          type='text'
+          name='ammount'
+          placeholder={this.props.entryType}
+          value={this.state.ammount}
+          onChange={this.handleInputChange}>
+        </input>
+        <input
+          type='text'
+          name='description'
+          placeholder='description'
+          value={this.state.description}
+          onChange={this.handleInputChange}>
+        </input>
+        <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={this.props.categoryOptions} />
+        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
+        <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
       </div>
     )
   }
