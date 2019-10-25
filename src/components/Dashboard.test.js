@@ -3,6 +3,7 @@ import Dashboard from './Dashboard';
 import renderer from 'react-test-renderer';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
+// TODO: Test routes
 
 describe('Dashboard component test', () => {
   let jsDomTree = null;
