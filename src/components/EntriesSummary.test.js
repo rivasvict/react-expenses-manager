@@ -3,6 +3,9 @@ import EntriesSummary from './EntriesSummary';
 import renderer from 'react-test-renderer';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
+import { getSumFromEntries } from '../helpers/entriesHelper';
+
+jest.mock('../helpers/entriesHelper')
 
 describe('EntriesSummary', () => {
   const entries = [
@@ -24,8 +27,10 @@ describe('EntriesSummary', () => {
   describe('Unit test', () => {
     let container = null;
     let entryComponent = null;
+    let totalSumOfEntries = 30;
 
     beforeEach(() => {
+      getSumFromEntries.mockReturnValue(totalSumOfEntries);
       container = document.createElement('div');
       document.body.appendChild(container);
 
@@ -42,7 +47,7 @@ describe('EntriesSummary', () => {
 
     it('should have the correct total sum rendered in the total div', () => {
       const totalDiv = container.querySelector('div').querySelector('div');
-      expect(totalDiv.innerHTML).toBe('Total: 15');
+      expect(totalDiv.innerHTML).toBe(`Total: ${totalSumOfEntries}`);
     })
 
     it('should at least the third element of the entries list', () => {
