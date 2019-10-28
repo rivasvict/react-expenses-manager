@@ -5,7 +5,8 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import { getSumFromEntries } from '../helpers/entriesHelper';
 
-jest.mock('../helpers/entriesHelper')
+// Mock the entriesHelper module
+jest.mock('../helpers/entriesHelper');
 
 describe('EntriesSummary', () => {
   const entries = [
@@ -40,6 +41,7 @@ describe('EntriesSummary', () => {
     });
 
     afterEach(() => {
+      getSumFromEntries.mockClear();
       unmountComponentAtNode(container);
       container.remove();
       container = null;
@@ -53,6 +55,14 @@ describe('EntriesSummary', () => {
     it('should at least the third element of the entries list', () => {
       const listOfEntries = container.querySelector('ul');
       expect(listOfEntries.children[2].innerHTML).toBe('7 My description Food');
+    })
+
+    it('should have valled getSumFromEntries one time with correct entries', () => {
+      expect(getSumFromEntries.mock.calls[0][0]).toBe(entries);
+    })
+
+    it('should only call the getSumFromEntries function only once', () => {
+      expect(getSumFromEntries.mock.calls.length).toBe(1);
     })
   });
 })
