@@ -1,6 +1,6 @@
-export const CAST_HOLA = 'CAST_HOLA'
+export const ADD_EXPENSE = 'ADD_EXPENSE';
 
-export const castHolaAction = greeting => ({
-  type: CAST_HOLA,
-  greeting
+export const castHolaAction = expense => ({
+  type: ADD_EXPENSE,
+  payload: expense
 });

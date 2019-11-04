@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import Results from './Results';
 import AddEntry from './AddEntry';
@@ -102,4 +103,8 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const mapStateToProps = state => {
+  return state;
+};
+
+export default connect(mapStateToProps)(Dashboard);
