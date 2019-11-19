@@ -1,6 +1,12 @@
-export const ADD_EXPENSE = 'ADD_EXPENSE';
+export const ADD_OUTCOME = 'ADD_OUTCOME';
+export const ADD_INCOME = 'ADD_INCOME';
 
-export const castHolaAction = expense => ({
-  type: ADD_EXPENSE,
+export const addOutcome = expense => ({
+  type: ADD_OUTCOME,
   payload: expense
+});
+
+export const addIncome = income => ({
+  type: ADD_INCOME,
+  payload: income
 });

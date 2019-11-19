@@ -1,6 +1,6 @@
-import { combineReucers } from 'redux';
-import { reducer as expensesManagerReducer } from './reducers/expensesManagerReducer';
+import { combineReducers } from 'redux';
+import { reducer as expensesManagerReducer } from './expensesManagerReducer';
 
-export default combineReucers({
+export default combineReducers({
   expensesManager: expensesManagerReducer
 });
