@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import EntriesSummary from './EntriesSummary';
 import CategorySelector from './CategorySelector';
+import { connect } from 'react-redux';
+import { categoryChange } from '../redux/actions/index';
 
 class EntrySummaryWithFilter extends Component {
-  constructor(pros) {
+  constructor(props) {
     super();
-    this.state = {
-      category: ''
-    }
+
+    this.onCategoryChange = props.onCategoryChange;
   }
 
   handleChange = (event) => {
     const { value } = event.currentTarget;
-    this.setState(() => {
-      return {
-        category: value
-      }
-    });
+    this.onCategoryChange(value);
   }
 
   getFilteredEntriesByCategory = (category) => {
@@ -26,11 +23,19 @@ class EntrySummaryWithFilter extends Component {
   render() {
     return (
       <div>
-        <CategorySelector name='category' value={this.state.category} handleChange={this.handleChange} categoryOptions={this.props.categoryOptions} />
-        <EntriesSummary entries={this.getFilteredEntriesByCategory(this.state.category)} name={this.props.name} />
+        <CategorySelector name='category' value={this.props.category} handleChange={this.handleChange.bind(this)} categoryOptions={this.props.categoryOptions} />
+        <EntriesSummary entries={this.getFilteredEntriesByCategory(this.props.category)} name={this.props.name} />
       </div>
     )
   }
 }
 
-export default EntrySummaryWithFilter;
+const mapStateToProps = state => ({
+  category: state.expensesManager.category
+});
+
+const mapActionsToProps = dispatch => ({
+  onCategoryChange: event => dispatch(categoryChange(event))
+});
+
+export default connect(mapStateToProps, mapActionsToProps)(EntrySummaryWithFilter);

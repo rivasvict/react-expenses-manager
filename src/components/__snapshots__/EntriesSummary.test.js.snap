@@ -36,7 +36,6 @@ exports[`EntriesSummary Snapshot: EntriesSummary component Should always render 
   <br />
   <div>
     Total: 
-    15
   </div>
 </div>
 `;
