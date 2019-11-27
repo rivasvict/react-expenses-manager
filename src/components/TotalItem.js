@@ -6,9 +6,9 @@ const totalItemStyle = {
   border: 'solid 1px black'
 };
 
-function TotalItem({ name, ammount, type }) {
+function TotalItem({ name, ammount, url }) {
   return (
-    <Link to={`/${type}`}><div style={totalItemStyle}>{name}<br/>{ammount}</div></Link>
+    <Link to={`${url}`}><div style={totalItemStyle}>{name}<br/>{ammount}</div></Link>
   );
 }
 
