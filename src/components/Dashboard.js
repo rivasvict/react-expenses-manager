@@ -47,10 +47,39 @@ class Dashboard extends Component {
 
   getSum = entryType => {
     if (this.entries[entryType]) {
-      const entries = this.entries[entryType];
+      const entries = this.getEntries(entryType);
       return getSumFromEntries(entries);
     }
   }
+
+  getEntries = entryType => {
+    return this.entries[entryType];
+  }
+
+  /*
+  TODO: Finish this abstraction
+  getResultsModel = (baseUrl = '') => {
+    return [
+      {
+        type: 'incomes',
+        url: `${baseUrl}/incomes`,
+        ammount: this.getSum('incomes'),
+        entries: this.getEntries('incomes'),
+        name: 'Income'
+      },
+      {
+        type: 'incomes',
+        url: `${baseUrl}/incomes`,
+        ammount: this.getSum('incomes'),
+        entries: this.getEntries('incomes'),
+        name: 'Income'
+      },
+      {
+        url: `${baseUrl}/summary`,
+        name: 'Income'
+      }
+    ]
+  }*/
 
   render() {
     this.entries = this.props.entries;

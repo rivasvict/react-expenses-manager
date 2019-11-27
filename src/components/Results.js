@@ -20,7 +20,7 @@ function Results({ incomes, outcomes, entries, baseUrl = '' }) {
   return (
     <div style={resultsStyle}>      
       <TotalItem name='Income' ammount={incomes} entries={entries[incomesName]} url={incomesUrl} />
-      <TotalItem name='Exoepenses' ammount={-outcomes} entries={entries[outcomesName]} url={outcomesUrl}/>
+      <TotalItem name='Expenses' ammount={-outcomes} entries={entries[outcomesName]} url={outcomesUrl}/>
       <TotalItem name='Total' ammount={calculateTotal(incomes, outcomes)} url={summaryUrl} />
     </div>
   );
