@@ -58,26 +58,27 @@ class Dashboard extends Component {
       <div style={dasahboardStyle}>
         <Switch>
           <Route exact path={`${this.props.match.url}`}>
-            <Link to={`${this.props.match.url}add-income`}>Add income</Link>
+            <Link to={`${this.props.match.url}/add-income`}>Add income</Link>
             <Results 
               incomes={this.getSum('incomes')} 
               outcomes={this.getSum('outcomes')}
-              entries={this.entries}/>
-            <Link to={`${this.props.match.url}add-expense`}>Add expense</Link>
+              entries={this.entries}
+              baseUrl={this.props.match.url}/>
+            <Link to={`${this.props.match.url}/add-expense`}>Add expense</Link>
           </Route>
-          <Route path={`${this.props.match.url}add-income`}>
-            <AddEntry entryType='income' handleEntry={this.onAddIncome} entryModel={this.getEntryModel('income')} categoryOptions={this.getEntryCategoryOption('income')}/>
+          <Route path={`${this.props.match.url}/add-income`}>
+            <AddEntry entryType='income' handleEntry={this.onAddIncome} entryModel={this.getEntryModel('income')} categoryOptions={this.getEntryCategoryOption('income')} />
           </Route>
-          <Route path={`${this.props.match.url}add-expense`}>
-            <AddEntry entryType='outcome' handleEntry={this.onAddOutcome} entryModel={this.getEntryModel('outcome')} categoryOptions={this.getEntryCategoryOption('outcome')}/>
+          <Route path={`${this.props.match.url}/add-expense`}>
+            <AddEntry entryType='outcome' handleEntry={this.onAddOutcome} entryModel={this.getEntryModel('outcome')} categoryOptions={this.getEntryCategoryOption('outcome')} />
           </Route>
-          <Route path='/incomes'>
-            <EntrySummaryWithFilter categoryOptions={this.getEntryCategoryOption('income')} entries={this.entries['incomes']} name='Incomes'/>
+          <Route path={`${this.props.match.url}/incomes`}>
+            <EntrySummaryWithFilter categoryOptions={this.getEntryCategoryOption('income')} entries={this.entries['incomes']} name='Incomes' />
           </Route>
-          <Route path='/outcomes'>
+          <Route path={`${this.props.match.url}/outcomes`}>
             <EntrySummaryWithFilter categoryOptions={this.getEntryCategoryOption('outcome')} entries={this.entries['outcomes']} name='Outcomes'/>
           </Route>
-          <Route path='/summary'>
+          <Route path={`${this.props.match.url}/summary`}>
             <Summary entries={this.entries} />
           </Route>
         </Switch>

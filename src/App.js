@@ -2,13 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import { Provider } from 'react-redux';
+import Lobby from './components/Lobby';
 
 function App({ reduxStore }) {
   return (
     <Provider store={reduxStore}>
       <Router>
         <Switch>
-          <Route path='/' component={Dashboard} />
+          <Route path='/expenses-manager' component={Dashboard} />
+          <Route path='/' component={Lobby} exact />
         </Switch>
       </Router>
     </Provider>
