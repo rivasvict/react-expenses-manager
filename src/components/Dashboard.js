@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import _ from 'lodash';
 import Results from './Results';
 import AddEntry from './AddEntry';
 import Summary from './Summary';
