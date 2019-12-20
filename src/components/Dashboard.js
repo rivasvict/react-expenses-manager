@@ -5,7 +5,6 @@ import Results from './Results';
 import AddEntry from './AddEntry';
 import Summary from './Summary';
 import EntrySummaryWithFilter from './EntrySummaryWithFilter'
-import { getEntryCategoryOption } from '../helpers/entriesHelper'; 
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -35,10 +34,10 @@ function Dashboard({ entries, match }) {
           <AddEntry entryType='outcome' />
         </Route>
         <Route path={`${match.url}/incomes`}>
-          <EntrySummaryWithFilter categoryOptions={getEntryCategoryOption('income')} entries={entries['incomes']} name='Incomes' />
+          <EntrySummaryWithFilter entryType='income' />
         </Route>
         <Route path={`${match.url}/outcomes`}>
-          <EntrySummaryWithFilter categoryOptions={getEntryCategoryOption('outcome')} entries={entries['outcomes']} name='Outcomes'/>
+          <EntrySummaryWithFilter entryType='outcome' />
         </Route>
         <Route path={`${match.url}/summary`}>
           <Summary entries={entries} />
