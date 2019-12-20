@@ -15,12 +15,12 @@ function Results({ entries, baseUrl = '' }) {
   const incomesUrl = `${baseUrl}/${incomesName}`;
   const outcomesUrl = `${baseUrl}/${outcomesName}`;
   const summaryUrl = `${baseUrl}/summary`;
-  const totalSum = calculateTotal(incomesSum, -outcomesSum);
+  const totalSum = calculateTotal(incomesSum, outcomesSum);
 
   return (
     <div style={resultsStyle}>      
       <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} />
-      <TotalItem name='Expenses' ammount={-outcomesSum} url={outcomesUrl}/>
+      <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl}/>
       <TotalItem name='Total' ammount={totalSum} url={summaryUrl} />
     </div>
   );
