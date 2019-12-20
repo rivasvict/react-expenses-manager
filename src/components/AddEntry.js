@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import CategorySelector from './CategorySelector';
+import { connect } from 'react-redux';
+import { addIncome, addOutcome } from '../redux/actions';
+import { getEntryModel, getEntryCategoryOption } from '../helpers/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
 
@@ -14,10 +17,19 @@ const addEntryStyle = {
   height: '100%'
 };
 
+const getActionFromEntryType = ({ entryType, props }) => {
+  const entryTypeToActionDictionary = {
+    income: props['onAddIncome'],
+    outcome: props['onAddOutcome']
+  };
+
+  return entryTypeToActionDictionary[entryType];
+};
+
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = props.entryModel;
+    this.state = getEntryModel(props.entryType);
   }
 
   handleInputChange = (event) => {
@@ -42,6 +54,9 @@ class AddEntry extends Component {
   }
 
   render() {
+    const handleEntry = getActionFromEntryType({ entryType: this.props.entryType, props: this.props });
+    const categoryOptions = getEntryCategoryOption(this.props.entryType);
+
     return (
       <div style={addEntryStyle}>
         Add new {this.props.entryType}
@@ -59,12 +74,20 @@ class AddEntry extends Component {
           value={this.state.description}
           onChange={this.handleInputChange}>
         </input>
-        <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={this.props.categoryOptions} />
-        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: this.props.handleEntry, history: this.props.history })}>Submit</button>
+        <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={categoryOptions} />
+        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history })}>Submit</button>
         <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
       </div>
     )
   }
 }
 
-export default withRouter(AddEntry);
+const mapStateToProps = state => ({
+});
+
+const mapActionToProps = dispatch => ({
+  onAddIncome: income => dispatch(addIncome(income)),
+  onAddOutcome: expense => dispatch(addOutcome(expense))
+});
+
+export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));

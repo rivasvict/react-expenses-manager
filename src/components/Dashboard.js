@@ -5,8 +5,7 @@ import Results from './Results';
 import AddEntry from './AddEntry';
 import Summary from './Summary';
 import EntrySummaryWithFilter from './EntrySummaryWithFilter'
-import { getEntryModel, getEntryCategoryOption } from '../helpers/entriesHelper'; 
-import { addOutcome, addIncome } from '../redux/actions';
+import { getEntryCategoryOption } from '../helpers/entriesHelper'; 
 
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -18,7 +17,7 @@ const dasahboardStyle = {
   height: '100vh'
 };
 
-function Dashboard({ entries, match, onAddIncome, onAddOutcome }) {
+function Dashboard({ entries, match }) {
   return (
     <div style={dasahboardStyle}>
       <Switch>
@@ -30,10 +29,10 @@ function Dashboard({ entries, match, onAddIncome, onAddOutcome }) {
           <Link to={`${match.url}/add-expense`}>Add expense</Link>
         </Route>
         <Route path={`${match.url}/add-income`}>
-          <AddEntry entryType='income' handleEntry={onAddIncome} entryModel={getEntryModel('income')} categoryOptions={getEntryCategoryOption('income')} />
+          <AddEntry entryType='income' />
         </Route>
         <Route path={`${match.url}/add-expense`}>
-          <AddEntry entryType='outcome' handleEntry={onAddOutcome} entryModel={getEntryModel('outcome')} categoryOptions={getEntryCategoryOption('outcome')} />
+          <AddEntry entryType='outcome' />
         </Route>
         <Route path={`${match.url}/incomes`}>
           <EntrySummaryWithFilter categoryOptions={getEntryCategoryOption('income')} entries={entries['incomes']} name='Incomes' />
@@ -51,11 +50,6 @@ function Dashboard({ entries, match, onAddIncome, onAddOutcome }) {
 
 const mapStateToProps = state => ({
   entries: state.expensesManager.entries
-});
-
-const mapActionsToProps = dispatch => ({
-  onAddOutcome: expense => dispatch(addOutcome(expense)),
-  onAddIncome: income => dispatch(addIncome(income))
 });
 
 Dashboard.propTypes = {
@@ -79,4 +73,4 @@ Dashboard.propTypes = {
   }).isRequired
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(Dashboard);
+export default connect(mapStateToProps)(Dashboard);
