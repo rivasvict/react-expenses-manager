@@ -5,13 +5,6 @@ function getSumFromEntries(entries) {
   return calculateTotal(...entriesForSum);
 }
 
-function gerNegativeVersionOfEntries(entries) {
-  return entries.map(entry => {
-    entry.ammount = -entry.ammount;
-    return entry;
-  })
-}
-
 function getSum({ entryType, entries }) {
   if (entries[entryType]) {
     const entriesByType = getEntries({ entryType, entries });
@@ -44,7 +37,6 @@ function getEntryCategoryOption(entryType) {
 
 export {
   getSumFromEntries,
-  gerNegativeVersionOfEntries,
   getSum,
   getEntryModel,
   getEntryCategoryOption 
