@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE } from '../actions/index';
-import { getEntryCategoryOption } from '../../helpers/entriesHelper';
 
 const initialState = {
   entries: {
