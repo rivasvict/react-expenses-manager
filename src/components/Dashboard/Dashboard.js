@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Results from './Results';
-import AddEntry from './AddEntry';
-import Summary from './Summary';
-import EntrySummaryWithFilter from './EntrySummaryWithFilter'
+import Results from '../Results';
+import AddEntry from '../common/AddEntry/AddEntry';
+import Summary from '../../components/common/Summaries/Summary';
+import EntrySummaryWithFilter from '../common/Summaries/EntrySummaryWithFilter'
 
 import { Switch, Route, Link } from 'react-router-dom';
 

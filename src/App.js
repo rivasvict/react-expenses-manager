@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import { Provider } from 'react-redux';
 import Lobby from './components/Lobby';
-import SignUp from './components/sign-up'
+import SignUp from './components/SignUp/sign-up'
 
 function App({ reduxStore }) {
   return (

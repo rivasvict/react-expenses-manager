@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import CategorySelector from './CategorySelector';
+import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
-import { addIncome, addOutcome } from '../redux/actions';
-import { getEntryModel, getEntryCategoryOption } from '../helpers/entriesHelper'; 
+import { addIncome, addOutcome } from '../../../redux/actions';
+import { getEntryModel, getEntryCategoryOption } from '../../../helpers/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
 

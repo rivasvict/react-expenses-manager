@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import EntriesSummary from './EntriesSummary';
-import CategorySelector from './CategorySelector';
+import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
-import { categoryChange } from '../redux/actions/index';
-import { getEntryCategoryOption } from '../helpers/entriesHelper'; 
+import { categoryChange } from '../../../redux/actions/index';
+import { getEntryCategoryOption } from '../../../helpers/entriesHelper'; 
 
 class EntrySummaryWithFilter extends Component {
   constructor(props) {
