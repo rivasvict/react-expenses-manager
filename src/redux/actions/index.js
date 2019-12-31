@@ -21,7 +21,7 @@ export const categoryChange = categoryValue => ({
 
 export const isLoading = isLoadingHappening => ({
   type: IS_LOADING,
-  payload: isLoadingHappening
+  payload: { isLoading: isLoadingHappening }
 })
 
 export const hasErrored = error => ({
@@ -42,6 +42,7 @@ export const createUser = (userPayload) => {
       const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/sign-up`;
       const body = JSON.stringify({ user: userPayload });
+      dispatch(isLoading(true));
       const rawResponse = await fetch(url, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -49,9 +50,11 @@ export const createUser = (userPayload) => {
       });
       const response = await rawResponse.json()
       if (!rawResponse.ok) {
-        throw new Error(response.message)
+        dispatch(isLoading(false));
+        throw response;
       }
 
+      dispatch(isLoading(false));
       dispatch(hasUserBeenCreated(userPayload));
     } catch (error) {
       dispatch(hasErrored(error));
