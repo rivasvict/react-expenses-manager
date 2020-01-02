@@ -41,8 +41,8 @@ class SignUp extends React.Component {
 }
 
 const mapStateToPros = state => ({
-  isLoading: state.main.isLoading,
-  validationErrors: state.authentication.validationErrors.validation
+  isLoading: state.userManager.isLoading,
+  validationErrors: state.userManager.validationErrors.validation
 });
 
 const mapActionsToProps = dispatch => ({
