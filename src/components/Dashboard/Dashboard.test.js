@@ -57,7 +57,7 @@ describe('Dashboard component test', () => {
     expect(DashboardInstance.state.entries.outcomes).toStrictEqual([ newEntry, newEntry ]);
   })
 
-  it('getSum: should get the correct sum for entries added', () => {
+  it.only('getSum: should get the correct sum for entries added', () => {
     act(() => {
       DashboardInstance.addOutcome(newEntry);
       DashboardInstance.addOutcome(newEntry);
