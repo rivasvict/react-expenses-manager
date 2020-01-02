@@ -1,7 +1,7 @@
 export const ADD_OUTCOME = 'ADD_OUTCOME';
 export const ADD_INCOME = 'ADD_INCOME';
 export const CATEGORY_CHANGE = 'CATEGORY_CHANGE'
-export const IS_LOADING = 'IS_LOADING';
+export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
 export const HAS_USER_BEEN_CREATED = 'HAS_USER_BEEN_CREATED ';
 export const HAS_ERRORED = 'HAS_ERRORED';
 
@@ -20,7 +20,7 @@ export const categoryChange = categoryValue => ({
 })
 
 export const isLoading = isLoadingHappening => ({
-  type: IS_LOADING,
+  type: CREATE_USER_LOADING,
   payload: { isLoading: isLoadingHappening }
 })
 
