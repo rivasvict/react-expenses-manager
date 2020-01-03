@@ -20,7 +20,7 @@ export const hasUserBeenCreated = user => ({
 
 // TODO: Handle loading state
 export const createUser = (userPayload) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
       const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/sign-up`;
