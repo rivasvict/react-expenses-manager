@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE } from '../actions/index';
+import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE } from './actions';
 
 const initialState = {
   entries: {
