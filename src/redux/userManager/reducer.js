@@ -1,14 +1,14 @@
-import { HAS_ERRORED, HAS_USER_BEEN_CREATED, CREATE_USER_LOADING } from "./actions";
+import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, CREATE_USER_LOADING } from "./actions";
 const defaultState = { user: {}, validationErrors: { validation: []}, isLoading: false }
 
 export const reducer = (state = defaultState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case HAS_ERRORED: return {
+    case CREATE_USER_ERROR: return {
       ...state,
       validationErrors: payload
     };
-    case HAS_USER_BEEN_CREATED: return {
+    case CREATE_USER_SUCCESS: return {
       ...state,
       user: payload.user
     };

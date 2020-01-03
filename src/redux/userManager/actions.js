@@ -1,31 +1,29 @@
 export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
-export const HAS_USER_BEEN_CREATED = 'HAS_USER_BEEN_CREATED ';
-export const HAS_ERRORED = 'HAS_ERRORED';
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
+export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
 
-export const isLoading = isLoadingHappening => ({
+export const userCreationLoading = isUserCreationLoadingHappening => ({
   type: CREATE_USER_LOADING,
-  payload: { isLoading: isLoadingHappening }
+  payload: { userCreationLoading: isUserCreationLoadingHappening }
 })
 
-export const hasErrored = error => ({
-  type: HAS_ERRORED,
+export const userCreationFail = error => ({
+  type: CREATE_USER_ERROR,
   payload: error
 })
 
-// TODO: Choose a better action name
 export const hasUserBeenCreated = user => ({
-  type: HAS_USER_BEEN_CREATED,
+  type: CREATE_USER_SUCCESS,
   payload: user
 });
 
-// TODO: Handle loading state
 export const createUser = (userPayload) => {
   return async (dispatch) => {
     try {
       const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/sign-up`;
       const body = JSON.stringify({ user: userPayload });
-      dispatch(isLoading(true));
+      dispatch(userCreationLoading(true));
       const rawResponse = await fetch(url, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -33,14 +31,14 @@ export const createUser = (userPayload) => {
       });
       const response = await rawResponse.json()
       if (!rawResponse.ok) {
-        dispatch(isLoading(false));
+        dispatch(userCreationLoading(false));
         throw response;
       }
 
-      dispatch(isLoading(false));
+      dispatch(userCreationLoading(false));
       dispatch(hasUserBeenCreated(userPayload));
     } catch (error) {
-      dispatch(hasErrored(error));
+      dispatch(userCreationFail(error));
     }
   }
 }
