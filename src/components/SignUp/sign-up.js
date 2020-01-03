@@ -14,9 +14,14 @@ class SignUp extends React.Component {
     };
   }
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
-    this.props.onCreateUser(this.state);
+    try {
+      await this.props.onCreateUser(this.state);
+      console.log('hola');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   handleChange = event => {
