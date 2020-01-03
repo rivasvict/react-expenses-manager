@@ -1,4 +1,4 @@
-import { HAS_ERRORED, HAS_USER_BEEN_CREATED, CREATE_USER_LOADING } from "../actions";
+import { HAS_ERRORED, HAS_USER_BEEN_CREATED, CREATE_USER_LOADING } from "./actions";
 const defaultState = { user: {}, validationErrors: { validation: []}, isLoading: false }
 
 export const reducer = (state = defaultState, action) => {
