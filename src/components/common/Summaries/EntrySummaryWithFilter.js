@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import EntriesSummary from './EntriesSummary';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
-import { categoryChange } from '../../../redux/expensesManager/actions';
+import { categoryChange } from '../../../redux/expensesManager/actionCreators';
 import { getEntryCategoryOption } from '../../../helpers/entriesHelper'; 
 
 class EntrySummaryWithFilter extends Component {
