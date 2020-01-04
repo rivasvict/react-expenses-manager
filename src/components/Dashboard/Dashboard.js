@@ -55,7 +55,7 @@ Dashboard.propTypes = {
   entries: PropTypes.shape({
     incomes: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.string.isRequired,
+        ammount: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired
@@ -63,7 +63,7 @@ Dashboard.propTypes = {
     ).isRequired,
     outcomes: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.string.isRequired,
+        ammount: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired
