@@ -37,6 +37,11 @@ const CreateUser = history => (userPayload) => {
 
       dispatch(userCreationLoading(false));
       dispatch(hasUserBeenCreated(userPayload));
+      // TODO: Change this to be a responsibility
+      // of either the component that dispatches
+      // this action or <Redirect> component of
+      // React router
+      history.push('/');
     } catch (error) {
       dispatch(userCreationFail(error));
     }

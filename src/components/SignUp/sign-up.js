@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
+import { history } from '../../helpers/history';
 
 class SignUp extends React.Component {
 
@@ -16,12 +17,7 @@ class SignUp extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-    try {
-      await this.props.onCreateUser(this.state);
-      console.log('hola');
-    } catch (error) {
-      console.error(error);
-    }
+    this.props.onCreateUser(this.state);
   };
 
   handleChange = event => {
@@ -30,6 +26,10 @@ class SignUp extends React.Component {
       [name]: value
     }));
   };
+
+  handleCancel = () => {
+    history.push('/');
+  }
 
   render = () => {
     return (
@@ -40,6 +40,7 @@ class SignUp extends React.Component {
         <label>Email: </label><input type='text' name='email' placeholder='Your email goes here' value={this.state.email} onChange={this.handleChange}></input><br />
         <label>Password: </label><input type='password' name='password' placeholder='Type password' value={this.state.password} onChange={this.handleChange}></input><br />
         {this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>}
+        <button onClick={this.handleCancel}>Cancel</button>
       </form>
     )
   }

@@ -10,8 +10,8 @@ function App({ reduxStore }) {
     <Provider store={reduxStore}>
       <Router>
         <Switch>
-          <Route path='/expenses-manager' component={Dashboard} />
           <Route path='/' component={Lobby} exact />
+          <Route path='/expenses-manager' component={Dashboard} />
           <Route path='/sign-up' component={SignUp} exact />
         </Switch>
       </Router>
