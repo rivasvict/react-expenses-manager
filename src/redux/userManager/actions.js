@@ -44,7 +44,5 @@ const CreateUser = history => (userPayload) => {
 }
 
 export const ActionCreators = history => ({
-  userCreationLoading,
-  userCreationFail,
   createUser: CreateUser(history)
 });
