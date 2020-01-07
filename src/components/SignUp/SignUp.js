@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
-import { history } from '../../helpers/history';
+// import { history } from '../../helpers/history';
+import { useHistory } from 'react-router-dom';
 
 function SignUp(props) {
 
@@ -11,6 +12,8 @@ function SignUp(props) {
     email: '',
     password: ''
   })
+
+  const history = useHistory();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -25,7 +28,8 @@ function SignUp(props) {
     });
   };
 
-  function handleCancel() {
+  function handleCancel(event) {
+    event.preventDefault();
     history.push('/');
   }
 
