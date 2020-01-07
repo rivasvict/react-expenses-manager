@@ -1,50 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { history } from '../../helpers/history';
 
-class SignUp extends React.Component {
+function SignUp(props) {
 
-  constructor() {
-    super();
-    this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
-    };
-  }
+  const [state, setState] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  })
 
-  handleSubmit = async event => {
+  function handleSubmit(event) {
     event.preventDefault();
-    this.props.onCreateUser(this.state);
+    props.onCreateUser(state);
   };
 
-  handleChange = event => {
+  function handleChange(event) {
     const { name, value } = event.currentTarget;
-    this.setState(() => ({
+    setState({
+      ...state,
       [name]: value
-    }));
+    });
   };
 
-  handleCancel = () => {
+  function handleCancel() {
     history.push('/');
   }
 
-  render = () => {
-    return (
-      <form>
-        <label>First Name: </label><input type='text' name='firstName' placeholder='First Name goes here' value={this.state.firstName} onChange={this.handleChange}></input><br />
-        {this.props.validationErrors.find(validationError => validationError.path === 'firstName') ? <label>First name is required</label> : null}
-        <label>Last Name: </label><input type='text' name='lastName' placeholder='Last Name goes here' value={this.state.lastName} onChange={this.handleChange}></input><br />
-        <label>Email: </label><input type='text' name='email' placeholder='Your email goes here' value={this.state.email} onChange={this.handleChange}></input><br />
-        <label>Password: </label><input type='password' name='password' placeholder='Type password' value={this.state.password} onChange={this.handleChange}></input><br />
-        {this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>}
-        <button onClick={this.handleCancel}>Cancel</button>
-      </form>
-    )
-  }
-}
+  return (
+    <form>
+      <label>First Name: </label><input type='text' name='firstName' placeholder='First Name goes here'  onChange={handleChange}></input><br />
+      {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <label>First name is required</label> : null}
+      <label>Last Name: </label><input type='text' name='lastName' placeholder='Last Name goes here'  onChange={handleChange}></input><br />
+      <label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={handleChange}></input><br />
+      <label>Password: </label><input type='password' name='password' placeholder='Type password'  onChange={handleChange}></input><br />
+      {props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
+      <button onClick={handleCancel}>Cancel</button>
+    </form>
+  )
+};
 
 const mapStateToPros = state => ({
   isLoading: state.userManager.isLoading,
