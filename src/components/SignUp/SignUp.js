@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
-// import { history } from '../../helpers/history';
 import { useHistory } from 'react-router-dom';
 
 function SignUp(props) {
 
-  const [state, setState] = useState({
+  const [formState, setInput] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -17,13 +16,14 @@ function SignUp(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    props.onCreateUser(state);
+    props.onCreateUser(formState);
+    history.push('/');
   };
 
   function handleChange(event) {
     const { name, value } = event.currentTarget;
-    setState({
-      ...state,
+    setInput({
+      ...formState,
       [name]: value
     });
   };
