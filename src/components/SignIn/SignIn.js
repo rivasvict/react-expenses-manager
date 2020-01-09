@@ -32,7 +32,8 @@ function SignIn() {
       {/*this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>*/}
       <button type='submit' onClick={handleSubmit}>Submit</button>
       <button onClick={handleCancel}>Cancel</button>
-    </form>);
+    </form>
+  );
 }
 
 export default SignIn;
