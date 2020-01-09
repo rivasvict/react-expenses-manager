@@ -1,41 +1,38 @@
-import React from 'react';
-import { history } from '../../helpers/history';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-class SignIn extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      username: '',
-      password: ''
-    };
-  }
+function SignIn() {
+  const history = useHistory();
+  const [state, setState] = useState({
+    username: '',
+    password: ''
+  });
 
-  handleChange = event => {
+  function handleChange(event) {
     const { name, value } = event.currentTarget;
-    this.setState(() => ({
+    setState({
+      ...state,
       [name]: value
-    }));
+    });
   };
 
-  handleSubmit = async event => {
+  function handleSubmit(event) {
     event.preventDefault();
   };
 
-  handleCancel = () => {
+  function handleCancel() {
     history.push('/');
   }
 
-  render = () => {
-    return (
-      <form>
-        <label>Username: </label><input type='text' name='firstName' placeholder='First Name goes here' value={this.state.firstName} onChange={this.handleChange}></input><br />
-        {/*this.props.validationErrors.find(validationError => validationError.path === 'userName') ? <label>Username is required</label> : null*/}
-        <label>Password: </label><input type='password' name='password' placeholder='Type password' value={this.state.password} onChange={this.handleChange}></input><br />
-        {/*this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>*/}
-        <button type='submit' onClick={this.handleSubmit}>Submit</button>
-        <button onClick={this.handleCancel}>Cancel</button>
-      </form>);
-  }
+  return (
+    <form>
+      <label>Username: </label><input type='text' name='username' placeholder='First Name goes here' onChange={handleChange}></input><br />
+      {/*this.props.validationErrors.find(validationError => validationError.path === 'userName') ? <label>Username is required</label> : null*/}
+      <label>Password: </label><input type='password' name='password' placeholder='Type password' onChange={handleChange}></input><br />
+      {/*this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>*/}
+      <button type='submit' onClick={handleSubmit}>Submit</button>
+      <button onClick={handleCancel}>Cancel</button>
+    </form>);
 }
 
 export default SignIn;
