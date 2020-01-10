@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ValidateField from '../../helpers/form-validation/ValidateField'
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
@@ -29,13 +30,16 @@ function SignUp(props) {
   };
 
   function handleCancel(event) {
-    event.preventDefault();
+    event.preventDefaiiiiiult();
     history.push('/');
   }
 
   return (
     <form>
-      <label>First Name: </label><input type='text' name='firstName' placeholder='First Name goes here'  onChange={handleChange}></input>
+      <label>First Name: </label>
+      <ValidateField validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]} value={formState.firstName}>
+        <input type='text' name='firstName' placeholder='First Name goes here'  onChange={handleChange}></input>
+      </ValidateField>
       {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <React.Fragment><br /><label>First name is required</label></React.Fragment> : null}
       <br /><label>Last Name: </label><input type='text' name='lastName' placeholder='Last Name goes here'  onChange={handleChange}></input>
       {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
