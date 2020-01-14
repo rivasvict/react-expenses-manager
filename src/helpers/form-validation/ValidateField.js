@@ -13,12 +13,20 @@ const defaultValidationRules = {
 };
 
 function ValidateField(props) {
-  const { validationTypes = [], isFormValid = false, customValidations = [], value = '' } = props;
+  const { validationTypes = [], customValidations = [], value = '', isFormValid } = props;
   const buildInValidations = validationTypes.map(validationType => {
     return defaultValidationRules[validationType.name]({ value, fieldName: props.children.props.name, message: validationType.message })
   });
   const fullValidations = [...buildInValidations, ...customValidations];
-  const validationMessages = fullValidations.map(singleValidation => singleValidation());
+  const validationMessages = fullValidations.map((singleValidation) => {
+    const validationMessage = singleValidation();
+    const hasValidationMessage = validationMessage ? true : false;
+    if (props.checkForValidity && !isFormValid !== hasValidationMessage) {
+      props.checkForValidity(validationMessage);
+    }
+
+    return validationMessage;
+  });
   const isFieldValid = validationMessages.every(singleValidation => singleValidation === '');
   const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label key={index}>{validationMessage}</label>)
 
