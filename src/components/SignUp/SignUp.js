@@ -8,12 +8,23 @@ import _ from 'lodash';
 
 function SignUp(props) {
 
-  const [formState, setInput] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
-  })
+  const userModel = {
+    values: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
+    },
+    validation: {
+      firstName: [],
+      lastName: [],
+      email: [],
+      password: []
+    },
+    isModelValid: false
+  }
+
+  const [formState, setInput] = useState(userModel);
 
   const history = useHistory();
 
@@ -26,7 +37,10 @@ function SignUp(props) {
     const { name, value } = event.currentTarget;
     setInput({
       ...formState,
-      [name]: value
+      values: {
+        ...formState.values,
+        [name]: value
+      },
     });
   };
 
@@ -36,12 +50,12 @@ function SignUp(props) {
   }
 
   return (
-    <FormValidation>
+    <FormValidation validity={formState.isModelValid}>
       <React.Fragment>
         <label>First Name: </label>
         <ValidateField 
           validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-          value={formState.firstName}>
+          value={formState.values.firstName}>
 
           <input type='text' name='firstName' placeholder='First Name goes here' onChange={handleChange}></input>
         </ValidateField>
@@ -49,7 +63,7 @@ function SignUp(props) {
         <br /><label>Last Name: </label>
         <ValidateField
           validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-          value={formState.lastName}>
+          value={formState.values.lastName}>
 
           <input type='text' name='lastName' placeholder='Last Name goes here' onChange={handleChange}></input>
         </ValidateField>

@@ -37,7 +37,7 @@ function ValidateField(props) {
   });
   const isFieldValid = validationMessages.every(singleValidation => singleValidation === '');
   const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label key={index}>{validationMessage}</label>)
-  checkValidityOfForm({ isFieldValid, dispatch });
+  // checkValidityOfForm({ isFieldValid, dispatch });
 
   return (
     <div>{props.children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
