@@ -31,45 +31,38 @@ function SignUp(props) {
   };
 
   function handleCancel(event) {
-    event.preventDefaiiiiiult();
+    event.preventDefault();
     history.push('/');
   }
 
   return (
-    <FormValidation render={({ isFormValid, checkForValidity }) => {
-      return (
-        <React.Fragment>
-          {isFormValid ? 'VALID' : 'INVALID'}
-          <label>First Name: </label>
-          <ValidateField 
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.firstName}
-            checkForValidity={checkForValidity()}
-            isFormValid={isFormValid}>
+    <FormValidation>
+      <React.Fragment>
+        <label>First Name: </label>
+        <ValidateField 
+          validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
+          value={formState.firstName}>
 
-            <input type='text' name='firstName' placeholder='First Name goes here'  onChange={handleChange}></input>
-          </ValidateField>
-          {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <React.Fragment><br /><label>First name is required</label></React.Fragment> : null}
-          <br /><label>Last Name: </label>
-          <ValidateField
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.lastName}
-            checkForValidity={checkForValidity()}
-            isFormValid={isFormValid}>
+          <input type='text' name='firstName' placeholder='First Name goes here' onChange={handleChange}></input>
+        </ValidateField>
+        {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <React.Fragment><br /><label>First name is required</label></React.Fragment> : null}
+        <br /><label>Last Name: </label>
+        <ValidateField
+          validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
+          value={formState.lastName}>
 
-            <input type='text' name='lastName' placeholder='Last Name goes here'  onChange={handleChange}></input>
-          </ValidateField>
-          {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
-          <br /><label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={handleChange}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'email') ? <React.Fragment><br /><label>Email is required</label></React.Fragment> : null}
-          <br /><label>Password: </label><input type='password' name='password' placeholder='Type password'  onChange={handleChange}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'password') ? <React.Fragment><br /><label>Password is required</label></React.Fragment> : null}
-          <br /><label>Retype password: </label><input type='password' name='password-retype' placeholder='Type password'  onChange={handleChange}></input>
-          <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
-          <button onClick={handleCancel}>Cancel</button>
-        </React.Fragment>
-      );
-    }} />
+          <input type='text' name='lastName' placeholder='Last Name goes here' onChange={handleChange}></input>
+        </ValidateField>
+        {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
+        <br /><label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={handleChange}></input>
+        {props.validationErrors.find(validationError => validationError.path === 'email') ? <React.Fragment><br /><label>Email is required</label></React.Fragment> : null}
+        <br /><label>Password: </label><input type='password' name='password' placeholder='Type password'  onChange={handleChange}></input>
+        {props.validationErrors.find(validationError => validationError.path === 'password') ? <React.Fragment><br /><label>Password is required</label></React.Fragment> : null}
+        <br /><label>Retype password: </label><input type='password' name='password-retype' placeholder='Type password'  onChange={handleChange}></input>
+        <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
+        <button onClick={handleCancel}>Cancel</button>
+      </React.Fragment>
+    </FormValidation>
   )
 };
 

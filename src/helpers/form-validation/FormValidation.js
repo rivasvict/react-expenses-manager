@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
+import validationReducer from './reducer';
+const ValidationContext = React.createContext();
 
-function FormValidation({ isFormValid = false, render }) {
-  const [ formState, setFormState ] = useState({ isFormValid });
-
-  function checkForValidity() {
-    return function(validationMessage) {
-      if (validationMessage) {
-        setFormState({ isFormValid: false });
-      } else {
-        setFormState({ isFormValid: true })
-      }
-    }
-  }
+function FormValidation({ children }) {
+  const [state, dispatch] = useReducer(validationReducer, { isValidForm: false });
 
   return (
-    <form>{render({ ...formState, checkForValidity })}</form>
+    <ValidationContext.Provider value={{ state, dispatch }}>
+      <form>{children}</form>
+    </ValidationContext.Provider>
   )
 }
 
 export default FormValidation;
+export { ValidationContext };
