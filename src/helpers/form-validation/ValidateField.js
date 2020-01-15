@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ValidationContext } from './FormValidation';
+import { setValidity } from './actions';
 
 const defaultValidationRules = {
   required: ({ value, fieldName, message }) => () => {
@@ -12,23 +14,30 @@ const defaultValidationRules = {
   }
 };
 
+function checkValidityOfForm({dispatch, isFieldValid}) {
+  if (!isFieldValid) {
+    dispatch(setValidity(false));
+  } else {
+    dispatch(setValidity(true));
+  }
+}
+
 function ValidateField(props) {
-  const { validationTypes = [], customValidations = [], value = '', isFormValid } = props;
+  const { dispatch } = useContext(ValidationContext);
+
+  const { validationTypes = [], customValidations = [], value = '' } = props;
   const buildInValidations = validationTypes.map(validationType => {
     return defaultValidationRules[validationType.name]({ value, fieldName: props.children.props.name, message: validationType.message })
   });
   const fullValidations = [...buildInValidations, ...customValidations];
   const validationMessages = fullValidations.map((singleValidation) => {
     const validationMessage = singleValidation();
-    const hasValidationMessage = validationMessage ? true : false;
-    if (props.checkForValidity && !isFormValid !== hasValidationMessage) {
-      props.checkForValidity(validationMessage);
-    }
 
     return validationMessage;
   });
   const isFieldValid = validationMessages.every(singleValidation => singleValidation === '');
   const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label key={index}>{validationMessage}</label>)
+  checkValidityOfForm({ isFieldValid, dispatch });
 
   return (
     <div>{props.children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
