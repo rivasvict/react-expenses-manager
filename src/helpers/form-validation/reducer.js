@@ -1,4 +1,4 @@
-import { SET_FORM_VALUE } from './actions';
+import { SET_FORM_VALUE, SET_FORM_VALIDITY } from './actions';
 
 const formReducer = (state, action) => {
   const { type, payload } = action;
@@ -13,6 +13,11 @@ const formReducer = (state, action) => {
           [name]: value
         }
       };
+    case SET_FORM_VALIDITY :
+      return {
+        ...state,
+        isModelValid: !state.isModelValid
+      }
     default:
       return state
   }
