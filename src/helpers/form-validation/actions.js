@@ -1,8 +1,8 @@
-export const SET_VALIDITY = 'SET_VALIDITY';
+export const SET_FORM_VALUE = 'SET_FORM_VALUE';
 
-export const setValidity = ({ isValidForm }) => {
+export const setFormValue = (newFormValue) => {
   return {
-    type: SET_VALIDITY,
-    payload: isValidForm
-  }
+    type: SET_FORM_VALUE,
+    payload: newFormValue
+   };
 };
