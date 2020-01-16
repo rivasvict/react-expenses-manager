@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { ValidationContext } from './FormValidation';
-import { setValidity } from './actions';
 
 const defaultValidationRules = {
   required: ({ value, fieldName, message }) => () => {
@@ -14,16 +13,9 @@ const defaultValidationRules = {
   }
 };
 
-function checkValidityOfForm({dispatch, isFieldValid}) {
-  if (!isFieldValid) {
-    dispatch(setValidity(false));
-  } else {
-    dispatch(setValidity(true));
-  }
-}
-
 function ValidateField(props) {
-  const { dispatch } = useContext(ValidationContext);
+  // TODO
+  const { values } = useContext(ValidationContext);
 
   const { validationTypes = [], customValidations = [], value = '' } = props;
   const buildInValidations = validationTypes.map(validationType => {

@@ -2,12 +2,12 @@ import React, { useReducer } from 'react';
 import validationReducer from './reducer';
 const ValidationContext = React.createContext();
 
-function FormValidation({ children }) {
-  const [state, dispatch] = useReducer(validationReducer, { isValidForm: false });
+function FormValidation({ render, formModel }) {
+  const [formState, dispatch] = useReducer(validationReducer, formModel);
 
   return (
-    <ValidationContext.Provider value={{ state, dispatch }}>
-      <form>{children}</form>
+    <ValidationContext.Provider value={{ formState, dispatch }}>
+      <form>{render({ dispatch, formState })}</form>
     </ValidationContext.Provider>
   )
 }
