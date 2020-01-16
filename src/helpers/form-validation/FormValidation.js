@@ -3,6 +3,8 @@ import validationReducer from './reducer';
 const ValidationContext = React.createContext();
 
 function FormValidation({ render, formModel }) {
+  // TODO: Construct the validation messages object to capture the validation state
+  // Use for in for this
   const [formState, dispatch] = useReducer(validationReducer, formModel);
 
   return (

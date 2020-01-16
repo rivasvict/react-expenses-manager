@@ -4,7 +4,7 @@ import ValidateField from '../../helpers/form-validation/ValidateField'
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
-import { setFormValue, setFormValidity } from '../../helpers/form-validation/actions';
+import { setFormValue } from '../../helpers/form-validation/actions';
 import _ from 'lodash';
 
 function SignUp(props) {
@@ -17,10 +17,22 @@ function SignUp(props) {
       password: ''
     },
     validation: {
-      firstName: [],
-      lastName: [],
-      email: [],
-      password: []
+      firstName: {
+        customValidation: [],
+        builtinValidation: [{ name: 'required', message: 'TEST MESSAGE' }]
+      },
+      lastName: {
+        customValidation: [],
+        builtinValidation: [{ name: 'required', message: 'TEST MESSAGE' }]
+      },
+      email: {
+        customValidation: [],
+        builtinValidation: []
+      },
+      password: {
+        customValidation: [],
+        builtinValidation: []
+      }
     },
     isModelValid: false
   }
@@ -35,7 +47,6 @@ function SignUp(props) {
   function handleChange({ event, dispatch, formState }) {
     const { name, value } = event.currentTarget;
     dispatch(setFormValue({name, value}))
-    dispatch(setFormValidity(formState.validation));
   };
 
   function handleCancel(event) {
@@ -51,7 +62,8 @@ function SignUp(props) {
           <label>First Name: </label>
           <ValidateField 
             validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.firstName}>
+            value={formState.values.firstName}
+            fieldName={'firstName'}>
 
             <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatch, formState })}></input>
           </ValidateField>
@@ -59,7 +71,8 @@ function SignUp(props) {
           <br /><label>Last Name: </label>
           <ValidateField
             validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.lastName}>
+            value={formState.values.lastName}
+            fieldName={'lastName'}>
 
             <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatch, formState })}></input>
           </ValidateField>
