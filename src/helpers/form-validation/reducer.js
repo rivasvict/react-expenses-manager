@@ -1,5 +1,5 @@
 import { SET_FORM_VALUE, SET_FORM_VALIDITY } from './actions';
-import { getModelValidity } from './helpers';
+import { isModelValid } from './helpers';
 
 const formReducer = (state, action) => {
   const { type, payload } = action;
@@ -14,7 +14,7 @@ const formReducer = (state, action) => {
       return {
         ...state,
         values: newValues,
-        isModelValid: getModelValidity({ validation: state.validation, values: newValues })
+        isModelValid: isModelValid({ validation: state.validation, values: newValues })
       };
     default:
       return state
