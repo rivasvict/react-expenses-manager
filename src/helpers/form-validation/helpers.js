@@ -25,7 +25,7 @@ const getValidationForField = ({ validationTypes = [], customValidations = [], v
   return { isFieldValid, validationMessages }
 };
 
-const getModelValidity = ({ values, validation }) => {
+const isModelValid = ({ values, validation }) => {
   let modelValidationMessages = [];
   for (let fieldName in values) {
     const value = values[fieldName];
@@ -55,4 +55,4 @@ const getModelValidity = ({ values, validation }) => {
   return modelValidationMessages.length === 0 ? true : false;
 };
 
-export { getValidationForField, getModelValidity };
+export { getValidationForField, isModelValid };
