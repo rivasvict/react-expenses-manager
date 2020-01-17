@@ -26,6 +26,7 @@ const getValidationForField = ({ validationTypes = [], customValidations = [], v
 };
 
 const getModelValidity = ({ values, validation }) => {
+  let modelValidationMessages = [];
   for (let fieldName in values) {
     const value = values[fieldName];
     const builtInValidationMessages = validation[fieldName].buildInValidations.reduce((validationMessages, currentValidation) => {
@@ -48,8 +49,10 @@ const getModelValidity = ({ values, validation }) => {
       return validationMessages;
     }, []);
 
-    const validationMessagesForField = [ ...builtInValidationMessages, ...customValidationMessages ];
+    modelValidationMessages = [ ...builtInValidationMessages, ...customValidationMessages, ...modelValidationMessages ];
   }
+
+  return modelValidationMessages.length === 0 ? true : false;
 };
 
 export { getValidationForField, getModelValidity };
