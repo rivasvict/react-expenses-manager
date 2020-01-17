@@ -18,20 +18,20 @@ function SignUp(props) {
     },
     validation: {
       firstName: {
-        customValidation: [],
-        builtinValidation: [{ name: 'required', message: 'TEST MESSAGE' }]
+        customValidations: [(value) => value === '' ? 'First validation' : '', (value) => value === '' ? 'Second validation' : ''],
+        buildInValidations: [{ name: 'required', message: 'TEST MESSAGE' }]
       },
       lastName: {
-        customValidation: [],
-        builtinValidation: [{ name: 'required', message: 'TEST MESSAGE' }]
+        customValidations: [],
+        buildInValidations: [{ name: 'required', message: 'TEST MESSAGE' }]
       },
       email: {
-        customValidation: [],
-        builtinValidation: []
+        customValidations: [],
+        buildInValidations: []
       },
       password: {
-        customValidation: [],
-        builtinValidation: []
+        customValidations: [],
+        buildInValidations: []
       }
     },
     isModelValid: false
