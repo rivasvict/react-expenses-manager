@@ -26,7 +26,29 @@ const getValidationForField = ({ validationTypes = [], customValidations = [], v
 };
 
 const getModelValidity = ({ values, validation }) => {
-  for (let value in values) {
+  for (let fieldName in values) {
+    const value = values[fieldName];
+    const builtInValidationMessages = validation[fieldName].buildInValidations.reduce((validationMessages, currentValidation) => {
+      const builtInValidationMessage = defaultValidationRules[currentValidation.name]({ value, fieldName, message: currentValidation.message })();
+
+      if (builtInValidationMessage !== '') {
+        return [...validationMessages, builtInValidationMessage];
+      }
+
+      return validationMessages;
+    }, []);
+
+    const customValidationMessages = validation[fieldName].customValidations.reduce((validationMessages, currentValidation) => {
+      const customValidationMessage = currentValidation(value);
+
+      if (customValidationMessage !== '') {
+        return [...validationMessages, customValidationMessage];
+      }
+
+      return validationMessages;
+    }, []);
+
+    const validationMessagesForField = [ ...builtInValidationMessages, ...customValidationMessages ];
   }
 };
 
