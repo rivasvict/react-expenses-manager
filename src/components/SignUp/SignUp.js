@@ -1,6 +1,5 @@
 import React from 'react';
-import FormValidation, { FormModel } from '../../helpers/form-validation/FormValidation'
-import ValidateField from '../../helpers/form-validation/ValidateField'
+import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/'
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
