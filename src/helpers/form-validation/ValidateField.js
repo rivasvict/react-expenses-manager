@@ -18,6 +18,7 @@ function ValidateField({ children, globalStyles = {}, labelStyles = {}}) {
       <div styles={globalStyles}>{children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
     )
   } catch(error) {
+    console.log(error);
     return (
       <div>ERROR: Validation component cannot work without validations defined for its model</div>
     )
