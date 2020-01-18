@@ -6,41 +6,28 @@ A simple way to use form validation with a model.
 
 ## How to use
 
+Within the component you want to use validation:
+
+1. Import this package
+
+```javascript
+import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/'
+```
+
 1. Create the form model on your component
 
 ```javascript
-  const userModel = {
-    values: { // (required) Form state
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
-    },
-    validation: { // (Required) The object properties names should match the ones on the form state
-      firstName: {
-        customValidations: [ // Here you place all custom validations you need. These should be an array of functions that either return an empty sting (Valid) or a string message (Invalid)
-          (value) => value === '' ? 'First validation' : '',
-          (value) => value === '' ? 'Second validation' : ''
-        ],
-        buildInValidations: [ // Here you place an array of objects that have ONLY two properties name (Name of the built in validation) and message (When the built in validation fails).
-          { name: 'required', message: 'TEST MESSAGE' }
-        ]
-      },
-      lastName: {
-        customValidations: [],
-        buildInValidations: [{ name: 'required', message: 'TEST MESSAGE' }]
-      },
-      email: {
-        customValidations: [],
-        buildInValidations: []
-      },
-      password: {
-        customValidations: [],
-        buildInValidations: []
-      }
-    },
-    isModelValid: false // Required
-  }
+  const userModel = FormModel({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  })
+    .addCustomValidationToField({ fieldName: 'firstName', validation: (value) => value === '' ? 'First validation' : ''  })
+    .addCustomValidationsToField({ fieldName: 'firstName', validations: [(value) => value === '' ? 'Second validation' : '', (value) => value === '' ? 'Third validation' : ''] })
+    .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'A simple custom message' }})
+    .addBuiltInValidationsToField({ fieldName: 'firstName', validations: [{ name: 'required', message: 'A simple custom message' }, { name: 'required', message: 'A simple custom message' }]})
+    .setModelInitialValidityState(false);
 ```
 
 2. Then you call form validation with 3 rpops:
@@ -49,36 +36,39 @@ A simple way to use form validation with a model.
    * `render`: The wrapper that will allow your form fields to render
 
   ```javascript
-    <FormValidation formModel={userModel} render={({ dispatch, formState }) => { // Render should receive dispatch and formState
+    <FormValidation formModel={userModel} render={({ dispatchFormStateChange, formState }) => {
       return (
         <React.Fragment>
-          {formState.isModelValid ? 'VALID' : 'INVALID'}
           <label>First Name: </label>
-          <ValidateField 
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.firstName}
-            fieldName={'firstName'}>
-
-            <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatch, formState })}></input>
+          <ValidateField>
+            <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <React.Fragment><br /><label>First name is required</label></React.Fragment> : null}
           <br /><label>Last Name: </label>
-          <ValidateField
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.lastName}
-            fieldName={'lastName'}>
-
-            <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatch, formState })}></input>
+          <ValidateField>
+            <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
-          <br /><label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={(event) => handleChange({ event, dispatch, formState })}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'email') ? <React.Fragment><br /><label>Email is required</label></React.Fragment> : null}
-          <br /><label>Password: </label><input type='password' name='password' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatch, formState })}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'password') ? <React.Fragment><br /><label>Password is required</label></React.Fragment> : null}
-          <br /><label>Retype password: </label><input type='password' name='password-retype' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatch, formState })}></input>
           <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
           <button onClick={handleCancel}>Cancel</button>
         </React.Fragment>
       )
     }}/>
   ```
+
+3. Set handleChange or any other event to update the state of the form
+
+```javascript
+  function handleChange({ event, dispatchFormStateChange }) {
+    const { name, value } = event.currentTarget;
+    dispatchFormStateChange({ name, value });
+  };
+```
+
+That's it, you should be all set!
+
+## Model builder API
+
+TODO
+
+## Components explanation and props
+
+TODO

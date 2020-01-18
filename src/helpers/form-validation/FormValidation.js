@@ -1,7 +1,6 @@
 import React, { useReducer } from 'react';
 import validationReducer from './reducer';
 import { setFormValue } from './actions';
-import { BuildFormModel } from './helpers';
 const ValidationContext = React.createContext();
 
 const getFormStateChangeDispatcher = (dispatch) => ({ name, value }) => dispatch(setFormValue({ name, value }));
@@ -22,5 +21,4 @@ function FormValidation({ render, formModel }) {
   )
 }
 
-export default FormValidation;
-export { ValidationContext, BuildFormModel as FormModel };
+export { ValidationContext, FormValidation };
