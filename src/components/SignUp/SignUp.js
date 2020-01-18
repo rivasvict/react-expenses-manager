@@ -1,5 +1,5 @@
 import React from 'react';
-import FormValidation from '../../helpers/form-validation/FormValidation'
+import FormValidation, { FormModel } from '../../helpers/form-validation/FormValidation'
 import ValidateField from '../../helpers/form-validation/ValidateField'
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 function SignUp(props) {
 
-  const userModel = {
+  /*const userModel = {
     values: {
       firstName: '',
       lastName: '',
@@ -33,7 +33,19 @@ function SignUp(props) {
       }
     },
     isModelValid: false
-  }
+  }*/
+
+  const userModel = FormModel({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  })
+    .addCustomValidationToField({ fieldName: 'firstName', validation: (value) => value === '' ? 'First validation' : ''  })
+    .addCustomValidationsToField({ fieldName: 'firstName', validations: [(value) => value === '' ? 'Second validation' : '', (value) => value === '' ? 'Third validation' : ''] })
+    .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'A simple custom message' }})
+    .addBuiltInValidationsToField({ fieldName: 'firstName', validations: [{ name: 'required', message: 'A simple custom message' }, { name: 'required', message: 'A simple custom message' }]})
+    .setModelInitialValidityState(false);
 
   const history = useHistory();
 
