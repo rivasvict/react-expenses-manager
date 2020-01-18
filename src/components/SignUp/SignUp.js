@@ -7,34 +7,6 @@ import { useHistory } from 'react-router-dom';
 
 function SignUp(props) {
 
-  /*const userModel = {
-    values: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
-    },
-    validation: {
-      firstName: {
-        customValidations: [(value) => value === '' ? 'First validation' : '', (value) => value === '' ? 'Second validation' : ''],
-        buildInValidations: [{ name: 'required', message: 'TEST MESSAGE' }]
-      },
-      lastName: {
-        customValidations: [],
-        buildInValidations: [{ name: 'required', message: 'TEST MESSAGE' }]
-      },
-      email: {
-        customValidations: [],
-        buildInValidations: []
-      },
-      password: {
-        customValidations: [],
-        buildInValidations: []
-      }
-    },
-    isModelValid: false
-  }*/
-
   const userModel = FormModel({
     firstName: '',
     lastName: '',
@@ -70,22 +42,11 @@ function SignUp(props) {
         <React.Fragment>
           {formState.isModelValid ? 'VALID' : 'INVALID'}
           <label>First Name: </label>
-          <ValidateField 
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.firstName}
-            fieldName={'firstName'}>
-
+          <ValidateField>
             <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
           </ValidateField>
-          {props.validationErrors.find(validationError => validationError.path === 'firstName') ? <React.Fragment><br /><label>First name is required</label></React.Fragment> : null}
           <br /><label>Last Name: </label>
-          <ValidateField
-            validationTypes={[{ name: 'required', message: 'TEST MESSAGE' }]}
-            value={formState.values.lastName}
-            fieldName={'lastName'}>
-
-            <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
-          </ValidateField>
+          <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
           {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
           <br /><label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
           {props.validationErrors.find(validationError => validationError.path === 'email') ? <React.Fragment><br /><label>Email is required</label></React.Fragment> : null}
