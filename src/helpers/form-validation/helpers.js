@@ -11,24 +11,14 @@ const defaultValidationRules = {
 };
 
 const getValidationForField = ({ validationTypes = [], customValidations = [], value = '', fieldName = '' }) => {
-  const validationMessages = getFieldValidationMessages({ value, validation: { [fieldName]: { customValidations, buildInValidations: validationTypes }}, fieldName});
+  const validationMessages = getFieldValidationMessages({ value, validation: { customValidations, buildInValidations: validationTypes }, fieldName});
   const isFieldValid = validationMessages.every(singleValidation => singleValidation === '');
 
   return { isFieldValid, validationMessages }
 };
 
-const getFieldValidationMessages = ({ value, validation, fieldName }) => {
-  const builtInValidationMessages = validation[fieldName] && validation[fieldName].buildInValidations ? validation[fieldName].buildInValidations.reduce((validationMessages, currentValidation) => {
-    const builtInValidationMessage = defaultValidationRules[currentValidation.name]({ value, fieldName, message: currentValidation.message })();
-
-    if (builtInValidationMessage !== '') {
-      return [...validationMessages, builtInValidationMessage];
-    }
-
-    return validationMessages;
-  }, []) : [];
-
-  const customValidationMessages = validation[fieldName] && validation[fieldName].customValidations ? validation[fieldName].customValidations.reduce((validationMessages, currentValidation) => {
+const getCustomValidationMessages = ({ value, validation }) => {
+  return validation && validation.customValidations ? validation.customValidations.reduce((validationMessages, currentValidation) => {
     const customValidationMessage = currentValidation(value);
 
     if (customValidationMessage !== '') {
@@ -37,6 +27,23 @@ const getFieldValidationMessages = ({ value, validation, fieldName }) => {
 
     return validationMessages;
   }, []) : [];
+};
+
+const getBuiltInValidationMessages = ({ validation, value, fieldName }) => {
+  return validation && validation.buildInValidations ? validation.buildInValidations.reduce((validationMessages, currentValidation) => {
+    const builtInValidationMessage = defaultValidationRules[currentValidation.name]({ value, fieldName, message: currentValidation.message })();
+
+    if (builtInValidationMessage !== '') {
+      return [...validationMessages, builtInValidationMessage];
+    }
+
+    return validationMessages;
+  }, []) : [];
+}
+
+const getFieldValidationMessages = ({ value, validation, fieldName }) => {
+  const builtInValidationMessages = getBuiltInValidationMessages({ value, validation, fieldName });
+  const customValidationMessages = getCustomValidationMessages({ value, validation })
   
   return [ ...builtInValidationMessages, ...customValidationMessages ];
 }
@@ -50,7 +57,7 @@ const isModelValid = ({ values, validation }) => {
   let modelValidationMessages = [];
   for (let fieldName in values) {
     const value = values[fieldName];
-    modelValidationMessages = getModelValidationMessages({ value, validation, fieldName, modelValidationMessages });
+    modelValidationMessages = getModelValidationMessages({ value, validation: validation[fieldName], fieldName, modelValidationMessages });
   }
 
   return modelValidationMessages.length === 0 ? true : false;
