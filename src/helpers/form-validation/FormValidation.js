@@ -1,13 +1,22 @@
 import React, { useReducer } from 'react';
 import validationReducer from './reducer';
+import { setFormValue } from './actions';
 const ValidationContext = React.createContext();
 
+const getFormStateChangeDispatcher = (dispatch) => ({ name, value }) => dispatch(setFormValue({ name, value }));
+
 function FormValidation({ render, formModel }) {
-  const [formState, dispatch] = useReducer(validationReducer, formModel);
+  const [ formState, dispatch ] = useReducer(validationReducer, formModel);
+  const dispatchFormStateChange = getFormStateChangeDispatcher(dispatch)
 
   return (
-    <ValidationContext.Provider value={{ formState, dispatch }}>
-      <form>{render({ dispatch, formState })}</form>
+    <ValidationContext.Provider
+      value={{
+        formState,
+        dispatch,
+        dispatchFormStateChange
+      }}>
+      <form>{render({ dispatch, formState, dispatchFormStateChange })}</form>
     </ValidationContext.Provider>
   )
 }
