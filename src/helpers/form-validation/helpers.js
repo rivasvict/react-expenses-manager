@@ -55,6 +55,13 @@ const isModelValid = ({ values, validation }) => {
   return modelValidationMessages.length === 0 ? true : false;
 };
 
+const getDefaultValidationsObject = () => {
+  return {
+    customValidations: [],
+    buildInValidations: []
+  }
+}
+
 const BuildFormModel = (modelValues) => {
   if (!modelValues) {
     throw new Error('No values have been set for this form, please send them as an object parameter');
@@ -65,13 +72,6 @@ const BuildFormModel = (modelValues) => {
     validation: {},
     isModelValid: false
   };
-
-  const getDefaultValidationsObject = () => {
-    return {
-      customValidations: [],
-      buildInValidations: []
-    }
-  }
 
   const builder = {
     addCustomValidationToField: ({ fieldName, validation }) => {
