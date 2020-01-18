@@ -1,4 +1,4 @@
-import { SET_FORM_VALUE, SET_FORM_VALIDITY } from './actions';
+import { SET_FORM_VALUE } from './actions';
 import { isModelValid } from './helpers';
 
 const formReducer = (state, action) => {
