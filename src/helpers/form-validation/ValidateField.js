@@ -10,8 +10,7 @@ function ValidateField({ children, globalStyles = {}, labelStyles = {}}) {
     const { validation, values } = formState;
     const validationTypes = validation[childrenProps.name].buildInValidations;
     const customValidations = validation[childrenProps.name].customValidations;
-    const value = values[fieldName];
-    const { validationMessages, isFieldValid } = getValidationForField({ validationTypes, customValidations, value, fieldName });
+    const { validationMessages, isFieldValid } = getValidationForField({ validationTypes, customValidations, values, fieldName });
     const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label styles={labelStyles} key={index}>{validationMessage}</label>)
 
     return (

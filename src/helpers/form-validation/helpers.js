@@ -1,25 +1,33 @@
 const defaultValidationRules = {
-  required: ({ value, fieldName, message }) => () => {
+  required: ({ values, fieldName, message }) => {
+    const value = values[fieldName];
     const validationMessage = message || `${fieldName} is required, please insert it`;
     return !value.length ? validationMessage : '';
   },
-  email: ({ value, fieldName, message }) => () => {
+  match: ({ values, fieldName, message, comparatorFieldName }) => {
+    const value = values[fieldName];
+    const fieldValueToMatch = values[comparatorFieldName];
+    const validationMessage = message || `${fieldName}s do not match`;
+    return value === fieldValueToMatch ? '' : validationMessage;
+  },
+  email: ({ values, fieldName, message }) => {
+    const value = values[fieldName];
     const validationMessage = message || `${fieldName} has a wrong email format`;
     const emailPattern = /@/g;
     return value.match(emailPattern) ? validationMessage : '';
   }
 };
 
-const getValidationForField = ({ validationTypes = [], customValidations = [], value = '', fieldName = '' }) => {
-  const validationMessages = getFieldValidationMessages({ value, validation: { customValidations, buildInValidations: validationTypes }, fieldName});
+const getValidationForField = ({ validationTypes = [], customValidations = [], values = {}, fieldName = '' }) => {
+  const validationMessages = getFieldValidationMessages({ values, validation: { customValidations, buildInValidations: validationTypes }, fieldName});
   const isFieldValid = validationMessages.every(singleValidation => singleValidation === '');
 
   return { isFieldValid, validationMessages }
 };
 
-const getCustomValidationMessages = ({ value, validation }) => {
+const getCustomValidationMessages = ({ values, validation, fieldName }) => {
   return validation && validation.customValidations ? validation.customValidations.reduce((validationMessages, currentValidation) => {
-    const customValidationMessage = currentValidation(value);
+    const customValidationMessage = currentValidation({ values, fieldName });
 
     if (customValidationMessage !== '') {
       return [...validationMessages, customValidationMessage];
@@ -29,35 +37,38 @@ const getCustomValidationMessages = ({ value, validation }) => {
   }, []) : [];
 };
 
-const getBuiltInValidationMessages = ({ validation, value, fieldName }) => {
+const getBuiltInValidationMessages = ({ validation, values, fieldName }) => {
   return validation && validation.buildInValidations ? validation.buildInValidations.reduce((validationMessages, currentValidation) => {
-    const builtInValidationMessage = defaultValidationRules[currentValidation.name]({ value, fieldName, message: currentValidation.message })();
+    if (defaultValidationRules[currentValidation.name]) {
+      const builtInValidationMessage = defaultValidationRules[currentValidation.name]({ values, fieldName, message: currentValidation.message, comparatorFieldName: currentValidation.comparatorFieldName });
 
-    if (builtInValidationMessage !== '') {
-      return [...validationMessages, builtInValidationMessage];
+      if (builtInValidationMessage !== '') {
+        return [...validationMessages, builtInValidationMessage];
+      }
+
+      return validationMessages;
+    } else {
+      throw new Error(`Built in validation '${currentValidation.name}' for field: '${fieldName}' does not exist`);
     }
-
-    return validationMessages;
   }, []) : [];
 }
 
-const getFieldValidationMessages = ({ value, validation, fieldName }) => {
-  const builtInValidationMessages = getBuiltInValidationMessages({ value, validation, fieldName });
-  const customValidationMessages = getCustomValidationMessages({ value, validation })
+const getFieldValidationMessages = ({ values, validation, fieldName }) => {
+  const builtInValidationMessages = getBuiltInValidationMessages({ values, validation, fieldName });
+  const customValidationMessages = getCustomValidationMessages({ values, validation, fieldName })
   
   return [ ...builtInValidationMessages, ...customValidationMessages ];
 }
 
-const getModelValidationMessages = ({ value, validation, fieldName, modelValidationMessages }) => {
-  const fieldValidationMessages = getFieldValidationMessages({ value, validation, fieldName, modelValidationMessages });
+const getModelValidationMessages = ({ values, validation, fieldName, modelValidationMessages }) => {
+  const fieldValidationMessages = getFieldValidationMessages({ values, validation, fieldName, modelValidationMessages });
   return [ ...fieldValidationMessages, ...modelValidationMessages ];
 }
 
 const isModelValid = ({ values, validation }) => {
   let modelValidationMessages = [];
   for (let fieldName in values) {
-    const value = values[fieldName];
-    modelValidationMessages = getModelValidationMessages({ value, validation: validation[fieldName], fieldName, modelValidationMessages });
+    modelValidationMessages = getModelValidationMessages({ values, validation: validation[fieldName], fieldName, modelValidationMessages });
   }
 
   return modelValidationMessages.length === 0 ? true : false;
@@ -126,7 +137,7 @@ const BuildFormModel = (modelValues) => {
       model.isModelValid = validationInitialState;
 
       return model;
-    },
+    }
   }
 
   Object.setPrototypeOf(model, builder);
