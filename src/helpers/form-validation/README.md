@@ -1,6 +1,6 @@
 # WIP
 
-# Validation form component
+# Form validation component
 
 A simple way to use form validation with a model.
 
@@ -47,7 +47,7 @@ import { FormValidation, FormModel, ValidateField } from '../../helpers/form-val
           <ValidateField>
             <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
+          <br /><button type='submit' disabled={!formState.isModelValid} onClick={handleSubmit}>Submit</button>
           <button onClick={handleCancel}>Cancel</button>
         </React.Fragment>
       )

@@ -92,6 +92,7 @@ const BuildFormModel = (modelValues) => {
     isModelValid: false
   };
 
+  // TODO: Think about if abstracting these will pay off
   const builder = {
     addCustomValidationToField: ({ fieldName, validation }) => {
       const existingFieldValidation = model.validation[fieldName] || getDefaultValidationsObject();
