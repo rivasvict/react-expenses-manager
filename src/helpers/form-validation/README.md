@@ -14,7 +14,7 @@ Within the component you want to use validation in:
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/'
 ```
 
-1. Create the form model on your component
+2. Create the form model on your component
 
 ```javascript
   const userModel = FormModel({
@@ -30,7 +30,7 @@ import { FormValidation, FormModel, ValidateField } from '../../helpers/form-val
     .setModelInitialValidityState(false);
 ```
 
-2. Then you call form validation with 2 props:
+3. Then you call form validation with 2 props:
 
    * `formModel`: The form model you have previously created.
    * `render`: The render prop wrapper that will allow you to use your form as simple input fields. This also provides you with a function for dispatching changes to the form model we previously created and the form/model state.
