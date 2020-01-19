@@ -3,6 +3,7 @@ import { FormValidation, FormModel, ValidateField } from '../../helpers/form-val
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
+import _ from 'lodash';
 
 function SignUp(props) {
 
@@ -10,19 +11,21 @@ function SignUp(props) {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
+    'password-retype': ''
   })
-    .addCustomValidationToField({ fieldName: 'firstName', validation: (value) => value === '' ? 'First validation' : ''  })
-    .addCustomValidationsToField({ fieldName: 'firstName', validations: [(value) => value === '' ? 'Second validation' : '', (value) => value === '' ? 'Third validation' : ''] })
-    .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'A simple custom message' }})
-    .addBuiltInValidationsToField({ fieldName: 'firstName', validations: [{ name: 'required', message: 'A simple custom message' }, { name: 'required', message: 'A simple custom message' }]})
+    .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'First name is required' }})
+    .addBuiltInValidationToField({ fieldName: 'lastName', validation: { name: 'required', message: 'Last name is required' }})
+    .addBuiltInValidationToField({ fieldName: 'email', validation: { name: 'required', message: 'Email is required' }})
+    .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }})
+    .addBuiltInValidationsToField({ fieldName: 'password-retype', validations: [{ name: 'required', message: 'Password is required' }, { name: 'match', comparatorFieldName: 'password', message: 'Password fields should match' }]})
     .setModelInitialValidityState(false);
 
   const history = useHistory();
 
-  function handleSubmit(event) {
+  function handleSubmit({ event, values }) {
     event.preventDefault();
-    // props.onCreateUser(_.omit(formState, 'retype-password'));
+    props.onCreateUser(_.omit(values, 'password-retype'));
   };
 
   function handleChange({ event, dispatchFormStateChange }) {
@@ -39,20 +42,27 @@ function SignUp(props) {
     <FormValidation formModel={userModel} render={({ dispatchFormStateChange, formState }) => {
       return (
         <React.Fragment>
-          {formState.isModelValid ? 'VALID' : 'INVALID'}
           <label>First Name: </label>
           <ValidateField>
             <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
           <br /><label>Last Name: </label>
-          <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'lastName') ? <React.Fragment><br /><label>Last name is required</label></React.Fragment> : null}
-          <br /><label>Email: </label><input type='text' name='email' placeholder='Your email goes here'  onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'email') ? <React.Fragment><br /><label>Email is required</label></React.Fragment> : null}
-          <br /><label>Password: </label><input type='password' name='password' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
-          {props.validationErrors.find(validationError => validationError.path === 'password') ? <React.Fragment><br /><label>Password is required</label></React.Fragment> : null}
-          <br /><label>Retype password: </label><input type='password' name='password-retype' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange, formState })}></input>
-          <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={handleSubmit}>Submit</button>}
+          <ValidateField>
+            <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <br /><label>Email: </label>
+          <ValidateField>
+            <input type='text' name='email' placeholder='Your email goes here'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <br /><label>Password: </label>
+          <ValidateField>
+            <input type='password' name='password' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <br /><label>Retype password: </label>
+          <ValidateField>
+            <input type='password' name='password-retype' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>}
           <button onClick={handleCancel}>Cancel</button>
         </React.Fragment>
       )
