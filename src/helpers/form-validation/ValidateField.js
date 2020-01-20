@@ -7,14 +7,20 @@ function ValidateField({ children, globalStyles = {}, labelStyles = {}}) {
   try {
     const childrenProps = children.props;
     const fieldName = childrenProps.name;
-    const { validation, values } = formState;
-    const validationTypes = validation[childrenProps.name].buildInValidations;
-    const customValidations = validation[childrenProps.name].customValidations;
-    const { validationMessages, isFieldValid } = getValidationForField({ validationTypes, customValidations, values, fieldName });
-    const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label styles={labelStyles} key={index}>{validationMessage}</label>)
+    if (formState.validation[fieldName].shouldValidationUpdate) {
+      const { validation, values } = formState;
+      const validationTypes = validation[childrenProps.name].buildInValidations;
+      const customValidations = validation[childrenProps.name].customValidations;
+      const { validationMessages, isFieldValid } = getValidationForField({ validationTypes, customValidations, values, fieldName });
+      const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label styles={labelStyles} key={index}>{validationMessage}</label>)
+
+      return (
+        <div styles={globalStyles}>{children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
+      )
+    }
 
     return (
-      <div styles={globalStyles}>{children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
+      <div>{children}</div>
     )
   } catch(error) {
     console.log(error);

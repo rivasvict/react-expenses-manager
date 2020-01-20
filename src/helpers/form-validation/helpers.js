@@ -1,3 +1,4 @@
+// TODO: Move into a different file
 const defaultValidationRules = {
   required: ({ values, fieldName, message }) => {
     const value = values[fieldName];
@@ -9,12 +10,6 @@ const defaultValidationRules = {
     const fieldValueToMatch = values[comparatorFieldName];
     const validationMessage = message || `${fieldName}s do not match`;
     return value === fieldValueToMatch ? '' : validationMessage;
-  },
-  email: ({ values, fieldName, message }) => {
-    const value = values[fieldName];
-    const validationMessage = message || `${fieldName} has a wrong email format`;
-    const emailPattern = /@/g;
-    return value.match(emailPattern) ? validationMessage : '';
   }
 };
 
@@ -98,7 +93,8 @@ const BuildFormModel = (modelValues) => {
       const existingFieldValidation = model.validation[fieldName] || getDefaultValidationsObject();
       model.validation = {...model.validation, [fieldName]: {
           customValidations: [...existingFieldValidation.customValidations, validation],
-          buildInValidations: [...existingFieldValidation.buildInValidations]
+          buildInValidations: [...existingFieldValidation.buildInValidations],
+          shouldValidationUpdate: false
         },
       };
 
@@ -108,7 +104,8 @@ const BuildFormModel = (modelValues) => {
       const existingFieldValidation = model.validation[fieldName] || getDefaultValidationsObject();
       model.validation = {...model.validation, [fieldName]: {
           customValidations: [...existingFieldValidation.customValidations, ...validations],
-          buildInValidations: [...existingFieldValidation.buildInValidations]
+          buildInValidations: [...existingFieldValidation.buildInValidations],
+          shouldValidationUpdate: false
         },
       };
 
@@ -118,7 +115,8 @@ const BuildFormModel = (modelValues) => {
       const existingFieldValidation = model.validation[fieldName] || getDefaultValidationsObject();
       model.validation = {...model.validation, [fieldName]: {
           buildInValidations: [...existingFieldValidation.buildInValidations, validation],
-          customValidations: [...existingFieldValidation.customValidations]
+          customValidations: [...existingFieldValidation.customValidations],
+          shouldValidationUpdate: false
         },
       };
 
@@ -128,7 +126,8 @@ const BuildFormModel = (modelValues) => {
       const existingFieldValidation = model.validation[fieldName] || getDefaultValidationsObject();
       model.validation = {...model.validation, [fieldName]: {
           buildInValidations: [...existingFieldValidation.buildInValidations, ...validations],
-          customValidations: [...existingFieldValidation.customValidations]
+          customValidations: [...existingFieldValidation.customValidations],
+          shouldValidationUpdate: false
         },
       };
 
