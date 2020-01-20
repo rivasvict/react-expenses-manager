@@ -14,7 +14,14 @@ const formReducer = (state, action) => {
       return {
         ...state,
         values: newValues,
-        isModelValid: isModelValid({ validation: state.validation, values: newValues })
+        isModelValid: isModelValid({ validation: state.validation, values: newValues }),
+        validation: {
+          ...state.validation,
+          [name]: {
+            ...state.validation[name],
+            shouldValidationUpdate: true
+          }
+        }
       };
     default:
       return state
