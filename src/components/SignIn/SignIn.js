@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 
 function SignIn() {
   const history = useHistory();
-  const [state, setState] = useState({
+  const userModel = FormModel({
     username: '',
     password: ''
-  });
+  })
+    .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' }})
+    .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }});
 
-  function handleChange(event) {
+  function handleChange({ event, dispatchFormStateChange }) {
     const { name, value } = event.currentTarget;
-    setState({
-      ...state,
-      [name]: value
-    });
+    dispatchFormStateChange({ name, value });
   };
 
   function handleSubmit(event) {
@@ -25,14 +25,22 @@ function SignIn() {
   }
 
   return (
-    <form>
-      <label>Username: </label><input type='text' name='username' placeholder='First Name goes here' onChange={handleChange}></input><br />
-      {/*this.props.validationErrors.find(validationError => validationError.path === 'userName') ? <label>Username is required</label> : null*/}
-      <label>Password: </label><input type='password' name='password' placeholder='Type password' onChange={handleChange}></input><br />
-      {/*this.props.isLoading ? 'loading...' : <button type='submit' onClick={this.handleSubmit}>Submit</button>*/}
-      <button type='submit' onClick={handleSubmit}>Submit</button>
-      <button onClick={handleCancel}>Cancel</button>
-    </form>
+    <FormValidation formModel={userModel} render={({  dispatchFormStateChange, formState  }) => {
+      return (
+        <React.Fragment>
+          <label>Username: </label>
+          <ValidateField>
+            <input type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <label>Password: </label>
+          <ValidateField>
+            <input type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
+          </ValidateField>
+          <button type='submit' onClick={handleSubmit} disabled={!formState.isModelValid}>Submit</button>
+        </React.Fragment>
+      );
+    }} />
+
   );
 }
 
