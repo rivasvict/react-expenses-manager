@@ -3,7 +3,7 @@ import EntriesSummary from './EntriesSummary';
 import renderer from 'react-test-renderer';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import { getSumFromEntries } from '../helpers/entriesHelper';
+import { getSumFromEntries } from '../../../helpers/entriesHelper';
 
 // Mock the entriesHelper module
 jest.mock('../helpers/entriesHelper');
