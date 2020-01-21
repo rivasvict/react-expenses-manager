@@ -1,6 +1,9 @@
 export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
+export const USER_LOG_IN_LOADING = 'USER_LOG_IN_LOADING';
+export const USER_LOG_IN_ERROR = 'USER_LOG_IN_LOADING';
+export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_LOADING';
 
 const userCreationLoading = isUserCreationLoadingHappening => ({
   type: CREATE_USER_LOADING,
@@ -16,6 +19,21 @@ const hasUserBeenCreated = user => ({
   type: CREATE_USER_SUCCESS,
   payload: user
 });
+
+const userLoginLoading = isUserLoginLoadingHappening => ({
+  type: USER_LOG_IN_LOADING,
+  payload: { userLoginLoading: isUserLoginLoadingHappening }
+})
+
+const userLoginSuccess = user => ({
+  type: USER_LOG_IN_SUCCESS,
+  payload: user
+})
+
+const userLoginError = error => ({
+  type: USER_LOG_IN_ERROR,
+  payload: error
+})
 
 const CreateUser = history => (userPayload) => {
   return async (dispatch) => {
@@ -48,6 +66,11 @@ const CreateUser = history => (userPayload) => {
   }
 }
 
+const LogIn = history => (userPayload) => {
+  return async (dispatch) => {}
+};
+
 export const ActionCreators = history => ({
-  createUser: CreateUser(history)
+  createUser: CreateUser(history),
+  logIn: LogIn(history)
 });

@@ -5,32 +5,32 @@ import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 
-function SignUp(props) {
+const userModel = FormModel({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  'password-retype': ''
+})
+  .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'First name is required' }})
+  .addBuiltInValidationToField({ fieldName: 'lastName', validation: { name: 'required', message: 'Last name is required' }})
+  .addBuiltInValidationToField({ fieldName: 'email', validation: { name: 'required', message: 'Email is required' }})
+  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }})
+  .addBuiltInValidationsToField({ fieldName: 'password-retype', validations: [{ name: 'required', message: 'Password is required' }, { name: 'match', comparatorFieldName: 'password', message: 'Password fields should match' }]})
+  .setModelInitialValidityState(false);
 
-  const userModel = FormModel({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    'password-retype': ''
-  })
-    .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'First name is required' }})
-    .addBuiltInValidationToField({ fieldName: 'lastName', validation: { name: 'required', message: 'Last name is required' }})
-    .addBuiltInValidationToField({ fieldName: 'email', validation: { name: 'required', message: 'Email is required' }})
-    .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }})
-    .addBuiltInValidationsToField({ fieldName: 'password-retype', validations: [{ name: 'required', message: 'Password is required' }, { name: 'match', comparatorFieldName: 'password', message: 'Password fields should match' }]})
-    .setModelInitialValidityState(false);
+function handleChange({ event, dispatchFormStateChange }) {
+  const { name, value } = event.currentTarget;
+  dispatchFormStateChange({ name, value });
+};
+
+function SignUp(props) {
 
   const history = useHistory();
 
   function handleSubmit({ event, values }) {
     event.preventDefault();
     props.onCreateUser(_.omit(values, 'password-retype'));
-  };
-
-  function handleChange({ event, dispatchFormStateChange }) {
-    const { name, value } = event.currentTarget;
-    dispatchFormStateChange({ name, value });
   };
 
   function handleCancel(event) {
