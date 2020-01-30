@@ -67,7 +67,34 @@ const CreateUser = history => (userPayload) => {
 }
 
 const LogIn = history => (userPayload) => {
-  return async (dispatch) => {}
+  return async (dispatch) => {
+    try {
+      const baseUrl = process.env.REACT_APP_API_URL;
+      const url = `${baseUrl}/api/user/login`;
+      const body = JSON.stringify({ user: userPayload });
+      dispatch(userLoginLoading(true));
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body
+      });
+      const response = await rawResponse.json()
+      if (!rawResponse.ok) {
+        dispatch(userLoginLoading(false));
+        throw response;
+      }
+
+      dispatch(userLoginLoading(false));
+      dispatch(userLoginSuccess(userPayload));
+      // TODO: Change this to be a responsibility
+      // of either the component that dispatches
+      // this action or <Redirect> component of
+      // React router
+      history.push('/');
+    } catch (error) {
+      dispatch(userLoginError(error));
+    }
+  }
 };
 
 export const ActionCreators = history => ({

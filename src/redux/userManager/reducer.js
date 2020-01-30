@@ -1,4 +1,4 @@
-import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, CREATE_USER_LOADING } from "./actions";
+import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, CREATE_USER_LOADING, USER_LOG_IN_LOADING, USER_LOG_IN_ERROR, USER_LOG_IN_SUCCESS } from "./actions";
 const defaultState = { user: {}, validationErrors: { validation: [] }, isLoading: false, error: null }
 
 const handleError = (error, state) => {
@@ -27,6 +27,16 @@ export const reducer = (state = defaultState, action) => {
       user: payload.user
     };
     case CREATE_USER_LOADING: return {
+      ...state,
+      isLoading: payload.isLoading
+    };
+    //TODO: REVISIT USER_LOG_IN REDUCERS
+    case USER_LOG_IN_ERROR: return handleError(payload, state);
+    case USER_LOG_IN_SUCCESS: return {
+      ...state,
+      user: payload.user
+    }
+    case USER_LOG_IN_LOADING: return {
       ...state,
       isLoading: payload.isLoading
     };
