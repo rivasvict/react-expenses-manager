@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/'
 import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
@@ -24,13 +24,19 @@ function handleChange({ event, dispatchFormStateChange }) {
   dispatchFormStateChange({ name, value });
 };
 
-function SignUp(props) {
+function SignUp({ isLoading, userCreated, onCreateUser }) {
 
   const history = useHistory();
 
+  useEffect(() => {
+    if (userCreated) {
+      history.push('/');
+    }
+  });
+
   function handleSubmit({ event, values }) {
     event.preventDefault();
-    props.onCreateUser(_.omit(values, 'password-retype'));
+    onCreateUser(_.omit(values, 'password-retype'));
   };
 
   function handleCancel(event) {
@@ -62,7 +68,7 @@ function SignUp(props) {
           <ValidateField>
             <input type='password' name='password-retype' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          <br />{props.isLoading ? 'loading...' : <button type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>}
+          <br />{isLoading ? 'loading...' : <button type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>}
           <button onClick={handleCancel}>Cancel</button>
         </React.Fragment>
       )
@@ -72,7 +78,8 @@ function SignUp(props) {
 
 const mapStateToPros = state => ({
   isLoading: state.userManager.isLoading,
-  validationErrors: state.userManager.validationErrors.validation
+  validationErrors: state.userManager.validationErrors.validation,
+  userCreated: state.userManager.userCreated
 });
 
 const mapActionsToProps = dispatch => ({

@@ -35,7 +35,7 @@ const userLoginError = error => ({
   payload: error
 })
 
-const CreateUser = history => (userPayload) => {
+const CreateUser = () => (userPayload) => {
   return async (dispatch) => {
     try {
       const baseUrl = process.env.REACT_APP_API_URL;
@@ -54,19 +54,15 @@ const CreateUser = history => (userPayload) => {
       }
 
       dispatch(userCreationLoading(false));
-      dispatch(hasUserBeenCreated(response));
-      // TODO: Change this to be a responsibility
-      // of either the component that dispatches
-      // this action or <Redirect> component of
-      // React router
-      history.push('/');
+      dispatch(hasUserBeenCreated(true));
+      dispatch(hasUserBeenCreated(false));
     } catch (error) {
       dispatch(userCreationFail(error));
     }
   }
 }
 
-const LogIn = history => (userPayload) => {
+const LogIn = () => (userPayload) => {
   return async (dispatch) => {
     try {
       const baseUrl = process.env.REACT_APP_API_URL;
@@ -86,18 +82,13 @@ const LogIn = history => (userPayload) => {
 
       dispatch(userLoginLoading(false));
       dispatch(userLoginSuccess(response));
-      // TODO: Change this to be a responsibility
-      // of either the component that dispatches
-      // this action or <Redirect> component of
-      // React router
-      history.push('/');
     } catch (error) {
       dispatch(userLoginError(error));
     }
   }
 };
 
-export const ActionCreators = history => ({
-  createUser: CreateUser(history),
-  logIn: LogIn(history)
+export const ActionCreators = () => ({
+  createUser: CreateUser(),
+  logIn: LogIn()
 });
