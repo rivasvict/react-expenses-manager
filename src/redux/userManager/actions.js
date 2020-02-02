@@ -2,8 +2,8 @@ export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
 export const USER_LOG_IN_LOADING = 'USER_LOG_IN_LOADING';
-export const USER_LOG_IN_ERROR = 'USER_LOG_IN_LOADING';
-export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_LOADING';
+export const USER_LOG_IN_ERROR = 'USER_LOG_IN_ERROR';
+export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 
 const userCreationLoading = isUserCreationLoadingHappening => ({
   type: CREATE_USER_LOADING,
@@ -54,7 +54,7 @@ const CreateUser = history => (userPayload) => {
       }
 
       dispatch(userCreationLoading(false));
-      dispatch(hasUserBeenCreated(userPayload));
+      dispatch(hasUserBeenCreated(response));
       // TODO: Change this to be a responsibility
       // of either the component that dispatches
       // this action or <Redirect> component of
@@ -85,7 +85,7 @@ const LogIn = history => (userPayload) => {
       }
 
       dispatch(userLoginLoading(false));
-      dispatch(userLoginSuccess(userPayload));
+      dispatch(userLoginSuccess(response));
       // TODO: Change this to be a responsibility
       // of either the component that dispatches
       // this action or <Redirect> component of
