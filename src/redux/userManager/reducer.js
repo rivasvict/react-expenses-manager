@@ -1,5 +1,5 @@
 import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, CREATE_USER_LOADING, USER_LOG_IN_LOADING, USER_LOG_IN_ERROR, USER_LOG_IN_SUCCESS } from "./actions";
-const defaultState = { user: {}, token: null, validationErrors: { validation: [] }, isLoading: false, error: null }
+const defaultState = { user: {}, token: null, validationErrors: { validation: [] }, isLoading: false, error: null, userCreated: false }
 
 const handleError = (error, state) => {
   if (error && error.name === 'ValidationError') {
@@ -24,7 +24,7 @@ export const reducer = (state = defaultState, action) => {
     case CREATE_USER_ERROR: return handleError(payload, state);
     case CREATE_USER_SUCCESS: return {
       ...state,
-      user: payload.user
+      userCreated: payload
     };
     case CREATE_USER_LOADING: return {
       ...state,

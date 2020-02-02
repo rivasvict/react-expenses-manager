@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
@@ -29,11 +29,16 @@ function SignIn({ onLogIn, user }) {
     history.push('/');
   }
 
+  useEffect(() => {
+    if (user && user._id) {
+      history.push('/');
+    }
+  });
+
   return (
     <FormValidation formModel={userModel} render={({  dispatchFormStateChange, formState  }) => {
       return (
         <React.Fragment>
-          <div>{user._id}</div>
           <label>Username: </label>
           <ValidateField>
             <input type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
