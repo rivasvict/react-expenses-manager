@@ -35,6 +35,11 @@ const userLoginError = error => ({
   payload: error
 })
 
+const notifyUserCreation = dispatch => {
+  dispatch(hasUserBeenCreated(true));
+  dispatch(hasUserBeenCreated(false));
+};
+
 const CreateUser = () => (userPayload) => {
   return async (dispatch) => {
     try {
@@ -54,8 +59,7 @@ const CreateUser = () => (userPayload) => {
       }
 
       dispatch(userCreationLoading(false));
-      dispatch(hasUserBeenCreated(true));
-      dispatch(hasUserBeenCreated(false));
+      notifyUserCreation(dispatch);
     } catch (error) {
       dispatch(userCreationFail(error));
     }
