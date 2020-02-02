@@ -21,10 +21,11 @@ const userModel = FormModel({
   .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' }})
   .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }});
 
-function SignIn(props) {
+function SignIn({ onLogIn, user }) {
   const history = useHistory();
 
-  function handleCancel() {
+  function handleCancel(event) {
+    event.preventDefault();
     history.push('/');
   }
 
@@ -32,6 +33,7 @@ function SignIn(props) {
     <FormValidation formModel={userModel} render={({  dispatchFormStateChange, formState  }) => {
       return (
         <React.Fragment>
+          <div>{user._id}</div>
           <label>Username: </label>
           <ValidateField>
             <input type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
@@ -40,7 +42,8 @@ function SignIn(props) {
           <ValidateField>
             <input type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn: props.onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>
+          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>
+          <button onClick={(event) => handleCancel(event)}>Cancel</button>
         </React.Fragment>
       );
     }} />
@@ -48,7 +51,9 @@ function SignIn(props) {
   );
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  user: state.userManager.user
+});
 
 const mapActionsToProps = dispatch => ({
   onLogIn: userPayload => dispatch(logIn(userPayload))
