@@ -6,7 +6,7 @@ import AddEntry from '../common/AddEntry/AddEntry';
 import Summary from '../../components/common/Summaries/Summary';
 import EntrySummaryWithFilter from '../common/Summaries/EntrySummaryWithFilter'
 
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 
 const dasahboardStyle = {
   display: 'flex',
@@ -16,7 +16,9 @@ const dasahboardStyle = {
   height: '100vh'
 };
 
-function Dashboard({ entries, match }) {
+function Dashboard({ entries }) {
+  const match = useRouteMatch();
+
   return (
     <div style={dasahboardStyle}>
       <Switch>

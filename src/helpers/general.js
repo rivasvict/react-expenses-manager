@@ -5,6 +5,11 @@ function calculateTotal(...numbersToSum) {
   }, 0) || 0;
 }
 
+function isUserLoggedIn () {
+  return localStorage.getItem('user');
+};
+
 export {
-  calculateTotal
+  calculateTotal,
+  isUserLoggedIn
 };
