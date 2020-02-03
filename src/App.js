@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import Lobby from './components/Lobby';
 import SignUp from './components/SignUp/SignUp'
 import SignIn from './components/SignIn/SignIn'
+import PrivateRoute from './components/common/PrivateRoute';
 
 function App({ reduxStore }) {
   return (
@@ -12,7 +13,9 @@ function App({ reduxStore }) {
       <Router>
         <Switch>
           <Route path='/' component={Lobby} exact />
-          <Route path='/expenses-manager' component={Dashboard} />
+          <PrivateRoute path='/expenses-manager'>
+            <Dashboard />
+          </PrivateRoute>
           <Route path='/sign-up' component={SignUp} exact />
           <Route path='/sign-in' component={SignIn} exact />
         </Switch>

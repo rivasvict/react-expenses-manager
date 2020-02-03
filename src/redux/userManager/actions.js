@@ -84,6 +84,7 @@ const LogIn = () => (userPayload) => {
         throw response;
       }
 
+      localStorage.setItem('user', response.user.email);
       dispatch(userLoginLoading(false));
       dispatch(userLoginSuccess(response));
     } catch (error) {
