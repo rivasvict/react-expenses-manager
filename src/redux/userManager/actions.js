@@ -1,3 +1,5 @@
+import { setObjectToSessionStorage } from "../../helpers/general";
+
 export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -66,6 +68,18 @@ const CreateUser = () => (userPayload) => {
   }
 }
 
+const setUserLocally = ({ dispatch, rawResponse, response }) => {
+  //TODO: THIS OBJECT SHOULD ONLY SAVE THE EMAIL
+  setObjectToSessionStorage(response);
+  if (!rawResponse.ok) {
+    dispatch(userLoginLoading(false));
+    throw response;
+  }
+
+  dispatch(userLoginLoading(false));
+  dispatch(userLoginSuccess(response));
+};
+
 const LogIn = () => (userPayload) => {
   return async (dispatch) => {
     try {
@@ -76,24 +90,39 @@ const LogIn = () => (userPayload) => {
       const rawResponse = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body
       });
       const response = await rawResponse.json()
-      if (!rawResponse.ok) {
-        dispatch(userLoginLoading(false));
-        throw response;
-      }
 
-      localStorage.setItem('user', response.user.email);
-      dispatch(userLoginLoading(false));
-      dispatch(userLoginSuccess(response));
+      setUserLocally({ dispatch, rawResponse, response });
     } catch (error) {
       dispatch(userLoginError(error));
     }
   }
 };
 
+const SetUser = () => () => {
+  return async (dispatch) => {
+    try {
+      const email = sessionStorage.getItem('email');
+      const baseUrl = process.env.REACT_APP_API_URL;
+      const url = `${baseUrl}/api/user/get/${email}`;
+      dispatch(userLoginLoading(true));
+      const rawResponse = await fetch(url, {
+        credentials: 'include'
+      });
+      const response = await rawResponse.json()
+
+      setUserLocally({ dispatch, rawResponse, response });
+    } catch (error) {
+      dispatch(userLoginError(error));
+    }
+  };
+};
+
 export const ActionCreators = () => ({
   createUser: CreateUser(),
-  logIn: LogIn()
+  logIn: LogIn(),
+  setUser: SetUser()
 });
