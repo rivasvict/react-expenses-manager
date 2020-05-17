@@ -1,14 +1,28 @@
 import React from 'react';
-import { isUserLoggedIn } from '../../helpers/general';
 import { Redirect, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setUser } from '../../redux/userManager/actoionCreators';
 
-function PrivateRoute ({ children, ...res }) {
+function PrivateRoute ({ user, onSetUser, children, ...res }) {
+  const RedirectToDefault = () => {
+    onSetUser();
+    return <Redirect to={{ pathname: 'sign-in' }} />;
+  };
+
   return (
     <Route
       {...res}
-      render={() => isUserLoggedIn() ? children : <Redirect to={{ pathname: 'sign-in' }} />}
+      render={() => user.email ? children : <RedirectToDefault />}
     />
   );
 }
 
-export default PrivateRoute;
+const mapSateToProps = state => ({
+  user: state.userManager.user
+});
+
+const mapActionToProps = dispacth => ({
+  onSetUser: () => dispacth(setUser())
+})
+
+export default connect(mapSateToProps, mapActionToProps)(PrivateRoute);
