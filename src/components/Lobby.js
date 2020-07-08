@@ -1,15 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { isUserLoggedIn } from '../helpers/general';
+import { connect } from 'react-redux';
 
-function Lobby() {
+function Lobby({ user }) {
+  const isThereAnyUser = () => user && user.email;
+
   return (
     <div>
-      { isUserLoggedIn() ? <Link to='/expenses-manager'>Dashboard</Link> : null }
-      { !isUserLoggedIn() ? <Link to='/sign-up'>Sign up</Link> : null }
-      { !isUserLoggedIn() ? <Link to='/sign-in'>Sign in</Link> : null }
+      { isThereAnyUser() ? <Link to='/expenses-manager'>Dashboard</Link> : null }
+      { !isThereAnyUser() ? <Link to='/sign-up'>Sign up</Link> : null }
+      { !isThereAnyUser() ? <Link to='/sign-in'>Sign in</Link> : null }
     </div>
   )
 }
 
-export default Lobby;
+const mapStateToProps = state => ({
+  user: state.userManager.user
+});
+
+export default connect(mapStateToProps)(Lobby);

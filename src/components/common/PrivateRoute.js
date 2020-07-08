@@ -3,22 +3,32 @@ import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setUser } from '../../redux/userManager/actoionCreators';
 
-function PrivateRoute ({ user, onSetUser, children, ...res }) {
+function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
   const RedirectToDefault = () => {
-    onSetUser();
     return <Redirect to={{ pathname: 'sign-in' }} />;
+  };
+
+  const render = () => {
+    if (user.isLoading) {
+      return <div>Loading...</div>
+    } else if (user.email) {
+      return children;
+    }
+
+    return RedirectToDefault();
   };
 
   return (
     <Route
       {...res}
-      render={() => user.email ? children : <RedirectToDefault />}
+      render={render}
     />
   );
 }
 
 const mapSateToProps = state => ({
-  user: state.userManager.user
+  user: state.userManager.user,
+  isLoading: state.userManager.isLoading
 });
 
 const mapActionToProps = dispacth => ({

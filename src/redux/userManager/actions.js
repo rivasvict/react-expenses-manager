@@ -1,16 +1,11 @@
 import { setObjectToSessionStorage } from "../../helpers/general";
 
-export const CREATE_USER_LOADING = 'CREATE_USER_LOADING';
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
-export const USER_LOG_IN_LOADING = 'USER_LOG_IN_LOADING';
+export const SET_APP_LOADING = 'SET_APP_LOADING';
 export const USER_LOG_IN_ERROR = 'USER_LOG_IN_ERROR';
 export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
-
-const userCreationLoading = isUserCreationLoadingHappening => ({
-  type: CREATE_USER_LOADING,
-  payload: { userCreationLoading: isUserCreationLoadingHappening }
-})
+export const SET_USER_LOADING = 'SET_USER_LOADING';
 
 const userCreationFail = error => ({
   type: CREATE_USER_ERROR,
@@ -22,9 +17,14 @@ const hasUserBeenCreated = user => ({
   payload: user
 });
 
-const userLoginLoading = isUserLoginLoadingHappening => ({
-  type: USER_LOG_IN_LOADING,
-  payload: { userLoginLoading: isUserLoginLoadingHappening }
+const setUserLoading = isUserLoading => ({
+  type: SET_USER_LOADING,
+  payload: { isUserLoading }
+});
+
+const setAppLoading = isLoading => ({
+  type: SET_APP_LOADING,
+  payload: { isLoading: isLoading }
 })
 
 const userLoginSuccess = user => ({
@@ -48,7 +48,7 @@ const CreateUser = () => (userPayload) => {
       const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/sign-up`;
       const body = JSON.stringify({ user: userPayload });
-      dispatch(userCreationLoading(true));
+      dispatch(setAppLoading(true));
       const rawResponse = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,11 +56,11 @@ const CreateUser = () => (userPayload) => {
       });
       const response = await rawResponse.json()
       if (!rawResponse.ok) {
-        dispatch(userCreationLoading(false));
+        dispatch(setAppLoading(false));
         throw response;
       }
 
-      dispatch(userCreationLoading(false));
+      dispatch(setAppLoading(false));
       notifyUserCreation(dispatch);
     } catch (error) {
       dispatch(userCreationFail(error));
@@ -72,12 +72,15 @@ const setUserLocally = ({ dispatch, rawResponse, response }) => {
   //TODO: THIS OBJECT SHOULD ONLY SAVE THE EMAIL
   setObjectToSessionStorage(response);
   if (!rawResponse.ok) {
-    dispatch(userLoginLoading(false));
+    dispatch(setAppLoading(false));
+    dispatch(setUserLoading(false));
     throw response;
   }
 
-  dispatch(userLoginLoading(false));
   dispatch(userLoginSuccess(response));
+  //CHECK THE NEW WAY WE ARE SETTING this, IT IS NOT WORKING PROPERLY IT IS GENERATING AN INFINITE LOOP
+  dispatch(setAppLoading(false));
+  dispatch(setUserLoading(false));
 };
 
 const LogIn = () => (userPayload) => {
@@ -86,7 +89,8 @@ const LogIn = () => (userPayload) => {
       const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/login`;
       const body = JSON.stringify({ user: userPayload });
-      dispatch(userLoginLoading(true));
+      dispatch(setAppLoading(true));
+      dispatch(setUserLoading(true));
       const rawResponse = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -106,15 +110,18 @@ const SetUser = () => () => {
   return async (dispatch) => {
     try {
       const email = sessionStorage.getItem('email');
-      const baseUrl = process.env.REACT_APP_API_URL;
-      const url = `${baseUrl}/api/user/get/${email}`;
-      dispatch(userLoginLoading(true));
-      const rawResponse = await fetch(url, {
-        credentials: 'include'
-      });
-      const response = await rawResponse.json()
+      if (email) {
+        const baseUrl = process.env.REACT_APP_API_URL;
+        const url = `${baseUrl}/api/user/get/${email}`;
+        dispatch(setUserLoading(true));
+        dispatch(setAppLoading(true));
+        const rawResponse = await fetch(url, {
+          credentials: 'include'
+        });
+        const response = await rawResponse.json()
 
-      setUserLocally({ dispatch, rawResponse, response });
+        setUserLocally({ dispatch, rawResponse, response });
+      }
     } catch (error) {
       dispatch(userLoginError(error));
     }
