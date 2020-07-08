@@ -5,10 +5,6 @@ function calculateTotal(...numbersToSum) {
   }, 0) || 0;
 }
 
-function isUserLoggedIn () {
-  return sessionStorage.getItem('user');
-};
-
 function setObjectToSessionStorage(objectToSet) {
   const receivedType = typeof objectToSet;
   if (receivedType === 'object') {
@@ -22,6 +18,5 @@ function setObjectToSessionStorage(objectToSet) {
 
 export {
   calculateTotal,
-  isUserLoggedIn,
   setObjectToSessionStorage
 };

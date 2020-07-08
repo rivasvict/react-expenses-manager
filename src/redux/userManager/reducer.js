@@ -1,9 +1,10 @@
-import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, CREATE_USER_LOADING, USER_LOG_IN_LOADING, USER_LOG_IN_ERROR, USER_LOG_IN_SUCCESS } from "./actions";
+import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, SET_APP_LOADING, USER_LOG_IN_ERROR, USER_LOG_IN_SUCCESS, SET_USER_LOADING } from "./actions";
 const defaultState = {
   user: {
     email: null,
     firstName: null,
-    lastName: null
+    lastName: null,
+    isLoading: false
   },
   token: null,
   validationErrors: {
@@ -40,17 +41,23 @@ export const reducer = (state = defaultState, action) => {
       ...state,
       userCreated: payload
     };
-    case CREATE_USER_LOADING: return {
+    case SET_USER_LOADING: return {
       ...state,
-      isLoading: payload.isLoading
-    };
+      user: {
+        ...state.user,
+        isLoading: payload.isUserLoading
+      }
+    }
     //TODO: REVISIT USER_LOG_IN REDUCERS
     case USER_LOG_IN_ERROR: return handleError(payload, state);
     case USER_LOG_IN_SUCCESS: return {
       ...state,
-      user: payload
+      user: {
+        ...state.user,
+        ...payload
+      }
     }
-    case USER_LOG_IN_LOADING: return {
+    case SET_APP_LOADING: return {
       ...state,
       isLoading: payload.isLoading
     };
