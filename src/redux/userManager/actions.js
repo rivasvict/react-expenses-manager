@@ -6,6 +6,7 @@ export const SET_APP_LOADING = 'SET_APP_LOADING';
 export const USER_LOG_IN_ERROR = 'USER_LOG_IN_ERROR';
 export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 export const SET_USER_LOADING = 'SET_USER_LOADING';
+const baseUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`
 
 const userCreationFail = error => ({
   type: CREATE_USER_ERROR,
@@ -45,7 +46,6 @@ const notifyUserCreation = dispatch => {
 const CreateUser = () => (userPayload) => {
   return async (dispatch) => {
     try {
-      const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/sign-up`;
       const body = JSON.stringify({ user: userPayload });
       dispatch(setAppLoading(true));
@@ -86,7 +86,6 @@ const setUserLocally = ({ dispatch, rawResponse, response }) => {
 const LogIn = () => (userPayload) => {
   return async (dispatch) => {
     try {
-      const baseUrl = process.env.REACT_APP_API_URL;
       const url = `${baseUrl}/api/user/login`;
       const body = JSON.stringify({ user: userPayload });
       dispatch(setAppLoading(true));
@@ -111,7 +110,6 @@ const SetUser = () => () => {
     try {
       const email = sessionStorage.getItem('email');
       if (email) {
-        const baseUrl = process.env.REACT_APP_API_URL;
         const url = `${baseUrl}/api/user/get/${email}`;
         dispatch(setUserLoading(true));
         dispatch(setAppLoading(true));
