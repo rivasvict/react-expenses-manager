@@ -17,16 +17,18 @@ function Lobby({ user }) {
 
   return (
     <Container className='Lobby'>
-      <Row>
-        {
-          !isThereAnyUser() ?
-            <Col>
-              <SignIn />
-              <Link className='btn btn-secondary' to='/sign-up'>Sign up</Link>
-            </Col>
-            : null
-        }
-      </Row>
+      {
+        !isThereAnyUser() ?
+          <React.Fragment>
+            <SignIn />
+            <Row>
+              <Col xs={12}>
+                <Link className='btn btn-primary btn-block vertical-standard-space' to='/sign-up'>Sign up</Link>
+              </Col>
+            </Row>
+          </React.Fragment>
+          : null
+      }
     </Container>
   )
 }

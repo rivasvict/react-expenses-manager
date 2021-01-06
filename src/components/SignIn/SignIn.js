@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
@@ -34,19 +34,21 @@ function SignIn({ onLogIn, user }) {
   return (
     <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (
-        <React.Fragment>
-          <Form.Group>
-            <ValidateField>
-              <Form.Control type='text' className='text' name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-            </ValidateField>
-          </Form.Group>
-          <Form.Group>
-            <ValidateField>
-              <Form.Control type='password' className='text' name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-            </ValidateField>
-          </Form.Group>
-          <Button type='submit' variant='primary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</Button>
-        </React.Fragment>
+        <Row>
+          <Col xs={12}>
+            <Form.Group>
+              <ValidateField>
+                <Form.Control type='text' className='text' name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <Form.Control type='password' className='text' name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Button block type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</Button>
+          </Col>
+        </Row>
       );
     }} />
 
