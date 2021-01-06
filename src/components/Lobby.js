@@ -22,7 +22,7 @@ function Lobby({ user }) {
           !isThereAnyUser() ?
             <Col>
               <SignIn />
-              <Link to='/sign-up'>Sign up</Link>
+              <Link className='btn btn-secondary' to='/sign-up'>Sign up</Link>
             </Col>
             : null
         }
