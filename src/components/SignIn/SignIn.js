@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
+import { Button, Form } from 'react-bootstrap';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
@@ -18,8 +19,8 @@ const userModel = FormModel({
   username: '',
   password: ''
 })
-  .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' }})
-  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }});
+  .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' } })
+  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } });
 
 function SignIn({ onLogIn, user }) {
   const history = useHistory();
@@ -31,18 +32,22 @@ function SignIn({ onLogIn, user }) {
   });
 
   return (
-    <FormValidation formModel={userModel} render={({  dispatchFormStateChange, formState  }) => {
+    <FormValidation formModel={userModel} CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (
         <React.Fragment>
-          <label>Username: </label>
-          <ValidateField>
-            <input type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <label>Password: </label>
-          <ValidateField>
-            <input type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</button>
+          <Form.Group>
+            <Form.Label>Username: </Form.Label>
+            <ValidateField>
+              <Form.Control type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+            </ValidateField>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Password: </Form.Label>
+            <ValidateField>
+              <Form.Control type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+            </ValidateField>
+          </Form.Group>
+          <Button type='submit' variant='primary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</Button>
         </React.Fragment>
       );
     }} />

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SignIn from './SignIn/SignIn';
+import { Col, Container, Row } from 'react-bootstrap';
+import './Lobby.scss';
 
 function Lobby({ user }) {
   const isThereAnyUser = () => user && user.email;
@@ -9,21 +11,23 @@ function Lobby({ user }) {
 
   useState(() => {
     if (isThereAnyUser()) {
-      history.push('/dashboard');      
+      history.push('/dashboard');
     }
   })
 
   return (
-    <div>
-      {
-        !isThereAnyUser() ?
-          <section>
-            <SignIn />
-            <Link to='/sign-up'>Sign up</Link>
-          </section>
-          : null
-      }
-    </div>
+    <Container className='Lobby'>
+      <Row>
+        {
+          !isThereAnyUser() ?
+            <Col>
+              <SignIn />
+              <Link to='/sign-up'>Sign up</Link>
+            </Col>
+            : null
+        }
+      </Row>
+    </Container>
   )
 }
 

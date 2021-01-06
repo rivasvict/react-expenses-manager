@@ -4,6 +4,7 @@ import './index.scss';
 import { setupStore } from './redux/store';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const reduxStore = setupStore();
 
