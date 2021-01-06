@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { getValidationForField } from './helpers';
 import { ValidationContext } from './FormValidation';
 
-function ValidateField({ children, globalStyles = {}, labelStyles = {}}) {
+function ValidateField({ children, globalStyles = {}, labelStyles = {}, className = 'validation-message'}) {
   const { formState } = useContext(ValidationContext);
   try {
     const childrenProps = children.props;
@@ -15,7 +15,7 @@ function ValidateField({ children, globalStyles = {}, labelStyles = {}}) {
       const validationMessagesWithTemplate = validationMessages.map((validationMessage, index) => <label styles={labelStyles} key={index}>{validationMessage}</label>)
 
       return (
-        <div styles={globalStyles}>{children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
+        <div className={className} style={globalStyles}>{children}{isFieldValid ? null : validationMessagesWithTemplate}</div>
       )
     }
 
