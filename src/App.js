@@ -24,7 +24,6 @@ const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) 
   const PublicRoutes = () => (
     <>
       <Route path='/sign-up' component={SignUp} exact />
-      <Route path='/sign-in' component={SignIn} exact />
       <Route path='/' component={Lobby} exact />
     </>
   );
