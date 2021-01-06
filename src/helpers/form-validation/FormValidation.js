@@ -5,7 +5,7 @@ const ValidationContext = React.createContext();
 
 const getFormStateChangeDispatcher = (dispatch) => ({ name, value }) => dispatch(setFormValue({ name, value }));
 
-function FormValidation({ render, formModel, CustomFormComponent = null }) {
+function FormValidation({ render, formModel, className = '', CustomFormComponent = null }) {
   const [ formState, dispatch ] = useReducer(validationReducer, formModel);
   const dispatchFormStateChange = getFormStateChangeDispatcher(dispatch)
 
@@ -17,8 +17,8 @@ function FormValidation({ render, formModel, CustomFormComponent = null }) {
         dispatchFormStateChange
       }}>
       {CustomFormComponent ?
-        <CustomFormComponent>{render({ dispatch, formState, dispatchFormStateChange })}</CustomFormComponent> :
-        <form>{render({ dispatch, formState, dispatchFormStateChange })}</form>
+        <CustomFormComponent className={className}>{render({ dispatch, formState, dispatchFormStateChange })}</CustomFormComponent> :
+        <form className={className}>{render({ dispatch, formState, dispatchFormStateChange })}</form>
       }
     </ValidationContext.Provider>
   )

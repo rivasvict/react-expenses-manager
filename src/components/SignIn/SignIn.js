@@ -32,7 +32,7 @@ function SignIn({ onLogIn, user }) {
   });
 
   return (
-    <FormValidation formModel={userModel} CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+    <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (
         <React.Fragment>
           <Form.Group>
