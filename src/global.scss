@@ -1,7 +1,7 @@
 @import './variables.scss';
 
 $form-radius: 0.526rem;
-$vertical-standard-margin: 1rem;
+$vertical-standard-margin: 0.925rem;
 
 @mixin button-like-style {
   font-size: 0.8125em;
@@ -14,6 +14,10 @@ $vertical-standard-margin: 1rem;
   display: flex;
   flex-flow: column wrap;
 
+  .form-group {
+    margin-bottom: $vertical-standard-margin;
+  }
+
   .form-control.text {
     border-radius: $form-radius;
     height: 2.312rem;
@@ -23,6 +27,10 @@ $vertical-standard-margin: 1rem;
 
   .form-control.text::placeholder {
     color: $color_dark_2;
+  }
+
+  .btn.btn-secondary {
+    margin-top: 1.51rem;
   }
 }
 
