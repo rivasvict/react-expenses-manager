@@ -36,15 +36,13 @@ function SignIn({ onLogIn, user }) {
       return (
         <React.Fragment>
           <Form.Group>
-            <Form.Label>Username: </Form.Label>
             <ValidateField>
-              <Form.Control type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              <Form.Control type='text' className='text' name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
             </ValidateField>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Password: </Form.Label>
             <ValidateField>
-              <Form.Control type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              <Form.Control type='password' className='text' name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
             </ValidateField>
           </Form.Group>
           <Button type='submit' variant='primary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</Button>
