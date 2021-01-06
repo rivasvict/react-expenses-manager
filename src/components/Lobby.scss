@@ -1,4 +1,6 @@
+@import '../variables.scss';
+
 .Lobby {
-  background-color: #0B1017;
+  background-color: $color_dark_1;
   height: 100vh;
 }
