@@ -24,14 +24,9 @@ const userModel = FormModel({
 function SignIn({ onLogIn, user }) {
   const history = useHistory();
 
-  function handleCancel(event) {
-    event.preventDefault();
-    history.push('/');
-  }
-
   useEffect(() => {
     if (user && user._id) {
-      history.push('/');
+      history.push('/dashboard');
     }
   });
 
@@ -47,8 +42,7 @@ function SignIn({ onLogIn, user }) {
           <ValidateField>
             <input type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
           </ValidateField>
-          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>
-          <button onClick={(event) => handleCancel(event)}>Cancel</button>
+          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</button>
         </React.Fragment>
       );
     }} />

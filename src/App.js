@@ -4,7 +4,6 @@ import Dashboard from './components/Dashboard/Dashboard';
 import { Provider, connect } from 'react-redux';
 import Lobby from './components/Lobby';
 import SignUp from './components/SignUp/SignUp'
-import SignIn from './components/SignIn/SignIn'
 import PrivateRoute from './components/common/PrivateRoute';
 import { setUser } from './redux/userManager/actoionCreators';
 
@@ -31,7 +30,7 @@ const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) 
   const PrivateRoutes = () => (
     <>
       <PublicRoutes />
-      <PrivateRoute path='/expenses-manager'>
+      <PrivateRoute path='/dashboard'>
         <Dashboard />
       </PrivateRoute>
     </>
