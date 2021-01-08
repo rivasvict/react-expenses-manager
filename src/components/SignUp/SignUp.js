@@ -46,6 +46,18 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
     history.push('/');
   }
 
+  const GenericInput = (props) => (
+    <Form.Control {...props} className='text' />
+  );
+
+  const InputText = (props) => (
+    <GenericInput {... {...props, type: 'text'}} />
+  );
+
+  const InputPassword = (props) => (
+    <GenericInput {... {...props, type: 'password'}} />
+  );
+
   return (
     <Container className='SignUp'>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
@@ -54,27 +66,27 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
             <Col xs={12}>
               <Form.Group>
                 <ValidateField>
-                  <Form.Control type='text' className='text' name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                  <InputText name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
                 </ValidateField>
               </Form.Group>
               <Form.Group>
                 <ValidateField>
-                  <Form.Control type='text' className='text' name='lastName' placeholder='Last Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                  <InputText name='lastName' placeholder='Last Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
                 </ValidateField>
               </Form.Group>
               <Form.Group>
                 <ValidateField>
-                  <Form.Control type='text' className='text' name='email' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                  <InputText name='email' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
                 </ValidateField>
               </Form.Group>
               <Form.Group>
                 <ValidateField>
-                  <Form.Control type='password' className='text' name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                  <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
                 </ValidateField>
               </Form.Group>
               <Form.Group>
                 <ValidateField>
-                  <Form.Control type='password' className='text' name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                  <InputPassword name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
                 </ValidateField>
               </Form.Group>
               {isLoading ? 'loading...' : <Button variant='primary' block type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</Button>}
