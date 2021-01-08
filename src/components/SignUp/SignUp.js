@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import './SignUp.scss';
+import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
 
 const userModel = FormModel({
   firstName: '',
@@ -46,26 +47,6 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
     history.push('/');
   }
 
-  const GenericInput = (props) => (
-    <Form.Control {...props} className='text' />
-  );
-
-  const InputText = (props) => (
-    <GenericInput {... {...props, type: 'text'}} />
-  );
-
-  const InputPassword = (props) => (
-    <GenericInput {... {...props, type: 'password'}} />
-  );
-
-  const FormContent = ({ children }) => (
-    <Row>
-      <Col xs={12}>
-        {children}
-      </Col>
-    </Row>
-  );
-
   return (
     <Container className='SignUp'>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
@@ -98,11 +79,11 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
             </Form.Group>
             {isLoading
               ? 'loading...'
-              : <Button variant='primary' block type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</Button>}
+              : <FormButton variant='primary' type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</FormButton>}
           </FormContent>
         )
       }} />
-      <Button variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</Button>
+      <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
     </Container>
   )
 };
