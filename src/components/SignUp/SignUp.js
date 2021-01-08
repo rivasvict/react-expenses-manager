@@ -58,40 +58,48 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
     <GenericInput {... {...props, type: 'password'}} />
   );
 
+  const FormContent = ({ children }) => (
+    <Row>
+      <Col xs={12}>
+        {children}
+      </Col>
+    </Row>
+  );
+
   return (
     <Container className='SignUp'>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
-          <Row>
-            <Col xs={12}>
-              <Form.Group>
-                <ValidateField>
-                  <InputText name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-                </ValidateField>
-              </Form.Group>
-              <Form.Group>
-                <ValidateField>
-                  <InputText name='lastName' placeholder='Last Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-                </ValidateField>
-              </Form.Group>
-              <Form.Group>
-                <ValidateField>
-                  <InputText name='email' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-                </ValidateField>
-              </Form.Group>
-              <Form.Group>
-                <ValidateField>
-                  <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-                </ValidateField>
-              </Form.Group>
-              <Form.Group>
-                <ValidateField>
-                  <InputPassword name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-                </ValidateField>
-              </Form.Group>
-              {isLoading ? 'loading...' : <Button variant='primary' block type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</Button>}
-            </Col>
-          </Row>
+          <FormContent>
+            <Form.Group>
+              <ValidateField>
+                <InputText name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <InputText name='lastName' placeholder='Last Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <InputText name='email' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <InputPassword name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            {isLoading
+              ? 'loading...'
+              : <Button variant='primary' block type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</Button>}
+          </FormContent>
         )
       }} />
       <Button variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</Button>
