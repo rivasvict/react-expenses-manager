@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import './SignUp.scss';
 
 const userModel = FormModel({
   firstName: '',
@@ -12,11 +14,11 @@ const userModel = FormModel({
   password: '',
   'password-retype': ''
 })
-  .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'First name is required' }})
-  .addBuiltInValidationToField({ fieldName: 'lastName', validation: { name: 'required', message: 'Last name is required' }})
-  .addBuiltInValidationToField({ fieldName: 'email', validation: { name: 'required', message: 'Email is required' }})
-  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }})
-  .addBuiltInValidationsToField({ fieldName: 'password-retype', validations: [{ name: 'required', message: 'Password is required' }, { name: 'match', comparatorFieldName: 'password', message: 'Password fields should match' }]})
+  .addBuiltInValidationToField({ fieldName: 'firstName', validation: { name: 'required', message: 'First name is required' } })
+  .addBuiltInValidationToField({ fieldName: 'lastName', validation: { name: 'required', message: 'Last name is required' } })
+  .addBuiltInValidationToField({ fieldName: 'email', validation: { name: 'required', message: 'Email is required' } })
+  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } })
+  .addBuiltInValidationsToField({ fieldName: 'password-retype', validations: [{ name: 'required', message: 'Password is required' }, { name: 'match', comparatorFieldName: 'password', message: 'Password fields should match' }] })
   .setModelInitialValidityState(false);
 
 function handleChange({ event, dispatchFormStateChange }) {
@@ -45,34 +47,43 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
   }
 
   return (
-    <FormValidation formModel={userModel} render={({ dispatchFormStateChange, formState }) => {
-      return (
-        <React.Fragment>
-          <label>First Name: </label>
-          <ValidateField>
-            <input type='text' name='firstName' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <br /><label>Last Name: </label>
-          <ValidateField>
-            <input type='text' name='lastName' placeholder='Last Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <br /><label>Email: </label>
-          <ValidateField>
-            <input type='text' name='email' placeholder='Your email goes here'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <br /><label>Password: </label>
-          <ValidateField>
-            <input type='password' name='password' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <br /><label>Retype password: </label>
-          <ValidateField>
-            <input type='password' name='password-retype' placeholder='Type password'  onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <br />{isLoading ? 'loading...' : <button type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>}
-          <button onClick={handleCancel}>Cancel</button>
-        </React.Fragment>
-      )
-    }}/>
+    <Container className='SignUp'>
+      <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+        return (
+          <Row>
+            <Col xs={12}>
+              <Form.Group>
+                <ValidateField>
+                  <Form.Control type='text' className='text' name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                </ValidateField>
+              </Form.Group>
+              <Form.Group>
+                <ValidateField>
+                  <Form.Control type='text' className='text' name='lastName' placeholder='Last Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                </ValidateField>
+              </Form.Group>
+              <Form.Group>
+                <ValidateField>
+                  <Form.Control type='text' className='text' name='email' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                </ValidateField>
+              </Form.Group>
+              <Form.Group>
+                <ValidateField>
+                  <Form.Control type='password' className='text' name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                </ValidateField>
+              </Form.Group>
+              <Form.Group>
+                <ValidateField>
+                  <Form.Control type='password' className='text' name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+                </ValidateField>
+              </Form.Group>
+              {isLoading ? 'loading...' : <Button variant='primary' block type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</Button>}
+            </Col>
+          </Row>
+        )
+      }} />
+      <Button variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</Button>
+    </Container>
   )
 };
 

@@ -51,7 +51,6 @@ function SignIn({ onLogIn, user }) {
         </Row>
       );
     }} />
-
   );
 }
 
