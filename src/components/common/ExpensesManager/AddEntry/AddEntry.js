@@ -50,7 +50,7 @@ class AddEntry extends Component {
   }
 
   navigateToDashboard = (history) => {
-    history.push('/expenses-manager');
+    history.push('/dashboard');
   }
 
   render() {
