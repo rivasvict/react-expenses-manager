@@ -1,5 +1,5 @@
 import React from 'react';
-import TotalItem from './common/TotalItem';
+import TotalItem from './common/ExpensesManager/TotalItem';
 import { getSum } from '../helpers/entriesHelper';
 import { calculateTotal } from '../helpers/general';
 

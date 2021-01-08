@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Results from '../Results';
-import AddEntry from '../common/AddEntry/AddEntry';
-import Summary from '../../components/common/Summaries/Summary';
-import EntrySummaryWithFilter from '../common/Summaries/EntrySummaryWithFilter'
+import AddEntry from '../common/ExpensesManager/AddEntry/AddEntry';
+import Summary from '../../components/common/ExpensesManager/Summaries/Summary';
+import EntrySummaryWithFilter from '../common/ExpensesManager/Summaries/EntrySummaryWithFilter'
 
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 
