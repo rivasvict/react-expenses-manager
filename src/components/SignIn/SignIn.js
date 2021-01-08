@@ -4,7 +4,7 @@ import { FormValidation, FormModel, ValidateField } from '../../helpers/form-val
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
 import { Form } from 'react-bootstrap';
-import { FormButton, FormContent, InputText } from '../common/Forms';
+import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
@@ -43,7 +43,7 @@ function SignIn({ onLogIn, user }) {
           </Form.Group>
           <Form.Group>
             <ValidateField>
-              <InputText name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
             </ValidateField>
           </Form.Group>
           <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</FormButton>
