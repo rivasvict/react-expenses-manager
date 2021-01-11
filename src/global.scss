@@ -36,6 +36,8 @@
 }
 
 #root {
+  color: $color_dark_1;
+
   .btn {
     @include button-like-style();
   }
@@ -57,5 +59,10 @@
   .vertical-standard-space-padding {
     padding-top: $vertical-standard-margin;
     padding-bottom: $vertical-standard-margin;
+  }
+
+  h1.title {
+    font-size: $h1-size-title;
+    text-align: center;
   }
 }

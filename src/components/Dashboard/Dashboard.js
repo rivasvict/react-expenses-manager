@@ -13,17 +13,21 @@ import './Dashboard.scss';
 import './DashboardContent.scss';
 
 const DashboardContent = ({ entries, match }) => (
-  <Row className='dashboard-content-container vertical-standard-space-padding'>
-    <Col xs={12}>
-      <Results
-        entries={entries}
-        baseUrl={match.url} />
-    </Col>
-    <Col xs={12}  className='bottom-container'>
-      <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
-      <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
-    </Col>
-  </Row>
+  <Col xs={12} className='dashboard-content-container vertical-standard-space-padding'>
+    <Row className='top-container'>
+      <Col xs={12} className='top-content'>
+        <Results
+          entries={entries}
+          baseUrl={match.url} />
+      </Col>
+    </Row>
+    <Row>
+      <Col xs={12} className='bottom-content'>
+        <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
+        <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
+      </Col>
+    </Row>
+  </Col>
 );
 
 function Dashboard({ entries }) {

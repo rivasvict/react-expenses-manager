@@ -2,10 +2,8 @@ import React from 'react';
 import TotalItem from './common/ExpensesManager/TotalItem';
 import { getSum } from '../helpers/entriesHelper';
 import { calculateTotal } from '../helpers/general';
-
-const resultsStyle = {
-  textAlign: 'center'
-}
+import { Col, Row } from 'react-bootstrap';
+import './Results.scss';
 
 function Results({ entries, baseUrl = '' }) {
   const incomesName = 'incomes';
@@ -18,11 +16,30 @@ function Results({ entries, baseUrl = '' }) {
   const totalSum = calculateTotal(incomesSum, outcomesSum);
 
   return (
-    <div style={resultsStyle}>      
-      <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} />
-      <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl}/>
-      <TotalItem name='Total' ammount={totalSum} url={summaryUrl} />
-    </div>
+    <React.Fragment>
+      <Row>
+        <Col xs={12}>
+          <h1 className='title'>
+            Monthly Income/Expenses
+          </h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} />
+        </Col>
+      </Row>
+      <Row className='results-total'>
+        <Col xs={12}>
+          <TotalItem name='Total' ammount={totalSum} url={summaryUrl} />
+        </Col>
+      </Row>
+    </React.Fragment>
   );
 }
 

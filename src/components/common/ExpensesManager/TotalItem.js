@@ -1,14 +1,20 @@
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
-const totalItemStyle = {
-  padding: '20px 20px',
-  border: 'solid 1px black'
-};
+import './TotalItem.scss';
 
 function TotalItem({ name, ammount, url }) {
   return (
-    <Link to={`${url}`}><div style={totalItemStyle}>{name}<br/>{ammount}</div></Link>
+    <Link to={`${url}`}>
+      <Row className='total-container'>
+        <Col xs={6}>
+          {name}
+        </Col>
+        <Col xs={6}>
+          {ammount}
+        </Col>
+      </Row>
+    </Link>
   );
 }
 
