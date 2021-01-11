@@ -7,45 +7,56 @@ import Summary from '../../components/common/ExpensesManager/Summaries/Summary';
 import EntrySummaryWithFilter from '../common/ExpensesManager/Summaries/EntrySummaryWithFilter'
 
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
+import { Col, Container, Row } from 'react-bootstrap';
+import Header from '../common/Header';
+import './Dashboard.scss';
+import './DashboardContent.scss';
 
-const dasahboardStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100vh'
-};
+const DashboardContent = ({ entries, match }) => (
+  <Row className='dashboard-content-container vertical-standard-space-padding'>
+    <Col xs={12}>
+      <Results
+        entries={entries}
+        baseUrl={match.url} />
+    </Col>
+    <Col xs={12}>
+      <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block vertical-standard-space'>Add Income</Link>
+    </Col>
+    <Col xs={12}>
+      <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
+    </Col>
+  </Row>
+);
 
 function Dashboard({ entries }) {
   const match = useRouteMatch();
 
   return (
-    <div style={dasahboardStyle}>
-      <Switch>
-        <Route exact path={`${match.url}`}>
-          <Link to={`${match.url}/add-income`}>Add income</Link>
-          <Results 
-            entries={entries}
-            baseUrl={match.url}/>
-          <Link to={`${match.url}/add-expense`}>Add expense</Link>
-        </Route>
-        <Route path={`${match.url}/add-income`}>
-          <AddEntry entryType='income' />
-        </Route>
-        <Route path={`${match.url}/add-expense`}>
-          <AddEntry entryType='outcome' />
-        </Route>
-        <Route path={`${match.url}/incomes`}>
-          <EntrySummaryWithFilter entryType='income' />
-        </Route>
-        <Route path={`${match.url}/outcomes`}>
-          <EntrySummaryWithFilter entryType='outcome' />
-        </Route>
-        <Route path={`${match.url}/summary`}>
-          <Summary entries={entries} />
-        </Route>
-      </Switch>
-    </div>
+    <React.Fragment>
+      <Header />
+      <Container fluid className='main-container'>
+        <Switch>
+          <Route exact path={`${match.url}`}>
+            <DashboardContent {...{ entries, match }} />
+          </Route>
+          <Route path={`${match.url}/add-income`}>
+            <AddEntry entryType='income' />
+          </Route>
+          <Route path={`${match.url}/add-expense`}>
+            <AddEntry entryType='outcome' />
+          </Route>
+          <Route path={`${match.url}/incomes`}>
+            <EntrySummaryWithFilter entryType='income' />
+          </Route>
+          <Route path={`${match.url}/outcomes`}>
+            <EntrySummaryWithFilter entryType='outcome' />
+          </Route>
+          <Route path={`${match.url}/summary`}>
+            <Summary entries={entries} />
+          </Route>
+        </Switch>
+      </Container>
+    </React.Fragment>
   )
 }
 

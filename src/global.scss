@@ -1,12 +1,9 @@
 @import './variables.scss';
 
-$form-radius: 0.526rem;
-$vertical-standard-margin: 0.925rem;
-
 @mixin button-like-style {
   font-size: 0.8125em;
   font-weight: bold;
-  border-radius: $form-radius;
+  border-radius: $standard-radius;
   border-color: $color_clear_3;
 }
 
@@ -19,7 +16,7 @@ $vertical-standard-margin: 0.925rem;
   }
 
   .form-control.text {
-    border-radius: $form-radius;
+    border-radius: $standard-radius;
     height: 2.312rem;
     font-size: 0.625em;
     padding: 0.92em 1.625em;
@@ -55,5 +52,10 @@ $vertical-standard-margin: 0.925rem;
   .vertical-standard-space {
     margin-top: $vertical-standard-margin;
     margin-bottom: $vertical-standard-margin;
+  }
+  
+  .vertical-standard-space-padding {
+    padding-top: $vertical-standard-margin;
+    padding-bottom: $vertical-standard-margin;
   }
 }
