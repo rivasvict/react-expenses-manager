@@ -3,4 +3,11 @@
 .dashboard-content-container {
   background-color: $color_clear_4;
   border-radius: $standard-radius;
+  height: 36rem;
+
+  .bottom-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 }

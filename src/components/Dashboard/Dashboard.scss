@@ -3,4 +3,8 @@
 .main-container {
   background-color: $color_dark_2;
   height: 100vh;
+  padding-bottom: 1.875rem;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }

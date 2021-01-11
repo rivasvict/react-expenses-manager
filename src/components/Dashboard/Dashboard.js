@@ -19,10 +19,8 @@ const DashboardContent = ({ entries, match }) => (
         entries={entries}
         baseUrl={match.url} />
     </Col>
-    <Col xs={12}>
-      <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block vertical-standard-space'>Add Income</Link>
-    </Col>
-    <Col xs={12}>
+    <Col xs={12}  className='bottom-container'>
+      <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
       <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
     </Col>
   </Row>
@@ -32,9 +30,9 @@ function Dashboard({ entries }) {
   const match = useRouteMatch();
 
   return (
-    <React.Fragment>
+    <main className='main-container'>
       <Header />
-      <Container fluid className='main-container'>
+      <Container fluid>
         <Switch>
           <Route exact path={`${match.url}`}>
             <DashboardContent {...{ entries, match }} />
@@ -56,7 +54,7 @@ function Dashboard({ entries }) {
           </Route>
         </Switch>
       </Container>
-    </React.Fragment>
+    </main>
   )
 }
 
