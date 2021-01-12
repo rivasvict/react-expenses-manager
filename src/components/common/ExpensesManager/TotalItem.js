@@ -3,12 +3,12 @@ import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './TotalItem.scss';
 
-function TotalItem({ name, ammount, icon, url }) {
+function TotalItem({ name, ammount, Icon, url }) {
   return (
     <Link to={`${url}`}>
       <Row className='total-container'>
         <Col xs={6}>
-          {name}
+          <Icon />
         </Col>
         <Col xs={6}>
           {ammount}

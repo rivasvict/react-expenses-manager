@@ -4,6 +4,7 @@ import { getSum } from '../helpers/entriesHelper';
 import { calculateTotal } from '../helpers/general';
 import { Col, Row } from 'react-bootstrap';
 import './Results.scss';
+import { IconSignIn, IconSignOut } from './common/Icons';
 
 function Results({ entries, baseUrl = '' }) {
   const incomesName = 'incomes';
@@ -26,12 +27,12 @@ function Results({ entries, baseUrl = '' }) {
       </Row>
       <Row>
         <Col xs={12}>
-          <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} />
+          <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
         </Col>
       </Row>
       <Row>
         <Col xs={12}>
-          <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} />
+          <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} Icon={IconSignOut} />
         </Col>
       </Row>
       <Row className='results-total'>
