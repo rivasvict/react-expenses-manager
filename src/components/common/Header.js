@@ -11,7 +11,7 @@ const Header = () => (
         <Nav.Link href='/'>home</Nav.Link>
       </Navbar.Collapse>
     </Navbar>
-    <Container fluid>
+    <Container>
       <Row>
         <Col xs={6}>Month Balance</Col>
         <Col xs={6}>2.500,00 CAD</Col>
