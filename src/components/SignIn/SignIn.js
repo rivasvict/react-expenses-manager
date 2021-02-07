@@ -24,14 +24,6 @@ const userModel = FormModel({
   .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } });
 
 function SignIn({ onLogIn, user }) {
-  const history = useHistory();
-
-  useEffect(() => {
-    if (user && user._id) {
-      history.push('/dashboard');
-    }
-  });
-
   return (
     <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (

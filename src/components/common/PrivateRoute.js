@@ -4,12 +4,14 @@ import { connect } from 'react-redux';
 import { setUser } from '../../redux/userManager/actoionCreators';
 
 function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
+
   const RedirectToDefault = () => {
-    return <Redirect to={{ pathname: 'sign-in' }} />;
+    return <Redirect to={{ pathname: '/' }} />;
   };
 
   const render = () => {
-    if (user.isLoading) {
+    if (user.isLoading && !user.email) {
+      onSetUser();
       return <div>Loading...</div>
     } else if (user.email) {
       return children;

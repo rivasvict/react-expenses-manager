@@ -11,7 +11,7 @@ function Lobby({ user }) {
 
   useState(() => {
     if (isThereAnyUser()) {
-      history.push('/dashboard');
+      //history.push('/dashboard');
     }
   })
 
@@ -27,7 +27,7 @@ function Lobby({ user }) {
               </Col>
             </Row>
           </React.Fragment>
-          : null
+          : history.push('/dashboard')
       }
     </Container>
   )

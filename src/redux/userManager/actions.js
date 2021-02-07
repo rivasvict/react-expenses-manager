@@ -118,8 +118,10 @@ const SetUser = () => () => {
         });
         const response = await rawResponse.json()
 
-        setUserLocally({ dispatch, rawResponse, response });
+        return setUserLocally({ dispatch, rawResponse, response });
       }
+
+      dispatch(setUserLoading(false));
     } catch (error) {
       dispatch(userLoginError(error));
     }

@@ -14,12 +14,6 @@ const mapActionToProps = dispatch => ({
 });
 
 const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) => {
-  useEffect(() => {
-    if (!user.email) {
-      onSetUser();
-    }
-  });
-
   const PublicRoutes = () => (
     <>
       <Route path='/sign-up' component={SignUp} exact />
@@ -39,9 +33,7 @@ const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) 
   return (
     <Router>
       <Switch>
-        {
-          !user.email ? <PublicRoutes /> : <PrivateRoutes />
-        }
+        <PrivateRoutes />
       </Switch>
     </Router>
   );
