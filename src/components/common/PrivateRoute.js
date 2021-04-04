@@ -5,13 +5,15 @@ import { setUser } from '../../redux/userManager/actoionCreators';
 
 function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
   const RedirectToDefault = () => {
-    return <Redirect to={{ pathname: 'sign-in' }} />;
+    return <Redirect to={{ pathname: '/' }} />;
   };
 
   const render = () => {
-    if (user.isLoading) {
-      return <div>Loading...</div>
-    } else if (user.email) {
+    if (user.isLoading && !user.email) {
+      onSetUser();
+      // TODO: Implement a proper loading spinner that will not get the app stuck
+      //return <div>Loading...</div>
+    } else {
       return children;
     }
 

@@ -4,7 +4,7 @@ const defaultState = {
     email: null,
     firstName: null,
     lastName: null,
-    isLoading: false
+    isLoading: true
   },
   token: null,
   validationErrors: {

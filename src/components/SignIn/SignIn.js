@@ -3,56 +3,46 @@ import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
+import { Form } from 'react-bootstrap';
+import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
   dispatchFormStateChange({ name, value });
 };
 
-function handleSubmit({ event, onLogIn, values }) {
+function handleSubmit({ event, onLogIn, values, history }) {
   event.preventDefault();
-  onLogIn(values);
+  onLogIn({ userPayload: values, history });
 };
 
 const userModel = FormModel({
   username: '',
   password: ''
 })
-  .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' }})
-  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' }});
+  .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' } })
+  .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } });
 
 function SignIn({ onLogIn, user }) {
   const history = useHistory();
-
-  function handleCancel(event) {
-    event.preventDefault();
-    history.push('/');
-  }
-
-  useEffect(() => {
-    if (user && user._id) {
-      history.push('/');
-    }
-  });
-
   return (
-    <FormValidation formModel={userModel} render={({  dispatchFormStateChange, formState  }) => {
+    <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (
-        <React.Fragment>
-          <label>Username: </label>
-          <ValidateField>
-            <input type='text' name='username' placeholder='First Name goes here' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <label>Password: </label>
-          <ValidateField>
-            <input type='password' name='password' placeholder='Type password' onChange={(event) => handleChange({ event, dispatchFormStateChange })}></input>
-          </ValidateField>
-          <button type='submit' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Submit</button>
-          <button onClick={(event) => handleCancel(event)}>Cancel</button>
-        </React.Fragment>
+        <FormContent>
+          <Form.Group>
+            <ValidateField>
+              <InputText name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+            </ValidateField>
+          </Form.Group>
+          <Form.Group>
+            <ValidateField>
+              <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+            </ValidateField>
+          </Form.Group>
+          <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
+        </FormContent>
       );
     }} />
-
   );
 }
 

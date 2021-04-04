@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
-import { addIncome, addOutcome } from '../../../redux/expensesManager/actionCreators';
-import { getEntryModel, getEntryCategoryOption } from '../../../helpers/entriesHelper'; 
+import { addIncome, addOutcome } from '../../../../redux/expensesManager/actionCreators';
+import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
 
@@ -50,7 +50,7 @@ class AddEntry extends Component {
   }
 
   navigateToDashboard = (history) => {
-    history.push('/expenses-manager');
+    history.push('/dashboard');
   }
 
   render() {

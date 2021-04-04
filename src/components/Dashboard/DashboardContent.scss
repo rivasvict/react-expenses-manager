@@ -1,0 +1,25 @@
+@import '../../variables.scss';
+
+.dashboard-content-container {
+  background-color: $color_clear_4;
+  border-radius: $standard-radius;
+  height: 36rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .top-container {
+    flex: 1;
+  }
+
+  .top-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bottom-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
