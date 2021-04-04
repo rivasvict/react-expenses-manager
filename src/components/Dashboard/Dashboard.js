@@ -31,16 +31,13 @@ const DashboardContent = ({ entries, match }) => (
 );
 
 function Dashboard({ entries }) {
-  const match = useRouteMatch();
-
+  const match = useRouteMatch(); 
+ 
   return (
     <main className='main-container'>
       <Header />
       <Container fluid>
         <Switch>
-          <Route exact path={`${match.url}`}>
-            <DashboardContent {...{ entries, match }} />
-          </Route>
           <Route path={`${match.url}/add-income`}>
             <AddEntry entryType='income' />
           </Route>
@@ -55,6 +52,9 @@ function Dashboard({ entries }) {
           </Route>
           <Route path={`${match.url}/summary`}>
             <Summary entries={entries} />
+          </Route>
+          <Route exact path={`${match.url}`}>
+            <DashboardContent {...{ entries, match }} />
           </Route>
         </Switch>
       </Container>

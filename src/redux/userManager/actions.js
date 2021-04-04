@@ -68,22 +68,19 @@ const CreateUser = () => (userPayload) => {
   }
 }
 
-const setUserLocally = ({ dispatch, rawResponse, response }) => {
-  //TODO: THIS OBJECT SHOULD ONLY SAVE THE EMAIL
-  setObjectToSessionStorage(response);
+const setUserLocally = ({ dispatch, rawResponse, response, history }) => {
+  dispatch(setAppLoading(false));
+  dispatch(setUserLoading(false));
+
   if (!rawResponse.ok) {
-    dispatch(setAppLoading(false));
-    dispatch(setUserLoading(false));
     throw response;
   }
 
+  setObjectToSessionStorage(response);
   dispatch(userLoginSuccess(response));
-  //CHECK THE NEW WAY WE ARE SETTING this, IT IS NOT WORKING PROPERLY IT IS GENERATING AN INFINITE LOOP
-  dispatch(setAppLoading(false));
-  dispatch(setUserLoading(false));
 };
 
-const LogIn = () => (userPayload) => {
+const LogIn = () => ({ userPayload, history }) => {
   return async (dispatch) => {
     try {
       const url = `${baseUrl}/api/user/login`;
@@ -98,7 +95,7 @@ const LogIn = () => (userPayload) => {
       });
       const response = await rawResponse.json()
 
-      setUserLocally({ dispatch, rawResponse, response });
+      setUserLocally({ dispatch, rawResponse, response, history });
     } catch (error) {
       dispatch(userLoginError(error));
     }
@@ -118,10 +115,11 @@ const SetUser = () => () => {
         });
         const response = await rawResponse.json()
 
-        return setUserLocally({ dispatch, rawResponse, response });
+        setUserLocally({ dispatch, rawResponse, response });
+      } else {
+        dispatch(setAppLoading(false));
+        dispatch(setUserLoading(false));
       }
-
-      dispatch(setUserLoading(false));
     } catch (error) {
       dispatch(userLoginError(error));
     }

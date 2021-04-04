@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { setUser } from '../../redux/userManager/actoionCreators';
 
 function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
-
   const RedirectToDefault = () => {
     return <Redirect to={{ pathname: '/' }} />;
   };
@@ -12,8 +11,9 @@ function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
   const render = () => {
     if (user.isLoading && !user.email) {
       onSetUser();
-      return <div>Loading...</div>
-    } else if (user.email) {
+      // TODO: Implement a proper loading spinner that will not get the app stuck
+      //return <div>Loading...</div>
+    } else {
       return children;
     }
 

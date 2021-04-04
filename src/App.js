@@ -23,26 +23,26 @@ const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) 
 
   const PrivateRoutes = () => (
     <>
-      <PublicRoutes />
       <PrivateRoute path='/dashboard'>
         <Dashboard />
       </PrivateRoute>
+      <PublicRoutes />
     </>
   );
 
   return (
-    <Router>
-      <Switch>
-        <PrivateRoutes />
-      </Switch>
-    </Router>
+    <PrivateRoutes />
   );
 });
 
 function App({ reduxStore }) {
   return (
     <Provider store={reduxStore}>
-      <Routes />
+      <Router>
+        <Switch>
+          <Routes />
+        </Switch>
+      </Router>
     </Provider>
   );
 }

@@ -11,9 +11,9 @@ function handleChange({ event, dispatchFormStateChange }) {
   dispatchFormStateChange({ name, value });
 };
 
-function handleSubmit({ event, onLogIn, values }) {
+function handleSubmit({ event, onLogIn, values, history }) {
   event.preventDefault();
-  onLogIn(values);
+  onLogIn({ userPayload: values, history });
 };
 
 const userModel = FormModel({
@@ -24,6 +24,7 @@ const userModel = FormModel({
   .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } });
 
 function SignIn({ onLogIn, user }) {
+  const history = useHistory();
   return (
     <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
       return (
@@ -38,7 +39,7 @@ function SignIn({ onLogIn, user }) {
               <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
             </ValidateField>
           </Form.Group>
-          <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values })} disabled={!formState.isModelValid}>Sign In</FormButton>
+          <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
         </FormContent>
       );
     }} />
