@@ -1,0 +1,10 @@
+@import '../variables.scss';
+@import '../global.scss';
+
+.Lobby {
+  background-color: $color_dark_1;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

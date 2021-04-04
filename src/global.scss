@@ -1,0 +1,73 @@
+@import './variables.scss';
+
+@mixin button-like-style {
+  font-size: 0.8125em;
+  font-weight: bold;
+  border-radius: $standard-radius;
+  border-color: $color_clear_3;
+}
+
+.user-form {
+  display: flex;
+  flex-flow: column wrap;
+
+  .form-group {
+    margin-bottom: $vertical-standard-margin;
+  }
+
+  .form-control.text {
+    border-radius: $standard-radius;
+    height: 2.312rem;
+    font-size: 0.625em;
+    padding: 0.92em 1.625em;
+  }
+
+  .form-control.text::placeholder {
+    color: $color_dark_2;
+  }
+
+  .btn.btn-secondary {
+    margin-top: 1.51rem;
+  }
+
+  .validation-message {
+    color: rgb(255, 159, 128);
+  }
+}
+
+#root {
+  color: $color_dark_1;
+
+  .btn {
+    @include button-like-style();
+  }
+
+  .btn.btn-primary {
+    background-color: $color_clear_1;
+  }
+
+  .btn.btn-secondary {
+    background-color: $color_clear_4;
+    color: $color_dark_1
+  }
+
+  .vertical-standard-space {
+    margin-top: $vertical-standard-margin;
+    margin-bottom: $vertical-standard-margin;
+  }
+  
+  .vertical-standard-space-padding {
+    padding-top: $vertical-standard-margin;
+    padding-bottom: $vertical-standard-margin;
+  }
+
+  h1.title {
+    font-size: $h1-size-title;
+    text-align: center;
+  }
+
+  .container-fluid {
+    padding-right:0;
+    padding-left:0;
+  }
+}
