@@ -1,5 +1,5 @@
 import React from 'react';
-import { InlineIcon } from '@iconify/react';
+import { InlineIcon, Icon as SimpleIcon } from '@iconify/react';
 import signOut from '@iconify-icons/codicon/sign-out';
 import signIn from '@iconify-icons/codicon/sign-in';
 
@@ -8,7 +8,7 @@ const Icon = ({ inLine, icon }) => (
     {
       inLine ?
         <InlineIcon icon={icon} /> :
-        <Icon icon={icon} />
+        <SimpleIcon icon={icon} />
     }
   </React.Fragment>
 );

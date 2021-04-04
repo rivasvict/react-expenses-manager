@@ -5,10 +5,14 @@ import './TotalItem.scss';
 
 function TotalItem({ name, ammount, Icon, url }) {
   return (
-    <Link to={`${url}`}>
+    <Link to={url}>
       <Row className='total-container'>
         <Col xs={6}>
-          <Icon />
+          {
+            Icon ?
+              <Icon /> :
+              null
+          }
         </Col>
         <Col xs={6}>
           {ammount}
