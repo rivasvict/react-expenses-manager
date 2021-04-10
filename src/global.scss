@@ -38,12 +38,17 @@
 #root {
   color: $color_dark_1;
 
+  a {
+    color: $color_dark_1;
+  }
+
   .btn {
     @include button-like-style();
   }
 
   .btn.btn-primary {
     background-color: $color_clear_1;
+    color: $color_clear_4;
   }
 
   .btn.btn-secondary {
