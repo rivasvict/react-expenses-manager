@@ -1,16 +1,38 @@
 import React from 'react';
-import TotalItem from './common/ExpensesManager/TotalItem';
 import { getSum } from '../helpers/entriesHelper';
 import { calculateTotal } from '../helpers/general';
-import { Col, Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import './Results.scss';
 import { IconSignIn, IconSignOut } from './common/Icons';
+import RowLink from './common/RowLink';
+import ScreenTitle from './common/ScreenTitle';
+
+const incomesName = 'incomes';
+const outcomesName = 'outcomes';
+
+function TotalItem({ name, ammount, Icon, url }) {
+  return (
+    <RowLink to={url} title={name} className='total-row'>
+      <Col xs={1}>
+        {
+          Icon ?
+            <Icon /> :
+            null
+        }
+      </Col>
+      <Col xs={5}>
+        {name}
+      </Col>
+      <Col xs={6}>
+        {ammount}
+      </Col>
+    </RowLink>
+  );
+}
 
 function Results({ entries, baseUrl = '' }) {
-  const incomesName = 'incomes';
-  const outcomesName = 'outcomes';
-  const incomesSum = getSum({ entryType: 'incomes', entries: entries })
-  const outcomesSum = getSum({ entryType: 'outcomes', entries: entries })
+  const incomesSum = getSum({ entryType: incomesName, entries: entries })
+  const outcomesSum = getSum({ entryType: incomesName, entries: entries })
   const incomesUrl = `${baseUrl}/${incomesName}`;
   const outcomesUrl = `${baseUrl}/${outcomesName}`;
   const summaryUrl = `${baseUrl}/summary`;
@@ -18,28 +40,14 @@ function Results({ entries, baseUrl = '' }) {
 
   return (
     <React.Fragment>
-      <Row>
+      <ScreenTitle screenTitle='Monthly Income/Expenses' />
+      <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
+      <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} Icon={IconSignOut} />
+      <RowLink to={summaryUrl} title='Summary' className='results-total'>
         <Col xs={12}>
-          <h1 className='title'>
-            Monthly Income/Expenses
-          </h1>
+          {`Savings: ${totalSum}`}
         </Col>
-      </Row>
-      <Row>
-        <Col xs={12}>
-          <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12}>
-          <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} Icon={IconSignOut} />
-        </Col>
-      </Row>
-      <Row className='results-total'>
-        <Col xs={12}>
-          <TotalItem name='Total' ammount={totalSum} url={summaryUrl} />
-        </Col>
-      </Row>
+      </RowLink>
     </React.Fragment>
   );
 }

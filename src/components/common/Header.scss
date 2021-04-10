@@ -10,5 +10,29 @@ header {
 
   .navbar {
     justify-content: space-between;
+    padding: 2rem 1.1rem 1rem 1rem;
+    
+    .navbar-toggler {
+      border: none;
+    }
+
+    .navbar-brand {
+      .logo {
+        height: 69px;
+      }
+    }
+  }
+
+  .header-info {
+    justify-content: flex-end;
+
+    div {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .sub-title {
+      justify-content: flex-start;
+    }
   }
 }

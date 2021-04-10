@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SignIn from './SignIn/SignIn';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -7,7 +7,6 @@ import './Lobby.scss';
 
 function Lobby({ user }) {
   const isThereAnyUser = () => user && user.email;
-  const history = useHistory();
 
   return (
     <Container className='Lobby'>
