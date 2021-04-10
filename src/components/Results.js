@@ -1,21 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { getSum } from '../helpers/entriesHelper';
 import { calculateTotal } from '../helpers/general';
-import { Col, Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import './Results.scss';
 import { IconSignIn, IconSignOut } from './common/Icons';
+import RowLink from './common/RowLink';
+import ScreenTitle from './common/ScreenTitle';
 
 const incomesName = 'incomes';
 const outcomesName = 'outcomes';
-
-function RowLink(props) {
-  return (
-    <Link {...{ ...props, className: `${props.className} row` }}>
-      {props.children}
-    </Link>
-  )
-};
 
 function TotalItem({ name, ammount, Icon, url }) {
   return (
@@ -34,18 +27,6 @@ function TotalItem({ name, ammount, Icon, url }) {
         {ammount}
       </Col>
     </RowLink>
-  );
-}
-
-function ScreenTitle({ screenTitle }) {
-  return (
-    <Row className='screen-title'>
-      <Col xs={12}>
-        <h1 className='title'>
-          {screenTitle}
-        </h1>
-      </Col>
-    </Row>
   );
 }
 
