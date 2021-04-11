@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 import Dashboard from './components/Dashboard/Dashboard';
 import { Provider, connect } from 'react-redux';
 import Lobby from './components/Lobby';
@@ -21,9 +21,10 @@ const Routes = connect(mapStateToProps, mapActionToProps)(({ user, onSetUser }) 
     </>
   );
 
+  const location = useLocation();
   const PrivateRoutes = () => (
     <>
-      <PrivateRoute path='/dashboard'>
+      <PrivateRoute path='/dashboard' from={location}>
         <Dashboard />
       </PrivateRoute>
       <PublicRoutes />
