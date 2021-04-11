@@ -32,7 +32,7 @@ function TotalItem({ name, ammount, Icon, url }) {
 
 function Results({ entries, baseUrl = '' }) {
   const incomesSum = getSum({ entryType: incomesName, entries: entries })
-  const outcomesSum = getSum({ entryType: incomesName, entries: entries })
+  const outcomesSum = getSum({ entryType: outcomesName, entries: entries })
   const incomesUrl = `${baseUrl}/${incomesName}`;
   const outcomesUrl = `${baseUrl}/${outcomesName}`;
   const summaryUrl = `${baseUrl}/summary`;
