@@ -6,6 +6,8 @@ export const SET_APP_LOADING = 'SET_APP_LOADING';
 export const USER_LOG_IN_ERROR = 'USER_LOG_IN_ERROR';
 export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 export const SET_USER_LOADING = 'SET_USER_LOADING';
+export const USER_LOG_OUT_ERROR = 'USER_LOG_OUT_ERROR';
+export const USER_LOG_OUT_SUCCESS = 'USER_LOG_OUT_SUCCESS';
 const baseUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`
 
 const userCreationFail = error => ({
@@ -35,6 +37,15 @@ const userLoginSuccess = user => ({
 
 const userLoginError = error => ({
   type: USER_LOG_IN_ERROR,
+  payload: error
+})
+
+const userLogOutSuccess = () => ({
+  type: USER_LOG_OUT_SUCCESS,
+})
+
+const userOutError = error => ({
+  type: USER_LOG_OUT_ERROR,
   payload: error
 })
 
@@ -68,7 +79,7 @@ const CreateUser = () => (userPayload) => {
   }
 }
 
-const setUserLocally = ({ dispatch, rawResponse, response, history }) => {
+const setUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(setAppLoading(false));
   dispatch(setUserLoading(false));
 
@@ -80,7 +91,19 @@ const setUserLocally = ({ dispatch, rawResponse, response, history }) => {
   dispatch(userLoginSuccess(response));
 };
 
-const LogIn = () => ({ userPayload, history }) => {
+const removeUserLocally = ({ dispatch, rawResponse, response }) => {
+  dispatch(setAppLoading(false));
+  dispatch(setUserLoading(false));
+
+  if (!rawResponse.ok) {
+    throw response;
+  }
+
+  setObjectToSessionStorage(response);
+  dispatch(userLogOutSuccess());
+};
+
+const LogIn = () => ({ userPayload }) => {
   return async (dispatch) => {
     try {
       const url = `${baseUrl}/api/user/login`;
@@ -95,9 +118,29 @@ const LogIn = () => ({ userPayload, history }) => {
       });
       const response = await rawResponse.json()
 
-      setUserLocally({ dispatch, rawResponse, response, history });
+      setUserLocally({ dispatch, rawResponse, response });
     } catch (error) {
       dispatch(userLoginError(error));
+    }
+  }
+};
+
+const LogOut = () => () => {
+  return async (dispatch) => {
+    try {
+      const url = `${baseUrl}/api/user/log-out`;
+      dispatch(setAppLoading(true));
+      dispatch(setUserLoading(true));
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const response = await rawResponse.json()
+
+      removeUserLocally({ dispatch, rawResponse, response });
+    } catch (error) {
+      dispatch(userOutError(error));
     }
   }
 };
@@ -129,5 +172,6 @@ const SetUser = () => () => {
 export const ActionCreators = () => ({
   createUser: CreateUser(),
   logIn: LogIn(),
-  setUser: SetUser()
+  setUser: SetUser(),
+  logOut: LogOut()
 });
