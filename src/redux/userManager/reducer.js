@@ -1,5 +1,14 @@
-import { CREATE_USER_ERROR, CREATE_USER_SUCCESS, SET_APP_LOADING, USER_LOG_IN_ERROR, USER_LOG_IN_SUCCESS, SET_USER_LOADING } from "./actions";
-const defaultState = {
+import {
+  CREATE_USER_ERROR,
+  CREATE_USER_SUCCESS,
+  SET_APP_LOADING,
+  USER_LOG_IN_ERROR,
+  USER_LOG_IN_SUCCESS,
+  USER_LOG_OUT_ERROR,
+  USER_LOG_OUT_SUCCESS,
+  SET_USER_LOADING
+} from "./actions";
+const getDefaultState = () => ({
   user: {
     email: null,
     firstName: null,
@@ -13,7 +22,7 @@ const defaultState = {
   isLoading: false,
   error: null,
   userCreated: false
-}
+})
 
 const handleError = (error, state) => {
   if (error && error.name === 'ValidationError') {
@@ -32,7 +41,7 @@ const handleError = (error, state) => {
   }
 };
 
-export const reducer = (state = defaultState, action) => {
+export const reducer = (state = getDefaultState(), action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -57,6 +66,9 @@ export const reducer = (state = defaultState, action) => {
         ...payload
       }
     }
+    //TODO: REVISIT USER_LOG_OUT REDUCERS
+    case USER_LOG_OUT_ERROR: return handleError(payload, state);
+    case USER_LOG_OUT_SUCCESS: return getDefaultState();
     case SET_APP_LOADING: return {
       ...state,
       isLoading: payload.isLoading
