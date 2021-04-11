@@ -27,10 +27,10 @@ class EntrySummaryWithFilter extends Component {
     const entryNamePlural = `${this.props.entryType}s`;
     const name = entryNamePlural;
     return (
-      <div>
+      <React.Fragment>
         <CategorySelector name='category' value={this.props.category} handleChange={this.handleChange.bind(this)} categoryOptions={categoryOptions} />
         <EntriesSummary entries={this.getFilteredEntriesByCategory({ category: this.props.category, entryNamePlural })} name={name} />
-      </div>
+      </React.Fragment>
     )
   }
 }

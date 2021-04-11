@@ -10,10 +10,10 @@ import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 import { Col, Container, Row } from 'react-bootstrap';
 import Header from '../common/Header';
 import './Dashboard.scss';
-import './DashboardContent.scss';
+import WorkAreaContentContainer from '../common/WorkAreaContentContainer';
 
 const DashboardContent = ({ entries, match }) => (
-  <Col xs={12} className='dashboard-content-container vertical-standard-space-padding'>
+  <React.Fragment>
     <Row className='top-container'>
       <Col xs={12} className='top-content'>
         <Results
@@ -27,7 +27,7 @@ const DashboardContent = ({ entries, match }) => (
         <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
       </Col>
     </Row>
-  </Col>
+  </React.Fragment>
 );
 
 function Dashboard({ entries }) {
@@ -37,26 +37,28 @@ function Dashboard({ entries }) {
     <main className='main-container'>
       <Header />
       <Container fluid>
-        <Switch>
-          <Route path={`${match.url}/add-income`}>
-            <AddEntry entryType='income' />
-          </Route>
-          <Route path={`${match.url}/add-expense`}>
-            <AddEntry entryType='outcome' />
-          </Route>
-          <Route path={`${match.url}/incomes`}>
-            <EntrySummaryWithFilter entryType='income' />
-          </Route>
-          <Route path={`${match.url}/outcomes`}>
-            <EntrySummaryWithFilter entryType='outcome' />
-          </Route>
-          <Route path={`${match.url}/summary`}>
-            <Summary entries={entries} />
-          </Route>
-          <Route exact path={`${match.url}`}>
-            <DashboardContent {...{ entries, match }} />
-          </Route>
-        </Switch>
+        <WorkAreaContentContainer>
+          <Switch>
+            <Route path={`${match.url}/add-income`}>
+              <AddEntry entryType='income' />
+            </Route>
+            <Route path={`${match.url}/add-expense`}>
+              <AddEntry entryType='outcome' />
+            </Route>
+            <Route path={`${match.url}/incomes`}>
+              <EntrySummaryWithFilter entryType='income' />
+            </Route>
+            <Route path={`${match.url}/outcomes`}>
+              <EntrySummaryWithFilter entryType='outcome' />
+            </Route>
+            <Route path={`${match.url}/summary`}>
+              <Summary entries={entries} />
+            </Route>
+            <Route exact path={`${match.url}`}>
+              <DashboardContent {...{ entries, match }} />
+            </Route>
+          </Switch>
+        </WorkAreaContentContainer>
       </Container>
     </main>
   )

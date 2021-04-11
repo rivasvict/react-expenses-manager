@@ -99,6 +99,7 @@ const removeUserLocally = ({ dispatch, rawResponse, response }) => {
     throw response;
   }
 
+  // TODO: We need to clean the session storage
   setObjectToSessionStorage(response);
   dispatch(userLogOutSuccess());
 };
