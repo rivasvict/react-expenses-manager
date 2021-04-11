@@ -6,17 +6,6 @@ import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entri
 
 import { withRouter } from 'react-router-dom';
 
-const addEntryStyle = {
-  zIndex: '10000',
-  backgroundColor: 'white',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'fixed',
-  width: '100%',
-  height: '100%'
-};
-
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
     income: props['onAddIncome'],
@@ -58,7 +47,7 @@ class AddEntry extends Component {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
 
     return (
-      <div style={addEntryStyle}>
+      <React.Fragment>
         Add new {this.props.entryType}
         <input
           type='text'
@@ -77,7 +66,7 @@ class AddEntry extends Component {
         <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={categoryOptions} />
         <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history })}>Submit</button>
         <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
-      </div>
+      </React.Fragment>
     )
   }
 }

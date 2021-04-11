@@ -8,11 +8,11 @@ function GetEntriesList(entries) {
 function EntriesSummary({ entries, name }) {
   const entriesList = GetEntriesList(entries);
   return (
-    <div>
+    <React.Fragment>
       {name}<br/>
       <ul>{entriesList.length ? entriesList : null}</ul><br/>
       <div>Total: {getSumFromEntries(entries)}</div>
-    </div>
+    </React.Fragment>
   );
 }
 
