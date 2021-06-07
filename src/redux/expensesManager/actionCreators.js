@@ -1,3 +1,3 @@
 import { ActionCreators } from './actions';
 
-export const { addOutcome, addIncome, categoryChange } = ActionCreators();
+export const { addExpense, addIncome, categoryChange } = ActionCreators();

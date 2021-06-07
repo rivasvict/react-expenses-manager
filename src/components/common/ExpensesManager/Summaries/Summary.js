@@ -17,10 +17,10 @@ class Summary extends Component {
   getFilteredEntries = filter => {
     const entriesSummary = {
       incomes: <EntriesSummary entries={this.props.entries['incomes']} name='Incomes' />,
-      outcomes: <EntriesSummary entries={this.props.entries['outcomes']} name='Outcomes' />
+      expenses: <EntriesSummary entries={this.props.entries['expenses']} name='Expenses' />
     }
     
-    return entriesSummary[filter] || <EntriesSummary entries={[...this.props.entries.incomes, ...this.props.entries.outcomes]} name='Summary' />
+    return entriesSummary[filter] || <EntriesSummary entries={[...this.props.entries.incomes, ...this.props.entries.expenses]} name='Summary' />
   }
 
   render() {
@@ -28,9 +28,9 @@ class Summary extends Component {
       <div>
         <form>
           <select name='filter' value={this.state.filter} onChange={this.handleChange}>
-            <option value=''>All incomes and outcomes</option>
+            <option value=''>All incomes and expenses</option>
             <option value='incomes'>Incomes</option>
-            <option value='outcomes'>Outcomes</option>
+            <option value='expenses'>Expenses</option>
           </select>
         </form>
         {this.getFilteredEntries(this.state.filter)}

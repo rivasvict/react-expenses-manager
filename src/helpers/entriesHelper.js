@@ -22,7 +22,7 @@ function getEntryModel(entryType) {
 
 function getEntryCategoryOption(entryType) {
   const categoryOptions = {
-    outcome: [
+    expense: [
       { name: 'Food', value: 'food' },
       { name: 'House', value: 'house' }
     ],

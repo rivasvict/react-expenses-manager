@@ -5,7 +5,7 @@ import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE } from './actions';
 const initialState = {
   entries: {
     incomes: [],
-    outcomes: []
+    expenses: []
   },
   category: ''
 }
@@ -32,7 +32,7 @@ export const reducer = (state = initialState, action) => {
   switch (type) {
     case ADD_OUTCOME: return addEntry({
         entry: payload,
-        entryType: 'outcomes',
+        entryType: 'expenses',
         state
       });
     case ADD_INCOME: return addEntry({

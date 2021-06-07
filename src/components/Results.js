@@ -8,7 +8,7 @@ import RowLink from './common/RowLink';
 import ScreenTitle from './common/ScreenTitle';
 
 const incomesName = 'incomes';
-const outcomesName = 'outcomes';
+const expensesName = 'expenses';
 
 function TotalItem({ name, ammount, Icon, url }) {
   return (
@@ -32,17 +32,17 @@ function TotalItem({ name, ammount, Icon, url }) {
 
 function Results({ entries, baseUrl = '' }) {
   const incomesSum = getSum({ entryType: incomesName, entries: entries })
-  const outcomesSum = getSum({ entryType: outcomesName, entries: entries })
+  const expensesSum = getSum({ entryType: expensesName, entries: entries })
   const incomesUrl = `${baseUrl}/${incomesName}`;
-  const outcomesUrl = `${baseUrl}/${outcomesName}`;
+  const expensesUrl = `${baseUrl}/${expensesName}`;
   const summaryUrl = `${baseUrl}/summary`;
-  const totalSum = calculateTotal(incomesSum, outcomesSum);
+  const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
     <React.Fragment>
       <ScreenTitle screenTitle='Monthly Income/Expenses' />
       <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
-      <TotalItem name='Expenses' ammount={outcomesSum} url={outcomesUrl} Icon={IconSignOut} />
+      <TotalItem name='Expenses' ammount={expensesSum} url={expensesUrl} Icon={IconSignOut} />
       <RowLink to={summaryUrl} title='Summary' className='results-total'>
         <Col xs={12}>
           {`Savings: ${totalSum}`}

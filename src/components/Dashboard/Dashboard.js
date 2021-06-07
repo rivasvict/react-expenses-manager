@@ -43,13 +43,13 @@ function Dashboard({ entries }) {
               <AddEntry entryType='income' />
             </Route>
             <Route path={`${match.url}/add-expense`}>
-              <AddEntry entryType='outcome' />
+              <AddEntry entryType='expense' />
             </Route>
             <Route path={`${match.url}/incomes`}>
               <EntrySummaryWithFilter entryType='income' />
             </Route>
-            <Route path={`${match.url}/outcomes`}>
-              <EntrySummaryWithFilter entryType='outcome' />
+            <Route path={`${match.url}/expenses`}>
+              <EntrySummaryWithFilter entryType='expense' />
             </Route>
             <Route path={`${match.url}/summary`}>
               <Summary entries={entries} />
@@ -78,7 +78,7 @@ Dashboard.propTypes = {
         category: PropTypes.string.isRequired
       }).isRequired
     ).isRequired,
-    outcomes: PropTypes.arrayOf(
+    expenses: PropTypes.arrayOf(
       PropTypes.shape({
         ammount: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
