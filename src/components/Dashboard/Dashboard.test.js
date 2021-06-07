@@ -37,7 +37,7 @@ describe('Dashboard component test', () => {
     expect(DashboardInstance.state.entries.incomes).toStrictEqual([ newEntry, newEntry ]);
   })
 
-  it('addIncome: should add new income to the state outcomes', () => {
+  it('addIncome: should add new income to the state expenses', () => {
     act(() => {
       DashboardInstance.addIncome(newEntry);
       DashboardInstance.addIncome(newEntry);
@@ -47,25 +47,25 @@ describe('Dashboard component test', () => {
     expect(DashboardInstance.state.entries.incomes).toStrictEqual([ newEntry, newEntry ]);
   })
   
-  it('addOutcome: should add new outcome to the state outcomes', () => {
+  it('addExpense: should add new expense to the state expenses', () => {
     act(() => {
-      DashboardInstance.addOutcome(newEntry);
-      DashboardInstance.addOutcome(newEntry);
+      DashboardInstance.addExpense(newEntry);
+      DashboardInstance.addExpense(newEntry);
     });
 
-    expect(DashboardInstance.state.entries.outcomes.length).toBe(2);
-    expect(DashboardInstance.state.entries.outcomes).toStrictEqual([ newEntry, newEntry ]);
+    expect(DashboardInstance.state.entries.expenses.length).toBe(2);
+    expect(DashboardInstance.state.entries.expenses).toStrictEqual([ newEntry, newEntry ]);
   })
 
   it.only('getSum: should get the correct sum for entries added', () => {
     act(() => {
-      DashboardInstance.addOutcome(newEntry);
-      DashboardInstance.addOutcome(newEntry);
-      DashboardInstance.addOutcome(newEntry);
-      DashboardInstance.addOutcome(newEntry);
+      DashboardInstance.addExpense(newEntry);
+      DashboardInstance.addExpense(newEntry);
+      DashboardInstance.addExpense(newEntry);
+      DashboardInstance.addExpense(newEntry);
     });
 
-    const totalSum = DashboardInstance.getSum('outcomes');
+    const totalSum = DashboardInstance.getSum('expenses');
     expect(totalSum).toBe(parseInt(newEntry.ammount) * 4);
   })
 })

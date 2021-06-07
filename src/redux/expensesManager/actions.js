@@ -2,7 +2,7 @@ export const ADD_OUTCOME = 'ADD_OUTCOME';
 export const ADD_INCOME = 'ADD_INCOME';
 export const CATEGORY_CHANGE = 'CATEGORY_CHANGE'
 
-const AddOutcome = () => expense => ({
+const AddExpense = () => expense => ({
   type: ADD_OUTCOME, payload: expense
 });
 
@@ -17,7 +17,7 @@ const CategoryChange = () => categoryValue => ({
 })
 
 export const ActionCreators = () => ({
-  addOutcome: AddOutcome(),
+  addExpense: AddExpense(),
   addIncome: AddIncome(),
   categoryChange: CategoryChange()
 });

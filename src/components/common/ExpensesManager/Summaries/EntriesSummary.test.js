@@ -11,8 +11,8 @@ jest.mock('../helpers/entriesHelper');
 describe('EntriesSummary', () => {
   const entries = [
     { ammount: 12, type: 'imcome', description: 'My description', category: 'Salary' },
-    { ammount: -2, type: 'outcome', description: 'My description', category: 'Food' },
-    { ammount: -7, type: 'outcome', description: 'My description', category: 'Food' },
+    { ammount: -2, type: 'expense', description: 'My description', category: 'Food' },
+    { ammount: -7, type: 'expense', description: 'My description', category: 'Food' },
     { ammount: 12, type: 'imcome', description: 'My description', category: 'Salary' }
   ];
 

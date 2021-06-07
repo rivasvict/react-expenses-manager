@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
-import { addIncome, addOutcome } from '../../../../redux/expensesManager/actionCreators';
+import { addIncome, addExpense } from '../../../../redux/expensesManager/actionCreators';
 import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
     income: props['onAddIncome'],
-    outcome: props['onAddOutcome']
+    expense: props['onAddExpense']
   };
 
   return entryTypeToActionDictionary[entryType];
@@ -76,7 +76,7 @@ const mapStateToProps = state => ({
 
 const mapActionToProps = dispatch => ({
   onAddIncome: income => dispatch(addIncome(income)),
-  onAddOutcome: expense => dispatch(addOutcome(expense))
+  onAddExpense: expense => dispatch(addExpense(expense))
 });
 
 export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));
