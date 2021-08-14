@@ -11,7 +11,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Header from '../common/Header';
 import './Dashboard.scss';
 import WorkAreaContentContainer from '../common/WorkAreaContentContainer';
-import { getBalance } from '../../redux/expensesManager/actionCreators';
 
 const DashboardContent = ({ entries, match }) => (
   <React.Fragment>
@@ -32,8 +31,8 @@ const DashboardContent = ({ entries, match }) => (
 );
 
 function Dashboard({ entries }) {
-  const match = useRouteMatch(); 
- 
+  const match = useRouteMatch();
+
   return (
     <main className='main-container'>
       <Header />
@@ -74,22 +73,24 @@ Dashboard.propTypes = {
     incomes: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
-        description: PropTypes.string.isRequired,
+        description: PropTypes.string,
+        timestamp: PropTypes.number,
+        type: PropTypes.string.isRequired,
         category: PropTypes.shape({
-          id: PropTypes.number.isRequired,
+          id: PropTypes.number,
           name: PropTypes.string.isRequired,
-          type: PropTypes.string.isRequired
         })
       }).isRequired
     ).isRequired,
     expenses: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
-        description: PropTypes.string.isRequired,
+        description: PropTypes.string,
+        timestamp: PropTypes.number,
+        type: PropTypes.string.isRequired,
         category: PropTypes.shape({
-          id: PropTypes.number.isRequired,
+          id: PropTypes.number,
           name: PropTypes.string.isRequired,
-          type: PropTypes.string.isRequired
         })
       }).isRequired
     ).isRequired

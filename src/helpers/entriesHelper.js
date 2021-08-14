@@ -17,7 +17,7 @@ function getEntries({ entries, entryType}) {
 }
 
 function getEntryModel(entryType) {
-  return { amount: '', description: '', type: entryType, category: '' };
+  return { amount: '', description: '', type: entryType, category: { name: '' } };
 }
 
 function getEntryCategoryOption(entryType) {
