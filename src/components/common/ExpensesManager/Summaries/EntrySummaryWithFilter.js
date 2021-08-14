@@ -19,7 +19,7 @@ class EntrySummaryWithFilter extends Component {
 
   getFilteredEntriesByCategory = ({ category, entryNamePlural }) => {
     const entries = this.props.entries[entryNamePlural];
-    return category.length ? entries.filter(entry => entry.category === category) : entries;
+    return category.length ? entries.filter(entry => entry.category.name === category) : entries;
   };
 
   render() {
