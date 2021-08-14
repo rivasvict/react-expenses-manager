@@ -16,7 +16,7 @@ describe('Dashboard component test', () => {
     jsDomTree = tree.toJSON();
     DashboardInstance = tree.root.findByType(Dashboard).instance;
     newEntry = {
-      ammount: '12',
+      amount: '12',
       description: 'fwwr',
       type: 'income',
       category: 'salary'
@@ -66,6 +66,6 @@ describe('Dashboard component test', () => {
     });
 
     const totalSum = DashboardInstance.getSum('expenses');
-    expect(totalSum).toBe(parseInt(newEntry.ammount) * 4);
+    expect(totalSum).toBe(parseInt(newEntry.amount) * 4);
   })
 })

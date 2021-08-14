@@ -10,7 +10,7 @@ import ScreenTitle from './common/ScreenTitle';
 const incomesName = 'incomes';
 const expensesName = 'expenses';
 
-function TotalItem({ name, ammount, Icon, url }) {
+function TotalItem({ name, amount, Icon, url }) {
   return (
     <RowLink to={url} title={name} className='total-row'>
       <Col xs={1}>
@@ -24,7 +24,7 @@ function TotalItem({ name, ammount, Icon, url }) {
         {name}
       </Col>
       <Col xs={6}>
-        {ammount}
+        {amount}
       </Col>
     </RowLink>
   );
@@ -41,8 +41,8 @@ function Results({ entries, baseUrl = '' }) {
   return (
     <React.Fragment>
       <ScreenTitle screenTitle='Monthly Income/Expenses' />
-      <TotalItem name='Incomes' ammount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
-      <TotalItem name='Expenses' ammount={expensesSum} url={expensesUrl} Icon={IconSignOut} />
+      <TotalItem name='Incomes' amount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
+      <TotalItem name='Expenses' amount={expensesSum} url={expensesUrl} Icon={IconSignOut} />
       <RowLink to={summaryUrl} title='Summary' className='results-total'>
         <Col xs={12}>
           {`Savings: ${totalSum}`}

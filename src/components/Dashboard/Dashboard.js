@@ -11,6 +11,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Header from '../common/Header';
 import './Dashboard.scss';
 import WorkAreaContentContainer from '../common/WorkAreaContentContainer';
+import { getBalance } from '../../redux/expensesManager/actionCreators';
 
 const DashboardContent = ({ entries, match }) => (
   <React.Fragment>
@@ -72,18 +73,24 @@ Dashboard.propTypes = {
   entries: PropTypes.shape({
     incomes: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.number.isRequired,
+        amount: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired
+        category: PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          name: PropTypes.string.isRequired,
+          type: PropTypes.string.isRequired
+        })
       }).isRequired
     ).isRequired,
     expenses: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.number.isRequired,
+        amount: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired
+        category: PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          name: PropTypes.string.isRequired,
+          type: PropTypes.string.isRequired
+        })
       }).isRequired
     ).isRequired
   }).isRequired
