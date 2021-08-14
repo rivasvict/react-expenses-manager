@@ -74,7 +74,7 @@ Dashboard.propTypes = {
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
         description: PropTypes.string,
-        timestamp: PropTypes.number,
+        timestamp: PropTypes.number.isRequired,
         type: PropTypes.string.isRequired,
         category: PropTypes.shape({
           id: PropTypes.number,
@@ -86,7 +86,7 @@ Dashboard.propTypes = {
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
         description: PropTypes.string,
-        timestamp: PropTypes.number,
+        timestamp: PropTypes.number.isRequired,
         type: PropTypes.string.isRequired,
         category: PropTypes.shape({
           id: PropTypes.number,
