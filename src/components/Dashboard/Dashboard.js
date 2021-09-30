@@ -31,8 +31,8 @@ const DashboardContent = ({ entries, match }) => (
 );
 
 function Dashboard({ entries }) {
-  const match = useRouteMatch(); 
- 
+  const match = useRouteMatch();
+
   return (
     <main className='main-container'>
       <Header />
@@ -72,18 +72,26 @@ Dashboard.propTypes = {
   entries: PropTypes.shape({
     incomes: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.number.isRequired,
-        description: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired,
+        description: PropTypes.string,
+        timestamp: PropTypes.number.isRequired,
         type: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired
+        category: PropTypes.shape({
+          id: PropTypes.number,
+          name: PropTypes.string.isRequired,
+        })
       }).isRequired
     ).isRequired,
     expenses: PropTypes.arrayOf(
       PropTypes.shape({
-        ammount: PropTypes.number.isRequired,
-        description: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired,
+        description: PropTypes.string,
+        timestamp: PropTypes.number.isRequired,
         type: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired
+        category: PropTypes.shape({
+          id: PropTypes.number,
+          name: PropTypes.string.isRequired,
+        })
       }).isRequired
     ).isRequired
   }).isRequired

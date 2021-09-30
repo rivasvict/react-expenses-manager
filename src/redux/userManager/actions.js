@@ -1,4 +1,5 @@
 import { setObjectToSessionStorage } from "../../helpers/general";
+import { getBalance } from "../expensesManager/actionCreators";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -89,6 +90,7 @@ const setUserLocally = ({ dispatch, rawResponse, response }) => {
 
   setObjectToSessionStorage(response);
   dispatch(userLoginSuccess(response));
+  dispatch(getBalance());
 };
 
 const removeUserLocally = ({ dispatch, rawResponse, response }) => {

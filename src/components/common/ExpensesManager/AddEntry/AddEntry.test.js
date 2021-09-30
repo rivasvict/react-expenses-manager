@@ -7,8 +7,8 @@ let container = null;
 
 const categoryOptions = [{ name: 'Cat1', value: 'cat1' }, { name: 'Cat2', value: 'cat2' }];
 const entryData = {
-  valid: { ammount: '12', category: categoryOptions[0].value, description: '', type: 'Income' },
-  invalid: { ammount: 'as12', category: categoryOptions[0].value, description: '', type: 'Income' }
+  valid: { amount: '12', category: categoryOptions[0].value, description: '', type: 'Income' },
+  invalid: { amount: 'as12', category: categoryOptions[0].value, description: '', type: 'Income' }
 };
 
 describe('Test AddEntry component', () => {

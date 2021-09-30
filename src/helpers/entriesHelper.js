@@ -1,7 +1,8 @@
+import moment from "moment";
 import { calculateTotal } from "./general";
 
 function getSumFromEntries(entries) {
-  const entriesForSum = entries.map(entry => parseInt(entry.ammount));
+  const entriesForSum = entries.map(entry => parseInt(entry.amount));
   return calculateTotal(...entriesForSum);
 }
 
@@ -17,7 +18,8 @@ function getEntries({ entries, entryType}) {
 }
 
 function getEntryModel(entryType) {
-  return { ammount: '', description: '', type: entryType, category: '' };
+  const timestamp = moment().unix();
+  return { timestamp, amount: '', description: '', type: entryType, category: { name: '' } };
 }
 
 function getEntryCategoryOption(entryType) {

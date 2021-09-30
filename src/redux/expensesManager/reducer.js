@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE } from './actions';
+import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE, GET_BALANCE } from './actions';
 
 const initialState = {
   entries: {
@@ -11,9 +11,9 @@ const initialState = {
 }
 
 const getEntryWithCalculableAmount = (entry, entryType) => {
-  const calculableAmount = entryType === 'incomes' ? parseInt(entry.ammount) : parseInt(`-${entry.ammount}`);
+  const calculableAmount = entryType === 'incomes' ? parseInt(entry.amount) : parseInt(`-${entry.amount}`);
 
-  return { ammount: calculableAmount, ..._.omit(entry, 'ammount') };
+  return { amount: calculableAmount, ..._.omit(entry, 'amount') };
 };
 
 const addEntry = ({ entry, entryType, state }) => {
@@ -41,6 +41,13 @@ export const reducer = (state = initialState, action) => {
         state
       });
     case CATEGORY_CHANGE: return categoryChange({ categoryValue: payload, currentState: state });
+    case GET_BALANCE: return {
+      ...state,
+      entries: {
+        incomes: [ ...state.entries.incomes , ...payload.entries.incomes ],
+        expenses: [  ...state.entries.expenses, ...payload.entries.expenses]
+      }
+    };
     default:
       return state;
   }

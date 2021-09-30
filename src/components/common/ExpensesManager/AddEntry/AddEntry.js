@@ -28,11 +28,16 @@ class AddEntry extends Component {
     })
   }
 
+  setCategory = (event) => {
+    const { value } = event.currentTarget;
+    this.setState(() => ({ category: { name: value }}))
+  }
+
   handleSubmit = (event, { handleEntry, history }) => {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
-    if (entry.ammount && digitMatcher.test(entry.ammount) && entry.category !== '') {
+    if (entry.amount && digitMatcher.test(entry.amount) && entry.category !== '') {
       handleEntry(entry);
       this.navigateToDashboard(history);
     }
@@ -51,9 +56,9 @@ class AddEntry extends Component {
         Add new {this.props.entryType}
         <input
           type='text'
-          name='ammount'
+          name='amount'
           placeholder={this.props.entryType}
-          value={this.state.ammount}
+          value={this.state.amount}
           onChange={this.handleInputChange}>
         </input>
         <input
@@ -63,7 +68,7 @@ class AddEntry extends Component {
           value={this.state.description}
           onChange={this.handleInputChange}>
         </input>
-        <CategorySelector name='category' value={this.state.category} handleChange={this.handleInputChange} categoryOptions={categoryOptions} />
+        <CategorySelector name='category' value={this.state.category.name} handleChange={this.setCategory} categoryOptions={categoryOptions} />
         <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history })}>Submit</button>
         <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
       </React.Fragment>
