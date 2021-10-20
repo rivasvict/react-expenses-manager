@@ -8,7 +8,7 @@ function calculateTotal(...numbersToSum) {
 function setObjectToSessionStorage(objectToSet) {
   const receivedType = typeof objectToSet;
   if (receivedType === 'object') {
-    for(const key in objectToSet) {
+    for (const key in objectToSet) {
       sessionStorage.setItem(key, objectToSet[key]);
     }
   } else {
@@ -16,7 +16,21 @@ function setObjectToSessionStorage(objectToSet) {
   }
 }
 
+const postConfig = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+};
+
+const postConfigAuthenticated = {
+  ...postConfig,
+  credentials: 'include',
+}
+
 export {
   calculateTotal,
-  setObjectToSessionStorage
+  setObjectToSessionStorage,
+  postConfig,
+  postConfigAuthenticated 
 };

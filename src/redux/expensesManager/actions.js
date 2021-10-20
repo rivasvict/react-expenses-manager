@@ -1,3 +1,4 @@
+import { postConfigAuthenticated } from "../../helpers/general";
 export const ADD_OUTCOME = 'ADD_OUTCOME';
 export const ADD_INCOME = 'ADD_INCOME';
 export const CATEGORY_CHANGE = 'CATEGORY_CHANGE'
@@ -14,14 +15,9 @@ const setAppLoading = isLoading => ({
   payload: { isLoading: isLoading }
 })
 
-const AddExpense = () => expense => ({
-  type: ADD_OUTCOME, payload: expense
-});
+const AddExpense = () => expense => setRecord({ entry: expense, type: ADD_OUTCOME });
 
-const AddIncome = () => income => ({
-  type: ADD_INCOME,
-  payload: income
-});
+const AddIncome = () => income => setRecord({ entry: income, type: ADD_INCOME })
 
 const CategoryChange = () => categoryValue => ({
   type: CATEGORY_CHANGE,
@@ -44,6 +40,22 @@ const GetBalance = () => () => {
       console.log(error);
     }
   };
+};
+
+const setRecord = ({ entry, type }) => {
+  return async (dispatch) => {
+    try {
+      const url = `${baseUrl}/api/balance`;
+      const body = JSON.stringify(entry);
+      dispatch(setAppLoading(true));
+      await fetch( url, { body, ...postConfigAuthenticated });
+      // TODO: Revisit this against the pattern of action creators
+      dispatch({ type, payload: entry });
+      dispatch(setAppLoading(false));
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };
 
 export const ActionCreators = () => ({
