@@ -1,5 +1,6 @@
-import { setObjectToSessionStorage } from "../../helpers/general";
+import { postConfigAuthenticated, setObjectToSessionStorage } from "../../helpers/general";
 import { getBalance } from "../expensesManager/actionCreators";
+import { postConfig } from "../../helpers/general";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -62,8 +63,7 @@ const CreateUser = () => (userPayload) => {
       const body = JSON.stringify({ user: userPayload });
       dispatch(setAppLoading(true));
       const rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        ...postConfig,
         body
       });
       const response = await rawResponse.json()
@@ -113,12 +113,7 @@ const LogIn = () => ({ userPayload }) => {
       const body = JSON.stringify({ user: userPayload });
       dispatch(setAppLoading(true));
       dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body
-      });
+      const rawResponse = await fetch(url, { body, ...postConfigAuthenticated });
       const response = await rawResponse.json()
 
       setUserLocally({ dispatch, rawResponse, response });
@@ -134,11 +129,7 @@ const LogOut = () => () => {
       const url = `${baseUrl}/api/user/log-out`;
       dispatch(setAppLoading(true));
       dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-      });
+      const rawResponse = await fetch(url, postConfigAuthenticated);
       const response = await rawResponse.json()
 
       removeUserLocally({ dispatch, rawResponse, response });
