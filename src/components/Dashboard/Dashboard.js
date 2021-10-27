@@ -1,36 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Results from '../Results';
 import AddEntry from '../common/ExpensesManager/AddEntry/AddEntry';
 import Summary from '../../components/common/ExpensesManager/Summaries/Summary';
 import EntrySummaryWithFilter from '../common/ExpensesManager/Summaries/EntrySummaryWithFilter'
 
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import Header from '../common/Header';
 import './Dashboard.scss';
 import WorkAreaContentContainer from '../common/WorkAreaContentContainer';
+import DashboardContent from './DashboardContent';
 
-const DashboardContent = ({ entries, match }) => (
-  <React.Fragment>
-    <Row className='top-container'>
-      <Col xs={12} className='top-content'>
-        <Results
-          entries={entries}
-          baseUrl={match.url} />
-      </Col>
-    </Row>
-    <Row>
-      <Col xs={12} className='bottom-content'>
-        <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
-        <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
-      </Col>
-    </Row>
-  </React.Fragment>
-);
-
-function Dashboard({ entries }) {
+function Dashboard({ entries, selectedDate }) {
   const match = useRouteMatch();
 
   return (
@@ -40,19 +22,20 @@ function Dashboard({ entries }) {
         <WorkAreaContentContainer>
           <Switch>
             <Route path={`${match.url}/add-income`}>
-              <AddEntry entryType='income' />
+              <AddEntry entryType='income' selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}/add-expense`}>
-              <AddEntry entryType='expense' />
+              <AddEntry entryType='expense' selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}/incomes`}>
-              <EntrySummaryWithFilter entryType='income' />
+              <EntrySummaryWithFilter selectedDate={selectedDate} entryType='income' />
             </Route>
             <Route path={`${match.url}/expenses`}>
-              <EntrySummaryWithFilter entryType='expense' />
+              <EntrySummaryWithFilter selectedDate={selectedDate} entryType='expense' />
             </Route>
             <Route path={`${match.url}/summary`}>
-              <Summary entries={entries} />
+              {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
+              <Summary entries={entries} selectedDate={selectedDate} />
             </Route>
             <Route exact path={`${match.url}`}>
               <DashboardContent {...{ entries, match }} />
@@ -65,9 +48,11 @@ function Dashboard({ entries }) {
 }
 
 const mapStateToProps = state => ({
-  entries: state.expensesManager.entries
+  entries: state.expensesManager.entries,
+  selectedDate: state.expensesManager.selectedDate
 });
 
+// TODO: Fix this propTypes and add it through the whole application
 Dashboard.propTypes = {
   entries: PropTypes.shape({
     incomes: PropTypes.arrayOf(

@@ -10,6 +10,7 @@ class EntrySummaryWithFilter extends Component {
     super();
 
     this.onCategoryChange = props.onCategoryChange;
+    this.selectedDate = props.selectedDate;
   }
 
   handleChange = (event) => {
@@ -18,7 +19,9 @@ class EntrySummaryWithFilter extends Component {
   }
 
   getFilteredEntriesByCategory = ({ category, entryNamePlural }) => {
-    const entries = this.props.entries[entryNamePlural];
+    const selectedYear = this.selectedDate.year;
+    const selectedMonth = this.selectedDate.month;
+    const entries = this.props.entries[selectedYear][selectedMonth][entryNamePlural];
     return category.length ? entries.filter(entry => entry.category.name === category) : entries;
   };
 
@@ -28,6 +31,7 @@ class EntrySummaryWithFilter extends Component {
     const name = entryNamePlural;
     return (
       <React.Fragment>
+        {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
         <CategorySelector name='category' value={this.props.category} handleChange={this.handleChange.bind(this)} categoryOptions={categoryOptions} />
         <EntriesSummary entries={this.getFilteredEntriesByCategory({ category: this.props.category, entryNamePlural })} name={name} />
       </React.Fragment>

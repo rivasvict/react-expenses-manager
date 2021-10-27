@@ -9,7 +9,7 @@ function getSumFromEntries(entries) {
 function getSum({ entryType, entries }) {
   if (entries[entryType]) {
     const entriesByType = getEntries({ entryType, entries });
-    return getSumFromEntries(entriesByType);
+    return entryType === 'incomes' ? getSumFromEntries(entriesByType) : -getSumFromEntries(entriesByType);
   }
 }
 
@@ -18,6 +18,7 @@ function getEntries({ entries, entryType}) {
 }
 
 function getEntryModel(entryType) {
+  // TODO: Change the use of moment by dayjs
   const timestamp = moment().unix();
   return { timestamp, amount: '', description: '', type: entryType, category: { name: '' } };
 }
