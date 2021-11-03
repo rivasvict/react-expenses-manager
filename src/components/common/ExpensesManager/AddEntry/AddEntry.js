@@ -33,12 +33,12 @@ class AddEntry extends Component {
     this.setState(() => ({ category: { name: value }}))
   }
 
-  handleSubmit = (event, { handleEntry, history }) => {
+  handleSubmit = (event, { handleEntry, history, selectedDate }) => {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
     if (entry.amount && digitMatcher.test(entry.amount) && entry.category !== '') {
-      handleEntry(entry);
+      handleEntry({ entry, selectedDate });
       this.navigateToDashboard(history);
     }
   }
@@ -53,6 +53,7 @@ class AddEntry extends Component {
 
     return (
       <React.Fragment>
+        {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
         Add new {this.props.entryType}
         <input
           type='text'
@@ -69,7 +70,7 @@ class AddEntry extends Component {
           onChange={this.handleInputChange}>
         </input>
         <CategorySelector name='category' value={this.state.category.name} handleChange={this.setCategory} categoryOptions={categoryOptions} />
-        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history })}>Submit</button>
+        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>Submit</button>
         <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
       </React.Fragment>
     )

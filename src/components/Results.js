@@ -5,7 +5,6 @@ import { Col } from 'react-bootstrap';
 import './Results.scss';
 import { IconSignIn, IconSignOut } from './common/Icons';
 import RowLink from './common/RowLink';
-import ScreenTitle from './common/ScreenTitle';
 
 const incomesName = 'incomes';
 const expensesName = 'expenses';
@@ -40,7 +39,6 @@ function Results({ entries, baseUrl = '' }) {
 
   return (
     <React.Fragment>
-      <ScreenTitle screenTitle='Monthly Income/Expenses' />
       <TotalItem name='Incomes' amount={incomesSum} url={incomesUrl} Icon={IconSignIn} />
       <TotalItem name='Expenses' amount={expensesSum} url={expensesUrl} Icon={IconSignOut} />
       <RowLink to={summaryUrl} title='Summary' className='results-total'>

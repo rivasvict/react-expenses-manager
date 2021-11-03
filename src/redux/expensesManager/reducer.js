@@ -1,53 +1,77 @@
 import _ from 'lodash';
+import { getCurrentMonth, getCurrentYear } from '../../helpers/date';
 
-import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE, GET_BALANCE } from './actions';
+import { ADD_OUTCOME, ADD_INCOME, CATEGORY_CHANGE, GET_BALANCE, SET_SELECTED_DATE } from './actions';
 
 const initialState = {
   entries: {
-    incomes: [],
-    expenses: []
   },
-  category: ''
+  category: '',
+  selectedDate: {
+    // Current month and year by default
+    // So the app is always up to date
+    // when it first load
+    month: getCurrentMonth(),
+    year: getCurrentYear()
+  }
 }
 
-const getEntryWithCalculableAmount = (entry, entryType) => {
-  const calculableAmount = entryType === 'incomes' ? parseInt(entry.amount) : parseInt(`-${entry.amount}`);
+const getEntryWithCalculableAmount = entry => (
+  { amount: parseInt(entry.amount), ..._.omit(entry, 'amount') }
+);
 
-  return { amount: calculableAmount, ..._.omit(entry, 'amount') };
-};
-
-const addEntry = ({ entry, entryType, state }) => {
-  const entryWithCalculableAmount = getEntryWithCalculableAmount(entry, entryType);
-  const entriesToInsert = [...state.entries[entryType], entryWithCalculableAmount];
-  const newState = _.chain({}).merge(state).merge({entries: {[entryType]: entriesToInsert}}).value();
+const addEntry = ({ entry, entryType, state, selectedDate }) => {
+  const selectedYear = selectedDate.year;
+  const selectedMonth = selectedDate.month;
+  const entryWithCalculableAmount = getEntryWithCalculableAmount(entry);
+  const entriesToInsert = [...state.entries[selectedYear][selectedMonth][entryType], entryWithCalculableAmount];
+  const newState = _.chain({}).merge(state).merge({
+    entries: {
+      [selectedYear]: {
+        [selectedMonth]: {
+          [entryType]: entriesToInsert
+        }
+      }
+    }
+  }).value();
   return newState;
 };
 
-const categoryChange = ({ categoryValue, currentState}) => {
+const changeCategory = ({ categoryValue, currentState}) => {
   return { ...currentState, category: categoryValue };
+};
+
+const changeSelectedDate = ({ newSelectedDateValue, currentState }) =>{
+  return { ...currentState, selectedDate: newSelectedDateValue };
 };
 
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case ADD_OUTCOME: return addEntry({
-        entry: payload,
+        entry: payload.entry,
+        selectedDate: payload.selectedDate,
         entryType: 'expenses',
         state
       });
     case ADD_INCOME: return addEntry({
-        entry: payload,
+        entry: payload.entry,
+        selectedDate: payload.selectedDate,
         entryType: 'incomes',
         state
       });
-    case CATEGORY_CHANGE: return categoryChange({ categoryValue: payload, currentState: state });
+    case CATEGORY_CHANGE: return changeCategory({ categoryValue: payload, currentState: state });
     case GET_BALANCE: return {
       ...state,
       entries: {
-        incomes: [ ...state.entries.incomes , ...payload.entries.incomes ],
-        expenses: [  ...state.entries.expenses, ...payload.entries.expenses]
+        ...state.entries,
+        ...payload.entries
       }
     };
+    case SET_SELECTED_DATE: return changeSelectedDate({
+      newSelectedDateValue: payload,
+      currentState: state
+    });
     default:
       return state;
   }
