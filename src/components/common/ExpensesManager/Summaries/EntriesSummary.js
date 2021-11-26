@@ -2,7 +2,6 @@ import React from 'react';
 import { getSumFromEntries } from '../../../../helpers/entriesHelper';
 
 function GetEntriesList(entries) {
-  // TODO: Change the way categories are shown here
   return entries.map((entry, key) => {
     const category = entry.categories_path.split(',')[1];
     return (
