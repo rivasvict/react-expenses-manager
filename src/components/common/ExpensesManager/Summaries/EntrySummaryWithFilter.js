@@ -22,7 +22,7 @@ class EntrySummaryWithFilter extends Component {
     const selectedYear = this.selectedDate.year;
     const selectedMonth = this.selectedDate.month;
     const entries = this.props.entries[selectedYear][selectedMonth][entryNamePlural];
-    return category.length ? entries.filter(entry => entry.category.name === category) : entries;
+    return category.length ? entries.filter(entry => entry.categories_path.match(category)) : entries;
   };
 
   render() {
