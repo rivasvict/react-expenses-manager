@@ -37,7 +37,7 @@ class AddEntry extends Component {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
-    if (entry.ammount && digitMatcher.test(entry.ammount) && entry.category !== '') {
+    if (entry.amount && digitMatcher.test(entry.amount) && entry.category !== '') {
       handleEntry({ entry, selectedDate });
       this.navigateToDashboard(history);
     }
@@ -57,7 +57,7 @@ class AddEntry extends Component {
         Add new {this.props.entryType}
         <input
           type='text'
-          name='ammount'
+          name='amount'
           placeholder={this.props.entryType}
           value={this.state.amount}
           onChange={this.handleInputChange}>

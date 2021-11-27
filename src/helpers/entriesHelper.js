@@ -2,7 +2,7 @@ import moment from "moment";
 import { calculateTotal } from "./general";
 
 function getSumFromEntries(entries) {
-  const entriesForSum = entries.map(entry => parseInt(entry.ammount));
+  const entriesForSum = entries.map(entry => parseInt(entry.amount));
   return calculateTotal(...entriesForSum);
 }
 
@@ -20,7 +20,7 @@ function getEntries({ entries, entryType}) {
 function getEntryModel(entryType) {
   // TODO: Change the use of moment by dayjs
   const timestamp = moment().unix();
-  return { date: timestamp, ammount: '', description: '', type: entryType, categories_path: '' };
+  return { date: timestamp, amount: '', description: '', type: entryType, categories_path: '' };
 }
 
 function getEntryCategoryOption(entryType) {
