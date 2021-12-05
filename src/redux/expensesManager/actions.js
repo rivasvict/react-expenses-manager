@@ -45,21 +45,18 @@ const groupEntriesByDate = () => ({ entries }) => {
         const newEntryYear = newEntryDate.year();
         const newEntryMonth = newEntryDate.month();
 
-        if (parsedEntries[newEntryYear] &&
-          parsedEntries[newEntryYear][newEntryMonth] &&
-          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`]
-        ) {
-          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(newEntry);
+        // Year not created
+        if (!parsedEntries[newEntryYear]) {
+          parsedEntries[newEntryYear] = { [newEntryMonth]: { [`${newEntry.type}s`]: [newEntry] } };
+        // Year created but month not created
+        } else if (parsedEntries[newEntryYear] && !parsedEntries[newEntryYear][newEntryMonth]) {
+          parsedEntries[newEntryYear][newEntryMonth] = { [`${newEntry.type}s`]: [newEntry] };
+        // Year created and month created but not the entry type
+        } else if (parsedEntries[newEntryYear] && parsedEntries[newEntryYear][newEntryMonth] && !parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`]) {
+          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`] = [newEntry];
+        // Everything exists
         } else {
-          if (parsedEntries[newEntryYear] && parsedEntries[newEntryYear][newEntryMonth]) {
-            parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`] = [newEntry];
-          } else {
-            if (!parsedEntries[newEntryYear]) {
-              parsedEntries[newEntryYear] = { [newEntryMonth]: { [`${newEntry.type}s`]: [newEntry] } };
-            } else {
-              parsedEntries[newEntryYear][newEntryMonth] = { [`${newEntry.type}s`]: [newEntry] };
-            }
-          }
+          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(newEntry);
         }
 
         return parsedEntries;
