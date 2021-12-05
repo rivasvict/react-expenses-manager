@@ -32,15 +32,12 @@ const CategoryChange = () => categoryValue => ({
   payload: categoryValue
 });
 
-const groupEntriesByDate = () => ({ entries }) => {
+const getGroupEntriesByDate = () => (entries) => {
   let entriesToSetInState = entries;
 
   if (entries.length) {
-    entriesToSetInState = {
-      entries: {}
-    };
-    return {
-      entries: entries.reduce((parsedEntries, newEntry) => {
+    return (
+      entries.reduce((parsedEntries, newEntry) => {
         const newEntryDate = dayjs(newEntry.date);
         const newEntryYear = newEntryDate.year();
         const newEntryMonth = newEntryDate.month();
@@ -61,10 +58,69 @@ const groupEntriesByDate = () => ({ entries }) => {
 
         return parsedEntries;
       }, {})
-    };
+    );
   }
 
   return entriesToSetInState;
+};
+
+const getEmtpyMonthModel = () => ({
+  incomes: [],
+  expenses: []
+});
+
+const fillYear = ({ entries, pointerYear }) => {
+  for (let i = 0; i <= 11; i++) {
+    if (!entries[pointerYear]) {
+      entries[pointerYear] = { [i]: getEmtpyMonthModel() };
+    } else {
+      entries[pointerYear][i] = getEmtpyMonthModel();
+    }
+  }
+};
+
+const getEntriesWithFilledDates = () => ({ entries, firstEntryDate }) => {
+  const pointerDate = dayjs(firstEntryDate);
+  let pointerYear = pointerDate.year();
+  let pointerMonth = pointerDate.month();
+  const endDate = dayjs();
+  const endYear = endDate.year();
+  const endMonth = endDate.month();
+
+  while (pointerYear <= endYear && pointerMonth <= endMonth) {
+    if (!entries[pointerYear]) {
+      fillYear({ entries, pointerYear })
+      pointerMonth = 0;
+      pointerYear++;
+    } else if (entries[pointerYear] && !entries[pointerYear][pointerMonth]) {
+      entries[pointerYear][pointerMonth] = getEmtpyMonthModel();
+      pointerMonth++;
+      if (pointerMonth > 11) {
+        pointerMonth = 0;
+        pointerYear++;
+      }
+    } else if (entries[pointerYear] && entries[pointerYear][pointerMonth] && !(entries[pointerYear][pointerMonth].incomes || entries[pointerYear][pointerMonth].incomes)) {
+      const entryMonthContent = entries[pointerYear][pointerMonth];
+      if (!entryMonthContent.incomes && entryMonthContent.expenses) {
+        entries[pointerYear][pointerMonth].incomes = [];
+      } else if (entryMonthContent.incomes && !entryMonthContent.expenses) {
+        entries[pointerYear][pointerMonth].expenses = [];
+      }
+      pointerMonth++;
+      if (pointerMonth > 11) {
+        pointerMonth = 0;
+        pointerYear++;
+      }
+    } else {
+      pointerMonth++;
+      if (pointerMonth > 11) {
+        pointerMonth = 0;
+        pointerYear++;
+      }
+    }
+  }
+
+  return entries;
 };
 
 const GetBalance = () => () => {
@@ -77,8 +133,9 @@ const GetBalance = () => () => {
       });
       const response = await rawResponse.json();
       // TODO: Revisit this against the pattern of action creators
-      console.log(groupEntriesByDate()(response));
-      dispatch({ type: GET_BALANCE, payload: groupEntriesByDate()(response) });
+      const groupEntriesByDate = getGroupEntriesByDate()(response);
+      const fullEntriesWithFilledDates = getEntriesWithFilledDates()({ entries: groupEntriesByDate, firstEntryDate: response.length && response[0].date });
+      dispatch({ type: GET_BALANCE, payload: { entries: fullEntriesWithFilledDates }});
       dispatch(setAppLoading(false));
     } catch (error) {
       console.log(error);
