@@ -99,11 +99,12 @@ const getEntriesWithFilledDates = () => ({ entries, firstEntryDate }) => {
         pointerMonth = 0;
         pointerYear++;
       }
-    } else if (entries[pointerYear] && entries[pointerYear][pointerMonth] && !(entries[pointerYear][pointerMonth].incomes || entries[pointerYear][pointerMonth].incomes)) {
+    } else if (entries[pointerYear] && entries[pointerYear][pointerMonth] && (!entries[pointerYear][pointerMonth].incomes || !entries[pointerYear][pointerMonth].expenses)) {
       const entryMonthContent = entries[pointerYear][pointerMonth];
-      if (!entryMonthContent.incomes && entryMonthContent.expenses) {
+      if (!entryMonthContent.incomes) {
         entries[pointerYear][pointerMonth].incomes = [];
-      } else if (entryMonthContent.incomes && !entryMonthContent.expenses) {
+      }
+      if (!entryMonthContent.expenses) {
         entries[pointerYear][pointerMonth].expenses = [];
       }
       pointerMonth++;
