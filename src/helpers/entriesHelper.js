@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import moment from "moment";
 import { calculateTotal } from "./general";
 
@@ -18,8 +19,7 @@ function getEntries({ entries, entryType}) {
 }
 
 function getEntryModel(entryType) {
-  // TODO: Change the use of moment by dayjs
-  const timestamp = moment().unix();
+  const timestamp = dayjs().unix() * 1000;
   return { date: timestamp, amount: '', description: '', type: entryType, categories_path: '' };
 }
 
