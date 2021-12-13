@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import moment from "moment";
 import { calculateTotal } from "./general";
 
 function getSumFromEntries(entries) {
