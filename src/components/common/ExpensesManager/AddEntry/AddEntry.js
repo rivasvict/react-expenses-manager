@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { addIncome, addExpense } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper'; 
+import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
 

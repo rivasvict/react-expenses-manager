@@ -1,4 +1,4 @@
-import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper";
+import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
 import { postConfigAuthenticated } from "../../helpers/general";
 export const ADD_OUTCOME = 'ADD_OUTCOME';
 export const ADD_INCOME = 'ADD_INCOME';

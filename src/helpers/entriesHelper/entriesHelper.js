@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { calculateTotal } from "./general";
+import { calculateTotal } from "../general";
 
 function getSumFromEntries(entries) {
   const entriesForSum = entries.map(entry => parseInt(entry.amount));
