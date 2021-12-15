@@ -1,3 +1,4 @@
+import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
 import { postConfigAuthenticated } from "../../helpers/general";
 export const ADD_OUTCOME = 'ADD_OUTCOME';
 export const ADD_INCOME = 'ADD_INCOME';
@@ -14,21 +15,21 @@ export const SET_APP_LOADING = 'SET_APP_LOADING';
 const setAppLoading = isLoading => ({
   type: SET_APP_LOADING,
   payload: { isLoading: isLoading }
-})
+});
 
 const AddExpense = () => ({ entry, selectedDate }) => setRecord({ entry, type: ADD_OUTCOME, selectedDate });
 
-const AddIncome = () => ({ entry, selectedDate }) => setRecord({ entry, type: ADD_INCOME, selectedDate })
+const AddIncome = () => ({ entry, selectedDate }) => setRecord({ entry, type: ADD_INCOME, selectedDate });
 
 const SetSelectedDate = () => newSelectedDate => ({
   type: SET_SELECTED_DATE,
   payload: newSelectedDate
-})
+});
 
 const CategoryChange = () => categoryValue => ({
   type: CATEGORY_CHANGE,
   payload: categoryValue
-})
+});
 
 const GetBalance = () => () => {
   return async (dispatch) => {
@@ -38,9 +39,9 @@ const GetBalance = () => () => {
       const rawResponse = await fetch(url, {
         credentials: 'include'
       });
-      const response = await rawResponse.json()
-      // TODO: Revisit this against the pattern of action creators
-      dispatch({ type: GET_BALANCE, payload: response });
+      const response = await rawResponse.json();
+      const fullEntriesWithFilledDates = getGroupedFilledEntriesByDate()(response);
+      dispatch({ type: GET_BALANCE, payload: { entries: fullEntriesWithFilledDates }});
       dispatch(setAppLoading(false));
     } catch (error) {
       console.log(error);
@@ -54,7 +55,7 @@ const setRecord = ({ entry, type, selectedDate }) => {
       const url = `${baseUrl}/api/balance`;
       const body = JSON.stringify(entry);
       dispatch(setAppLoading(true));
-      await fetch( url, { body, ...postConfigAuthenticated });
+      await fetch(url, { body, ...postConfigAuthenticated });
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry, selectedDate } });
       dispatch(setAppLoading(false));

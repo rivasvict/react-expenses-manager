@@ -3,7 +3,7 @@ import EntriesSummary from './EntriesSummary';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { categoryChange } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryCategoryOption } from '../../../../helpers/entriesHelper'; 
+import { getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
 
 class EntrySummaryWithFilter extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class EntrySummaryWithFilter extends Component {
     const selectedYear = this.selectedDate.year;
     const selectedMonth = this.selectedDate.month;
     const entries = this.props.entries[selectedYear][selectedMonth][entryNamePlural];
-    return category.length ? entries.filter(entry => entry.category.name === category) : entries;
+    return category.length ? entries.filter(entry => entry.categories_path.match(category)) : entries;
   };
 
   render() {

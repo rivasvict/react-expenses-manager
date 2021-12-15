@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { addIncome, addExpense } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper'; 
+import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
 
@@ -30,14 +30,15 @@ class AddEntry extends Component {
 
   setCategory = (event) => {
     const { value } = event.currentTarget;
-    this.setState(() => ({ category: { name: value }}))
+    this.setState(() => ({ categories_path: value }))
   }
 
   handleSubmit = (event, { handleEntry, history, selectedDate }) => {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
     const digitMatcher = /^\d+$/;
-    if (entry.amount && digitMatcher.test(entry.amount) && entry.category !== '') {
+    // TODO: review the validation for the missing category
+    if (entry.amount && digitMatcher.test(entry.amount) && entry.categories_path !== '') {
       handleEntry({ entry, selectedDate });
       this.navigateToDashboard(history);
     }
@@ -69,7 +70,7 @@ class AddEntry extends Component {
           value={this.state.description}
           onChange={this.handleInputChange}>
         </input>
-        <CategorySelector name='category' value={this.state.category.name} handleChange={this.setCategory} categoryOptions={categoryOptions} />
+        <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
         <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>Submit</button>
         <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
       </React.Fragment>

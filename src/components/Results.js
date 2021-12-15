@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSum } from '../helpers/entriesHelper';
+import { getSum } from '../helpers/entriesHelper/entriesHelper';
 import { calculateTotal } from '../helpers/general';
 import { Col } from 'react-bootstrap';
 import './Results.scss';

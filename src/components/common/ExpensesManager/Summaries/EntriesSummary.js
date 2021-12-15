@@ -1,8 +1,13 @@
 import React from 'react';
-import { getSumFromEntries } from '../../../../helpers/entriesHelper';
+import { getSumFromEntries } from '../../../../helpers/entriesHelper/entriesHelper';
 
 function GetEntriesList(entries) {
-  return entries.map((entry, key) => <li key={key}>{entry.amount} {entry.description} {entry.category.name}</li>);
+  return entries.map((entry, key) => {
+    const category = entry.categories_path.split(',')[1];
+    return (
+      <li key={key}>{entry.amount} {entry.description} {category}</li>
+    )
+  });
 }
 
 function EntriesSummary({ entries, name }) {
