@@ -37,6 +37,8 @@ function getEntryCategoryOption(entryType) {
   return categoryOptions[entryType];
 }
 
+// TODO: Refactor this function so it does not have that much
+// Responsibility
 const getGroupEntriesByDate = () => (entries) => {
   let entriesToSetInState = entries;
 
@@ -47,18 +49,22 @@ const getGroupEntriesByDate = () => (entries) => {
         const newEntryYear = newEntryDate.year();
         const newEntryMonth = newEntryDate.month();
 
+        const addEntryDateTreeToANewYear = () => parsedEntries[newEntryYear] = { [newEntryMonth]: { [`${newEntry.type}s`]: [newEntry] } };
+        const addEntryDateTreeToANewMonth = () => parsedEntries[newEntryYear][newEntryMonth] = { [`${newEntry.type}s`]: [newEntry] };
+        const addEntryDateTreeToANewType = () => parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`] = [newEntry];
+        const pushTheNewEntryToTheExistingType = () => parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(newEntry);
         // Year not created
         if (!parsedEntries[newEntryYear]) {
-          parsedEntries[newEntryYear] = { [newEntryMonth]: { [`${newEntry.type}s`]: [newEntry] } };
+          addEntryDateTreeToANewYear();
         // Year created but month not created
-        } else if (parsedEntries[newEntryYear] && !parsedEntries[newEntryYear][newEntryMonth]) {
-          parsedEntries[newEntryYear][newEntryMonth] = { [`${newEntry.type}s`]: [newEntry] };
+        } else if (!parsedEntries[newEntryYear][newEntryMonth]) {
+          addEntryDateTreeToANewMonth();
         // Year created and month created but not the entry type
-        } else if (parsedEntries[newEntryYear] && parsedEntries[newEntryYear][newEntryMonth] && !parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`]) {
-          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`] = [newEntry];
+        } else if (parsedEntries[newEntryYear][newEntryMonth] && !parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`]) {
+          addEntryDateTreeToANewType();
         // Everything exists
         } else {
-          parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(newEntry);
+          pushTheNewEntryToTheExistingType();
         }
 
         return parsedEntries;
