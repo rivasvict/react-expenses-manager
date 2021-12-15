@@ -84,6 +84,10 @@ const fillYear = ({ entries, pointerYear }) => {
   }
 };
 
+
+// TODO: Make a refactor here so the internal functions belong
+// Into its own functions outside of getEntriesWithFilledDates
+// scope
 const getEntriesWithFilledDates = () => ({ entries, firstEntryDate }) => {
   const pointerDate = dayjs(firstEntryDate);
   let pointerYear = pointerDate.year();
@@ -92,37 +96,51 @@ const getEntriesWithFilledDates = () => ({ entries, firstEntryDate }) => {
   const endYear = endDate.year();
   const endMonth = endDate.month();
 
-  while (pointerYear <= endYear && pointerMonth <= endMonth) {
-    if (!entries[pointerYear]) {
-      fillYear({ entries, pointerYear })
+  const fillAYearOfMonthsWithEmptyEntries = () => {
+    fillYear({ entries, pointerYear });
+    pointerMonth = 0;
+    pointerYear++;
+  }
+
+  const fillMonthWithEmptyMonthModel = (currentEntriesYear) => {
+    currentEntriesYear[pointerMonth] = getEmtpyMonthModel();
+    advanceToTheNextDateIndexes();
+  }
+
+  const fillMonthEntries = (currentEntriesYear) => {
+    const entryMonthContent = currentEntriesYear[pointerMonth];
+    const currentEntriesMonth = currentEntriesYear[pointerMonth];
+    if (!entryMonthContent.incomes) {
+      currentEntriesMonth.incomes = [];
+    }
+    if (!entryMonthContent.expenses) {
+      currentEntriesMonth.expenses = [];
+    }
+    advanceToTheNextDateIndexes();
+  }
+
+  const advanceToTheNextDateIndexes = () => {
+    pointerMonth++;
+    resetMonthCountToJanuaryIndex();
+  }
+
+  const resetMonthCountToJanuaryIndex = () => {
+    if (pointerMonth > 11) {
       pointerMonth = 0;
       pointerYear++;
-    } else if (entries[pointerYear] && !entries[pointerYear][pointerMonth]) {
-      entries[pointerYear][pointerMonth] = getEmtpyMonthModel();
-      pointerMonth++;
-      if (pointerMonth > 11) {
-        pointerMonth = 0;
-        pointerYear++;
-      }
-    } else if (entries[pointerYear] && entries[pointerYear][pointerMonth] && (!entries[pointerYear][pointerMonth].incomes || !entries[pointerYear][pointerMonth].expenses)) {
-      const entryMonthContent = entries[pointerYear][pointerMonth];
-      if (!entryMonthContent.incomes) {
-        entries[pointerYear][pointerMonth].incomes = [];
-      }
-      if (!entryMonthContent.expenses) {
-        entries[pointerYear][pointerMonth].expenses = [];
-      }
-      pointerMonth++;
-      if (pointerMonth > 11) {
-        pointerMonth = 0;
-        pointerYear++;
-      }
+    }
+  }
+
+  while (pointerYear <= endYear && pointerMonth <= endMonth) {
+    const currentEntriesYear = entries[pointerYear];
+    if (!currentEntriesYear) {
+      fillAYearOfMonthsWithEmptyEntries();
+    } else if (!currentEntriesYear[pointerMonth]) {
+      fillMonthWithEmptyMonthModel(currentEntriesYear);
+    } else if (currentEntriesYear[pointerMonth] && (!currentEntriesYear[pointerMonth].incomes || !currentEntriesYear[pointerMonth].expenses)) {
+      fillMonthEntries(currentEntriesYear);
     } else {
-      pointerMonth++;
-      if (pointerMonth > 11) {
-        pointerMonth = 0;
-        pointerYear++;
-      }
+      advanceToTheNextDateIndexes();
     }
   }
 
