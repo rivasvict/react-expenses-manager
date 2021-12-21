@@ -1,3 +1,4 @@
+import { config } from "../../config";
 import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
 import { postConfigAuthenticated } from "../../helpers/general";
 export const ADD_OUTCOME = 'ADD_OUTCOME';
@@ -5,7 +6,7 @@ export const ADD_INCOME = 'ADD_INCOME';
 export const CATEGORY_CHANGE = 'CATEGORY_CHANGE'
 export const GET_BALANCE = 'GET_BALANCE';
 export const SET_SELECTED_DATE = 'SET_SELECTED_DATE';
-const baseUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`
+const baseUrl = `${config.REACT_APP_API_HOST}:${config.REACT_APP_API_PORT}`
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE

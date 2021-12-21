@@ -1,6 +1,7 @@
 import { postConfigAuthenticated, setObjectToSessionStorage } from "../../helpers/general";
 import { getBalance } from "../expensesManager/actionCreators";
 import { postConfig } from "../../helpers/general";
+import { config } from "../../config";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -10,7 +11,7 @@ export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 export const SET_USER_LOADING = 'SET_USER_LOADING';
 export const USER_LOG_OUT_ERROR = 'USER_LOG_OUT_ERROR';
 export const USER_LOG_OUT_SUCCESS = 'USER_LOG_OUT_SUCCESS';
-const baseUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`
+const baseUrl = `${config.REACT_APP_API_HOST}:${config.REACT_APP_API_PORT}`
 
 const userCreationFail = error => ({
   type: CREATE_USER_ERROR,
