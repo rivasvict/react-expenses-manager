@@ -11,7 +11,7 @@ export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 export const SET_USER_LOADING = 'SET_USER_LOADING';
 export const USER_LOG_OUT_ERROR = 'USER_LOG_OUT_ERROR';
 export const USER_LOG_OUT_SUCCESS = 'USER_LOG_OUT_SUCCESS';
-const baseUrl = `${config.REACT_APP_API_HOST}:${config.REACT_APP_API_PORT}`
+const baseUrl = config.REACT_APP_API_HOST
 
 const userCreationFail = error => ({
   type: CREATE_USER_ERROR,
