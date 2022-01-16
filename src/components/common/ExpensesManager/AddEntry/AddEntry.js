@@ -57,7 +57,7 @@ class AddEntry extends Component {
         {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
         Add new {this.props.entryType}
         <input
-          type='text'
+          type='number'
           name='amount'
           placeholder={this.props.entryType}
           value={this.state.amount}
