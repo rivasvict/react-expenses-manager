@@ -13,8 +13,8 @@ function getSum({ entryType, entries }) {
   }
 }
 
-function getEntries({ entries, entryType}) {
-   return entries[entryType];
+function getEntries({ entries, entryType }) {
+  return entries[entryType];
 }
 
 function getEntryModel(entryType) {
@@ -22,18 +22,46 @@ function getEntryModel(entryType) {
   return { date: timestamp, amount: '', description: '', type: entryType, categories_path: '' };
 }
 
+function getSelectOptionsForDisplay(selectOptions) {
+  return selectOptions.map((selectOption) => (
+    { name: selectOption, value: selectOption.toLowerCase() }
+  ));
+};
+
 function getEntryCategoryOption(entryType) {
+  // TODO: These categories should live somewhere else
+  // in a settings or constant file
+
+  // TODO: These categories should come from the database
+  const incomeCategories = [
+    'Salary',
+    'Deposit',
+    'Saving'
+  ];
+
+  const expenseCategories = [
+    'Food',
+    'Alcohol',
+    'Clothes',
+    'Fixed expenses',
+    'Health',
+    'House',
+    'House insurance',
+    'Electricity',
+    'Internet',
+    'Laundry',
+    'Others',
+    'Parents',
+    'Mobile',
+    'Tech',
+    'Transport'
+  ];
+
   const categoryOptions = {
-    expense: [
-      { name: 'Food', value: 'food' },
-      { name: 'House', value: 'house' }
-    ],
-    income: [
-      { name: 'Salary', value: 'salary' },
-      { name: 'Loan', value: 'loan' }
-    ]
+    income: getSelectOptionsForDisplay(incomeCategories),
+    expense: getSelectOptionsForDisplay(expenseCategories)
   };
-  
+
   return categoryOptions[entryType];
 }
 
@@ -56,13 +84,13 @@ const getGroupEntriesByDate = () => (entries) => {
         // Year not created
         if (!parsedEntries[newEntryYear]) {
           addEntryDateTreeToANewYear();
-        // Year created but month not created
+          // Year created but month not created
         } else if (!parsedEntries[newEntryYear][newEntryMonth]) {
           addEntryDateTreeToANewMonth();
-        // Year created and month created but not the entry type
+          // Year created and month created but not the entry type
         } else if (parsedEntries[newEntryYear][newEntryMonth] && !parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`]) {
           addEntryDateTreeToANewType();
-        // Everything exists
+          // Everything exists
         } else {
           pushTheNewEntryToTheExistingType();
         }
