@@ -17,7 +17,7 @@ const initialState = {
 }
 
 const getEntryWithCalculableAmount = entry => (
-  { amount: parseInt(entry.amount), ..._.omit(entry, 'amount') }
+  { amount: parseFloat(entry.amount), ..._.omit(entry, 'amount') }
 );
 
 const addEntry = ({ entry, entryType, state, selectedDate }) => {

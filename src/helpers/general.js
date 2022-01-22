@@ -1,6 +1,6 @@
 function calculateTotal(...numbersToSum) {
   return numbersToSum.reduce((accumulated, currentNumber) => {
-    accumulated = parseInt(accumulated) + parseInt(currentNumber);
+    accumulated = parseFloat(accumulated) + parseFloat(currentNumber);
     return accumulated;
   }, 0) || 0;
 }
