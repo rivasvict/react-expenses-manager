@@ -66,6 +66,6 @@ describe('Dashboard component test', () => {
     });
 
     const totalSum = DashboardInstance.getSum('expenses');
-    expect(totalSum).toBe(parseInt(newEntry.amount) * 4);
+    expect(totalSum).toBe(parseFloat(newEntry.amount) * 4);
   })
 })

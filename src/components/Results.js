@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSum } from '../helpers/entriesHelper/entriesHelper';
+import { formatNumberForDisplay, getSum } from '../helpers/entriesHelper/entriesHelper';
 import { calculateTotal } from '../helpers/general';
 import { Col } from 'react-bootstrap';
 import './Results.scss';
@@ -23,7 +23,7 @@ function TotalItem({ name, amount, Icon, url }) {
         {name}
       </Col>
       <Col xs={6}>
-        {amount}
+        {formatNumberForDisplay(amount)}
       </Col>
     </RowLink>
   );
@@ -43,7 +43,7 @@ function Results({ entries, baseUrl = '' }) {
       <TotalItem name='Expenses' amount={expensesSum} url={expensesUrl} Icon={IconSignOut} />
       <RowLink to={summaryUrl} title='Summary' className='results-total'>
         <Col xs={12}>
-          {`Savings: ${totalSum}`}
+          {`Savings: ${formatNumberForDisplay(totalSum)}`}
         </Col>
       </RowLink>
     </React.Fragment>

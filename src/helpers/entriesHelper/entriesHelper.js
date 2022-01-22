@@ -2,8 +2,32 @@ import dayjs from "dayjs";
 import { calculateTotal } from "../general";
 
 function getSumFromEntries(entries) {
-  const entriesForSum = entries.map(entry => parseInt(entry.amount));
+  const entriesForSum = entries.map(entry => parseFloat(entry.amount));
   return calculateTotal(...entriesForSum);
+}
+
+/*
+*  TODO: This function probably needs to be separated
+*  from the rest of the helpers as the formatting
+*  functionalities may become more complex
+*/
+function formatNumberForDisplay(amount) {
+  if (isNaN(amount)) {
+    /*
+    * TODO: The currency CAD string here should come from
+    * a global configuration object of the user settings
+    * in the db
+    */
+    return `${0} CAD`;
+  } else {
+    const numberOfDecimals = 2;
+    /*
+    * TODO: The currency CAD string here should come from
+    * a global configuration object of the user settings
+    * in the db
+    */
+    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} CAD`;
+  }
 }
 
 function getSum({ entryType, entries }) {
@@ -188,6 +212,7 @@ const getGroupedFilledEntriesByDate = () => (entries) => {
 
 export {
   getSumFromEntries,
+  formatNumberForDisplay,
   getSum,
   getEntryModel,
   getEntryCategoryOption,

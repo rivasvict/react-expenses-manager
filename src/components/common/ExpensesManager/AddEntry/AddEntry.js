@@ -36,9 +36,10 @@ class AddEntry extends Component {
   handleSubmit = (event, { handleEntry, history, selectedDate }) => {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
-    const digitMatcher = /^\d+$/;
+    const digitMatcher = /^\d+(\.)*\d+$/;
+    const amount = entry.amount;
     // TODO: review the validation for the missing category
-    if (entry.amount && digitMatcher.test(entry.amount) && entry.categories_path !== '') {
+    if (amount && digitMatcher.test(amount) && entry.categories_path !== '') {
       handleEntry({ entry, selectedDate });
       this.navigateToDashboard(history);
     }
