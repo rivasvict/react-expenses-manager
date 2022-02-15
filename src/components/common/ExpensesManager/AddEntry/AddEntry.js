@@ -5,6 +5,7 @@ import { addIncome, addExpense } from '../../../../redux/expensesManager/actionC
 import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
 
 import { withRouter } from 'react-router-dom';
+import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -15,10 +16,18 @@ const getActionFromEntryType = ({ entryType, props }) => {
   return entryTypeToActionDictionary[entryType];
 };
 
+// TODO: Change this to a function component instead of a class component
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = getEntryModel(props.entryType);
+    this.state = getEntryModel({
+      entryType: props.entryType,
+      // TODO: Make sure the date calculation takes the hours and seconds into account
+      timestamp: getTimestampFromMonthAndYear({
+        month: props.selectedDate.month,
+        year: props.selectedDate.year
+      })
+    });
   }
 
   handleInputChange = (event) => {
