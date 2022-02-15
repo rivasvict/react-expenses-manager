@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { getCurrentTimestamp } from "../date";
 import { calculateTotal } from "../general";
 
 function getSumFromEntries(entries) {
@@ -41,7 +42,7 @@ function getEntries({ entries, entryType }) {
   return entries[entryType];
 }
 
-function getEntryModel({ entryType, timestamp = dayjs().unix() * 1000 }) {
+function getEntryModel({ entryType, timestamp = getCurrentTimestamp() }) {
   return { date: timestamp, amount: '', description: '', type: entryType, categories_path: '' };
 }
 
