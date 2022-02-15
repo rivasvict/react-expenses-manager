@@ -18,7 +18,7 @@ const getActionFromEntryType = ({ entryType, props }) => {
 class AddEntry extends Component {
   constructor(props) {
     super();
-    this.state = getEntryModel(props.entryType);
+    this.state = getEntryModel({ entryType: props.entryType });
   }
 
   handleInputChange = (event) => {

@@ -41,8 +41,7 @@ function getEntries({ entries, entryType }) {
   return entries[entryType];
 }
 
-function getEntryModel(entryType) {
-  const timestamp = dayjs().unix() * 1000;
+function getEntryModel({ entryType, timestamp = dayjs().unix() * 1000 }) {
   return { date: timestamp, amount: '', description: '', type: entryType, categories_path: '' };
 }
 
