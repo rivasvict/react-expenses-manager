@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { getCurrentTimestamp } from "../date";
+import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
 
 function getSumFromEntries(entries) {
@@ -89,11 +89,22 @@ function getEntryCategoryOption(entryType) {
   return categoryOptions[entryType];
 }
 
+const getEmtpyMonthModel = () => ({
+  incomes: [],
+  expenses: []
+});
+
+const getCurrentEmptyMonth = () => (
+  {
+    [getCurrentYear()]: {
+      [getCurrentMonth()]: getEmtpyMonthModel()
+    }
+  }
+);
+
 // TODO: Refactor this function so it does not have that much
 // Responsibility
 const getGroupEntriesByDate = () => (entries) => {
-  let entriesToSetInState = entries;
-
   if (entries.length) {
     return (
       entries.reduce((parsedEntries, newEntry) => {
@@ -124,13 +135,8 @@ const getGroupEntriesByDate = () => (entries) => {
     );
   }
 
-  return entriesToSetInState;
+  return getCurrentEmptyMonth();
 };
-
-const getEmtpyMonthModel = () => ({
-  incomes: [],
-  expenses: []
-});
 
 const fillYear = ({ entries, pointerYear }) => {
   for (let i = 0; i <= 11; i++) {
@@ -141,7 +147,6 @@ const fillYear = ({ entries, pointerYear }) => {
     }
   }
 };
-
 
 // TODO: Make a refactor here so the internal functions belong
 // Into its own functions outside of getEntriesWithFilledDates
