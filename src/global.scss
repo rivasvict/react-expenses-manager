@@ -1,10 +1,12 @@
 @import './variables.scss';
 
 @mixin button-like-style {
-  font-size: 0.8125em;
-  font-weight: bold;
+  font-size: 0.88em;
   border-radius: $standard-radius;
-  border-color: $color_clear_3;
+  border-color: $color_dark_1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-form {
@@ -17,13 +19,16 @@
 
   .form-control.text {
     border-radius: $standard-radius;
-    height: 2.312rem;
-    font-size: 0.625em;
+    height: 2.7rem;
+    font-size: 1em;
     padding: 0.92em 1.625em;
+    background-color: $color_dark_1;
+    color: $color_clear_3;
+    border-color: $color_dark_1;
   }
 
   .form-control.text::placeholder {
-    color: $color_dark_2;
+    color: $color_clear_2;
   }
 
   .btn.btn-secondary {
@@ -36,7 +41,7 @@
 }
 
 #root {
-  color: $color_dark_1;
+  color: $color_clear_3;
 
   a {
     color: $color_dark_1;
@@ -44,16 +49,17 @@
 
   .btn {
     @include button-like-style();
+    height: 3.3em;
   }
 
   .btn.btn-primary {
     background-color: $color_clear_1;
-    color: $color_clear_4;
+    color: $color_dark_1;
   }
 
   .btn.btn-secondary {
-    background-color: $color_clear_4;
-    color: $color_dark_1
+    background-color: $color_dark_3;
+    color: $color_clear_3;
   }
 
   .vertical-standard-space {
