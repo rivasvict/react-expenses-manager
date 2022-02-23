@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
-import { Container, Form } from 'react-bootstrap';
-import './SignUp.scss';
+import { Form } from 'react-bootstrap';
 import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
+import NoSessionContainer from '../common/NoSessionContainer';
 
 const userModel = FormModel({
   firstName: '',
@@ -48,7 +48,7 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
   }
 
   return (
-    <Container className='SignUp'>
+    <NoSessionContainer>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
           <FormContent>
@@ -84,7 +84,7 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
         )
       }} />
       <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
-    </Container>
+    </NoSessionContainer>
   )
 };
 
