@@ -5,7 +5,6 @@
 }
 
 header {
-  background-color: $color_dark_2;
   @include header-color();
 
   .navbar {
