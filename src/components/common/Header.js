@@ -27,8 +27,6 @@ const Header = ({ onLogOut }) => (
         <Col xs={12} className='sub-title'>
           <h3>Month Balance</h3>
         </Col>
-        <Col xs={5}>Salary</Col>
-        <Col xs={4}>2.500,00 CAD</Col>
       </Row>
     </Container>
   </header>

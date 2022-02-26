@@ -3,10 +3,12 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Results from '../Results';
 import { getMonthNameDisplay } from '../../helpers/date';
-import { getNewSelectedDate, doesAdjacentDateExist } from '../../helpers/general';
+import { getNewSelectedDate, doesAdjacentDateExist, calculateTotal } from '../../helpers/general';
 import ScreenTitle from '../common/ScreenTitle';
 import { connect } from 'react-redux';
 import { setSelectedDate } from '../../redux/expensesManager/actionCreators';
+import AmountSummary from '../common/AmountSummary';
+import { getSum } from '../../helpers/entriesHelper/entriesHelper';
 
 const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChange, dateAdjacencyType }) => (
   onSelectedDateChange(getNewSelectedDate({
@@ -18,10 +20,16 @@ const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChan
 
 const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }) => {
   const monthBalance = (entries[selectedDate.year] && entries[selectedDate.year][selectedDate.month]) || { incomes: [], expenses: [] };
+  const summaryUrl = `${match.url}/summary`;
+  const incomesName = 'incomes';
+  const expensesName = 'expenses';
+  const incomesSum = getSum({ entryType: incomesName, entries: monthBalance })
+  const expensesSum = getSum({ entryType: expensesName, entries: monthBalance })
+  const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
     <React.Fragment>
-      <ScreenTitle screenTitle='Monthly Income/Expenses' />
+      <AmountSummary to={summaryUrl} title='Summary' totalSum={totalSum} />
       <Row>
         <Col xs={3}>
           {
@@ -31,7 +39,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
           }
         </Col>
         <Col xs={6}>
-          {getMonthNameDisplay(selectedDate.month)} {selectedDate.year}
+          <ScreenTitle screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`} />
         </Col>
         <Col xs={3}>
           {

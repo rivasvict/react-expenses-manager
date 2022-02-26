@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SignIn from './SignIn/SignIn';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import './Lobby.scss';
 
 function Lobby({ user, isLoading }) {

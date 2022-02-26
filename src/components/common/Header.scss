@@ -1,7 +1,6 @@
 @import '../../variables.scss';
 
 @mixin header-color {
-  color: $color_clear_4;
 }
 
 header {
@@ -31,7 +30,7 @@ header {
     }
 
     .sub-title {
-      justify-content: flex-start;
+      justify-content: center;
     }
   }
 }
