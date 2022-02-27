@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Results from '../Results';
 import { getMonthNameDisplay } from '../../helpers/date';
@@ -7,8 +7,10 @@ import { getNewSelectedDate, doesAdjacentDateExist, calculateTotal } from '../..
 import ScreenTitle from '../common/ScreenTitle';
 import { connect } from 'react-redux';
 import { setSelectedDate } from '../../redux/expensesManager/actionCreators';
-import AmountSummary from '../common/AmountSummary';
-import { getSum } from '../../helpers/entriesHelper/entriesHelper';
+import { formatNumberForDisplay, getSum } from '../../helpers/entriesHelper/entriesHelper';
+import RowLink from '../common/RowLink';
+import './DashboardContent.scss';
+import { IconRemote } from '../common/Icons';
 
 const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChange, dateAdjacencyType }) => (
   onSelectedDateChange(getNewSelectedDate({
@@ -28,9 +30,14 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
   const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
-    <React.Fragment>
-      <AmountSummary to={summaryUrl} title='Summary' totalSum={totalSum} />
-      <Row>
+    <Container className='DasboardContent'>
+      <RowLink title='Summary' to={summaryUrl} className='results-total'>
+        <Col xs={12}>
+          {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
+        </Col>
+        <hr/>
+      </RowLink>
+      <Row className='month-header'>
         <Col xs={3}>
           {
             doesAdjacentDateExist({ dateAdjacencyType: 'prev', selectedDate, entries }) ?
@@ -50,7 +57,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
         </Col>
       </Row>
       <MonthContent {...{ entries: monthBalance, match }} />
-    </React.Fragment>
+    </Container>
   );
 };
 

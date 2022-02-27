@@ -8,7 +8,7 @@ import RowLink from './common/RowLink';
 function TotalItem({ name, amount, Icon, url }) {
   return (
     <RowLink to={url} title={name} className='total-row'>
-      <Col xs={1}>
+      <Col xs={2}>
         {
           Icon ?
             <Icon /> :
@@ -18,7 +18,7 @@ function TotalItem({ name, amount, Icon, url }) {
       <Col xs={5}>
         {name}
       </Col>
-      <Col xs={6}>
+      <Col xs={5}>
         {formatNumberForDisplay(amount)}
       </Col>
     </RowLink>
