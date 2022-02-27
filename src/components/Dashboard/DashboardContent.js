@@ -8,9 +8,9 @@ import ScreenTitle from '../common/ScreenTitle';
 import { connect } from 'react-redux';
 import { setSelectedDate } from '../../redux/expensesManager/actionCreators';
 import { formatNumberForDisplay, getSum } from '../../helpers/entriesHelper/entriesHelper';
-import RowLink from '../common/RowLink';
 import './DashboardContent.scss';
 import { IconRemote } from '../common/Icons';
+import ContentTileSection from '../common/ContentTitleSection';
 
 const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChange, dateAdjacencyType }) => (
   onSelectedDateChange(getNewSelectedDate({
@@ -31,12 +31,9 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
 
   return (
     <Container className='DasboardContent'>
-      <RowLink title='Summary' to={summaryUrl} className='results-total'>
-        <Col xs={12}>
-          {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
-        </Col>
-        <hr/>
-      </RowLink>
+      <ContentTileSection title='Summary' className='results-total' to={summaryUrl}>
+        {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
+      </ContentTileSection>
       <Row className='month-header'>
         <Col xs={3}>
           {
@@ -78,7 +75,6 @@ const MonthContent = ({ entries, match }) => (
     </Row>
   </React.Fragment>
 );
-
 
 const mapStateToProps = state => ({
   entries: state.expensesManager.entries,

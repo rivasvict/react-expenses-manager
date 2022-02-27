@@ -9,6 +9,7 @@ import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
 import { Button, Form } from 'react-bootstrap';
 import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
 import { capitalize } from 'lodash';
+import ContentTileSection from '../../ContentTitleSection';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -72,7 +73,9 @@ class AddEntry extends Component {
           className: 'app-form'
         }}>
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-          Add new {this.props.entryType}
+          <ContentTileSection>
+            Add new {capitalize(this.props.entryType)}
+          </ContentTileSection>
           <Form.Group>
             <InputNumber
               type='number'
