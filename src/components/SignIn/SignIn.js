@@ -4,7 +4,7 @@ import { FormValidation, FormModel, ValidateField } from '../../helpers/form-val
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
 import { Col, Form, Row } from 'react-bootstrap';
-import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
+import { FormButton, InputPassword, InputText } from '../common/Forms';
 import NoSessionContainer from '../common/NoSessionContainer';
 import ButtonLikeLink from '../common/ButtonLikeLink';
 
@@ -29,7 +29,7 @@ function SignIn({ onLogIn }) {
   const history = useHistory();
   return (
     <NoSessionContainer>
-      <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+      <FormValidation formModel={userModel} className='app-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
           <React.Fragment>
             <Form.Group>
@@ -42,6 +42,9 @@ function SignIn({ onLogIn }) {
                 <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
               </ValidateField>
             </Form.Group>
+            {/** TODO: Make sure the event for sending to the backend is handled in
+             * onSubmit of the form as it is standard for forms
+             */}
             <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
           </React.Fragment>
         );

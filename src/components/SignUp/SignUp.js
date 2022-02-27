@@ -49,7 +49,7 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
 
   return (
     <NoSessionContainer>
-      <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+      <FormValidation formModel={userModel} className='app-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
           <React.Fragment>
             <Form.Group>
@@ -77,6 +77,9 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
                 <InputPassword name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
               </ValidateField>
             </Form.Group>
+            {/** TODO: Make sure the event for sending to the backend is handled in
+             * onSubmit of the form as it is standard for forms
+             */}
             {isLoading
               ? 'loading...'
               : <FormButton variant='primary' type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</FormButton>}

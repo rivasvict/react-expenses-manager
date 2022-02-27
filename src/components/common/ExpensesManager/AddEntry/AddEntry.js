@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { addIncome, addExpense } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
+import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper';
 
 import { withRouter } from 'react-router-dom';
 import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
+import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -65,26 +66,37 @@ class AddEntry extends Component {
 
     return (
       <React.Fragment>
-        {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-        Add new {this.props.entryType}
-        <input
-          type='number'
-          name='amount'
-          placeholder={this.props.entryType}
-          value={this.state.amount}
-          onChange={this.handleInputChange}>
-        </input>
-        <input
-          type='text'
-          name='description'
-          placeholder='description'
-          value={this.state.description}
-          onChange={this.handleInputChange}>
-        </input>
-        <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
-        <Button block varian='primary' name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>
-          Submit
-        </Button>
+        <FormContent formProps={{
+          onSubmit: event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate }),
+          className: 'app-form'
+        }}>
+          {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
+          Add new {this.props.entryType}
+          <Form.Group>
+            <InputNumber
+              type='number'
+              name='amount'
+              placeholder={this.props.entryType}
+              value={this.state.amount}
+              onChange={this.handleInputChange}>
+            </InputNumber>
+          </Form.Group>
+          <Form.Group>
+            <InputText
+              type='text'
+              name='description'
+              placeholder='description'
+              value={this.state.description}
+              onChange={this.handleInputChange}>
+            </InputText>
+          </Form.Group>
+          <Form.Group>
+            <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
+          </Form.Group>
+          <FormButton varian='primary' name='submit' type='submit'>
+            Submit
+          </FormButton>
+        </FormContent>
         <Button block variant='secondary' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
       </React.Fragment>
     )
