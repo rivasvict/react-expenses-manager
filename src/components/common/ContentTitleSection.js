@@ -15,13 +15,13 @@ const RowContent = ({ children }) => (
 const ContentTileSection = ({ title = 'Content title section', to, className = '', children }) => (
   <React.Fragment>
     { to ?
-      <Row title={title} className={`content-title-selection ${className}`}>
-        <RowContent>{children}</RowContent>
-      </Row>
-      :
       <RowLink title={title} to={to} className={`content-title-selection ${className}`}>
         <RowContent>{children}</RowContent>
       </RowLink>
+      :
+      <Row title={title} className={`content-title-selection ${className}`}>
+        <RowContent>{children}</RowContent>
+      </Row>
     }
   </React.Fragment>
 );

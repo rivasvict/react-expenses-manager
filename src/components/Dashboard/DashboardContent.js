@@ -31,7 +31,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
 
   return (
     <Container className='DasboardContent'>
-      <ContentTileSection title='Summary' className='results-total' to={summaryUrl}>
+      <ContentTileSection title='Summary' to={summaryUrl}>
         {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
       </ContentTileSection>
       <Row className='month-header'>
