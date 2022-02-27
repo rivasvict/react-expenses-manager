@@ -6,6 +6,7 @@ import { logIn } from '../../redux/userManager/actoionCreators';
 import { Col, Form, Row } from 'react-bootstrap';
 import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
 import NoSessionContainer from '../common/NoSessionContainer';
+import ButtonLikeLink from '../common/ButtonLikeLink';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
@@ -47,7 +48,7 @@ function SignIn({ onLogIn }) {
       }} />
       <Row>
         <Col xs={12}>
-          <Link className='btn btn-primary btn-block vertical-standard-space' to='/sign-up'>Sign up</Link>
+          <ButtonLikeLink className='btn-primary' to='/sign-up' buttonTitle='Sign up' />
         </Col>
       </Row>
     </NoSessionContainer>
