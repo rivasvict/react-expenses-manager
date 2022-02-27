@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
 import { Button, Form } from 'react-bootstrap';
 import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
+import { capitalize } from 'lodash';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -76,7 +77,7 @@ class AddEntry extends Component {
             <InputNumber
               type='number'
               name='amount'
-              placeholder={this.props.entryType}
+              placeholder={capitalize(this.props.entryType)}
               value={this.state.amount}
               onChange={this.handleInputChange}>
             </InputNumber>
@@ -85,7 +86,7 @@ class AddEntry extends Component {
             <InputText
               type='text'
               name='description'
-              placeholder='description'
+              placeholder='Description'
               value={this.state.description}
               onChange={this.handleInputChange}>
             </InputText>

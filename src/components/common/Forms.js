@@ -21,8 +21,14 @@ const FormButton = (props) => (
   <Button {...props} block></Button>
 );
 
+{/** Once react-bootstrap is updated to v2,
+  Make sure to update the way this select control
+  is implemented as described at
+  https://react-bootstrap.netlify.app/forms/select/
+  (with Form.Select)
+*/}
 const FormSelect = (props) => (
-  <Form.Select {...props}>{props.children}</Form.Select>
+  <Form.Control as='select' {...props}>{props.children}</Form.Control>
 );
 
 const FormContent = ({ children, render, formProps }) => (
