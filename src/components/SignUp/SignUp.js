@@ -51,7 +51,7 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
     <NoSessionContainer>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
-          <FormContent>
+          <React.Fragment>
             <Form.Group>
               <ValidateField>
                 <InputText name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
@@ -80,7 +80,7 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
             {isLoading
               ? 'loading...'
               : <FormButton variant='primary' type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</FormButton>}
-          </FormContent>
+          </React.Fragment>
         )
       }} />
       <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>

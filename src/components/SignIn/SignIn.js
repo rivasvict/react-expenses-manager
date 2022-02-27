@@ -31,7 +31,7 @@ function SignIn({ onLogIn }) {
     <NoSessionContainer>
       <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
-          <FormContent>
+          <React.Fragment>
             <Form.Group>
               <ValidateField>
                 <InputText name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
@@ -43,7 +43,7 @@ function SignIn({ onLogIn }) {
               </ValidateField>
             </Form.Group>
             <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
-          </FormContent>
+          </React.Fragment>
         );
       }} />
       <Row>

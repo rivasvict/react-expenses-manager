@@ -6,6 +6,7 @@ import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entri
 
 import { withRouter } from 'react-router-dom';
 import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
+import { Button } from 'react-bootstrap';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -81,8 +82,10 @@ class AddEntry extends Component {
           onChange={this.handleInputChange}>
         </input>
         <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
-        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>Submit</button>
-        <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
+        <Button block varian='primary' name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>
+          Submit
+        </Button>
+        <Button block variant='secondary' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
       </React.Fragment>
     )
   }

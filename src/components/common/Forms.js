@@ -17,10 +17,10 @@ const FormButton = (props) => (
   <Button {...props} block></Button>
 );
 
-const FormContent = ({ children }) => (
-  <Row>
+const FormContent = ({ children, render }) => (
+  <Row as={Form}>
     <Col xs={12}>
-      {children}
+      {render ? render() : children}
     </Col>
   </Row>
 );
