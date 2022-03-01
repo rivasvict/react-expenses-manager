@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Results from '../Results';
 import { getMonthNameDisplay } from '../../helpers/date';
@@ -11,6 +11,7 @@ import { formatNumberForDisplay, getSum } from '../../helpers/entriesHelper/entr
 import './DashboardContent.scss';
 import { IconRemote } from '../common/Icons';
 import ContentTileSection from '../common/ContentTitleSection';
+import { MainContentContainer } from '../common/MainContentContainer';
 
 const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChange, dateAdjacencyType }) => (
   onSelectedDateChange(getNewSelectedDate({
@@ -30,7 +31,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
   const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
-    <Container className='DasboardContent'>
+    <MainContentContainer className='dasboard-content'>
       <ContentTileSection title='Summary' to={summaryUrl}>
         {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
       </ContentTileSection>
@@ -54,7 +55,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
         </Col>
       </Row>
       <MonthContent {...{ entries: monthBalance, match }} />
-    </Container>
+    </MainContentContainer>
   );
 };
 
@@ -67,7 +68,7 @@ const MonthContent = ({ entries, match }) => (
           baseUrl={match.url} />
       </Col>
     </Row>
-    <Row>
+    <Row className='bottom-container'>
       <Col xs={12} className='bottom-content'>
         <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
         <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>

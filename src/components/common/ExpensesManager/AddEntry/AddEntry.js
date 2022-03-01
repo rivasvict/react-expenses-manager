@@ -10,6 +10,7 @@ import { Button, Form } from 'react-bootstrap';
 import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
 import { capitalize } from 'lodash';
 import ContentTileSection from '../../ContentTitleSection';
+import { MainContentContainer } from '../../MainContentContainer';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -67,7 +68,7 @@ class AddEntry extends Component {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
 
     return (
-      <React.Fragment>
+      <MainContentContainer>
         <FormContent formProps={{
           onSubmit: event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate }),
           className: 'app-form'
@@ -100,9 +101,9 @@ class AddEntry extends Component {
           <FormButton varian='primary' name='submit' type='submit'>
             Submit
           </FormButton>
+          <Button block variant='secondary' className='vertical-standard-space' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
         </FormContent>
-        <Button block variant='secondary' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
-      </React.Fragment>
+      </MainContentContainer>
     )
   }
 }

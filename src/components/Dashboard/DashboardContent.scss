@@ -1,8 +1,6 @@
 @import '../../variables.scss';
 
-.DasboardContent {
-  display: flex;
-  flex-direction: column;
+.dasboard-content {
   height: 100%;
 
   .month-header {

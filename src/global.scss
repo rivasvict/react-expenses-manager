@@ -40,6 +40,12 @@
   }
 }
 
+.main-content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 #root {
   color: $color_clear_3;
   background-color: $color_dark_1;
