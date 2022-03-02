@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Row } from 'react-bootstrap';
+import { Button, Container, Form, Row } from 'react-bootstrap';
 
 const GenericInput = (props) => (
   <Form.Control {...props} className='text' />
@@ -32,9 +32,11 @@ const FormSelect = (props) => (
 );
 
 const FormContent = ({ children, render, formProps = {} }) => (
-  <Row as={Form} {...formProps}>
-    {render ? render() : children}
-  </Row>
+  <Container className="form-container">
+    <Row as={Form} {...formProps}>
+      {render ? render() : children}
+    </Row>
+  </Container>
 );
 
 export { InputText, InputPassword, InputNumber, FormButton, FormSelect, FormContent };

@@ -9,31 +9,35 @@
   justify-content: center;
 }
 
-.app-form {
-  display: flex;
-  flex-flow: column wrap;
+.form-container{
   height: 100%;
 
-  .form-group {
-    margin-bottom: $vertical-standard-margin;
-  }
+  .app-form {
+    display: flex;
+    flex-flow: column wrap;
+    height: 100%;
 
-  .form-control.text {
-    border-radius: $standard-radius;
-    height: 2.7rem;
-    font-size: 1em;
-    padding: 0.92em 1.625em;
-    background-color: $color_dark_2;
-    color: $color_clear_3;
-    border-color: $color_dark_1;
-  }
+    .form-group {
+      margin-bottom: $vertical-standard-margin;
+    }
 
-  .form-control.text::placeholder {
-    color: $color_clear_2;
-  }
+    .form-control.text {
+      border-radius: $standard-radius;
+      height: 2.7rem;
+      font-size: 1em;
+      padding: 0.92em 1.625em;
+      background-color: $color_dark_2;
+      color: $color_clear_3;
+      border-color: $color_dark_1;
+    }
 
-  .validation-message {
-    color: rgb(255, 159, 128);
+    .form-control.text::placeholder {
+      color: $color_clear_2;
+    }
+
+    .validation-message {
+      color: rgb(255, 159, 128);
+    }
   }
 }
 
