@@ -6,7 +6,7 @@ import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entri
 
 import { withRouter } from 'react-router-dom';
 import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Col, Row } from 'react-bootstrap';
 import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
 import { capitalize } from 'lodash';
 import ContentTileSection from '../../ContentTitleSection';
@@ -69,39 +69,46 @@ class AddEntry extends Component {
 
     return (
       <MainContentContainer>
+        <ContentTileSection>
+          Add new {capitalize(this.props.entryType)}
+        </ContentTileSection>
         <FormContent formProps={{
           onSubmit: event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate }),
           className: 'app-form'
         }}>
-          {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-          <ContentTileSection>
-            Add new {capitalize(this.props.entryType)}
-          </ContentTileSection>
-          <Form.Group>
-            <InputNumber
-              type='number'
-              name='amount'
-              placeholder={capitalize(this.props.entryType)}
-              value={this.state.amount}
-              onChange={this.handleInputChange}>
-            </InputNumber>
-          </Form.Group>
-          <Form.Group>
-            <InputText
-              type='text'
-              name='description'
-              placeholder='Description'
-              value={this.state.description}
-              onChange={this.handleInputChange}>
-            </InputText>
-          </Form.Group>
-          <Form.Group>
-            <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
-          </Form.Group>
-          <FormButton varian='primary' name='submit' type='submit'>
-            Submit
-          </FormButton>
-          <Button block variant='secondary' className='vertical-standard-space' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
+          <Row className='top-container'>
+            <Col xs={12} className='top-content'>
+              <Form.Group>
+                <InputNumber
+                  type='number'
+                  name='amount'
+                  placeholder={capitalize(this.props.entryType)}
+                  value={this.state.amount}
+                  onChange={this.handleInputChange}>
+                </InputNumber>
+              </Form.Group>
+              <Form.Group>
+                <InputText
+                  type='text'
+                  name='description'
+                  placeholder='Description'
+                  value={this.state.description}
+                  onChange={this.handleInputChange}>
+                </InputText>
+              </Form.Group>
+              <Form.Group>
+                <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className='bottom-container'>
+            <Col xs={12} className='bottom-content'>
+              <FormButton varian='primary' name='submit' type='submit'>
+                Submit
+              </FormButton>
+              <Button block variant='secondary' className='vertical-standard-space' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
+            </Col>
+          </Row>
         </FormContent>
       </MainContentContainer>
     )

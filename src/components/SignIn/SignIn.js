@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
@@ -46,14 +46,14 @@ function SignIn({ onLogIn }) {
              * onSubmit of the form as it is standard for forms
              */}
             <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
+            <Row>
+              <Col xs={12}>
+                <ButtonLikeLink className='btn-primary' to='/sign-up' buttonTitle='Sign up' />
+              </Col>
+            </Row>
           </React.Fragment>
         );
       }} />
-      <Row>
-        <Col xs={12}>
-          <ButtonLikeLink className='btn-primary' to='/sign-up' buttonTitle='Sign up' />
-        </Col>
-      </Row>
     </NoSessionContainer>
   );
 }

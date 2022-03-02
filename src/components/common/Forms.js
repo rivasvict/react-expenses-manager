@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Form, Row } from 'react-bootstrap';
 
 const GenericInput = (props) => (
   <Form.Control {...props} className='text' />
@@ -31,11 +31,9 @@ const FormSelect = (props) => (
   <Form.Control as='select' {...props}>{props.children}</Form.Control>
 );
 
-const FormContent = ({ children, render, formProps }) => (
+const FormContent = ({ children, render, formProps = {} }) => (
   <Row as={Form} {...formProps}>
-    <Col xs={12}>
-      {render ? render() : children}
-    </Col>
+    {render ? render() : children}
   </Row>
 );
 

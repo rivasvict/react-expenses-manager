@@ -5,7 +5,7 @@ import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { Form } from 'react-bootstrap';
-import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
+import { FormButton, InputPassword, InputText } from '../common/Forms';
 import NoSessionContainer from '../common/NoSessionContainer';
 
 const userModel = FormModel({
@@ -83,10 +83,10 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
             {isLoading
               ? 'loading...'
               : <FormButton variant='primary' type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</FormButton>}
+            <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
           </React.Fragment>
         )
       }} />
-      <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
     </NoSessionContainer>
   )
 };

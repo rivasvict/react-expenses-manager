@@ -12,6 +12,7 @@
 .app-form {
   display: flex;
   flex-flow: column wrap;
+  height: 100%;
 
   .form-group {
     margin-bottom: $vertical-standard-margin;
@@ -29,10 +30,6 @@
 
   .form-control.text::placeholder {
     color: $color_clear_2;
-  }
-
-  .btn.btn-secondary {
-    margin-top: 1.51rem;
   }
 
   .validation-message {
