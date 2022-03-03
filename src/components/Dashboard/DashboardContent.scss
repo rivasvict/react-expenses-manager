@@ -4,9 +4,8 @@
   height: 100%;
 
   .month-header {
-    $month_header_vertical-margin: 1.3em;
-    margin-top: $month_header_vertical-margin;
-    margin-bottom: $month_header_vertical-margin;
+    margin-top: $section_header_vertical-margin;
+    margin-bottom: $section_header_vertical-margin;
     align-items: center;
 
     div:nth-child(3) {

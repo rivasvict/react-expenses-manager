@@ -3,6 +3,7 @@ import { InlineIcon, Icon as SimpleIcon } from '@iconify/react';
 import signOut from '@iconify-icons/codicon/sign-out';
 import signIn from '@iconify-icons/codicon/sign-in';
 import remote from '@iconify-icons/codicon/remote';
+import check from '@iconify-icons/codicon/check';
 
 const Icon = ({ inLine, icon }) => (
   <React.Fragment>
@@ -26,4 +27,8 @@ const IconRemote = (props) => (
   <Icon {...props} icon={remote} />
 );
 
-export { IconSignOut, IconSignIn, IconRemote };
+const IconPlus = (props) => (
+  <Icon {...props} icon={check} />
+);
+
+export { IconSignOut, IconSignIn, IconRemote, IconPlus };

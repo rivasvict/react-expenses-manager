@@ -1,14 +1,5 @@
 @import './variables.scss';
 
-@mixin button-like-style {
-  font-size: 0.88em;
-  border-radius: $standard-radius;
-  border-color: $color_dark_1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .form-container{
   height: 100%;
 
