@@ -31,7 +31,7 @@ class EntrySummaryWithFilter extends Component {
   };
 
   render() {
-    const categoryOptions =getEntryCategoryOption(this.props.entryType);
+    const categoryOptions = getEntryCategoryOption(this.props.entryType);
     const entryNamePlural = `${this.props.entryType}s`;
     const name = entryNamePlural;
     const totalSum = getSumFromEntries(this.getFilteredEntriesByCategory({ category: this.props.category, entryNamePlural }));

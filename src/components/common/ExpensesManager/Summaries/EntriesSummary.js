@@ -1,7 +1,7 @@
 import { capitalize } from 'lodash';
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { formatNumberForDisplay, getSumFromEntries } from '../../../../helpers/entriesHelper/entriesHelper';
+import { formatNumberForDisplay } from '../../../../helpers/entriesHelper/entriesHelper';
 import { IconPlus } from '../../Icons';
 import './EntriesSummary.scss';
 
@@ -36,13 +36,7 @@ function EntriesSummary({ entries, name }) {
           {capitalize(name)}
         </Col>
       </Row>
-      {entriesList.length ? entriesList : null}<br/>
-      <Row>
-        <Col xs={12}>
-          {/** TODO: Separate the next part into a new component */}
-          Total: {formatNumberForDisplay(getSumFromEntries(entries))}
-        </Col>
-      </Row>
+      {entriesList.length ? entriesList : null}
     </Container>
   );
 }

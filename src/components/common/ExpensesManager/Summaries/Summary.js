@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
+import ContentTileSection from '../../ContentTitleSection';
+import { FormSelect } from '../../Forms';
+import { capitalize } from 'lodash';
+import { MainContentContainer } from '../../MainContentContainer';
 import EntriesSummary from './EntriesSummary';
+import { IconRemote } from '../../Icons';
+import { formatNumberForDisplay } from '../../../../helpers/entriesHelper/entriesHelper';
+import { getMonthNameDisplay } from '../../../../helpers/date';
+import './Summary.scss';
 
 class Summary extends Component {
   constructor(props) {
@@ -30,17 +38,19 @@ class Summary extends Component {
 
   render() {
     return (
-      <div>
+      <MainContentContainer className='summary-container'>
+        <ContentTileSection title='Summary'>
+          {/** TODO: Make sure the totalization is done here */}
+          {`${capitalize(getMonthNameDisplay(this.selectedDate.month))} `}<IconRemote inLine={true} />{` PEEENDINGNUMBER ${formatNumberForDisplay(22)}`}
+        </ContentTileSection>
         {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-        <form>
-          <select name='filter' value={this.state.filter} onChange={this.handleChange}>
-            <option value=''>All incomes and expenses</option>
-            <option value='incomes'>Incomes</option>
-            <option value='expenses'>Expenses</option>
-          </select>
-        </form>
+        <FormSelect name='filler' value={this.state.filter} onChange={this.handleChange} className='select-entry-type'>
+          <option value=''>All incomes and expenses</option>
+          <option value='incomes'>Incomes</option>
+          <option value='expenses'>Expenses</option>
+        </FormSelect>
         {this.getFilteredEntries(this.state.filter)}
-      </div>
+      </MainContentContainer>
     )
   }
 }
