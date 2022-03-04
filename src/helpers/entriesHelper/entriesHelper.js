@@ -4,6 +4,7 @@ import { calculateTotal } from "../general";
 
 function getSumFromEntries(entries) {
   const entriesForSum = entries.map(entry => parseFloat(entry.amount));
+
   return calculateTotal(...entriesForSum);
 }
 
