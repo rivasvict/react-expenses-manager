@@ -9,8 +9,12 @@ import { calculateTotal } from "../general";
 const currencySymbol = '$';
 
 function getSumFromEntries(entries) {
-  const entriesForSum = entries.map(entry => parseFloat(entry.amount));
+  const entriesForSum = entries.map(entry => {
+    const amount = entry.amount;
+    return entry.type === 'income' ? parseFloat(amount) : -parseFloat(amount);
+  });
 
+  console.log(entries, entriesForSum)
   return calculateTotal(...entriesForSum);
 }
 
