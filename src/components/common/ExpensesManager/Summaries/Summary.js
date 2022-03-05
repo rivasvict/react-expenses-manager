@@ -56,7 +56,11 @@ class Summary extends Component {
       expenses: <EntriesSummary entries={datedEntries['expenses']} name='Expenses' selectedDate={this.selectedDate} />
     }
     
-    return entriesSummary[filter] || <EntriesSummary entries={[...datedEntries.incomes, ...datedEntries.expenses]} name='Summary' />
+    return entriesSummary[filter] ||
+      <React.Fragment>
+        {entriesSummary['incomes']}
+        {entriesSummary['expenses']}
+      </React.Fragment>
   }
 
   render() {
