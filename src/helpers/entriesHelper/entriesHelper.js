@@ -62,6 +62,10 @@ function getSelectOptionsForDisplay(selectOptions) {
   ));
 };
 
+function absoluteValue(val) {
+  return val < 0 ? val * - 1 : val;
+};
+
 function getEntryCategoryOption(entryType) {
   // TODO: These categories should live somewhere else
   // in a settings or constant file
@@ -231,5 +235,6 @@ export {
   getSum,
   getEntryModel,
   getEntryCategoryOption,
-  getGroupedFilledEntriesByDate
+  getGroupedFilledEntriesByDate,
+  absoluteValue
 }
