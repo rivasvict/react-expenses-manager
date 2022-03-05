@@ -1,6 +1,12 @@
 import dayjs from "dayjs";
 import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
+/*
+* TODO: The currency $ string here should come from
+* a global configuration object of the user settings
+* in the db
+*/
+const currencySymbol = '$';
 
 function getSumFromEntries(entries) {
   const entriesForSum = entries.map(entry => parseFloat(entry.amount));
@@ -16,19 +22,19 @@ function getSumFromEntries(entries) {
 function formatNumberForDisplay(amount) {
   if (isNaN(amount)) {
     /*
-    * TODO: The currency CAD string here should come from
+    * TODO: The currency $ string here should come from
     * a global configuration object of the user settings
     * in the db
     */
-    return `${0} CAD`;
+    return `${0} ${currencySymbol}`;
   } else {
     const numberOfDecimals = 2;
     /*
-    * TODO: The currency CAD string here should come from
+    * TODO: The currency $ string here should come from
     * a global configuration object of the user settings
     * in the db
     */
-    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} CAD`;
+    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${currencySymbol}`;
   }
 }
 
