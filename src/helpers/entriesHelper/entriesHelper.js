@@ -14,7 +14,6 @@ function getSumFromEntries(entries) {
     return entry.type === 'income' ? parseFloat(amount) : -parseFloat(amount);
   });
 
-  console.log(entries, entriesForSum)
   return calculateTotal(...entriesForSum);
 }
 
@@ -45,7 +44,7 @@ function formatNumberForDisplay(amount) {
 function getSum({ entryType, entries }) {
   if (entries[entryType]) {
     const entriesByType = getEntries({ entryType, entries });
-    return entryType === 'incomes' ? getSumFromEntries(entriesByType) : -getSumFromEntries(entriesByType);
+    return getSumFromEntries(entriesByType);
   }
 }
 
