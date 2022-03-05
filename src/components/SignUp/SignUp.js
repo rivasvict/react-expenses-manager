@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { createUser } from '../../redux/userManager/actoionCreators';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
-import { Container, Form } from 'react-bootstrap';
-import './SignUp.scss';
-import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
+import { Form } from 'react-bootstrap';
+import { FormButton, InputPassword, InputText } from '../common/Forms';
+import NoSessionContainer from '../common/NoSessionContainer';
 
 const userModel = FormModel({
   firstName: '',
@@ -48,10 +48,10 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
   }
 
   return (
-    <Container className='SignUp'>
-      <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+    <NoSessionContainer>
+      <FormValidation formModel={userModel} className='app-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
         return (
-          <FormContent>
+          <React.Fragment>
             <Form.Group>
               <ValidateField>
                 <InputText name='firstName' placeholder='First Name' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
@@ -77,14 +77,17 @@ function SignUp({ isLoading, userCreated, onCreateUser }) {
                 <InputPassword name='password-retype' placeholder='Retype Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
               </ValidateField>
             </Form.Group>
+            {/** TODO: Make sure the event for sending to the backend is handled in
+             * onSubmit of the form as it is standard for forms
+             */}
             {isLoading
               ? 'loading...'
               : <FormButton variant='primary' type='submit' onClick={(event) => handleSubmit({ event, values: formState.values })} disabled={!formState.isModelValid}>Submit</FormButton>}
-          </FormContent>
+            <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
+          </React.Fragment>
         )
       }} />
-      <FormButton variant='secondary' block className='vertical-standard-space' onClick={handleCancel}>Cancel</FormButton>
-    </Container>
+    </NoSessionContainer>
   )
 };
 

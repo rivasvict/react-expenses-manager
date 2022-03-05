@@ -1,0 +1,17 @@
+@import '../../variables.scss';
+@import '../../global.scss';
+
+.NoSessionContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
+  .upperSide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 0;
+    margin: 2em 0 2em 0;
+  }
+}

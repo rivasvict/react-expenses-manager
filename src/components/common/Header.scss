@@ -1,11 +1,9 @@
 @import '../../variables.scss';
 
 @mixin header-color {
-  color: $color_clear_4;
 }
 
 header {
-  background-color: $color_dark_2;
   @include header-color();
 
   .navbar {
@@ -32,7 +30,7 @@ header {
     }
 
     .sub-title {
-      justify-content: flex-start;
+      justify-content: center;
     }
   }
 }

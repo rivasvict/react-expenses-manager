@@ -1,25 +1,21 @@
 import React from 'react';
-import { Col, Container, Form, Nav, Navbar, Row } from 'react-bootstrap';
+import { Button, Col, Container, Navbar, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import logoImage from '../../images/expenses_tracker_logo.png';
 import { logOut } from '../../redux/userManager/actoionCreators';
-import { FormButton } from './Forms';
+import ButtonLikeLink from './ButtonLikeLink';
 import './Header.scss';
 
 const Header = ({ onLogOut }) => (
   <header>
-    <Navbar expand="md">
+    <Navbar expand="md" variant='dark'>
       <Navbar.Brand href="#home">
         <img src={logoImage} alt='Expenses tracker logo' className='logo'/>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav.Link href='/'>home</Nav.Link>
-        <Form onSubmit={onLogOut}>
-          <Form.Group>
-            <FormButton type='submit' variant='secondary'>Sign out</FormButton>
-          </Form.Group>
-        </Form>
+        <ButtonLikeLink to='/' buttonTitle='Home' />
+        <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button>
       </Navbar.Collapse>
     </Navbar>
     <Container>
@@ -27,8 +23,6 @@ const Header = ({ onLogOut }) => (
         <Col xs={12} className='sub-title'>
           <h3>Month Balance</h3>
         </Col>
-        <Col xs={5}>Salary</Col>
-        <Col xs={4}>2.500,00 CAD</Col>
       </Row>
     </Container>
   </header>

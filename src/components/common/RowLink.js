@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 /**
@@ -6,9 +7,9 @@ import { Link } from 'react-router-dom';
  */
 function RowLink(props) {
   return (
-    <Link {...{ ...props, className: `${props.className} row` }}>
+    <Row as={Link} {...{ ...props, className: `${props.className}` }}>
       {props.children}
-    </Link>
+    </Row>
   )
 };
 

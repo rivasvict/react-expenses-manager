@@ -3,10 +3,15 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Results from '../Results';
 import { getMonthNameDisplay } from '../../helpers/date';
-import { getNewSelectedDate, doesAdjacentDateExist } from '../../helpers/general';
+import { getNewSelectedDate, doesAdjacentDateExist, calculateTotal } from '../../helpers/general';
 import ScreenTitle from '../common/ScreenTitle';
 import { connect } from 'react-redux';
 import { setSelectedDate } from '../../redux/expensesManager/actionCreators';
+import { formatNumberForDisplay, getSum } from '../../helpers/entriesHelper/entriesHelper';
+import './DashboardContent.scss';
+import { IconRemote } from '../common/Icons';
+import ContentTileSection from '../common/ContentTitleSection';
+import { MainContentContainer } from '../common/MainContentContainer';
 
 const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChange, dateAdjacencyType }) => (
   onSelectedDateChange(getNewSelectedDate({
@@ -18,11 +23,19 @@ const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChan
 
 const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }) => {
   const monthBalance = (entries[selectedDate.year] && entries[selectedDate.year][selectedDate.month]) || { incomes: [], expenses: [] };
+  const summaryUrl = `${match.url}/summary`;
+  const incomesName = 'incomes';
+  const expensesName = 'expenses';
+  const incomesSum = getSum({ entryType: incomesName, entries: monthBalance })
+  const expensesSum = getSum({ entryType: expensesName, entries: monthBalance })
+  const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
-    <React.Fragment>
-      <ScreenTitle screenTitle='Monthly Income/Expenses' />
-      <Row>
+    <MainContentContainer className='dasboard-content'>
+      <ContentTileSection title='Summary' to={summaryUrl}>
+        {`Savings `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
+      </ContentTileSection>
+      <Row className='month-header'>
         <Col xs={3}>
           {
             doesAdjacentDateExist({ dateAdjacencyType: 'prev', selectedDate, entries }) ?
@@ -31,7 +44,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
           }
         </Col>
         <Col xs={6}>
-          {getMonthNameDisplay(selectedDate.month)} {selectedDate.year}
+          <ScreenTitle screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`} />
         </Col>
         <Col xs={3}>
           {
@@ -42,7 +55,7 @@ const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }
         </Col>
       </Row>
       <MonthContent {...{ entries: monthBalance, match }} />
-    </React.Fragment>
+    </MainContentContainer>
   );
 };
 
@@ -55,7 +68,7 @@ const MonthContent = ({ entries, match }) => (
           baseUrl={match.url} />
       </Col>
     </Row>
-    <Row>
+    <Row className='bottom-container'>
       <Col xs={12} className='bottom-content'>
         <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
         <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
@@ -63,7 +76,6 @@ const MonthContent = ({ entries, match }) => (
     </Row>
   </React.Fragment>
 );
-
 
 const mapStateToProps = state => ({
   entries: state.expensesManager.entries,

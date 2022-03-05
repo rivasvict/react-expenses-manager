@@ -1,5 +1,4 @@
 .top-content {
-  padding: 18px 40px 68px 40px;
   .total-row {
     div {
       display: flex;
@@ -8,7 +7,6 @@
     }
 
     div:first-child {
-      padding: 0px;
       justify-content: center;
       font-size: 1.6rem;
     }
@@ -17,13 +15,5 @@
       display: flex;
       justify-content: flex-end;
     }
-  }
-}
-
-.results-total {
-  margin-top: auto;
-  div {
-    justify-content: flex-end;
-    display: flex;
   }
 }

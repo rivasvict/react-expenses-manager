@@ -3,7 +3,12 @@ import EntriesSummary from './EntriesSummary';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { categoryChange } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
+import { formatNumberForDisplay, getEntryCategoryOption, getSumFromEntries } from '../../../../helpers/entriesHelper/entriesHelper'; 
+import { MainContentContainer } from '../../MainContentContainer';
+import ContentTileSection from '../../ContentTitleSection';
+import { IconRemote } from '../../Icons';
+import { capitalize } from 'lodash';
+import './EntrySummaryWithFilter.scss';
 
 class EntrySummaryWithFilter extends Component {
   constructor(props) {
@@ -26,15 +31,25 @@ class EntrySummaryWithFilter extends Component {
   };
 
   render() {
-    const categoryOptions =getEntryCategoryOption(this.props.entryType);
+    const categoryOptions = getEntryCategoryOption(this.props.entryType);
     const entryNamePlural = `${this.props.entryType}s`;
     const name = entryNamePlural;
+    const totalSum = getSumFromEntries(this.getFilteredEntriesByCategory({ category: this.props.category, entryNamePlural }));
     return (
-      <React.Fragment>
+      <MainContentContainer className='entry-summary-with-filter'>
+        <ContentTileSection title='Summary'>
+          {`${capitalize(entryNamePlural)} `}<IconRemote inLine={true} />{` ${formatNumberForDisplay(totalSum)}`}
+        </ContentTileSection>
         {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-        <CategorySelector name='category' value={this.props.category} handleChange={this.handleChange.bind(this)} categoryOptions={categoryOptions} />
+        <CategorySelector
+          name='category'
+          value={this.props.category}
+          handleChange={this.handleChange.bind(this)}
+          categoryOptions={categoryOptions}
+          className='category-select'
+        />
         <EntriesSummary entries={this.getFilteredEntriesByCategory({ category: this.props.category, entryNamePlural })} name={name} />
-      </React.Fragment>
+      </MainContentContainer>
     )
   }
 }

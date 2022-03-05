@@ -1,9 +1,19 @@
 import dayjs from "dayjs";
 import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
+/*
+* TODO: The currency $ string here should come from
+* a global configuration object of the user settings
+* in the db
+*/
+const currencySymbol = '$';
 
 function getSumFromEntries(entries) {
-  const entriesForSum = entries.map(entry => parseFloat(entry.amount));
+  const entriesForSum = entries.map(entry => {
+    const amount = entry.amount;
+    return entry.type === 'income' ? parseFloat(amount) : -parseFloat(amount);
+  });
+
   return calculateTotal(...entriesForSum);
 }
 
@@ -15,26 +25,26 @@ function getSumFromEntries(entries) {
 function formatNumberForDisplay(amount) {
   if (isNaN(amount)) {
     /*
-    * TODO: The currency CAD string here should come from
+    * TODO: The currency $ string here should come from
     * a global configuration object of the user settings
     * in the db
     */
-    return `${0} CAD`;
+    return `${0} ${currencySymbol}`;
   } else {
     const numberOfDecimals = 2;
     /*
-    * TODO: The currency CAD string here should come from
+    * TODO: The currency $ string here should come from
     * a global configuration object of the user settings
     * in the db
     */
-    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} CAD`;
+    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${currencySymbol}`;
   }
 }
 
 function getSum({ entryType, entries }) {
   if (entries[entryType]) {
     const entriesByType = getEntries({ entryType, entries });
-    return entryType === 'incomes' ? getSumFromEntries(entriesByType) : -getSumFromEntries(entriesByType);
+    return getSumFromEntries(entriesByType);
   }
 }
 
@@ -50,6 +60,10 @@ function getSelectOptionsForDisplay(selectOptions) {
   return selectOptions.map((selectOption) => (
     { name: selectOption, value: selectOption.toLowerCase() }
   ));
+};
+
+function absoluteValue(val) {
+  return val < 0 ? val * - 1 : val;
 };
 
 function getEntryCategoryOption(entryType) {
@@ -221,5 +235,6 @@ export {
   getSum,
   getEntryModel,
   getEntryCategoryOption,
-  getGroupedFilledEntriesByDate
+  getGroupedFilledEntriesByDate,
+  absoluteValue
 }

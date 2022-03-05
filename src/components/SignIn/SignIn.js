@@ -3,8 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/';
 import { connect } from 'react-redux';
 import { logIn } from '../../redux/userManager/actoionCreators';
-import { Form } from 'react-bootstrap';
-import { FormButton, FormContent, InputPassword, InputText } from '../common/Forms';
+import { Col, Form, Row } from 'react-bootstrap';
+import { FormButton, InputPassword, InputText } from '../common/Forms';
+import NoSessionContainer from '../common/NoSessionContainer';
+import ButtonLikeLink from '../common/ButtonLikeLink';
 
 function handleChange({ event, dispatchFormStateChange }) {
   const { name, value } = event.currentTarget;
@@ -26,23 +28,33 @@ const userModel = FormModel({
 function SignIn({ onLogIn }) {
   const history = useHistory();
   return (
-    <FormValidation formModel={userModel} className='user-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
-      return (
-        <FormContent>
-          <Form.Group>
-            <ValidateField>
-              <InputText name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-            </ValidateField>
-          </Form.Group>
-          <Form.Group>
-            <ValidateField>
-              <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
-            </ValidateField>
-          </Form.Group>
-          <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
-        </FormContent>
-      );
-    }} />
+    <NoSessionContainer>
+      <FormValidation formModel={userModel} className='app-form' CustomFormComponent={Form} render={({ dispatchFormStateChange, formState }) => {
+        return (
+          <React.Fragment>
+            <Form.Group>
+              <ValidateField>
+                <InputText name='username' placeholder='Email' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            <Form.Group>
+              <ValidateField>
+                <InputPassword name='password' placeholder='Password' onChange={(event) => handleChange({ event, dispatchFormStateChange })} />
+              </ValidateField>
+            </Form.Group>
+            {/** TODO: Make sure the event for sending to the backend is handled in
+             * onSubmit of the form as it is standard for forms
+             */}
+            <FormButton type='submit' variant='secondary' onClick={(event) => handleSubmit({ event, onLogIn, values: formState.values, history })} disabled={!formState.isModelValid}>Sign In</FormButton>
+            <Row>
+              <Col xs={12}>
+                <ButtonLikeLink className='btn-primary' to='/sign-up' buttonTitle='Sign up' />
+              </Col>
+            </Row>
+          </React.Fragment>
+        );
+      }} />
+    </NoSessionContainer>
   );
 }
 

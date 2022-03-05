@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import CategorySelector from '../CategorySelector';
 import { connect } from 'react-redux';
 import { addIncome, addExpense } from '../../../../redux/expensesManager/actionCreators';
-import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper'; 
+import { getEntryModel, getEntryCategoryOption } from '../../../../helpers/entriesHelper/entriesHelper';
 
 import { withRouter } from 'react-router-dom';
 import { getTimestampFromMonthAndYear } from '../../../../helpers/date';
+import { Button, Form, Col, Row } from 'react-bootstrap';
+import { FormButton, FormContent, InputNumber, InputText } from '../../Forms';
+import { capitalize } from 'lodash';
+import ContentTileSection from '../../ContentTitleSection';
+import { MainContentContainer } from '../../MainContentContainer';
 
 const getActionFromEntryType = ({ entryType, props }) => {
   const entryTypeToActionDictionary = {
@@ -45,7 +50,7 @@ class AddEntry extends Component {
   handleSubmit = (event, { handleEntry, history, selectedDate }) => {
     event.preventDefault();
     const entry = Object.assign({}, this.state);
-    const digitMatcher = /^\d+(\.)*\d+$/;
+    const digitMatcher = /^\d*(\.)*\d+$/;
     const amount = entry.amount;
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== '') {
@@ -63,27 +68,49 @@ class AddEntry extends Component {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
 
     return (
-      <React.Fragment>
-        {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-        Add new {this.props.entryType}
-        <input
-          type='number'
-          name='amount'
-          placeholder={this.props.entryType}
-          value={this.state.amount}
-          onChange={this.handleInputChange}>
-        </input>
-        <input
-          type='text'
-          name='description'
-          placeholder='description'
-          value={this.state.description}
-          onChange={this.handleInputChange}>
-        </input>
-        <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
-        <button name='submit' onClick={event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate })}>Submit</button>
-        <button onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</button>
-      </React.Fragment>
+      <MainContentContainer>
+        <ContentTileSection>
+          Add new {capitalize(this.props.entryType)}
+        </ContentTileSection>
+        <FormContent formProps={{
+          onSubmit: event => this.handleSubmit(event, { handleEntry: handleEntry, history: this.props.history, selectedDate: this.props.selectedDate }),
+          className: 'app-form'
+        }}>
+          <Row className='top-container'>
+            <Col xs={12} className='top-content'>
+              <Form.Group>
+                <InputNumber
+                  type='number'
+                  name='amount'
+                  placeholder={capitalize(this.props.entryType)}
+                  value={this.state.amount}
+                  onChange={this.handleInputChange}>
+                </InputNumber>
+              </Form.Group>
+              <Form.Group>
+                <InputText
+                  type='text'
+                  name='description'
+                  placeholder='Description'
+                  value={this.state.description}
+                  onChange={this.handleInputChange}>
+                </InputText>
+              </Form.Group>
+              <Form.Group>
+                <CategorySelector name='category' value={this.state.categories_path} handleChange={this.setCategory} categoryOptions={categoryOptions} />
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className='bottom-container'>
+            <Col xs={12} className='bottom-content'>
+              <FormButton varian='primary' name='submit' type='submit'>
+                Submit
+              </FormButton>
+              <Button block variant='secondary' className='vertical-standard-space' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
+            </Col>
+          </Row>
+        </FormContent>
+      </MainContentContainer>
     )
   }
 }
