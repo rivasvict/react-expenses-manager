@@ -9,7 +9,7 @@
     .item-icon {
       @include adjust-text-in-vertical-axis();
       padding: 0;
-      justify-content: end
+      justify-content: flex-end
     }
 
     .item-description {
@@ -18,7 +18,7 @@
 
     .item-amount {
       @include adjust-text-in-vertical-axis();
-      justify-content: end;
+      justify-content: flex-end;
     }
   }
 }
