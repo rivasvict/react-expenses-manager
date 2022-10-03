@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss';
 import { setupStore } from './redux/store';
@@ -8,6 +8,9 @@ import * as serviceWorker from './serviceWorker';
 
 const reduxStore = setupStore();
 
-ReactDOM.render(<App reduxStore={reduxStore}/>, document.getElementById('root'));
+const container: Element | DocumentFragment = (document.getElementById('root') as Element);
+
+const root = createRoot(container);
+root.render(<App reduxStore={reduxStore}/>);
 
 serviceWorker.unregister();

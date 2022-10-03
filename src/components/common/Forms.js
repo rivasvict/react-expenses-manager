@@ -18,7 +18,7 @@ const InputPassword = (props) => (
 );
 
 const FormButton = (props) => (
-  <Button {...props} block></Button>
+  <Button {...props} block="true"></Button>
 );
 
 /** 
