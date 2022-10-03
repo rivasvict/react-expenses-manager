@@ -5,6 +5,10 @@
   "dependencies": {
     "@iconify/react": "^1.1.4",
     "@reduxjs/toolkit": "^1.8.5",
+    "@types/jest": "^29.1.1",
+    "@types/node": "^18.8.0",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
     "bootstrap": "^4.6.1",
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
@@ -21,7 +25,8 @@
     "react-test-renderer": "^16.14.0",
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
-    "redux-thunk": "^2.4.1"
+    "redux-thunk": "^2.4.1",
+    "typescript": "^4.8.4"
   },
   "scripts": {
     "start": "react-scripts start",
