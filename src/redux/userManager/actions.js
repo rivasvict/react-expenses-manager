@@ -2,6 +2,7 @@ import { postConfigAuthenticated, setObjectToSessionStorage } from "../../helper
 import { getBalance } from "../expensesManager/actionCreators";
 import { postConfig } from "../../helpers/general";
 import { config } from "../../config";
+import { ActionCreatorNew } from "./actions.new.tsx";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -107,23 +108,6 @@ const removeUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(userLogOutSuccess());
 };
 
-const LogIn = () => ({ userPayload }) => {
-  return async (dispatch) => {
-    try {
-      const url = `${baseUrl}/api/user/login`;
-      const body = JSON.stringify({ user: userPayload });
-      dispatch(setAppLoading(true));
-      dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, { body, ...postConfigAuthenticated });
-      const response = await rawResponse.json()
-
-      setUserLocally({ dispatch, rawResponse, response });
-    } catch (error) {
-      dispatch(userLoginError(error));
-    }
-  }
-};
-
 const LogOut = () => () => {
   return async (dispatch) => {
     try {
@@ -164,9 +148,22 @@ const SetUser = () => () => {
   };
 };
 
-export const ActionCreators = () => ({
-  createUser: CreateUser(),
-  logIn: LogIn(),
-  setUser: SetUser(),
-  logOut: LogOut()
-});
+export const ActionCreators = () => {
+  const { logIn } = ActionCreatorNew({
+    baseUrl,
+    json: JSON,
+    setAppLoading,
+    setUserLoading,
+    req: fetch,
+    postConfigAuthenticated,
+    setUserLocally,
+    userLoginError
+  })
+
+  return ({
+    createUser: CreateUser(),
+    logIn,
+    setUser: SetUser(),
+    logOut: LogOut()
+  });
+};
