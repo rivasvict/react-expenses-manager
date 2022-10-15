@@ -28,12 +28,12 @@ const hasUserBeenCreated = user => ({
   payload: user
 });
 
-const setUserLoading = isUserLoading => ({
+export const setUserLoading = isUserLoading => ({
   type: SET_USER_LOADING,
   payload: { isUserLoading }
 });
 
-const setAppLoading = isLoading => ({
+export const setAppLoading = isLoading => ({
   type: SET_APP_LOADING,
   payload: { isLoading: isLoading }
 })

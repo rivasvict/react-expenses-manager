@@ -1,24 +1,20 @@
 import { postConfigAuthenticated } from "../../helpers/general";
 import { ActionCreatorNew } from "./actions.new.tsx";
-import { ActionCreators } from "./actions";
-import { config } from "../../config";
-
 /**
  * TODO: The actionCreators should be unified
  * in the future ActionCreatorNew will be the
  * ActionCreators that we currently have.
  */
-export const {
-  createUser,
-  userCreationFail,
-  userCreationLoading,
+
+import {
   setAppLoading,
   setUserLoading,
   setUserLocally,
   userLoginError,
   removeUserLocally,
   userOutError,
-} = ActionCreators();
+} from "./actions";
+import { config } from "../../config";
 
 /**
  * TODO: The actionCreators should be unified
