@@ -8,40 +8,6 @@ interface IpostConfigAuthenticated {
   credentials: "include" | "omit" | "same-origin";
 }
 
-const LogOut =
-  ({
-    baseUrl,
-    setAppLoading,
-    setUserLoading,
-    req,
-    postConfigAuthenticated,
-    removeUserLocally,
-    userOutError,
-  }: {
-    baseUrl: string;
-    setAppLoading: ActionCreator<boolean>;
-    setUserLoading: ActionCreator<boolean>;
-    req: Fetch;
-    postConfigAuthenticated: IpostConfigAuthenticated;
-    removeUserLocally: ({ dispatch, rawResponse, response }) => void;
-    userOutError: ActionCreator<Error>;
-  }) =>
-  () => {
-    return async (dispatch) => {
-      try {
-        const url = `${baseUrl}/api/user/log-out`;
-        dispatch(setAppLoading(true));
-        dispatch(setUserLoading(true));
-        const rawResponse: Response = await req(url, postConfigAuthenticated);
-        const response = await rawResponse.json();
-
-        removeUserLocally({ dispatch, rawResponse, response });
-      } catch (error) {
-        dispatch(userOutError(error));
-      }
-    };
-  };
-
 const LogIn =
   ({
     baseUrl,
@@ -78,6 +44,40 @@ const LogIn =
         setUserLocally({ dispatch, rawResponse, response });
       } catch (error) {
         dispatch(userLoginError(error));
+      }
+    };
+  };
+
+const LogOut =
+  ({
+    baseUrl,
+    setAppLoading,
+    setUserLoading,
+    req,
+    postConfigAuthenticated,
+    removeUserLocally,
+    userOutError,
+  }: {
+    baseUrl: string;
+    setAppLoading: ActionCreator<boolean>;
+    setUserLoading: ActionCreator<boolean>;
+    req: Fetch;
+    postConfigAuthenticated: IpostConfigAuthenticated;
+    removeUserLocally: ({ dispatch, rawResponse, response }) => void;
+    userOutError: ActionCreator<Error>;
+  }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        const url = `${baseUrl}/api/user/log-out`;
+        dispatch(setAppLoading(true));
+        dispatch(setUserLoading(true));
+        const rawResponse: Response = await req(url, postConfigAuthenticated);
+        const response = await rawResponse.json();
+
+        removeUserLocally({ dispatch, rawResponse, response });
+      } catch (error) {
+        dispatch(userOutError(error));
       }
     };
   };
