@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { FormValidation, FormModel, ValidateField } from '../../helpers/form-validation/'
 import { connect } from 'react-redux';
-import { createUser } from '../../redux/userManager/actoionCreators';
+import { ActionCreators } from '../../redux/userManager/actions';
 import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { Form } from 'react-bootstrap';
 import { FormButton, InputPassword, InputText } from '../common/Forms';
 import NoSessionContainer from '../common/NoSessionContainer';
+const { createUser } = ActionCreators();
 
 const userModel = FormModel({
   firstName: '',

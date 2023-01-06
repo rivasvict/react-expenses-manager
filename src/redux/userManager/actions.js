@@ -1,6 +1,5 @@
-import { postConfigAuthenticated, setObjectToSessionStorage } from "../../helpers/general";
 import { getBalance } from "../expensesManager/actionCreators";
-import { postConfig } from "../../helpers/general";
+import { postConfig, setObjectToSessionStorage } from "../../helpers/general";
 import { config } from "../../config";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
@@ -11,7 +10,13 @@ export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
 export const SET_USER_LOADING = 'SET_USER_LOADING';
 export const USER_LOG_OUT_ERROR = 'USER_LOG_OUT_ERROR';
 export const USER_LOG_OUT_SUCCESS = 'USER_LOG_OUT_SUCCESS';
-const baseUrl = config.REACT_APP_API_HOST
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const baseUrl = config.REACT_APP_API_HOST
 
 const userCreationFail = error => ({
   type: CREATE_USER_ERROR,
@@ -23,12 +28,12 @@ const hasUserBeenCreated = user => ({
   payload: user
 });
 
-const setUserLoading = isUserLoading => ({
+export const setUserLoading = isUserLoading => ({
   type: SET_USER_LOADING,
   payload: { isUserLoading }
 });
 
-const setAppLoading = isLoading => ({
+export const setAppLoading = isLoading => ({
   type: SET_APP_LOADING,
   payload: { isLoading: isLoading }
 })
@@ -38,7 +43,13 @@ const userLoginSuccess = user => ({
   payload: user
 })
 
-const userLoginError = error => ({
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const userLoginError = error => ({
   type: USER_LOG_IN_ERROR,
   payload: error
 })
@@ -47,7 +58,13 @@ const userLogOutSuccess = () => ({
   type: USER_LOG_OUT_SUCCESS,
 })
 
-const userOutError = error => ({
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const userOutError = error => ({
   type: USER_LOG_OUT_ERROR,
   payload: error
 })
@@ -81,7 +98,13 @@ const CreateUser = () => (userPayload) => {
   }
 }
 
-const setUserLocally = ({ dispatch, rawResponse, response }) => {
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const setUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(setAppLoading(false));
   dispatch(setUserLoading(false));
 
@@ -94,7 +117,13 @@ const setUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(getBalance());
 };
 
-const removeUserLocally = ({ dispatch, rawResponse, response }) => {
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const removeUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(setAppLoading(false));
   dispatch(setUserLoading(false));
 
@@ -107,66 +136,14 @@ const removeUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(userLogOutSuccess());
 };
 
-const LogIn = () => ({ userPayload }) => {
-  return async (dispatch) => {
-    try {
-      const url = `${baseUrl}/api/user/login`;
-      const body = JSON.stringify({ user: userPayload });
-      dispatch(setAppLoading(true));
-      dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, { body, ...postConfigAuthenticated });
-      const response = await rawResponse.json()
-
-      setUserLocally({ dispatch, rawResponse, response });
-    } catch (error) {
-      dispatch(userLoginError(error));
-    }
-  }
+/**
+ * TODO: Remove the export once the ActionCreators
+ * and ActionCreatorNew are together again as this
+ * dependency will live within the same file where
+ * it will be used.
+ */
+export const ActionCreators = () => {
+  return ({
+    createUser: CreateUser()
+  });
 };
-
-const LogOut = () => () => {
-  return async (dispatch) => {
-    try {
-      const url = `${baseUrl}/api/user/log-out`;
-      dispatch(setAppLoading(true));
-      dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, postConfigAuthenticated);
-      const response = await rawResponse.json()
-
-      removeUserLocally({ dispatch, rawResponse, response });
-    } catch (error) {
-      dispatch(userOutError(error));
-    }
-  }
-};
-
-const SetUser = () => () => {
-  return async (dispatch) => {
-    try {
-      const email = sessionStorage.getItem('email');
-      if (email) {
-        const url = `${baseUrl}/api/user/get/${email}`;
-        dispatch(setUserLoading(true));
-        dispatch(setAppLoading(true));
-        const rawResponse = await fetch(url, {
-          credentials: 'include'
-        });
-        const response = await rawResponse.json()
-
-        setUserLocally({ dispatch, rawResponse, response });
-      } else {
-        dispatch(setAppLoading(false));
-        dispatch(setUserLoading(false));
-      }
-    } catch (error) {
-      dispatch(userLoginError(error));
-    }
-  };
-};
-
-export const ActionCreators = () => ({
-  createUser: CreateUser(),
-  logIn: LogIn(),
-  setUser: SetUser(),
-  logOut: LogOut()
-});
