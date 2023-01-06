@@ -8,6 +8,30 @@ interface IpostConfigAuthenticated {
   credentials: "include" | "omit" | "same-origin";
 }
 
+/**
+ * TODO: Move this type to the a better place for types
+ */
+
+type UserCredentials = {
+  username: string,
+  password: string,
+}
+
+/** TODO: This User type should belong to the setUserLocally
+ * file function definiton
+ */
+type User = {
+  /** TODO: Figure out a way to move the following 2
+   * attributes into another custom type.
+   */
+  __v: number,
+  _id: string,
+  accounts: string[],
+  email: string,
+  firstName: string,
+  lastName: string,
+}
+
 const LogIn =
   ({
     baseUrl,
@@ -28,7 +52,7 @@ const LogIn =
     setUserLocally: ({ dispatch, rawResponse, response }) => void;
     userLoginError: ActionCreator<Error>;
   }) =>
-  ({ userPayload }) => {
+  ({ userPayload }: { userPayload: UserCredentials }) => {
     return async (dispatch) => {
       try {
         const url = `${baseUrl}/api/user/login`;
@@ -39,7 +63,7 @@ const LogIn =
           body,
           ...postConfigAuthenticated,
         });
-        const response = await rawResponse.json();
+        const response: User = await rawResponse.json();
 
         setUserLocally({ dispatch, rawResponse, response });
       } catch (error) {
