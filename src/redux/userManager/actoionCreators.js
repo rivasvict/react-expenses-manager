@@ -1,5 +1,6 @@
+import { req } from "../../services/mock-api.ts";
 import { postConfigAuthenticated } from "../../helpers/general";
-import { ActionCreatorNew } from "./actions.new.tsx";
+import { ActionCreatorNew } from "./actions.new.ts";
 /**
  * TODO: The actionCreators should be unified
  * in the future ActionCreatorNew will be the
@@ -26,7 +27,7 @@ export const { logIn, setUser, logOut } = ActionCreatorNew({
   json: JSON,
   setAppLoading,
   setUserLoading,
-  req: fetch,
+  req,
   postConfigAuthenticated,
   setUserLocally,
   userLoginError,

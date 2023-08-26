@@ -25,7 +25,19 @@ const userModel = FormModel({
   .addBuiltInValidationToField({ fieldName: 'username', validation: { name: 'required', message: 'Username is required' } })
   .addBuiltInValidationToField({ fieldName: 'password', validation: { name: 'required', message: 'Password is required' } });
 
-function SignIn({ onLogIn }) {
+/** TODO: Make a better implementation of the error message */
+function ErrorMessage({ message }) {
+  return (
+    <Row>
+      <Col xs={12}>
+        {message}
+      </Col>
+    </Row>
+  );
+}
+
+/** TODO: Implement the error message from redux */
+function SignIn({ onLogIn, error }) {
   const history = useHistory();
   return (
     <NoSessionContainer>
@@ -51,6 +63,7 @@ function SignIn({ onLogIn }) {
                 <ButtonLikeLink className='btn-primary' to='/sign-up' buttonTitle='Sign up' />
               </Col>
             </Row>
+            {error && <ErrorMessage message={error} />}
           </React.Fragment>
         );
       }} />
@@ -59,7 +72,8 @@ function SignIn({ onLogIn }) {
 }
 
 const mapStateToProps = state => ({
-  user: state.userManager.user
+  user: state.userManager.user,
+  error: state.userManager.error,
 });
 
 const mapActionsToProps = dispatch => ({

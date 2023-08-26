@@ -1,6 +1,7 @@
 import { getBalance } from "../expensesManager/actionCreators";
 import { postConfig, setObjectToSessionStorage } from "../../helpers/general";
 import { config } from "../../config";
+import { req } from "../../services/mock-api.ts";
 
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
@@ -80,9 +81,9 @@ const CreateUser = () => (userPayload) => {
       const url = `${baseUrl}/api/user/sign-up`;
       const body = JSON.stringify({ user: userPayload });
       dispatch(setAppLoading(true));
-      const rawResponse = await fetch(url, {
+      const rawResponse = await req(url, {
         ...postConfig,
-        body
+        data: body,
       });
       const response = await rawResponse.json()
       if (!rawResponse.ok) {

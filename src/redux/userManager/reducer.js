@@ -24,6 +24,7 @@ const getDefaultState = () => ({
   userCreated: false
 })
 
+const NOT_FOUND_ERROR_CODE = 404;
 const handleError = (error, state) => {
   if (error && error.name === 'ValidationError') {
     return {
@@ -34,7 +35,12 @@ const handleError = (error, state) => {
     }
   }
 
-  console.error(error);
+  if (error?.response?.status === NOT_FOUND_ERROR_CODE) {
+    return {
+      ...state,
+      error: 'Incorrect username or password'
+    };
+  }
   return {
     ...state,
     error

@@ -1,4 +1,6 @@
+import { Axios } from "axios";
 import { ActionCreator } from "redux";
+import { req as mockedApi } from '../../services/mock-api.ts';
 
 type Fetch = <T>(url: string, RequestInit) => Promise<T>;
 
@@ -47,7 +49,7 @@ const LogIn =
     json: JSON;
     setAppLoading: ActionCreator<boolean>;
     setUserLoading: ActionCreator<boolean>;
-    req: Fetch;
+    req: any;
     postConfigAuthenticated: IpostConfigAuthenticated;
     setUserLocally: ({ dispatch, rawResponse, response }) => void;
     userLoginError: ActionCreator<Error>;
@@ -59,15 +61,19 @@ const LogIn =
         const body = json.stringify({ user: userPayload });
         dispatch(setAppLoading(true));
         dispatch(setUserLoading(true));
-        const rawResponse = await req<Response>(url, {
+        const rawResponse = await req.get(url, {
           body,
           ...postConfigAuthenticated,
         });
+        /** TODO: Adapt response from mocked api */
+        debugger;
         const response: User = await rawResponse.json();
 
         setUserLocally({ dispatch, rawResponse, response });
       } catch (error) {
+        debugger;
         dispatch(userLoginError(error));
+        dispatch(setAppLoading(false));
       }
     };
   };
@@ -120,7 +126,7 @@ const SetUser =
     baseUrl: string;
     setUserLoading: ActionCreator<boolean>;
     setAppLoading: ActionCreator<boolean>;
-    req: Fetch;
+    req: Axios;
     setUserLocally: ({ dispatch, rawResponse, response }) => void;
     userLoginError: ActionCreator<Error>;
   }) =>
@@ -132,10 +138,10 @@ const SetUser =
           const url = `${baseUrl}/api/user/get/${email}`;
           dispatch(setUserLoading(true));
           dispatch(setAppLoading(true));
-          const rawResponse = await req<Response>(url, {
+          const rawResponse = await req.post(url, {
             credentials: "include",
           });
-          const response = await rawResponse.json();
+          const response = await rawResponse;
 
           setUserLocally({ dispatch, rawResponse, response });
         } else {
@@ -167,7 +173,8 @@ export const ActionCreatorNew = ({
       json,
       setAppLoading,
       setUserLoading,
-      req,
+      /** TODO: Temporary mock api usage */
+      req: mockedApi,
       postConfigAuthenticated,
       setUserLocally,
       userLoginError,
