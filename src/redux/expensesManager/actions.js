@@ -32,6 +32,7 @@ const CategoryChange = () => categoryValue => ({
   payload: categoryValue
 });
 
+/** MAKE SURE THIS FUNCTION WORKS WITH THE MOCKED SERVER */
 const GetBalance = () => () => {
   return async (dispatch) => {
     try {

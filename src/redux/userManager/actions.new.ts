@@ -1,6 +1,6 @@
-import { Axios } from "axios";
 import { ActionCreator } from "redux";
-import { req as mockedApi } from '../../services/mock-api.ts';
+import { httpClient } from "../../services/httpClient/axios/intex.ts";
+import { HttpClientAdapter } from "../../services/httpClient/types.js";
 
 type Fetch = <T>(url: string, RequestInit) => Promise<T>;
 
@@ -65,13 +65,10 @@ const LogIn =
           body,
           ...postConfigAuthenticated,
         });
-        /** TODO: Adapt response from mocked api */
-        debugger;
         const response: User = await rawResponse.json();
 
         setUserLocally({ dispatch, rawResponse, response });
       } catch (error) {
-        debugger;
         dispatch(userLoginError(error));
         dispatch(setAppLoading(false));
       }
@@ -126,7 +123,7 @@ const SetUser =
     baseUrl: string;
     setUserLoading: ActionCreator<boolean>;
     setAppLoading: ActionCreator<boolean>;
-    req: Axios;
+    req: HttpClientAdapter;
     setUserLocally: ({ dispatch, rawResponse, response }) => void;
     userLoginError: ActionCreator<Error>;
   }) =>
@@ -174,7 +171,7 @@ export const ActionCreatorNew = ({
       setAppLoading,
       setUserLoading,
       /** TODO: Temporary mock api usage */
-      req: mockedApi,
+      req: httpClient,
       postConfigAuthenticated,
       setUserLocally,
       userLoginError,

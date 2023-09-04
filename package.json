@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
-    "@iconify-icons/codicon": "^1.1.26"
+    "@iconify-icons/codicon": "^1.1.26",
+    "tslint": "^6.1.3"
   }
 }
