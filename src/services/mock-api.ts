@@ -12,6 +12,8 @@ interface User {
   password: string;
 }
 
+interface Entry {}
+
 const getUsers = (): User[] => {
   const users = localStorage.getItem("users");
   return users ? JSON.parse(users) : [];
@@ -28,7 +30,6 @@ mock.onGet(`${baseUrl}/api/user/login`).reply((config) => {
   if (user) {
     const token = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
     document.cookie = `token=${token};path=/;HttpOnly`;
-    /** TODO: Look for the way to make this response compatible with what is expected */
     return [200, user.user];
   } else {
     return [401, { message: "Invalid email or passwords" }];
@@ -50,5 +51,35 @@ mock.onPost(`${baseUrl}/api/user/sign-up`).reply((config) => {
   saveUser(newUser);
   return [201, { message: "User created successfully" }];
 });
+
+/** TODO: The following two mocks need to be implemented from scratch */
+mock.onGet(`${baseUrl}/api/api/balance`).reply((config) => {
+  debugger;
+  const { body } = config;
+  const { user: localUser } = JSON.parse(body);
+  const { username: email, password } = localUser;
+  const users = getUsers();
+  const user = users.find(
+    (mockedUser: User) => mockedUser.user.email === email && mockedUser.user.password === password
+  );
+  if (user) {
+    const token = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    document.cookie = `token=${token};path=/;HttpOnly`;
+    return [200, user.user];
+  } else {
+    return [401, { message: "Invalid email or passwords" }];
+  }
+});
+
+mock.onPost(`${baseUrl}/api/balance`).reply((config) => {
+  const entry: Entry = JSON.parse(config.data);
+  const users = getUsers();
+  if (users.find((mockedUser: User) => mockedUser.email === entry.email)) {
+    return [409, { message: "User already exists with this email" }];
+  }
+  saveEntry(entry);
+  return [201, { message: "User created successfully" }];
+});
+
 
 export const req = instance;
