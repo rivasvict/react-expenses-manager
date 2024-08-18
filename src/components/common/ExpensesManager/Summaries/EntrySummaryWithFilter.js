@@ -26,8 +26,8 @@ class EntrySummaryWithFilter extends Component {
   getFilteredEntriesByCategory = ({ category, entryNamePlural }) => {
     const selectedYear = this.selectedDate.year;
     const selectedMonth = this.selectedDate.month;
-    const entries = this.props.entries[selectedYear][selectedMonth][entryNamePlural];
-    return category.length ? entries.filter(entry => entry.categories_path.match(category)) : entries;
+    const entries = this?.props?.entries?.[selectedYear]?.[selectedMonth]?.[entryNamePlural];
+    return category.length ? entries.filter(entry => entry.categories_path.match(category)) : entries || [];
   };
 
   render() {

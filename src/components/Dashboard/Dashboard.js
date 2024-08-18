@@ -21,21 +21,24 @@ function Dashboard({ entries, selectedDate }) {
       <Container fluid>
         <WorkAreaContentContainer>
           <Switch>
-            <Route path={`${match.url}/add-income`}>
+            <Route path={`${match.url}add-income`}>
               <AddEntry entryType='income' selectedDate={selectedDate} />
             </Route>
-            <Route path={`${match.url}/add-expense`}>
+            <Route path={`${match.url}add-expense`}>
               <AddEntry entryType='expense' selectedDate={selectedDate} />
             </Route>
-            <Route path={`${match.url}/incomes`}>
+            <Route path={`${match.url}incomes`}>
               <EntrySummaryWithFilter selectedDate={selectedDate} entryType='income' />
             </Route>
-            <Route path={`${match.url}/expenses`}>
+            <Route path={`${match.url}expenses`}>
               <EntrySummaryWithFilter selectedDate={selectedDate} entryType='expense' />
             </Route>
-            <Route path={`${match.url}/summary`}>
+            <Route path={`${match.url}summary`}>
               {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
               <Summary entries={entries} selectedDate={selectedDate} />
+            </Route>
+            <Route path={`${match.url}dashboard`}>
+              <DashboardContent {...{ entries, match }} />
             </Route>
             <Route exact path={`${match.url}`}>
               <DashboardContent {...{ entries, match }} />
