@@ -59,6 +59,7 @@ class AddEntry extends Component {
     }
   }
 
+  /* TODO: Use back history navigation instead of a specific route for cancel action */
   navigateToDashboard = (history) => {
     history.push('/dashboard');
   }
@@ -106,6 +107,7 @@ class AddEntry extends Component {
               <FormButton varian='primary' name='submit' type='submit'>
                 Submit
               </FormButton>
+              {/* TODO: Use back history navigation instead of a specific route for cancel action */}
               <Button block variant='secondary' className='vertical-standard-space' onClick={() => this.navigateToDashboard(this.props.history)}>Cancel</Button>
             </Col>
           </Row>

@@ -23,7 +23,7 @@ const handleDateSelectionPointers = ({ entries, selectedDate, onSelectedDateChan
 
 const DashboardContent = ({ entries, match, selectedDate, onSelectedDateChange }) => {
   const monthBalance = (entries[selectedDate.year] && entries[selectedDate.year][selectedDate.month]) || { incomes: [], expenses: [] };
-  const summaryUrl = `${match.url}/summary`;
+  const summaryUrl = `${match.url}summary`;
   const incomesName = 'incomes';
   const expensesName = 'expenses';
   const incomesSum = getSum({ entryType: incomesName, entries: monthBalance })
@@ -70,8 +70,8 @@ const MonthContent = ({ entries, match }) => (
     </Row>
     <Row className='bottom-container'>
       <Col xs={12} className='bottom-content'>
-        <Link to={`${match.url}/add-income`} className='btn btn-primary btn-block'>Add Income</Link>
-        <Link to={`${match.url}/add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
+        <Link to={`${match.url}add-income`} className='btn btn-primary btn-block'>Add Income</Link>
+        <Link to={`${match.url}add-expense`} className='btn btn-secondary btn-block'>Add Expenses</Link>
       </Col>
     </Row>
   </React.Fragment>

@@ -39,21 +39,21 @@ class Summary extends Component {
   getEntriesToSum = ({ filter = '', props = this.props }) => {
     const datedEntries = this.getDatedEntries({ props });
 
-    return datedEntries[filter] || [...datedEntries['incomes'], ...datedEntries['expenses']];
+    return datedEntries?.[filter] || [...(datedEntries?.['incomes'] || []), ...(datedEntries?.['expenses'] || [])] || [];
   };
 
   getDatedEntries = ({ props = this.props }) => {
     const selectedYear = this.selectedDate.year;
     const selectedMonth = this.selectedDate.month;
     const entries = props.entries;
-    return entries[selectedYear][selectedMonth];
+    return entries?.[selectedYear]?.[selectedMonth] || {incomes: [], expenses: []};
   };
 
   getFilteredEntries = ({ filter = '', props = this.props }) => {
     const datedEntries = this.getDatedEntries({ props });
     const entriesSummary = {
-      incomes: <EntriesSummary entries={datedEntries['incomes']} name='Incomes' selectedDate={this.selectedDate} />,
-      expenses: <EntriesSummary entries={datedEntries['expenses']} name='Expenses' selectedDate={this.selectedDate} />
+      incomes: <EntriesSummary entries={datedEntries?.['incomes']} name='Incomes' selectedDate={this.selectedDate} />,
+      expenses: <EntriesSummary entries={datedEntries?.['expenses']} name='Expenses' selectedDate={this.selectedDate} />
     }
     
     return entriesSummary[filter] ||

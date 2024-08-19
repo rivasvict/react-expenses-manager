@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Container, Navbar, Row } from 'react-bootstrap';
+import { Col, Container, Navbar, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import logoImage from '../../images/expenses_tracker_logo.png';
 import { logOut } from '../../redux/userManager/actoionCreators';
@@ -15,7 +15,12 @@ const Header = ({ onLogOut }) => (
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <ButtonLikeLink to='/' buttonTitle='Home' />
-        <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button>
+        {/**
+         * TODO:
+         * Reinstate <AuthenticatedApp />
+         * https://github.com/users/rivasvict/projects/3/views/1?pane=issue&itemId=75192915
+        */}
+        {/* <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button> */}
       </Navbar.Collapse>
     </Navbar>
     <Container>

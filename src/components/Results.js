@@ -30,8 +30,8 @@ function Results({ entries, baseUrl = '' }) {
   const expensesName = 'expenses';
   const incomesSum = getSum({ entryType: incomesName, entries })
   const expensesSum = getSum({ entryType: expensesName, entries })
-  const incomesUrl = `${baseUrl}/${incomesName}`;
-  const expensesUrl = `${baseUrl}/${expensesName}`;
+  const incomesUrl = `${baseUrl}${incomesName}`;
+  const expensesUrl = `${baseUrl}${expensesName}`;
 
   return (
     <React.Fragment>
