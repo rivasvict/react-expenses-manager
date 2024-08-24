@@ -1,3 +1,10 @@
-import { ActionCreators } from './actions';
+import { ActionCreators } from "./actions";
 
-export const { createUser, userCreationFail, userCreationLoading, logIn, setUser, logOut } = ActionCreators();
+export const {
+  createUser,
+  userCreationFail,
+  userCreationLoading,
+  logIn,
+  setUser,
+  logOut,
+} = ActionCreators();

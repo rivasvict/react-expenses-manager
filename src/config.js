@@ -1,5 +1,6 @@
-const REACT_APP_API_HOST = process.env.REACT_APP_API_HOST || 'http://localhost:9000';
+const REACT_APP_API_HOST =
+  process.env.REACT_APP_API_HOST || "http://localhost:9000";
 
 export const config = {
-  REACT_APP_API_HOST
+  REACT_APP_API_HOST,
 };

@@ -1,12 +1,12 @@
-import React from 'react';
-import { Redirect, Route, useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { setUser } from '../../redux/userManager/actoionCreators';
+import React from "react";
+import { Redirect, Route, useLocation } from "react-router-dom";
+import { connect } from "react-redux";
+import { setUser } from "../../redux/userManager/actoionCreators";
 
 function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
   const location = useLocation();
   const RedirectToDefault = () => {
-    return <Redirect to={{ pathname: '/', state: { from: location } }} />;
+    return <Redirect to={{ pathname: "/", state: { from: location } }} />;
   };
 
   const render = () => {
@@ -19,21 +19,16 @@ function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
     return RedirectToDefault();
   };
 
-  return (
-    <Route
-      {...res}
-      render={render}
-    />
-  );
+  return <Route {...res} render={render} />;
 }
 
-const mapSateToProps = state => ({
+const mapSateToProps = (state) => ({
   user: state.userManager.user,
-  isLoading: state.userManager.isLoading
+  isLoading: state.userManager.isLoading,
 });
 
-const mapActionToProps = dispacth => ({
-  onSetUser: () => dispacth(setUser())
-})
+const mapActionToProps = (dispacth) => ({
+  onSetUser: () => dispacth(setUser()),
+});
 
 export default connect(mapSateToProps, mapActionToProps)(PrivateRoute);
