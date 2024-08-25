@@ -1,6 +1,6 @@
-import { ActionCreators } from './actions';
-import storageSelector from '../../services/storageSelector';
-import { STORAGE_TYPES } from '../../constants';
+import { ActionCreators } from "./actions";
+import storageSelector from "../../services/storageSelector";
+import { STORAGE_TYPES } from "../../constants";
 /**
  * TODO: Use STORAGE_TYPES.REMOTE
  * when the connection to the backend is reinstated https://github.com/rivasvict/react-expenses-manager/issues/50
@@ -13,5 +13,5 @@ export const {
   addIncome,
   categoryChange,
   getBalance,
-  setSelectedDate
+  setSelectedDate,
 } = ActionCreators({ storage });

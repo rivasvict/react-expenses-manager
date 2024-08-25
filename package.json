@@ -12,7 +12,6 @@
     "bootstrap": "^5.2.2",
     "create-react-app": "^1.2.1",
     "dayjs": "^1.10.7",
-    "eslint": "^8.24.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "node-sass": "^7.0.3",
@@ -35,7 +34,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect=0.0.0.0 test --runInBand --no-cache",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint -c .eslintrc.json .",
+    "lint:fix": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,6 +54,9 @@
     ]
   },
   "devDependencies": {
-    "@iconify-icons/codicon": "^1.1.26"
+    "@iconify-icons/codicon": "^1.1.26",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^3.3.3"
   }
 }

@@ -1,25 +1,19 @@
-import React from 'react';
-import { Button, Container, Form, Row } from 'react-bootstrap';
+import React from "react";
+import { Button, Container, Form, Row } from "react-bootstrap";
 
-const GenericInput = (props) => (
-  <Form.Control {...props} className='text' />
-);
+const GenericInput = (props) => <Form.Control {...props} className="text" />;
 
-const InputText = (props) => (
-  <GenericInput {... { ...props, type: 'text' }} />
-);
+const InputText = (props) => <GenericInput {...{ ...props, type: "text" }} />;
 
 const InputNumber = (props) => (
-  <GenericInput {... { ...props, type: 'number' }} />
+  <GenericInput {...{ ...props, type: "number" }} />
 );
 
 const InputPassword = (props) => (
-  <GenericInput {... { ...props, type: 'password' }} />
+  <GenericInput {...{ ...props, type: "password" }} />
 );
 
-const FormButton = (props) => (
-  <Button {...props} block="true"></Button>
-);
+const FormButton = (props) => <Button {...props} block="true"></Button>;
 
 /** 
   Once react-bootstrap is updated to v2,
@@ -29,7 +23,9 @@ const FormButton = (props) => (
   (with Form.Select)
 */
 const FormSelect = (props) => (
-  <Form.Control as='select' {...props}>{props.children}</Form.Control>
+  <Form.Control as="select" {...props}>
+    {props.children}
+  </Form.Control>
 );
 
 const FormContent = ({ children, render, formProps = {} }) => (
@@ -40,4 +36,11 @@ const FormContent = ({ children, render, formProps = {} }) => (
   </Container>
 );
 
-export { InputText, InputPassword, InputNumber, FormButton, FormSelect, FormContent };
+export {
+  InputText,
+  InputPassword,
+  InputNumber,
+  FormButton,
+  FormSelect,
+  FormContent,
+};

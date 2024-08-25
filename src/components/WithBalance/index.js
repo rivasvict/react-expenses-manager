@@ -1,6 +1,5 @@
-
-import { connect } from 'react-redux';
-import { getBalance } from '../../redux/expensesManager/actionCreators';
+import { connect } from "react-redux";
+import { getBalance } from "../../redux/expensesManager/actionCreators";
 
 /**
  *  This is just a component that calls getBalance from redux to set the balance

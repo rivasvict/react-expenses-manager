@@ -1,15 +1,13 @@
-import React from 'react';
+import React from "react";
 
 const addLinkStyle = {
-  cursor: 'pointer',
+  cursor: "pointer",
   border: 0,
-  padding: 0
+  padding: 0,
 };
 
 function AddLink(props) {
-  return (
-    <button style={addLinkStyle}>{props.children}</button>
-  );
+  return <button style={addLinkStyle}>{props.children}</button>;
 }
 
 export default AddLink;

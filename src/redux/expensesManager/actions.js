@@ -1,47 +1,59 @@
 import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
-export const ADD_OUTCOME = 'ADD_OUTCOME';
-export const ADD_INCOME = 'ADD_INCOME';
-export const CATEGORY_CHANGE = 'CATEGORY_CHANGE'
-export const GET_BALANCE = 'GET_BALANCE';
-export const SET_SELECTED_DATE = 'SET_SELECTED_DATE';
+export const ADD_OUTCOME = "ADD_OUTCOME";
+export const ADD_INCOME = "ADD_INCOME";
+export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
+export const GET_BALANCE = "GET_BALANCE";
+export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
 
-export const SET_APP_LOADING = 'SET_APP_LOADING';
+export const SET_APP_LOADING = "SET_APP_LOADING";
 
-const setAppLoading = isLoading => ({
+const setAppLoading = (isLoading) => ({
   type: SET_APP_LOADING,
-  payload: { isLoading: isLoading }
+  payload: { isLoading: isLoading },
 });
 
-const AddExpense = ({ storage }) => ({ entry, selectedDate }) => setRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
+const AddExpense =
+  ({ storage }) =>
+  ({ entry, selectedDate }) =>
+    setRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
 
-const AddIncome = ({ storage }) => ({ entry, selectedDate }) => setRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
+const AddIncome =
+  ({ storage }) =>
+  ({ entry, selectedDate }) =>
+    setRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
 
-const SetSelectedDate = () => newSelectedDate => ({
+const SetSelectedDate = () => (newSelectedDate) => ({
   type: SET_SELECTED_DATE,
-  payload: newSelectedDate
+  payload: newSelectedDate,
 });
 
-const CategoryChange = () => categoryValue => ({
+const CategoryChange = () => (categoryValue) => ({
   type: CATEGORY_CHANGE,
-  payload: categoryValue
+  payload: categoryValue,
 });
 
-const GetBalance = ({ storage }) => () => {
-  return async (dispatch) => {
-    try {
-      dispatch(setAppLoading(true));
-      const response = await storage.getBalance();
-      const fullEntriesWithFilledDates = getGroupedFilledEntriesByDate()(response);
-      dispatch({ type: GET_BALANCE, payload: { entries: fullEntriesWithFilledDates }});
-      dispatch(setAppLoading(false));
-    } catch (error) {
-      console.log(error);
-    }
+const GetBalance =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const response = await storage.getBalance();
+        const fullEntriesWithFilledDates =
+          getGroupedFilledEntriesByDate()(response);
+        dispatch({
+          type: GET_BALANCE,
+          payload: { entries: fullEntriesWithFilledDates },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
   };
-};
 
 const setRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
@@ -54,7 +66,7 @@ const setRecord = ({ entry, type, selectedDate }, { storage }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 };
 
 export const ActionCreators = ({ storage }) => {
@@ -63,6 +75,6 @@ export const ActionCreators = ({ storage }) => {
     addIncome: AddIncome({ storage }),
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
-    setSelectedDate: SetSelectedDate()
-  }
+    setSelectedDate: SetSelectedDate(),
+  };
 };

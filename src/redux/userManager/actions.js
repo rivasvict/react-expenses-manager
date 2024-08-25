@@ -1,58 +1,61 @@
-import { postConfigAuthenticated, setObjectToSessionStorage } from "../../helpers/general";
+import {
+  postConfigAuthenticated,
+  setObjectToSessionStorage,
+} from "../../helpers/general";
 import { getBalance } from "../expensesManager/actionCreators";
 import { postConfig } from "../../helpers/general";
 import { config } from "../../config";
 
-export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
-export const CREATE_USER_ERROR = 'CREATE_USER_ERROR';
-export const SET_APP_LOADING = 'SET_APP_LOADING';
-export const USER_LOG_IN_ERROR = 'USER_LOG_IN_ERROR';
-export const USER_LOG_IN_SUCCESS = 'USER_LOG_IN_SUCCESS';
-export const SET_USER_LOADING = 'SET_USER_LOADING';
-export const USER_LOG_OUT_ERROR = 'USER_LOG_OUT_ERROR';
-export const USER_LOG_OUT_SUCCESS = 'USER_LOG_OUT_SUCCESS';
-const baseUrl = config.REACT_APP_API_HOST
+export const CREATE_USER_SUCCESS = "CREATE_USER_SUCCESS";
+export const CREATE_USER_ERROR = "CREATE_USER_ERROR";
+export const SET_APP_LOADING = "SET_APP_LOADING";
+export const USER_LOG_IN_ERROR = "USER_LOG_IN_ERROR";
+export const USER_LOG_IN_SUCCESS = "USER_LOG_IN_SUCCESS";
+export const SET_USER_LOADING = "SET_USER_LOADING";
+export const USER_LOG_OUT_ERROR = "USER_LOG_OUT_ERROR";
+export const USER_LOG_OUT_SUCCESS = "USER_LOG_OUT_SUCCESS";
+const baseUrl = config.REACT_APP_API_HOST;
 
-const userCreationFail = error => ({
+const userCreationFail = (error) => ({
   type: CREATE_USER_ERROR,
-  payload: error
-})
+  payload: error,
+});
 
-const hasUserBeenCreated = user => ({
+const hasUserBeenCreated = (user) => ({
   type: CREATE_USER_SUCCESS,
-  payload: user
+  payload: user,
 });
 
-const setUserLoading = isUserLoading => ({
+const setUserLoading = (isUserLoading) => ({
   type: SET_USER_LOADING,
-  payload: { isUserLoading }
+  payload: { isUserLoading },
 });
 
-const setAppLoading = isLoading => ({
+const setAppLoading = (isLoading) => ({
   type: SET_APP_LOADING,
-  payload: { isLoading: isLoading }
-})
+  payload: { isLoading: isLoading },
+});
 
-const userLoginSuccess = user => ({
+const userLoginSuccess = (user) => ({
   type: USER_LOG_IN_SUCCESS,
-  payload: user
-})
+  payload: user,
+});
 
-const userLoginError = error => ({
+const userLoginError = (error) => ({
   type: USER_LOG_IN_ERROR,
-  payload: error
-})
+  payload: error,
+});
 
 const userLogOutSuccess = () => ({
   type: USER_LOG_OUT_SUCCESS,
-})
+});
 
-const userOutError = error => ({
+const userOutError = (error) => ({
   type: USER_LOG_OUT_ERROR,
-  payload: error
-})
+  payload: error,
+});
 
-const notifyUserCreation = dispatch => {
+const notifyUserCreation = (dispatch) => {
   dispatch(hasUserBeenCreated(true));
   dispatch(hasUserBeenCreated(false));
 };
@@ -65,9 +68,9 @@ const CreateUser = () => (userPayload) => {
       dispatch(setAppLoading(true));
       const rawResponse = await fetch(url, {
         ...postConfig,
-        body
+        body,
       });
-      const response = await rawResponse.json()
+      const response = await rawResponse.json();
       if (!rawResponse.ok) {
         dispatch(setAppLoading(false));
         throw response;
@@ -78,8 +81,8 @@ const CreateUser = () => (userPayload) => {
     } catch (error) {
       dispatch(userCreationFail(error));
     }
-  }
-}
+  };
+};
 
 const setUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(setAppLoading(false));
@@ -107,22 +110,27 @@ const removeUserLocally = ({ dispatch, rawResponse, response }) => {
   dispatch(userLogOutSuccess());
 };
 
-const LogIn = () => ({ userPayload }) => {
-  return async (dispatch) => {
-    try {
-      const url = `${baseUrl}/api/user/login`;
-      const body = JSON.stringify({ user: userPayload });
-      dispatch(setAppLoading(true));
-      dispatch(setUserLoading(true));
-      const rawResponse = await fetch(url, { body, ...postConfigAuthenticated });
-      const response = await rawResponse.json()
+const LogIn =
+  () =>
+  ({ userPayload }) => {
+    return async (dispatch) => {
+      try {
+        const url = `${baseUrl}/api/user/login`;
+        const body = JSON.stringify({ user: userPayload });
+        dispatch(setAppLoading(true));
+        dispatch(setUserLoading(true));
+        const rawResponse = await fetch(url, {
+          body,
+          ...postConfigAuthenticated,
+        });
+        const response = await rawResponse.json();
 
-      setUserLocally({ dispatch, rawResponse, response });
-    } catch (error) {
-      dispatch(userLoginError(error));
-    }
-  }
-};
+        setUserLocally({ dispatch, rawResponse, response });
+      } catch (error) {
+        dispatch(userLoginError(error));
+      }
+    };
+  };
 
 const LogOut = () => () => {
   return async (dispatch) => {
@@ -131,27 +139,27 @@ const LogOut = () => () => {
       dispatch(setAppLoading(true));
       dispatch(setUserLoading(true));
       const rawResponse = await fetch(url, postConfigAuthenticated);
-      const response = await rawResponse.json()
+      const response = await rawResponse.json();
 
       removeUserLocally({ dispatch, rawResponse, response });
     } catch (error) {
       dispatch(userOutError(error));
     }
-  }
+  };
 };
 
 const SetUser = () => () => {
   return async (dispatch) => {
     try {
-      const email = sessionStorage.getItem('email');
+      const email = sessionStorage.getItem("email");
       if (email) {
         const url = `${baseUrl}/api/user/get/${email}`;
         dispatch(setUserLoading(true));
         dispatch(setAppLoading(true));
         const rawResponse = await fetch(url, {
-          credentials: 'include'
+          credentials: "include",
         });
-        const response = await rawResponse.json()
+        const response = await rawResponse.json();
 
         setUserLocally({ dispatch, rawResponse, response });
       } else {
@@ -168,5 +176,5 @@ export const ActionCreators = () => ({
   createUser: CreateUser(),
   logIn: LogIn(),
   setUser: SetUser(),
-  logOut: LogOut()
+  logOut: LogOut(),
 });
