@@ -1,9 +1,16 @@
 import React from "react";
 import { Button, Container, Form, Row } from "react-bootstrap";
 
-const GenericInput = (props) => <Form.Control {...props} className="text" />;
+const GenericInput = (props) => (
+  <Form.Control {...props} className={`text ${props.className}`} />
+);
 
-const InputText = (props) => <GenericInput {...{ ...props, type: "text" }} />;
+const InputText = (props) => (
+  <GenericInput
+    {...{ ...props, type: "text" }}
+    className={`text ${props.className}`}
+  />
+);
 
 const InputNumber = (props) => (
   <GenericInput {...{ ...props, type: "number" }} />
@@ -28,8 +35,8 @@ const FormSelect = (props) => (
   </Form.Control>
 );
 
-const FormContent = ({ children, render, formProps = {} }) => (
-  <Container className="form-container">
+const FormContent = ({ children, render, formProps = {}, className }) => (
+  <Container className="form-container" fluid>
     <Row as={Form} {...formProps}>
       {render ? render() : children}
     </Row>

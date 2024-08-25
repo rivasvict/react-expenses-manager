@@ -93,7 +93,7 @@ class AddEntry extends Component {
             className: "app-form",
           }}
         >
-          <Row className="top-container">
+          <Row className="top-container container-fluid">
             <Col xs={12} className="top-content">
               <Form.Group>
                 <InputNumber
@@ -111,6 +111,7 @@ class AddEntry extends Component {
                   placeholder="Description"
                   value={this.state.description}
                   onChange={this.handleInputChange}
+                  className="vertical-standard-space"
                 ></InputText>
               </Form.Group>
               <Form.Group>
@@ -119,11 +120,12 @@ class AddEntry extends Component {
                   value={this.state.categories_path}
                   handleChange={this.setCategory}
                   categoryOptions={categoryOptions}
+                  className="vertical-standard-space"
                 />
               </Form.Group>
             </Col>
           </Row>
-          <Row className="bottom-container">
+          <Row className="bottom-container container-fluid vertical-standard-space">
             <Col xs={12} className="bottom-content">
               <FormButton varian="primary" name="submit" type="submit">
                 Submit

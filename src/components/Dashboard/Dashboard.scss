@@ -2,8 +2,18 @@
 
 .main-container {
   height: 100vh;
+  /**
+  * Look at src/helpers/general.js's function `addViewHeightMobileConfig`
+  * To understand how we calculate this `--vh` var
+  */
+  height: calc(var(--vh, 1vh) * 100);
   padding-bottom: 1.875rem;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
+  min-height: fit-content;
+  background-color: #292c32;
+
+  .dashboard-container {
+    flex-grow: 1;
+  }
 }

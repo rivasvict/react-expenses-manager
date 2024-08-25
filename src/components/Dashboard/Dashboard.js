@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AddEntry from "../common/ExpensesManager/AddEntry/AddEntry";
@@ -11,14 +11,24 @@ import Header from "../common/Header";
 import "./Dashboard.scss";
 import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
 import DashboardContent from "./DashboardContent";
+import { addViewHeightMobileConfig } from "../../helpers/general";
 
 function Dashboard({ entries, selectedDate }) {
+  useEffect(() => {
+    /**
+     * TODO: Make sure this calculation also occurs when resizing the screen
+     * as well and implement a debounced call.
+     * https://github.com/rivasvict/react-expenses-manager/issues/63
+     */
+    addViewHeightMobileConfig();
+  }, []);
+  const mainRef = useRef(null);
   const match = useRouteMatch();
 
   return (
-    <main className="main-container">
+    <main className="main-container container-background" ref={mainRef}>
       <Header />
-      <Container fluid>
+      <Container fluid className="dashboard-container">
         <WorkAreaContentContainer>
           <Switch>
             <Route path={`${match.url}add-income`}>
@@ -74,7 +84,7 @@ Dashboard.propTypes = {
           id: PropTypes.number,
           name: PropTypes.string.isRequired,
         }),
-      }).isRequired,
+      }).isRequired
     ).isRequired,
     expenses: PropTypes.arrayOf(
       PropTypes.shape({
@@ -86,7 +96,7 @@ Dashboard.propTypes = {
           id: PropTypes.number,
           name: PropTypes.string.isRequired,
         }),
-      }).isRequired,
+      }).isRequired
     ).isRequired,
   }).isRequired,
 };

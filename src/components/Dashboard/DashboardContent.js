@@ -31,7 +31,7 @@ const handleDateSelectionPointers = ({
       entries,
       dateAdjacencyType,
       currentSelectedDate: selectedDate,
-    }),
+    })
   );
 
 const DashboardContent = ({
@@ -56,7 +56,7 @@ const DashboardContent = ({
   const totalSum = calculateTotal(incomesSum, expensesSum);
 
   return (
-    <MainContentContainer className="dasboard-content">
+    <MainContentContainer className="dashboard-content">
       <ContentTileSection title="Summary" to={summaryUrl}>
         {`Savings `}
         <IconRemote inLine={true} />
@@ -131,7 +131,7 @@ const MonthContent = ({ entries, match }) => (
         </Link>
         <Link
           to={`${match.url}add-expense`}
-          className="btn btn-secondary btn-block"
+          className="btn btn-secondary btn-block vertical-standard-space"
         >
           Add Expenses
         </Link>

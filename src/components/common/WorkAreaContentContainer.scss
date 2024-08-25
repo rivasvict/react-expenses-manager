@@ -3,13 +3,13 @@
 .work-area-content-container {
   background-color: $color_dark_2;
   border-radius: $standard-container-radius;
-  height: 36rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   .top-container {
-    flex: 1;
+    flex: 1 1;
   }
 
   .top-content {
