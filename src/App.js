@@ -19,7 +19,7 @@ const mapActionToProps = (dispatch) => ({
 
 const Routes = connect(
   mapStateToProps,
-  mapActionToProps,
+  mapActionToProps
 )(() => {
   return (
     <>

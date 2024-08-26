@@ -8,6 +8,7 @@
   display: flex;
   flex-flow: column wrap;
   height: 100%;
+  align-items: center;
 
   .form-group {
     margin-bottom: $vertical-standard-margin;
