@@ -30,3 +30,20 @@ $h1-size-title: 1.125rem;
   display: flex;
   align-items: center;
 }
+
+@mixin buttons {
+  .btn {
+    @include button-like-style();
+    height: 3.3em;
+  }
+
+  .btn.btn-primary {
+    background-color: $color_clear_1;
+    color: $color_dark_1;
+  }
+
+  .btn.btn-secondary {
+    background-color: $color_dark_3;
+    color: $color_clear_3;
+  }
+}

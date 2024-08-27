@@ -8,8 +8,9 @@ import Dashboard from "./components/Dashboard/Dashboard";
  */
 // import AuthenticatedApp from './components/AuthenticatedApp';
 import { Provider, connect } from "react-redux";
-import { setUser } from "./redux/userManager/actoionCreators";
+import { setUser } from "./redux/userManager/actionCreators";
 import WithBalance from "./components/WithBalance";
+import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
 
 const mapStateToProps = (state) => ({ user: state.userManager.user });
 
@@ -36,7 +37,9 @@ const Routes = connect(
        */}
       {/* <AuthenticatedApp /> */}
       <WithBalance>
-        <Dashboard />
+        <WithDataDisclaimer>
+          <Dashboard />
+        </WithDataDisclaimer>
       </WithBalance>
     </>
   );

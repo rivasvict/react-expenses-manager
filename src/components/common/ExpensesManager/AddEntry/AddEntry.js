@@ -127,12 +127,11 @@ class AddEntry extends Component {
           </Row>
           <Row className="bottom-container container-fluid vertical-standard-space">
             <Col xs={12} className="bottom-content">
-              <FormButton varian="primary" name="submit" type="submit">
+              <FormButton variant="primary" name="submit" type="submit">
                 Submit
               </FormButton>
               {/* TODO: Use back history navigation instead of a specific route for cancel action */}
               <Button
-                block
                 variant="secondary"
                 className="vertical-standard-space"
                 onClick={() => this.navigateToDashboard(this.props.history)}
