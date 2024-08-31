@@ -177,7 +177,7 @@ const DashboardContent = ({
           ) : null}
         </Col>
       </Row>
-      <Row className="balance-chart-container">
+      <Row className="chart-container">
         <Col xs={6}>
           <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
         </Col>

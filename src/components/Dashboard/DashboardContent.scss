@@ -2,14 +2,6 @@
 
 .dashboard-content {
   height: 100%;
-  .balance-chart-container {
-    margin-bottom: $section_header_vertical-margin;
-    display: flex;
-    justify-content: center;
-    div {
-      width: 70%;
-    }
-  }
 
   .month-header {
     margin-top: $section_header_vertical-margin;

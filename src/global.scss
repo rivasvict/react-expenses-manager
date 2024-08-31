@@ -89,4 +89,13 @@ select.form-control, select.form-control:focus {
     padding-right:0;
     padding-left:0;
   }
+
+  .chart-container {
+    margin-bottom: $section_header_vertical-margin;
+    display: flex;
+    justify-content: center;
+    div {
+      width: 70%;
+    }
+  }
 }
