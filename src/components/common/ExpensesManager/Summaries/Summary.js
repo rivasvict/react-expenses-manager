@@ -26,7 +26,7 @@ class Summary extends Component {
     this.state = {
       selectedEntries: this.getFilteredEntries({ props }),
       selectedEntriesSum: formatNumberForDisplay(
-        getSumFromEntries(this.getEntriesToSum({ props })),
+        getSumFromEntries(this.getEntriesToSum({ props }))
       ),
     };
   }
@@ -37,7 +37,7 @@ class Summary extends Component {
       return {
         selectedEntries: this.getFilteredEntries({ filter: value }),
         selectedEntriesSum: formatNumberForDisplay(
-          getSumFromEntries(this.getEntriesToSum({ filter: value })),
+          getSumFromEntries(this.getEntriesToSum({ filter: value }))
         ),
       };
     });
