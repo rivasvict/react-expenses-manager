@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-import ContentTileSection from "../../ContentTitleSection";
-import { FormSelect } from "../../Forms";
+import ContentTileSection from "../../../ContentTitleSection";
+import { FormSelect } from "../../../Forms";
 import { capitalize } from "lodash";
-import { MainContentContainer } from "../../MainContentContainer";
-import EntriesSummary from "./EntriesSummary";
-import { IconRemote } from "../../Icons";
+import { MainContentContainer } from "../../../MainContentContainer";
+import EntriesSummary from "../EntriesSummary";
+import { IconRemote } from "../../../Icons";
 import {
   formatNumberForDisplay,
   getSumFromEntries,
-} from "../../../../helpers/entriesHelper/entriesHelper";
-import { getMonthNameDisplay } from "../../../../helpers/date";
-import "./Summary.scss";
+} from "../../../../../helpers/entriesHelper/entriesHelper";
+import { getMonthNameDisplay } from "../../../../../helpers/date";
+import "./styles.scss";
+import { Col, Row } from "react-bootstrap";
+import SummaryChart from "./components/SummaryChart";
 
 /**
  * TODO: Turn this into a functional component
@@ -28,6 +30,7 @@ class Summary extends Component {
       selectedEntriesSum: formatNumberForDisplay(
         getSumFromEntries(this.getEntriesToSum({ props }))
       ),
+      filter: "",
     };
   }
 
@@ -39,6 +42,7 @@ class Summary extends Component {
         selectedEntriesSum: formatNumberForDisplay(
           getSumFromEntries(this.getEntriesToSum({ filter: value }))
         ),
+        filter: value,
       };
     });
   };
@@ -93,7 +97,24 @@ class Summary extends Component {
     );
   };
 
+  getChartdata() {
+    if (this.state.filter) return {};
+    const datedEntries = this.getDatedEntries({});
+    const incomesSum = Math.abs(getSumFromEntries(datedEntries["incomes"]));
+    const expensesSum = Math.abs(getSumFromEntries(datedEntries["expenses"]));
+
+    return { incomes: incomesSum, expenses: expensesSum };
+  }
+
   render() {
+    const datedEntries = this.getDatedEntries({});
+    const incomesSum = Math.abs(getSumFromEntries(datedEntries["incomes"]));
+    const expensesSum = Math.abs(getSumFromEntries(datedEntries["expenses"]));
+    const totalSum = incomesSum + expensesSum;
+    const chartData = !this.state.filter
+      ? { incomes: incomesSum, expense: expensesSum }
+      : {};
+
     return (
       <MainContentContainer className="summary-container">
         <ContentTileSection title="Summary">
@@ -113,6 +134,12 @@ class Summary extends Component {
           <option value="incomes">Incomes</option>
           <option value="expenses">Expenses</option>
         </FormSelect>
+        <Row className="chart-container">
+          <Col xs={6}>
+            {/** TODO: Add the way to show the graph summarized for incomes and expenses (when the filter is applied) */}
+            <SummaryChart data={chartData} totalSum={totalSum} />
+          </Col>
+        </Row>
         {this.state.selectedEntries}
       </MainContentContainer>
     );

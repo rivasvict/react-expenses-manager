@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AddEntry from "../common/ExpensesManager/AddEntry/AddEntry";
-import Summary from "../../components/common/ExpensesManager/Summaries/Summary";
+import Summary from "../common/ExpensesManager/Summaries/Summary";
 import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesSummaryWithFilter";
 
 import { Switch, Route, useRouteMatch } from "react-router-dom";
