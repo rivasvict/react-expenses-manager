@@ -1,41 +1,25 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Results from "../Results";
-import { getMonthNameDisplay } from "../../helpers/date";
+import Results from "../../../Results";
+import { getMonthNameDisplay } from "../../../../helpers/date";
 import {
   getNewSelectedDate,
   doesAdjacentDateExist,
   calculateTotal,
-} from "../../helpers/general";
-import ScreenTitle from "../common/ScreenTitle";
+} from "../../../../helpers/general";
+import ScreenTitle from "../../../common/ScreenTitle";
 import { connect } from "react-redux";
-import { setSelectedDate } from "../../redux/expensesManager/actionCreators";
+import { setSelectedDate } from "../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getSum,
-} from "../../helpers/entriesHelper/entriesHelper";
-import "./DashboardContent.scss";
-import { IconRemote } from "../common/Icons";
-import ContentTileSection from "../common/ContentTitleSection";
-import { MainContentContainer } from "../common/MainContentContainer";
-import DoughnutChart from "../common/DoughnutChart";
-
-const BalanceChart = ({ incomesSum, expensesSum }) => {
-  const totalSum = incomesSum + Math.abs(expensesSum);
-  const incomePercentage = (incomesSum / totalSum) * 100;
-  const expensePercentage = (Math.abs(expensesSum) / totalSum) * 100;
-
-  return (
-    <DoughnutChart
-      data={{
-        labels: ["Incomes", "Expenses"],
-        chartData: [incomePercentage, expensePercentage],
-      }}
-      shouldShow={!!totalSum}
-    />
-  );
-};
+} from "../../../../helpers/entriesHelper/entriesHelper";
+import "./styles.scss";
+import { IconRemote } from "../../../common/Icons";
+import ContentTileSection from "../../../common/ContentTitleSection";
+import { MainContentContainer } from "../../../common/MainContentContainer";
+import BalanceChart from "./components/BalanceChart";
 
 const handleDateSelectionPointers = ({
   entries,

@@ -8,9 +8,9 @@ import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesS
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "../common/Header";
-import "./Dashboard.scss";
+import "./styles.scss";
 import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
-import DashboardContent from "./DashboardContent";
+import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
 
 function Dashboard({ entries, selectedDate }) {
