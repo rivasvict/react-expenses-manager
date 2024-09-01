@@ -97,24 +97,42 @@ class Summary extends Component {
     );
   };
 
-  getChartdata() {
-    if (this.state.filter) return {};
-    const datedEntries = this.getDatedEntries({});
-    const incomesSum = Math.abs(getSumFromEntries(datedEntries["incomes"]));
-    const expensesSum = Math.abs(getSumFromEntries(datedEntries["expenses"]));
-
-    return { incomes: incomesSum, expenses: expensesSum };
-  }
-
-  render() {
+  getSummaryChartData() {
     const datedEntries = this.getDatedEntries({});
     const incomesSum = Math.abs(getSumFromEntries(datedEntries["incomes"]));
     const expensesSum = Math.abs(getSumFromEntries(datedEntries["expenses"]));
     const totalSum = incomesSum + expensesSum;
-    const chartData = !this.state.filter
-      ? { incomes: incomesSum, expenses: expensesSum }
-      : {};
+    const chartData = { incomes: incomesSum, expenses: expensesSum };
+    return { data: chartData, totalSum };
+  }
 
+  getByEntryTypeChartData(filter = this.state.filter) {
+    const datedEntries = this.getDatedEntries({});
+    const filteredEntries = datedEntries[filter];
+    const entryTotalSum = Math.abs(getSumFromEntries(filteredEntries));
+    const chartData = filteredEntries.reduce((allChartData, entry) => {
+      const { amount: rawAmount, categories_path } = entry;
+      const category = capitalize(categories_path.split(",")[1]);
+      const amount = Math.abs(parseFloat(rawAmount));
+      const percentageAmount = (amount / entryTotalSum) * 100;
+      return {
+        ...allChartData,
+        [category]:
+          (allChartData[category] ? allChartData[category] : 0) +
+          percentageAmount,
+      };
+    }, {});
+    return { data: chartData, totalSum: entryTotalSum };
+  }
+
+  getChartProps() {
+    return !this.state.filter
+      ? this.getSummaryChartData()
+      : this.getByEntryTypeChartData();
+  }
+
+  render() {
+    const chartProps = this.getChartProps();
     return (
       <MainContentContainer className="summary-container">
         <ContentTileSection title="Summary">
@@ -136,8 +154,7 @@ class Summary extends Component {
         </FormSelect>
         <Row className="chart-container">
           <Col xs={6}>
-            {/** TODO: Add the way to show the graph summarized for incomes and expenses (when the filter is applied) */}
-            <SummaryChart data={chartData} totalSum={totalSum} />
+            <SummaryChart {...chartProps} />
           </Col>
         </Row>
         {this.state.selectedEntries}
