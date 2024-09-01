@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect, Route, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import { setUser } from "../../redux/userManager/actoionCreators";
+import { setUser } from "../../redux/userManager/actionCreators";
 
 function PrivateRoute({ user, onSetUser, isLoading, children, ...res }) {
   const location = useLocation();

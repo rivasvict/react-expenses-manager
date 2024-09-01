@@ -6,7 +6,7 @@ import {
   ValidateField,
 } from "../../helpers/form-validation/";
 import { connect } from "react-redux";
-import { logIn } from "../../redux/userManager/actoionCreators";
+import { logIn } from "../../redux/userManager/actionCreators";
 import { Col, Form, Row } from "react-bootstrap";
 import { FormButton, InputPassword, InputText } from "../common/Forms";
 import NoSessionContainer from "../common/NoSessionContainer";

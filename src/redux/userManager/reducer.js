@@ -81,6 +81,7 @@ export const reducer = (state = getDefaultState(), action) => {
         ...state,
         isLoading: payload.isLoading,
       };
+
     default:
       return state;
   }

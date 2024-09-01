@@ -5,7 +5,7 @@ import {
   ValidateField,
 } from "../../helpers/form-validation/";
 import { connect } from "react-redux";
-import { createUser } from "../../redux/userManager/actoionCreators";
+import { createUser } from "../../redux/userManager/actionCreators";
 import { useHistory } from "react-router-dom";
 import _ from "lodash";
 import { Form } from "react-bootstrap";

@@ -1,3 +1,9 @@
+/**
+ *  TODO: Move these dependencies closer to its dependencies, so they
+ * are more cohesive with its dependents and are easier to move and
+ * understand as modules
+ * https://github.com/rivasvict/react-expenses-manager/issues/65
+ */
 import {
   postConfigAuthenticated,
   setObjectToSessionStorage,
