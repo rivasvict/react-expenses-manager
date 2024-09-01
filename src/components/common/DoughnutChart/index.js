@@ -1,7 +1,7 @@
 import { Chart } from "chart.js/auto";
 import { useEffect, useRef } from "react";
 
-const DoughnutChart = ({ chartLabel, data }) => {
+const DoughnutChart = ({ chartLabel, data, shouldShow = true }) => {
   const { labels, chartData } = data;
   const chartRef = useRef(null);
   useEffect(() => {
@@ -52,7 +52,7 @@ const DoughnutChart = ({ chartLabel, data }) => {
     }
   }, [labels, chartData, chartLabel]);
 
-  return chartData.length && <canvas ref={chartRef} />;
+  return !!chartData.length && shouldShow && <canvas ref={chartRef} />;
 };
 
 export default DoughnutChart;

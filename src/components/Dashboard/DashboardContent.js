@@ -22,8 +22,9 @@ import { MainContentContainer } from "../common/MainContentContainer";
 import DoughnutChart from "../common/DoughnutChart";
 
 const BalanceChart = ({ incomesSum, expensesSum }) => {
-  const incomePercentage = (incomesSum / (incomesSum + -expensesSum)) * 100;
-  const expensePercentage = (-expensesSum / (incomesSum + -expensesSum)) * 100;
+  const totalSum = incomesSum + Math.abs(expensesSum);
+  const incomePercentage = (incomesSum / totalSum) * 100;
+  const expensePercentage = (Math.abs(expensesSum) / totalSum) * 100;
 
   return (
     <DoughnutChart
@@ -31,6 +32,7 @@ const BalanceChart = ({ incomesSum, expensesSum }) => {
         labels: ["Incomes", "Expenses"],
         chartData: [incomePercentage, expensePercentage],
       }}
+      shouldShow={!!totalSum}
     />
   );
 };
