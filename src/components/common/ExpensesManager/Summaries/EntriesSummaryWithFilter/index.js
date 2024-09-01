@@ -39,23 +39,23 @@ class EntrySummaryWithFilter extends Component {
 
   render() {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
-    const entryNamePlural = `${this.props.entryType}s`;
-    const name = entryNamePlural;
+    const entryTypePlural = `${this.props.entryType}s`;
+    const name = entryTypePlural;
     const entriesByCategory = this.getFilteredEntriesByCategory({
       category: this.props.category,
-      entryNamePlural,
+      entryNamePlural: entryTypePlural,
     });
     const totalSum = getSumFromEntries(entriesByCategory);
     return (
       <MainContentContainer className="entry-summary-with-filter">
         <ContentTileSection title="Summary">
-          {`${capitalize(entryNamePlural)} `}
+          {`${capitalize(entryTypePlural)} `}
           <IconRemote inLine={true} />
           {` ${formatNumberForDisplay(totalSum)}`}
         </ContentTileSection>
         {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
         <CategorySelector
-          name="category"
+          name={entryTypePlural}
           value={this.props.category}
           handleChange={this.handleChange.bind(this)}
           categoryOptions={categoryOptions}
