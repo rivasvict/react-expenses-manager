@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import EntriesSummary from "../EntriesSummary";
 import CategorySelector from "../../CategorySelector";
 import { connect } from "react-redux";
 import { categoryChange } from "../../../../../redux/expensesManager/actionCreators";
@@ -13,8 +12,7 @@ import ContentTileSection from "../../../ContentTitleSection";
 import { IconRemote } from "../../../Icons";
 import { capitalize } from "lodash";
 import "./styles.scss";
-import { Col, Row } from "react-bootstrap";
-import EntriesSummaryChart from "./components/EntriesSummaryChart";
+import SummaryWithChart from "../../../SummaryWithChart";
 
 class EntrySummaryWithFilter extends Component {
   constructor(props) {
@@ -63,12 +61,7 @@ class EntrySummaryWithFilter extends Component {
           categoryOptions={categoryOptions}
           className="category-select"
         />
-        <Row className="chart-container">
-          <Col xs={6}>
-            <EntriesSummaryChart data={entriesByCategory} totalSum={totalSum} />
-          </Col>
-        </Row>
-        <EntriesSummary entries={entriesByCategory} name={name} />
+        <SummaryWithChart entries={entriesByCategory} name={name} />
       </MainContentContainer>
     );
   }

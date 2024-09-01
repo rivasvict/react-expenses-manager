@@ -13,6 +13,7 @@ import { getMonthNameDisplay } from "../../../../../helpers/date";
 import "./styles.scss";
 import { Col, Row } from "react-bootstrap";
 import SummaryChart from "./components/SummaryChart";
+import SummaryWithChart from "../../../SummaryWithChart";
 
 /**
  * TODO: Turn this into a functional component
@@ -71,19 +72,19 @@ class Summary extends Component {
   getFilteredEntries = ({ filter = "", props = this.props }) => {
     const datedEntries = this.getDatedEntries({ props });
     const entriesSummary = {
-      incomes: (
-        <EntriesSummary
-          entries={datedEntries?.["incomes"]}
-          name="Incomes"
-          selectedDate={this.selectedDate}
-        />
+      incomes: !!filter ? (
+        <SummaryWithChart entries={datedEntries?.["incomes"]} name="Incomes" />
+      ) : (
+        <EntriesSummary entries={datedEntries?.["incomes"]} mame="Incomes" />
       ),
-      expenses: (
-        <EntriesSummary
+      expenses: !!filter ? (
+        <SummaryWithChart
           entries={datedEntries?.["expenses"]}
           name="Expenses"
-          selectedDate={this.selectedDate}
+          showChart={!!filter}
         />
+      ) : (
+        <EntriesSummary entries={datedEntries?.["expenses"]} name="Expenses" />
       ),
     };
 
@@ -152,11 +153,13 @@ class Summary extends Component {
           <option value="incomes">Incomes</option>
           <option value="expenses">Expenses</option>
         </FormSelect>
-        <Row className="chart-container">
-          <Col xs={6}>
-            <SummaryChart {...chartProps} />
-          </Col>
-        </Row>
+        {!this.state.filter && (
+          <Row className="chart-container">
+            <Col xs={6}>
+              <SummaryChart {...chartProps} />
+            </Col>
+          </Row>
+        )}
         {this.state.selectedEntries}
       </MainContentContainer>
     );
