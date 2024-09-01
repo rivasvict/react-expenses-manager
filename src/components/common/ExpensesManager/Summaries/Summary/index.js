@@ -112,7 +112,7 @@ class Summary extends Component {
     const expensesSum = Math.abs(getSumFromEntries(datedEntries["expenses"]));
     const totalSum = incomesSum + expensesSum;
     const chartData = !this.state.filter
-      ? { incomes: incomesSum, expense: expensesSum }
+      ? { incomes: incomesSum, expenses: expensesSum }
       : {};
 
     return (
