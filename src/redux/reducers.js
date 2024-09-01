@@ -6,5 +6,5 @@ import { reducer as userManagerReducer } from "./userManager/reducer";
 export default combineReducers({
   expensesManager: expensesManagerReducer,
   userManager: userManagerReducer,
-  commonManage: commonManagerReducer,
+  commonManager: commonManagerReducer,
 });

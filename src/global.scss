@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .app-form {
   display: flex;
   flex-flow: column wrap;
@@ -48,26 +52,13 @@ select.form-control, select.form-control:focus {
   height: 100%;
 }
 
+@include buttons();
+
 #root {
   color: $color_clear_3;
   background-color: $color_dark_1;
 
   a {
-    color: $color_clear_3;
-  }
-
-  .btn {
-    @include button-like-style();
-    height: 3.3em;
-  }
-
-  .btn.btn-primary {
-    background-color: $color_clear_1;
-    color: $color_dark_1;
-  }
-
-  .btn.btn-secondary {
-    background-color: $color_dark_3;
     color: $color_clear_3;
   }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import logoImage from "../../images/expenses_tracker_logo.png";
-import { logOut } from "../../redux/userManager/actoionCreators";
+import { logOut } from "../../redux/userManager/actionCreators";
 import ButtonLikeLink from "./ButtonLikeLink";
 import "./Header.scss";
 

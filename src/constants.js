@@ -3,4 +3,9 @@ const STORAGE_TYPES = {
   REMOTE: "remote",
 };
 
-export { STORAGE_TYPES };
+const BOOLEAN_ENUM = {
+  FALSE: 0,
+  TRUE: 1,
+};
+
+export { STORAGE_TYPES, BOOLEAN_ENUM };
