@@ -1,8 +1,9 @@
 import { capitalize } from "lodash";
 import React from "react";
 import DoughnutChart from "../../../../../DoughnutChart";
+import { quantitiesToPercentages } from "../../../../../../../helpers/entriesHelper/entriesHelper";
 
-const EntriesSummaryChart = ({ data, totalSum }) => {
+const EntriesSummaryChart = ({ data }) => {
   const summarizedEntriesByCategory = data.reduce(
     (summarizedEntries, entry) => {
       return {
@@ -15,9 +16,9 @@ const EntriesSummaryChart = ({ data, totalSum }) => {
     {}
   );
   const labels = Object.keys(summarizedEntriesByCategory);
-  const chartData = Object.values(summarizedEntriesByCategory).map((value) => {
-    return Math.abs(value / totalSum) * 100;
-  });
+  const chartData = quantitiesToPercentages(
+    Object.values(summarizedEntriesByCategory)
+  );
   const hasMoreThanOneCategory = chartData.length > 1;
   return (
     hasMoreThanOneCategory && (

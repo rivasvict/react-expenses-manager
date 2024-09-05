@@ -1,14 +1,22 @@
+import { capitalize } from "lodash";
 import DoughnutChart from "../../../../../common/DoughnutChart";
+import { ENTRY_TYPES_PLURAL } from "../../../../../../constants";
+import { quantitiesToPercentages } from "../../../../../../helpers/entriesHelper/entriesHelper";
 
 const BalanceChart = ({ incomesSum, expensesSum }) => {
   const totalSum = incomesSum + Math.abs(expensesSum);
-  const incomePercentage = (incomesSum / totalSum) * 100;
-  const expensePercentage = (Math.abs(expensesSum) / totalSum) * 100;
+  const [incomePercentage, expensePercentage] = quantitiesToPercentages([
+    incomesSum,
+    expensesSum,
+  ]);
 
   return (
     <DoughnutChart
       data={{
-        labels: ["Incomes", "Expenses"],
+        labels: [
+          capitalize(ENTRY_TYPES_PLURAL.INCOMES),
+          capitalize(ENTRY_TYPES_PLURAL.EXPENSES),
+        ],
         chartData: [incomePercentage, expensePercentage],
       }}
       shouldShow={!!totalSum}

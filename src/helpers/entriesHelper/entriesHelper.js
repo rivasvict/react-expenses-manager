@@ -140,7 +140,7 @@ const getGroupEntriesByDate = () => (entries) => {
         ]);
       const pushTheNewEntryToTheExistingType = () =>
         parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(
-          newEntry,
+          newEntry
         );
       // Year not created
       if (!parsedEntries[newEntryYear]) {
@@ -252,6 +252,20 @@ const getGroupedFilledEntriesByDate = () => (entries) => {
   });
 };
 
+/**
+ * Function to convert quantities in percentages
+ * @param {[number]} quantities
+ * @returns {[number]} percentages
+ */
+const quantitiesToPercentages = (quantities) => {
+  if (!quantities?.length) return [];
+  const totalSum = quantities.reduce(
+    (sum, quantity) => sum + Math.abs(quantity),
+    0
+  );
+  return quantities.map((quantity) => (Math.abs(quantity) / totalSum) * 100);
+};
+
 export {
   getSumFromEntries,
   formatNumberForDisplay,
@@ -260,4 +274,5 @@ export {
   getEntryCategoryOption,
   getGroupedFilledEntriesByDate,
   absoluteValue,
+  quantitiesToPercentages,
 };
