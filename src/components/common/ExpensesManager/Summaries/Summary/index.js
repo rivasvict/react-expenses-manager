@@ -7,6 +7,8 @@ import EntriesSummary from "../EntriesSummary";
 import { IconRemote } from "../../../Icons";
 import {
   formatNumberForDisplay,
+  getCategoryPercentagesFromEntries,
+  getDatedEntries,
   getSumFromEntries,
 } from "../../../../../helpers/entriesHelper/entriesHelper";
 import { getMonthNameDisplay } from "../../../../../helpers/date";
@@ -15,39 +17,6 @@ import { Col, Row } from "react-bootstrap";
 import SummaryChart from "./components/SummaryChart";
 import SummaryWithChart from "../../../SummaryWithChart";
 import { ENTRY_TYPES_PLURAL } from "../../../../../constants";
-
-const getDatedEntries = ({ entries, year, month }) => {
-  return entries?.[year]?.[month] || { incomes: [], expenses: [] };
-};
-
-/**
- * Calculates the percentage of each category's total amount relative to the total sum.
- *
- * This function transforms an array of entries to an array of categories as keys
- * and it accumulated percentages. This is ideal to summarize a list of expenses for a
- * chart.
- *
- * @param {Object} params - The parameters for the function.
- * @param {number} params.totalSum - The total sum used as the denominator for percentage calculation.
- * @param {Array<Object>} params.entries - The list of entries to process.
- * @param {string} params.entries[].amount - The raw amount value for the entry, which will be converted to a float.
- * @param {string} params.entries[].categories_path - A comma-separated string representing the category path.
- * @returns {Object} An object where each key is a category and each value is the percentage of the total sum for that category
- */
-const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
-  entries.reduce((consolidatedCategories, entry) => {
-    const { amount: rawAmount, categories_path } = entry;
-    const category = capitalize(categories_path.split(",")[1]);
-    const amount = Math.abs(parseFloat(rawAmount));
-    const percentageAmount = (amount / totalSum) * 100;
-    return {
-      ...consolidatedCategories,
-      [category]:
-        (consolidatedCategories[category]
-          ? consolidatedCategories[category]
-          : 0) + percentageAmount,
-    };
-  }, {});
 
 /**
  * TODO: Turn this into a functional component
@@ -63,7 +32,7 @@ class Summary extends Component {
     this.state = {
       selectedEntries: this.getFilteredEntries({ props }),
       selectedEntriesSum: formatNumberForDisplay(
-        getSumFromEntries(this.getEntriesToSum({ props }))
+        getSumFromEntries({ entries: this.getEntriesToSum({ props }) })
       ),
       filter: "",
     };
@@ -75,7 +44,9 @@ class Summary extends Component {
       return {
         selectedEntries: this.getFilteredEntries({ filter: value }),
         selectedEntriesSum: formatNumberForDisplay(
-          getSumFromEntries(this.getEntriesToSum({ filter: value }))
+          getSumFromEntries({
+            entries: this.getEntriesToSum({ filter: value }),
+          })
         ),
         filter: value,
       };
@@ -83,7 +54,11 @@ class Summary extends Component {
   };
 
   getEntriesToSum = ({ filter = "", props = this.props }) => {
-    const datedEntries = this.getDatedEntries(props);
+    const datedEntries = getDatedEntries({
+      entries: props.entries,
+      year: this.selectedDate.year,
+      month: this.selectedDate.month,
+    });
 
     return (
       datedEntries?.[filter] || [
@@ -94,19 +69,12 @@ class Summary extends Component {
     );
   };
 
-  getDatedEntries = (props = this.props) => {
-    const selectedYear = this.selectedDate.year;
-    const selectedMonth = this.selectedDate.month;
-    const entries = props.entries;
-    return getDatedEntries({
-      entries,
-      year: selectedYear,
-      month: selectedMonth,
-    });
-  };
-
   getFilteredEntries = ({ filter = "", props = this.props }) => {
-    const datedEntries = this.getDatedEntries(props);
+    const datedEntries = getDatedEntries({
+      entries: props.entries,
+      year: this.selectedDate.year,
+      month: this.selectedDate.month,
+    });
     const entriesSummary = {
       incomes: !!filter ? (
         <SummaryWithChart
@@ -145,22 +113,35 @@ class Summary extends Component {
   };
 
   getSummaryChartData() {
-    const datedEntries = this.getDatedEntries();
-    const incomesSum = Math.abs(
-      getSumFromEntries(datedEntries[ENTRY_TYPES_PLURAL.INCOMES])
-    );
-    const expensesSum = Math.abs(
-      getSumFromEntries(datedEntries[ENTRY_TYPES_PLURAL.EXPENSES])
-    );
+    const datedEntries = getDatedEntries({
+      entries: this.props.entries,
+      year: this.selectedDate.year,
+      month: this.selectedDate.month,
+    });
+    const incomesSum = getSumFromEntries({
+      entries: datedEntries[ENTRY_TYPES_PLURAL.INCOMES],
+      absolute: true,
+    });
+    const expensesSum = getSumFromEntries({
+      entries: datedEntries[ENTRY_TYPES_PLURAL.EXPENSES],
+      absolute: true,
+    });
     const totalSum = incomesSum + expensesSum;
     const chartData = { incomes: incomesSum, expenses: expensesSum };
     return { data: chartData, totalSum };
   }
 
   getByEntryTypeChartData(filter = this.state.filter) {
-    const datedEntries = this.getDatedEntries();
+    const datedEntries = getDatedEntries({
+      entries: this.props.entries,
+      year: this.selectedDate.year,
+      month: this.selectedDate.month,
+    });
     const filteredEntries = datedEntries[filter];
-    const entryTotalSum = Math.abs(getSumFromEntries(filteredEntries));
+    const entryTotalSum = getSumFromEntries({
+      entries: filteredEntries,
+      absolute: true,
+    });
     const chartData = getCategoryPercentagesFromEntries({
       totalSum: entryTotalSum,
       entries: filteredEntries,

@@ -5,6 +5,7 @@ import { categoryChange } from "../../../../../redux/expensesManager/actionCreat
 import {
   formatNumberForDisplay,
   getEntryCategoryOption,
+  getFilteredEntriesByCategory,
   getSumFromEntries,
 } from "../../../../../helpers/entriesHelper/entriesHelper";
 import { MainContentContainer } from "../../../MainContentContainer";
@@ -27,25 +28,17 @@ class EntrySummaryWithFilter extends Component {
     this.onCategoryChange(value);
   };
 
-  getFilteredEntriesByCategory = ({ category, entryNamePlural }) => {
-    const selectedYear = this.selectedDate.year;
-    const selectedMonth = this.selectedDate.month;
-    const entries =
-      this?.props?.entries?.[selectedYear]?.[selectedMonth]?.[entryNamePlural];
-    return category.length
-      ? entries.filter((entry) => entry.categories_path.match(category))
-      : entries || [];
-  };
-
   render() {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
     const entryTypePlural = `${this.props.entryType}s`;
     const name = entryTypePlural;
-    const entriesByCategory = this.getFilteredEntriesByCategory({
+    const entriesByCategory = getFilteredEntriesByCategory({
+      entries: this?.props?.entries,
+      selectedDate: this.selectedDate,
       category: this.props.category,
-      entryNamePlural: entryTypePlural,
+      entryTypePlural: entryTypePlural,
     });
-    const totalSum = getSumFromEntries(entriesByCategory);
+    const totalSum = getSumFromEntries({ entries: entriesByCategory });
     return (
       <MainContentContainer className="entry-summary-with-filter">
         <ContentTileSection title="Summary">
