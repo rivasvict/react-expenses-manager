@@ -24,3 +24,5 @@ export {
   ENTRY_TYPES_PLURAL,
   ENTRY_TYPES_SINGULAR,
 };
+
+export const CURRENCY_SYMBOL = "$";

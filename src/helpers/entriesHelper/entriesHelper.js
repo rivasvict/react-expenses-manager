@@ -1,17 +1,14 @@
 import dayjs from "dayjs";
 import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
-/*
- * TODO: The currency $ string here should come from
- * a global configuration object of the user settings
- * in the db
- */
-const currencySymbol = "$";
+import { CURRENCY_SYMBOL, ENTRY_TYPES_SINGULAR } from "../../constants";
 
 function getSumFromEntries(entries) {
   const entriesForSum = entries.map((entry) => {
     const amount = entry.amount;
-    return entry.type === "income" ? parseFloat(amount) : -parseFloat(amount);
+    return entry.type === ENTRY_TYPES_SINGULAR.INCOME
+      ? parseFloat(amount)
+      : -parseFloat(amount);
   });
 
   return calculateTotal(...entriesForSum);
@@ -29,7 +26,7 @@ function formatNumberForDisplay(amount) {
      * a global configuration object of the user settings
      * in the db
      */
-    return `${0} ${currencySymbol}`;
+    return `${0} ${CURRENCY_SYMBOL}`;
   } else {
     const numberOfDecimals = 2;
     /*
@@ -37,7 +34,7 @@ function formatNumberForDisplay(amount) {
      * a global configuration object of the user settings
      * in the db
      */
-    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${currencySymbol}`;
+    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${CURRENCY_SYMBOL}`;
   }
 }
 

@@ -34,7 +34,7 @@ const getDatedEntries = ({ entries, year, month }) => {
  * @param {string} params.entries[].categories_path - A comma-separated string representing the category path.
  * @returns {Object} An object where each key is a category and each value is the percentage of the total sum for that category
  */
-const getEntriesToPercentagesByCategory = ({ totalSum, entries }) =>
+const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
   entries.reduce((consolidatedCategories, entry) => {
     const { amount: rawAmount, categories_path } = entry;
     const category = capitalize(categories_path.split(",")[1]);
@@ -161,7 +161,7 @@ class Summary extends Component {
     const datedEntries = this.getDatedEntries();
     const filteredEntries = datedEntries[filter];
     const entryTotalSum = Math.abs(getSumFromEntries(filteredEntries));
-    const chartData = getEntriesToPercentagesByCategory({
+    const chartData = getCategoryPercentagesFromEntries({
       totalSum: entryTotalSum,
       entries: filteredEntries,
     });
