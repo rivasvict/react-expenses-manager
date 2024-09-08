@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
-import { CURRENCY_SYMBOL, ENTRY_TYPES_SINGULAR } from "../../constants";
+import { ENTRY_TYPES_SINGULAR } from "../../constants";
 import { capitalize } from "lodash";
 
 function getSumFromEntries({ entries, absolute = false }) {
