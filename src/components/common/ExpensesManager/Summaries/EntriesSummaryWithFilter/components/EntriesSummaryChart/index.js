@@ -16,17 +16,17 @@ const EntriesSummaryChart = ({ data }) => {
     {}
   );
   const labels = Object.keys(summarizedEntriesByCategory);
-  const chartData = quantitiesToPercentages(
+  const percentages = quantitiesToPercentages(
     Object.values(summarizedEntriesByCategory)
   );
-  const hasMoreThanOneCategory = chartData.length > 1;
+  const hasMoreThanOneCategory = percentages.length > 1;
   return (
     hasMoreThanOneCategory && (
       <DoughnutChart
         chartLabel="entry"
         data={{
           labels: labels.map((label) => capitalize(label.split(",")[1])),
-          chartData,
+          chartData: percentages,
         }}
       />
     )

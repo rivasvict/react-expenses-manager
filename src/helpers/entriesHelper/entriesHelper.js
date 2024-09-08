@@ -62,28 +62,23 @@ const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
           : 0) + percentageAmount,
     };
   }, {});
+
 /*
  *  TODO: This function probably needs to be separated
  *  from the rest of the helpers as the formatting
  *  functionalities may become more complex
  */
 function formatNumberForDisplay(amount) {
-  if (isNaN(amount)) {
-    /*
-     * TODO: The currency $ string here should come from
-     * a global configuration object of the user settings
-     * in the db
-     */
-    return `${0} ${CURRENCY_SYMBOL}`;
-  } else {
-    const numberOfDecimals = 2;
-    /*
-     * TODO: The currency $ string here should come from
-     * a global configuration object of the user settings
-     * in the db
-     */
-    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${CURRENCY_SYMBOL}`;
-  }
+  /**
+   * TODO: Make sure the locale settings are loaded from the browser
+   * and can be configurable from a database
+   * https://github.com/rivasvict/react-expenses-manager/issues/69
+   */
+  const USDollar = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+  return isNaN(amount) ? USDollar.format(0) : USDollar.format(amount);
 }
 
 function getSum({ entryType, entries }) {
