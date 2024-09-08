@@ -13,10 +13,10 @@ import {
 } from "../../../../../helpers/entriesHelper/entriesHelper";
 import { getMonthNameDisplay } from "../../../../../helpers/date";
 import "./styles.scss";
-import { Col, Row } from "react-bootstrap";
 import SummaryChart from "./components/SummaryChart";
 import SummaryWithChart from "../../../SummaryWithChart";
 import { ENTRY_TYPES_PLURAL } from "../../../../../constants";
+import ChartContainerRowWrapper from "../../../ChartContainerRowWrapper";
 
 /**
  * TODO: Turn this into a functional component
@@ -181,11 +181,9 @@ class Summary extends Component {
           </option>
         </FormSelect>
         {!this.state.filter && (
-          <Row className="chart-container">
-            <Col xs={6}>
-              <SummaryChart {...chartProps} />
-            </Col>
-          </Row>
+          <ChartContainerRowWrapper>
+            <SummaryChart {...chartProps} />
+          </ChartContainerRowWrapper>
         )}
         {this.state.selectedEntries}
       </MainContentContainer>

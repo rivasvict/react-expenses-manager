@@ -20,6 +20,7 @@ import { IconRemote } from "../../../common/Icons";
 import ContentTileSection from "../../../common/ContentTitleSection";
 import { MainContentContainer } from "../../../common/MainContentContainer";
 import BalanceChart from "./components/BalanceChart";
+import ChartContainerRowWrapper from "../../../common/ChartContainerRowWrapper";
 
 const handleDateSelectionPointers = ({
   entries,
@@ -109,11 +110,9 @@ const DashboardContent = ({
           ) : null}
         </Col>
       </Row>
-      <Row className="chart-container">
-        <Col xs={6}>
-          <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
-        </Col>
-      </Row>
+      <ChartContainerRowWrapper>
+        <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
+      </ChartContainerRowWrapper>
       <MonthContent {...{ entries: monthBalance, match }} />
     </MainContentContainer>
   );

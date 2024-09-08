@@ -1,15 +1,13 @@
-import { Col, Row } from "react-bootstrap";
 import EntriesSummaryChart from "../ExpensesManager/Summaries/EntriesSummaryWithFilter/components/EntriesSummaryChart";
 import EntriesSummary from "../ExpensesManager/Summaries/EntriesSummary";
+import ChartContainerRowWrapper from "../ChartContainerRowWrapper";
 
 const SummaryWithChart = ({ entries, name }) => {
   return (
     <>
-      <Row className="chart-container">
-        <Col xs={6}>
-          <EntriesSummaryChart data={entries} />
-        </Col>
-      </Row>
+      <ChartContainerRowWrapper>
+        <EntriesSummaryChart data={entries} />
+      </ChartContainerRowWrapper>
       <EntriesSummary entries={entries} name={name} />
     </>
   );
