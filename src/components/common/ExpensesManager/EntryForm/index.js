@@ -24,7 +24,7 @@ const getActionFromEntryType = ({ entryType, props }) => {
 };
 
 // TODO: Change this to a function component instead of a class component
-class AddEntry extends Component {
+class EntryForm extends Component {
   constructor(props) {
     super();
     this.state = props.entry;
@@ -142,4 +142,7 @@ const mapActionToProps = (dispatch) => ({
   onAddExpense: (expense) => dispatch(addExpense(expense)),
 });
 
-export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));
+export default connect(
+  mapStateToProps,
+  mapActionToProps
+)(withRouter(EntryForm));
