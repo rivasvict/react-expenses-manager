@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import AddEntry from "../common/ExpensesManager/AddEntry/AddEntry";
+import AddEntry from "../common/ExpensesManager/AddEntry";
 import Summary from "../common/ExpensesManager/Summaries/Summary";
 import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesSummaryWithFilter";
 
@@ -34,8 +34,14 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}add-income`}>
               <AddEntry entryType="income" selectedDate={selectedDate} />
             </Route>
+            <Route path={`${match.url}edit-income/:entryId`}>
+              <AddEntry entryType="income" selectedDate={selectedDate} />
+            </Route>
             <Route path={`${match.url}add-expense`}>
               <AddEntry entryType="expense" selectedDate={selectedDate} />
+            </Route>
+            <Route path={`${match.url}edit-expense/:entryId`}>
+              <AddEntry entryType="income" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}incomes`}>
               <EntrySummaryWithFilter
