@@ -12,6 +12,7 @@ import "./styles.scss";
 import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
 import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
+import EditEntry from "../common/ExpensesManager/EditEntry";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -35,13 +36,13 @@ function Dashboard({ entries, selectedDate }) {
               <AddEntry entryType="income" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}edit-income/:entryId`}>
-              <AddEntry entryType="income" selectedDate={selectedDate} />
+              <EditEntry entryType="income" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}add-expense`}>
               <AddEntry entryType="expense" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}edit-expense/:entryId`}>
-              <AddEntry entryType="income" selectedDate={selectedDate} />
+              <EditEntry entryType="income" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}incomes`}>
               <EntrySummaryWithFilter
