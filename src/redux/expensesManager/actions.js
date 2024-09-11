@@ -69,6 +69,16 @@ const setRecord = ({ entry, type, selectedDate }, { storage }) => {
   };
 };
 
+const GetEntryById =
+  ({ storage }) =>
+  (entryId) => {
+    return async (dispatch) => {
+      /** TODO: Register an action for retrieving the entry just for the sake of log */
+      const entry = await storage.getEntryById(entryId);
+      return entry;
+    };
+  };
+
 export const ActionCreators = ({ storage }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -76,5 +86,6 @@ export const ActionCreators = ({ storage }) => {
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
     setSelectedDate: SetSelectedDate(),
+    getEntryById: GetEntryById({ storage }),
   };
 };

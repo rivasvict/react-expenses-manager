@@ -54,7 +54,11 @@ class EntrySummaryWithFilter extends Component {
           categoryOptions={categoryOptions}
           className="category-select"
         />
-        <SummaryWithChart entries={entriesByCategory} name={name} />
+        <SummaryWithChart
+          entries={entriesByCategory}
+          name={name}
+          entryType={this.props.entryType}
+        />
       </MainContentContainer>
     );
   }

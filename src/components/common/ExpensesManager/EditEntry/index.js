@@ -1,30 +1,45 @@
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { getCurrentTimestamp } from "../../../../helpers/date";
-import { getEntryModel } from "../../../../helpers/entriesHelper/entriesHelper";
 import EntryForm from "../EntryForm";
+import {
+  getEntryById,
+  // editEntry,
+  // removeEntry,
+} from "../../../../redux/expensesManager/actionCreators";
+import { connect } from "react-redux";
+import { useEffect, useState } from "react";
 
-const EditEntry = ({ entryType, selectedDate }) => {
+const EditEntry = ({ entryType, selectedDate, onGetEntry }) => {
   const params = useParams();
-  console.log(params);
+  const { entryId } = params;
+  const [entry, setEntry] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const entryToDisplay = await onGetEntry(entryId);
+      setEntry(entryToDisplay);
+    })();
+  }, [entryId, onGetEntry]);
   /**
    * Next steps:
-   * 1. Make sure to give a proper id to any new created entry in src/components/common/ExpensesManager/AddEntry/index.js
    * 2. Add here a fetch for the requested entry by id
    * 3. Handle error of entry not found
    * 4. Add a callback handler for the submit action
    * 5. Add the deletion flow (including button and callback)
    */
-  const newEntry = getEntryModel({
-    entryType,
-    // TODO: Make sure the date calculation takes the hours and seconds into account
-    // also, make sure the timestamp calculation happens at the actual entry creation
-    // Not at the component rendering time
-    timestamp: getCurrentTimestamp({
-      month: selectedDate.month,
-      year: selectedDate.year,
-    }),
-  });
-  return <EntryForm entry={newEntry} selectedDate={selectedDate} />;
+  return (
+    entry && (
+      <EntryForm entry={entry} selectedDate={selectedDate} type={entryType} />
+    )
+  );
 };
 
-export default EditEntry;
+const mapStateToProps = (state) => ({
+  entries: state.expensesManager.entries,
+});
+
+const mapActionsToProps = (dispatch) => ({
+  onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
+  // onSaveEntry: (entry) => dispatch(editEntry(entry)),
+  // onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
+});
+
+export default connect(mapStateToProps, mapActionsToProps)(EditEntry);
