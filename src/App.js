@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
-import Dashboard from "./components/Dashboard/Dashboard";
+import Dashboard from "./components/Dashboard";
 /**
  * TODO:
  * Reinstate <AuthenticatedApp />

@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AddEntry from "../common/ExpensesManager/AddEntry/AddEntry";
-import Summary from "../../components/common/ExpensesManager/Summaries/Summary";
-import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntrySummaryWithFilter";
+import Summary from "../common/ExpensesManager/Summaries/Summary";
+import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesSummaryWithFilter";
 
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "../common/Header";
-import "./Dashboard.scss";
+import "./styles.scss";
 import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
-import DashboardContent from "./DashboardContent";
+import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
 
 function Dashboard({ entries, selectedDate }) {

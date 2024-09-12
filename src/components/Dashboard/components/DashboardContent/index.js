@@ -1,24 +1,26 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Results from "../Results";
-import { getMonthNameDisplay } from "../../helpers/date";
+import Results from "../../../Results";
+import { getMonthNameDisplay } from "../../../../helpers/date";
 import {
   getNewSelectedDate,
   doesAdjacentDateExist,
   calculateTotal,
-} from "../../helpers/general";
-import ScreenTitle from "../common/ScreenTitle";
+} from "../../../../helpers/general";
+import ScreenTitle from "../../../common/ScreenTitle";
 import { connect } from "react-redux";
-import { setSelectedDate } from "../../redux/expensesManager/actionCreators";
+import { setSelectedDate } from "../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getSum,
-} from "../../helpers/entriesHelper/entriesHelper";
-import "./DashboardContent.scss";
-import { IconRemote } from "../common/Icons";
-import ContentTileSection from "../common/ContentTitleSection";
-import { MainContentContainer } from "../common/MainContentContainer";
+} from "../../../../helpers/entriesHelper/entriesHelper";
+import "./styles.scss";
+import { IconRemote } from "../../../common/Icons";
+import ContentTileSection from "../../../common/ContentTitleSection";
+import { MainContentContainer } from "../../../common/MainContentContainer";
+import BalanceChart from "./components/BalanceChart";
+import ChartContainerRowWrapper from "../../../common/ChartContainerRowWrapper";
 
 const handleDateSelectionPointers = ({
   entries,
@@ -54,7 +56,6 @@ const DashboardContent = ({
     entries: monthBalance,
   });
   const totalSum = calculateTotal(incomesSum, expensesSum);
-
   return (
     <MainContentContainer className="dashboard-content">
       <ContentTileSection title="Summary" to={summaryUrl}>
@@ -109,6 +110,9 @@ const DashboardContent = ({
           ) : null}
         </Col>
       </Row>
+      <ChartContainerRowWrapper>
+        <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
+      </ChartContainerRowWrapper>
       <MonthContent {...{ entries: monthBalance, match }} />
     </MainContentContainer>
   );

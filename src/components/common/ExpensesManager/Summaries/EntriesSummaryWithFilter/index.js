@@ -1,18 +1,19 @@
 import React, { Component } from "react";
-import EntriesSummary from "./EntriesSummary";
-import CategorySelector from "../CategorySelector";
+import CategorySelector from "../../CategorySelector";
 import { connect } from "react-redux";
-import { categoryChange } from "../../../../redux/expensesManager/actionCreators";
+import { categoryChange } from "../../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getEntryCategoryOption,
+  getFilteredEntriesByCategory,
   getSumFromEntries,
-} from "../../../../helpers/entriesHelper/entriesHelper";
-import { MainContentContainer } from "../../MainContentContainer";
-import ContentTileSection from "../../ContentTitleSection";
-import { IconRemote } from "../../Icons";
+} from "../../../../../helpers/entriesHelper/entriesHelper";
+import { MainContentContainer } from "../../../MainContentContainer";
+import ContentTileSection from "../../../ContentTitleSection";
+import { IconRemote } from "../../../Icons";
 import { capitalize } from "lodash";
-import "./EntrySummaryWithFilter.scss";
+import "./styles.scss";
+import SummaryWithChart from "../../../SummaryWithChart";
 
 class EntrySummaryWithFilter extends Component {
   constructor(props) {
@@ -27,48 +28,33 @@ class EntrySummaryWithFilter extends Component {
     this.onCategoryChange(value);
   };
 
-  getFilteredEntriesByCategory = ({ category, entryNamePlural }) => {
-    const selectedYear = this.selectedDate.year;
-    const selectedMonth = this.selectedDate.month;
-    const entries =
-      this?.props?.entries?.[selectedYear]?.[selectedMonth]?.[entryNamePlural];
-    return category.length
-      ? entries.filter((entry) => entry.categories_path.match(category))
-      : entries || [];
-  };
-
   render() {
     const categoryOptions = getEntryCategoryOption(this.props.entryType);
-    const entryNamePlural = `${this.props.entryType}s`;
-    const name = entryNamePlural;
-    const totalSum = getSumFromEntries(
-      this.getFilteredEntriesByCategory({
-        category: this.props.category,
-        entryNamePlural,
-      }),
-    );
+    const entryTypePlural = `${this.props.entryType}s`;
+    const name = entryTypePlural;
+    const entriesByCategory = getFilteredEntriesByCategory({
+      entries: this?.props?.entries,
+      selectedDate: this.selectedDate,
+      category: this.props.category,
+      entryTypePlural: entryTypePlural,
+    });
+    const totalSum = getSumFromEntries({ entries: entriesByCategory });
     return (
       <MainContentContainer className="entry-summary-with-filter">
         <ContentTileSection title="Summary">
-          {`${capitalize(entryNamePlural)} `}
+          {`${capitalize(entryTypePlural)} `}
           <IconRemote inLine={true} />
           {` ${formatNumberForDisplay(totalSum)}`}
         </ContentTileSection>
         {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
         <CategorySelector
-          name="category"
+          name={entryTypePlural}
           value={this.props.category}
           handleChange={this.handleChange.bind(this)}
           categoryOptions={categoryOptions}
           className="category-select"
         />
-        <EntriesSummary
-          entries={this.getFilteredEntriesByCategory({
-            category: this.props.category,
-            entryNamePlural,
-          })}
-          name={name}
-        />
+        <SummaryWithChart entries={entriesByCategory} name={name} />
       </MainContentContainer>
     );
   }
@@ -85,5 +71,5 @@ const mapActionsToProps = (dispatch) => ({
 
 export default connect(
   mapStateToProps,
-  mapActionsToProps,
+  mapActionsToProps
 )(EntrySummaryWithFilter);

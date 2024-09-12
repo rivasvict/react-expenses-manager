@@ -1,0 +1,7 @@
+@import '../../../variables.scss';
+
+.chart-container {
+  margin-bottom: $section_header_vertical-margin;
+  display: flex;
+  justify-content: center;
+}

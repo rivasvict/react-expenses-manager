@@ -1,21 +1,67 @@
 import dayjs from "dayjs";
 import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
-/*
- * TODO: The currency $ string here should come from
- * a global configuration object of the user settings
- * in the db
- */
-const currencySymbol = "$";
+import { ENTRY_TYPES_SINGULAR } from "../../constants";
+import { capitalize } from "lodash";
 
-function getSumFromEntries(entries) {
+function getSumFromEntries({ entries, absolute = false }) {
   const entriesForSum = entries.map((entry) => {
     const amount = entry.amount;
-    return entry.type === "income" ? parseFloat(amount) : -parseFloat(amount);
+    return entry.type === ENTRY_TYPES_SINGULAR.INCOME || absolute
+      ? parseFloat(amount)
+      : -parseFloat(amount);
   });
 
   return calculateTotal(...entriesForSum);
 }
+
+function getFilteredEntriesByCategory({
+  entries,
+  selectedDate,
+  category,
+  entryTypePlural,
+}) {
+  const selectedYear = selectedDate.year;
+  const selectedMonth = selectedDate.month;
+  const entriesToFilter =
+    entries[selectedYear]?.[selectedMonth]?.[entryTypePlural];
+  return category.length
+    ? entriesToFilter.filter((entry) => entry.categories_path.match(category))
+    : entriesToFilter || [];
+}
+
+const getDatedEntries = ({ entries, year, month }) => {
+  return entries?.[year]?.[month] || { incomes: [], expenses: [] };
+};
+
+/**
+ * Calculates the percentage of each category's total amount relative to the total sum.
+ *
+ * This function transforms an array of entries to an array of categories as keys
+ * and it accumulated percentages. This is ideal to summarize a list of expenses for a
+ * chart.
+ *
+ * @param {Object} params - The parameters for the function.
+ * @param {number} params.totalSum - The total sum used as the denominator for percentage calculation.
+ * @param {Array<Object>} params.entries - The list of entries to process.
+ * @param {string} params.entries[].amount - The raw amount value for the entry, which will be converted to a float.
+ * @param {string} params.entries[].categories_path - A comma-separated string representing the category path.
+ * @returns {Object} An object where each key is a category and each value is the percentage of the total sum for that category
+ */
+const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
+  entries.reduce((consolidatedCategories, entry) => {
+    const { amount: rawAmount, categories_path } = entry;
+    const category = capitalize(categories_path.split(",")[1]);
+    const amount = Math.abs(parseFloat(rawAmount));
+    const percentageAmount = (amount / totalSum) * 100;
+    return {
+      ...consolidatedCategories,
+      [category]:
+        (consolidatedCategories[category]
+          ? consolidatedCategories[category]
+          : 0) + percentageAmount,
+    };
+  }, {});
 
 /*
  *  TODO: This function probably needs to be separated
@@ -23,28 +69,22 @@ function getSumFromEntries(entries) {
  *  functionalities may become more complex
  */
 function formatNumberForDisplay(amount) {
-  if (isNaN(amount)) {
-    /*
-     * TODO: The currency $ string here should come from
-     * a global configuration object of the user settings
-     * in the db
-     */
-    return `${0} ${currencySymbol}`;
-  } else {
-    const numberOfDecimals = 2;
-    /*
-     * TODO: The currency $ string here should come from
-     * a global configuration object of the user settings
-     * in the db
-     */
-    return `${Number.isSafeInteger(parseFloat(amount)) ? amount : parseFloat(amount).toFixed(numberOfDecimals)} ${currencySymbol}`;
-  }
+  /**
+   * TODO: Make sure the locale settings are loaded from the browser
+   * and can be configurable from a database
+   * https://github.com/rivasvict/react-expenses-manager/issues/69
+   */
+  const USDollar = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+  return isNaN(amount) ? USDollar.format(0) : USDollar.format(amount);
 }
 
 function getSum({ entryType, entries }) {
   if (entries[entryType]) {
     const entriesByType = getEntries({ entryType, entries });
-    return getSumFromEntries(entriesByType);
+    return getSumFromEntries({ entries: entriesByType });
   }
 }
 
@@ -67,10 +107,6 @@ function getSelectOptionsForDisplay(selectOptions) {
     name: selectOption,
     value: selectOption.toLowerCase(),
   }));
-}
-
-function absoluteValue(val) {
-  return val < 0 ? val * -1 : val;
 }
 
 function getEntryCategoryOption(entryType) {
@@ -140,7 +176,7 @@ const getGroupEntriesByDate = () => (entries) => {
         ]);
       const pushTheNewEntryToTheExistingType = () =>
         parsedEntries[newEntryYear][newEntryMonth][`${newEntry.type}s`].push(
-          newEntry,
+          newEntry
         );
       // Year not created
       if (!parsedEntries[newEntryYear]) {
@@ -252,6 +288,20 @@ const getGroupedFilledEntriesByDate = () => (entries) => {
   });
 };
 
+/**
+ * Function to convert quantities in percentages
+ * @param {[number]} quantities
+ * @returns {[number]} percentages
+ */
+const quantitiesToPercentages = (quantities) => {
+  if (!quantities?.length) return [];
+  const totalSum = quantities.reduce(
+    (sum, quantity) => sum + Math.abs(quantity),
+    0
+  );
+  return quantities.map((quantity) => (Math.abs(quantity) / totalSum) * 100);
+};
+
 export {
   getSumFromEntries,
   formatNumberForDisplay,
@@ -259,5 +309,8 @@ export {
   getEntryModel,
   getEntryCategoryOption,
   getGroupedFilledEntriesByDate,
-  absoluteValue,
+  quantitiesToPercentages,
+  getFilteredEntriesByCategory,
+  getDatedEntries,
+  getCategoryPercentagesFromEntries,
 };
