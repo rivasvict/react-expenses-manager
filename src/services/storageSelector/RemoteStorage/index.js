@@ -14,7 +14,7 @@ const HttpStorage = () => ({
       console.log(error);
     }
   },
-  setRecord: async (entry) => {
+  setNewRecord: async (entry) => {
     try {
       const url = `${baseUrl}/api/balance`;
       const body = JSON.stringify(entry);

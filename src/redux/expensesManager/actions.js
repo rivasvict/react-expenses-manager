@@ -18,12 +18,12 @@ const setAppLoading = (isLoading) => ({
 const AddExpense =
   ({ storage }) =>
   ({ entry, selectedDate }) =>
-    setRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
+    setNewRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
 
 const AddIncome =
   ({ storage }) =>
   ({ entry, selectedDate }) =>
-    setRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
+    setNewRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
 
 const SetSelectedDate = () => (newSelectedDate) => ({
   type: SET_SELECTED_DATE,
@@ -55,11 +55,11 @@ const GetBalance =
     };
   };
 
-const setRecord = ({ entry, type, selectedDate }, { storage }) => {
+const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      await storage.setRecord(entry);
+      await storage.setNewRecord(entry);
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry, selectedDate } });
       dispatch(setAppLoading(false));
@@ -73,9 +73,29 @@ const GetEntryById =
   ({ storage }) =>
   (entryId) => {
     return async (dispatch) => {
-      /** TODO: Register an action for retrieving the entry just for the sake of log */
-      const entry = await storage.getEntryById(entryId);
-      return entry;
+      try {
+        dispatch(setAppLoading(true));
+        /** TODO: Register an action for retrieving the entry just for the sake of log */
+        const entry = await storage.getEntryById(entryId);
+        dispatch(setAppLoading(false));
+        return entry;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const EditEntry =
+  ({ storage }) =>
+  ({ entryId, entry }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        await storage.editEntry({ entryId, entry });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
     };
   };
 
@@ -87,5 +107,6 @@ export const ActionCreators = ({ storage }) => {
     getBalance: GetBalance({ storage }),
     setSelectedDate: SetSelectedDate(),
     getEntryById: GetEntryById({ storage }),
+    editEntry: EditEntry({ storage }),
   };
 };

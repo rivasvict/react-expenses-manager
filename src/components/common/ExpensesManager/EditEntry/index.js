@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import EntryForm from "../EntryForm";
 import {
   getEntryById,
-  // editEntry,
+  editEntry,
   // removeEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
@@ -20,15 +20,14 @@ const EditEntry = ({ entryType, selectedDate, onGetEntry }) => {
   }, [entryId, onGetEntry]);
   /**
    * Next steps:
-   * 2. Add here a fetch for the requested entry by id
    * 3. Handle error of entry not found
    * 4. Add a callback handler for the submit action
    * 5. Add the deletion flow (including button and callback)
    */
-  return (
-    entry && (
-      <EntryForm entry={entry} selectedDate={selectedDate} type={entryType} />
-    )
+  return entry ? (
+    <EntryForm entry={entry} selectedDate={selectedDate} type={entryType} />
+  ) : (
+    <>Entry not found</>
   );
 };
 
@@ -38,7 +37,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = (dispatch) => ({
   onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
-  // onSaveEntry: (entry) => dispatch(editEntry(entry)),
+  onSaveEntry: ({ entryId, entry }) => dispatch(editEntry({ entryId, entry })),
   // onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
 });
 
