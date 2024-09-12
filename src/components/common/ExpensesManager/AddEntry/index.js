@@ -1,8 +1,29 @@
+import { connect } from "react-redux";
 import { getCurrentTimestamp } from "../../../../helpers/date";
 import { getEntryModel } from "../../../../helpers/entriesHelper/entriesHelper";
 import EntryForm from "../EntryForm";
+import { withRouter } from "react-router-dom";
+import {
+  addExpense,
+  addIncome,
+} from "../../../../redux/expensesManager/actionCreators";
 
-const AddEntry = ({ entryType, selectedDate }) => {
+const getActionFromEntryType = ({ entryType, actions }) => {
+  const entryTypeToActionDictionary = {
+    income: actions["onAddIncome"],
+    expense: actions["onAddExpense"],
+  };
+
+  return entryTypeToActionDictionary[entryType];
+};
+
+const AddEntry = ({
+  entryType,
+  selectedDate,
+  onAddIncome,
+  onAddExpense,
+  history,
+}) => {
   const newEntry = getEntryModel({
     entryType,
     // TODO: Make sure the date calculation takes the hours and seconds into account
@@ -14,15 +35,28 @@ const AddEntry = ({ entryType, selectedDate }) => {
     }),
   });
 
-  const handleSubmit = (event, { handleEntry, history, selectedDate }) => {
+  /* TODO: Use back history navigation instead of a specific route for cancel action */
+  const navigateToDashboard = () => {
+    history.push("/dashboard");
+  };
+
+  const handleEntry = getActionFromEntryType({
+    entryType,
+    actions: {
+      onAddIncome,
+      onAddExpense,
+    },
+  });
+
+  const handleSubmit = (event, { selectedDate, entryToAdd }) => {
     event.preventDefault();
-    const entry = Object.assign({}, this.state);
+    const entry = Object.assign({}, entryToAdd);
     const digitMatcher = /^\d*(\.)*\d+$/;
     const amount = entry.amount;
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
       handleEntry({ entry, selectedDate });
-      this.navigateToDashboard(history);
+      navigateToDashboard();
     }
   };
 
@@ -35,4 +69,11 @@ const AddEntry = ({ entryType, selectedDate }) => {
   );
 };
 
-export default AddEntry;
+const mapStateToProps = (state) => ({});
+
+const mapActionToProps = (dispatch) => ({
+  onAddIncome: (income) => dispatch(addIncome(income)),
+  onAddExpense: (expense) => dispatch(addExpense(expense)),
+});
+
+export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));
