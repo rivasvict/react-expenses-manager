@@ -48,7 +48,7 @@ const AddEntry = ({
     },
   });
 
-  const handleSubmit = (event, { selectedDate, entryToAdd }) => {
+  const handleSubmit = (event, { entryToAdd }) => {
     event.preventDefault();
     const entry = Object.assign({}, entryToAdd);
     const digitMatcher = /^\d*(\.)*\d+$/;
@@ -65,6 +65,7 @@ const AddEntry = ({
       entry={newEntry}
       selectedDate={selectedDate}
       handleSubmit={handleSubmit}
+      onCancel={navigateToDashboard}
     />
   );
 };
