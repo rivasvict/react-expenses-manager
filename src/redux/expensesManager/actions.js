@@ -87,10 +87,12 @@ const GetEntryById =
 
 const EditEntry =
   ({ storage }) =>
-  ({ entryId, entry }) => {
+  ({ entry }) => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
+        const entryId = entry.id;
+        /** TODO: Register an action for entry edition */
         await storage.editEntry({ entryId, entry });
         dispatch(setAppLoading(false));
       } catch (error) {

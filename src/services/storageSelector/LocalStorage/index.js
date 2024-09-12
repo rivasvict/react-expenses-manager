@@ -32,7 +32,6 @@ const LocalStorage = () => ({
       }
       return originalEntry;
     });
-    debugger;
     storeBalance(newBalance);
   },
 });
