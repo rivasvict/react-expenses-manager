@@ -91,7 +91,6 @@ const EditEntry =
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        /** TODO: Register an action for entry edition */
         const newBalance = await storage.editEntry({ entry });
         const entries = getGroupedFilledEntriesByDate()(newBalance);
         dispatch({ type: EDIT_ENTRY, payload: { entries } });
