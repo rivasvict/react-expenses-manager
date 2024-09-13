@@ -78,7 +78,22 @@ class EntryForm extends Component {
           </Row>
           <Row className="bottom-container container-fluid vertical-standard-space">
             <Col xs={12} className="bottom-content">
-              <FormButton variant="primary" name="submit" type="submit">
+              {this.props.handleEntryRemoval && (
+                <Button
+                  variant="danger"
+                  onClick={() =>
+                    this.props.handleEntryRemoval({ entryId: this.state.id })
+                  }
+                >
+                  REMOVE ENTRY
+                </Button>
+              )}
+              <FormButton
+                variant="primary"
+                name="submit"
+                type="submit"
+                className="vertical-standard-space"
+              >
                 Submit
               </FormButton>
               <Button

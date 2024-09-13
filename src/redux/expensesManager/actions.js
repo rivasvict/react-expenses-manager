@@ -5,6 +5,7 @@ export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
 export const GET_BALANCE = "GET_BALANCE";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
+export const REMOVE_ENTRY = "REMOVE_ENTRY";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -101,6 +102,22 @@ const EditEntry =
     };
   };
 
+const RemoveEntry =
+  ({ storage }) =>
+  ({ entryId }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const newBalance = await storage.removeEntry({ entryId });
+        const entries = getGroupedFilledEntriesByDate()(newBalance);
+        dispatch({ type: REMOVE_ENTRY, payload: { entries } });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
 export const ActionCreators = ({ storage }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -110,5 +127,6 @@ export const ActionCreators = ({ storage }) => {
     setSelectedDate: SetSelectedDate(),
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
+    removeEntry: RemoveEntry({ storage }),
   };
 };

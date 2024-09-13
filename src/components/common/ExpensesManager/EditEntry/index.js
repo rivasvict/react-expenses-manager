@@ -3,7 +3,7 @@ import EntryForm from "../EntryForm";
 import {
   getEntryById,
   editEntry,
-  // removeEntry,
+  removeEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
@@ -12,9 +12,10 @@ import { withRouter } from "react-router-dom";
 const EditEntry = ({
   entryType,
   selectedDate,
-  onGetEntry,
   history,
+  onGetEntry,
   onSaveEntry,
+  onRemoveEntry,
 }) => {
   const params = useParams();
   const { entryId } = params;
@@ -47,12 +48,19 @@ const EditEntry = ({
     }
   };
 
+  const handleEntryRemoval = ({ entryId }) => {
+    onRemoveEntry({ entryId });
+    // TODO: Try using back navigation instead
+    navigateToDashboard();
+  };
+
   return entry ? (
     <EntryForm
       entry={entry}
       selectedDate={selectedDate}
       type={entryType}
       handleSubmit={handleSubmit}
+      handleEntryRemoval={handleEntryRemoval}
     />
   ) : (
     <>Entry not found</>
@@ -66,7 +74,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = (dispatch) => ({
   onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
   onSaveEntry: ({ entryId, entry }) => dispatch(editEntry({ entryId, entry })),
-  // onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
+  onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
 });
 
 export default connect(

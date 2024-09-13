@@ -35,6 +35,14 @@ const LocalStorage = () => ({
     storeBalance(newBalance);
     return newBalance;
   },
+  removeEntry: ({ entryId }) => {
+    const balance = getBalanceFromLocalStorage();
+    const newBalance = balance.filter(
+      (originalEntry) => originalEntry.id !== entryId
+    );
+    storeBalance(newBalance);
+    return newBalance;
+  },
 });
 
 export default LocalStorage;
