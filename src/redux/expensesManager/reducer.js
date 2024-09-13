@@ -7,6 +7,7 @@ import {
   CATEGORY_CHANGE,
   GET_BALANCE,
   SET_SELECTED_DATE,
+  EDIT_ENTRY,
 } from "./actions";
 
 const initialState = {
@@ -89,6 +90,14 @@ export const reducer = (state = initialState, action) => {
         newSelectedDateValue: payload,
         currentState: state,
       });
+    case EDIT_ENTRY:
+      return {
+        ...state,
+        entries: {
+          ...state.entries,
+          ...payload.entries,
+        },
+      };
     default:
       return state;
   }

@@ -24,15 +24,16 @@ const LocalStorage = () => ({
     if (!entry) return null;
     return entry;
   },
-  editEntry: ({ entryId, entry }) => {
+  editEntry: ({ entry }) => {
     const balance = getBalanceFromLocalStorage();
     const newBalance = balance.map((originalEntry) => {
-      if (originalEntry.id === entryId) {
+      if (originalEntry.id === entry.id) {
         return entry;
       }
       return originalEntry;
     });
     storeBalance(newBalance);
+    return newBalance;
   },
 });
 

@@ -4,6 +4,7 @@ export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
 export const GET_BALANCE = "GET_BALANCE";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
+export const EDIT_ENTRY = "EDIT_ENTRY";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -75,7 +76,6 @@ const GetEntryById =
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        /** TODO: Register an action for retrieving the entry just for the sake of log */
         const entry = await storage.getEntryById(entryId);
         dispatch(setAppLoading(false));
         return entry;
@@ -91,9 +91,10 @@ const EditEntry =
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        const entryId = entry.id;
         /** TODO: Register an action for entry edition */
-        await storage.editEntry({ entryId, entry });
+        const newBalance = await storage.editEntry({ entry });
+        const entries = getGroupedFilledEntriesByDate()(newBalance);
+        dispatch({ type: EDIT_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
       } catch (error) {
         console.log(error);
