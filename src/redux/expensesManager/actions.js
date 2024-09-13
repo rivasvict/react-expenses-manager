@@ -72,7 +72,7 @@ const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
 
 const GetEntryById =
   ({ storage }) =>
-  (entryId) => {
+  ({ entryId }) => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));

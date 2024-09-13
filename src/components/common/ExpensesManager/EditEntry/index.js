@@ -21,7 +21,7 @@ const EditEntry = ({
   const [entry, setEntry] = useState(null);
   useEffect(() => {
     (async () => {
-      const entryToDisplay = await onGetEntry(entryId);
+      const entryToDisplay = await onGetEntry({ entryId });
       setEntry(entryToDisplay);
     })();
   }, [entryId, onGetEntry]);
