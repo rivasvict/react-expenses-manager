@@ -1,3 +1,4 @@
+import { json2csv } from "json-2-csv";
 import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
@@ -118,6 +119,24 @@ const RemoveEntry =
     };
   };
 
+const DownloadBackup =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const balance = storage.getBalance();
+        const csvBackup = json2csv(balance);
+        console.log(csvBackup);
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const UploadBackup = () => () => {};
+
 export const ActionCreators = ({ storage }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -128,5 +147,7 @@ export const ActionCreators = ({ storage }) => {
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
+    downloadBackup: DownloadBackup({ storage }),
+    uploadBackup: UploadBackup({ storage }),
   };
 };

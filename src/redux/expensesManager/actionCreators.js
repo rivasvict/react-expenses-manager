@@ -17,4 +17,6 @@ export const {
   getEntryById,
   editEntry,
   removeEntry,
+  downloadBackup,
+  uploadBackup,
 } = ActionCreators({ storage });

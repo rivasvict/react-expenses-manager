@@ -1,12 +1,16 @@
 import React from "react";
-import { Col, Container, Navbar, Row } from "react-bootstrap";
+import { Button, Col, Container, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import logoImage from "../../images/expenses_tracker_logo.png";
 import { logOut } from "../../redux/userManager/actionCreators";
 import ButtonLikeLink from "./ButtonLikeLink";
 import "./Header.scss";
+import {
+  downloadBackup,
+  uploadBackup,
+} from "../../redux/expensesManager/actionCreators";
 
-const Header = ({ onLogOut }) => (
+const Header = ({ /*onLogOut,*/ onDownloadBackup, onUploadBackup }) => (
   <header>
     <Navbar expand="md" variant="dark">
       <Navbar.Brand href="#home">
@@ -21,6 +25,22 @@ const Header = ({ onLogOut }) => (
          * https://github.com/users/rivasvict/projects/3/views/1?pane=issue&itemId=75192915
          */}
         {/* <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button> */}
+        <Button
+          block
+          type="submit"
+          variant="primary"
+          onClick={onDownloadBackup}
+        >
+          Download Backup
+        </Button>
+        <Button
+          block
+          type="submit"
+          variant="secondary"
+          onClick={onUploadBackup}
+        >
+          Upload Backup
+        </Button>
       </Navbar.Collapse>
     </Navbar>
     <Container>
@@ -35,6 +55,8 @@ const Header = ({ onLogOut }) => (
 
 const mapActionsToProps = (dispatch) => ({
   onLogOut: () => dispatch(logOut()),
+  onDownloadBackup: () => dispatch(downloadBackup()),
+  onUploadBackup: () => dispatch(uploadBackup()),
 });
 
 export default connect(null, mapActionsToProps)(Header);
