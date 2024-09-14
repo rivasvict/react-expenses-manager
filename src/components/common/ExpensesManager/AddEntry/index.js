@@ -37,9 +37,8 @@ const AddEntry = ({
     }),
   });
 
-  /* TODO: Use back history navigation instead of a specific route for cancel action */
-  const navigateToDashboard = () => {
-    history.push("/dashboard");
+  const navigateBack = () => {
+    history.goBack();
   };
 
   const handleEntry = getActionFromEntryType({
@@ -58,7 +57,7 @@ const AddEntry = ({
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
       handleEntry({ entry, selectedDate });
-      navigateToDashboard();
+      navigateBack();
     }
   };
 
@@ -67,7 +66,7 @@ const AddEntry = ({
       entry={newEntry}
       selectedDate={selectedDate}
       handleSubmit={handleSubmit}
-      onCancel={navigateToDashboard}
+      onCancel={navigateBack}
       operationTitle={ADD_NEW}
     />
   );

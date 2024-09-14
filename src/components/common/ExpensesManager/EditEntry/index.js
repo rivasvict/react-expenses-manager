@@ -27,14 +27,8 @@ const EditEntry = ({
       setEntry(entryToDisplay);
     })();
   }, [entryId, onGetEntry]);
-  /**
-   * Next steps:
-   * 4. Add a callback handler for the submit action
-   * 5. Add the deletion flow (including button and callback)
-   */
-  /* TODO: Use back history navigation instead of a specific route for cancel action */
-  const navigateToDashboard = () => {
-    history.push("/dashboard");
+  const navigateBack = () => {
+    history.goBack();
   };
 
   const handleSubmit = (event, { entryToAdd }) => {
@@ -45,14 +39,14 @@ const EditEntry = ({
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
       onSaveEntry({ entry });
-      navigateToDashboard();
+      navigateBack();
     }
   };
 
   const handleEntryRemoval = ({ entryId }) => {
     onRemoveEntry({ entryId });
     // TODO: Try using back navigation instead
-    navigateToDashboard();
+    navigateBack();
   };
 
   return entry ? (
@@ -63,6 +57,7 @@ const EditEntry = ({
       handleSubmit={handleSubmit}
       handleEntryRemoval={handleEntryRemoval}
       operationTitle={EDIT}
+      onCancel={navigateBack}
     />
   ) : (
     <>Entry not found</>
