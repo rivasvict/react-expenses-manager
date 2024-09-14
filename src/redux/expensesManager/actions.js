@@ -119,7 +119,7 @@ const RemoveEntry =
     };
   };
 
-const DownloadBackup =
+const GetBackupData =
   ({ storage }) =>
   () => {
     return async (dispatch) => {
@@ -127,8 +127,8 @@ const DownloadBackup =
         dispatch(setAppLoading(true));
         const balance = storage.getBalance();
         const csvBackup = json2csv(balance);
-        console.log(csvBackup);
         dispatch(setAppLoading(false));
+        return csvBackup;
       } catch (error) {
         console.log(error);
       }
@@ -147,7 +147,7 @@ export const ActionCreators = ({ storage }) => {
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
-    downloadBackup: DownloadBackup({ storage }),
+    getBackupData: GetBackupData({ storage }),
     uploadBackup: UploadBackup({ storage }),
   };
 };
