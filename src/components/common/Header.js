@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Container, Navbar, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Navbar, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import logoImage from "../../images/expenses_tracker_logo.png";
 import { logOut } from "../../redux/userManager/actionCreators";
@@ -56,6 +56,18 @@ const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
       console.log(error);
     }
   };
+  const handleUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", (onloadEvent) => {
+        const fileContent = onloadEvent.target.result;
+        console.log(fileContent);
+      });
+      reader.readAsText(file);
+    }
+    // onUploadBackup();
+  };
   return (
     <header>
       <Navbar expand="md" variant="dark">
@@ -74,14 +86,12 @@ const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
           <Button block type="submit" variant="primary" onClick={handleBackup}>
             Download Backup
           </Button>
-          <Button
+          <Form.Control
             block
-            type="submit"
+            type="file"
             variant="secondary"
-            onClick={onUploadBackup}
-          >
-            Upload Backup
-          </Button>
+            onChange={handleUpload}
+          />
         </Navbar.Collapse>
       </Navbar>
       <Container>
