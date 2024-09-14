@@ -29,11 +29,14 @@ class EntryForm extends Component {
 
   render() {
     const categoryOptions = getEntryCategoryOption(this.state.type);
+    const operationTitle = this.props.operationTitle
+      ? `${this.props.operationTitle} `
+      : "";
 
     return (
       <MainContentContainer>
         <ContentTileSection>
-          Add new {capitalize(this.props.type)}
+          {`${operationTitle}${capitalize(this.state.type)}`}
         </ContentTileSection>
         <FormContent
           formProps={{

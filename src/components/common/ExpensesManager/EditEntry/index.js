@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 
+const EDIT = "Edit";
 const EditEntry = ({
   entryType,
   selectedDate,
@@ -61,6 +62,7 @@ const EditEntry = ({
       type={entryType}
       handleSubmit={handleSubmit}
       handleEntryRemoval={handleEntryRemoval}
+      operationTitle={EDIT}
     />
   ) : (
     <>Entry not found</>

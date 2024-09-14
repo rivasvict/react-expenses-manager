@@ -8,6 +8,8 @@ import {
   addIncome,
 } from "../../../../redux/expensesManager/actionCreators";
 
+const ADD_NEW = "Add new";
+
 const getActionFromEntryType = ({ entryType, actions }) => {
   const entryTypeToActionDictionary = {
     income: actions["onAddIncome"],
@@ -66,6 +68,7 @@ const AddEntry = ({
       selectedDate={selectedDate}
       handleSubmit={handleSubmit}
       onCancel={navigateToDashboard}
+      operationTitle={ADD_NEW}
     />
   );
 };

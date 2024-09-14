@@ -15,7 +15,10 @@ import { getMonthNameDisplay } from "../../../../../helpers/date";
 import "./styles.scss";
 import SummaryChart from "./components/SummaryChart";
 import SummaryWithChart from "../../../SummaryWithChart";
-import { ENTRY_TYPES_PLURAL } from "../../../../../constants";
+import {
+  ENTRY_TYPES_PLURAL,
+  ENTRY_TYPES_SINGULAR,
+} from "../../../../../constants";
 import ChartContainerRowWrapper from "../../../ChartContainerRowWrapper";
 
 /**
@@ -81,11 +84,13 @@ class Summary extends Component {
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.INCOMES]}
           name={capitalize(ENTRY_TYPES_PLURAL.INCOMES)}
           showChart={!!filter}
+          entryType={ENTRY_TYPES_SINGULAR.INCOME}
         />
       ) : (
         <EntriesSummary
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.INCOMES]}
           name={ENTRY_TYPES_PLURAL.INCOMES}
+          entryType={ENTRY_TYPES_SINGULAR.INCOME}
         />
       ),
       expenses: !!filter ? (
@@ -93,11 +98,13 @@ class Summary extends Component {
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.EXPENSES]}
           name={capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
           showChart={!!filter}
+          entryType={ENTRY_TYPES_SINGULAR.EXPENSE}
         />
       ) : (
         <EntriesSummary
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.EXPENSES]}
           name={capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
+          entryType={ENTRY_TYPES_SINGULAR.EXPENSE}
         />
       ),
     };
