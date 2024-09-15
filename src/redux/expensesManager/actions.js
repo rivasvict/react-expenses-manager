@@ -1,8 +1,9 @@
-import { json2csv } from "json-2-csv";
 import {
   getCurrentEmptyMonth,
   getGroupedFilledEntriesByDate,
 } from "../../helpers/entriesHelper/entriesHelper";
+import { getCurrentTimestamp } from "../../helpers/date";
+import { getDataFromFile } from "./utils";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
@@ -63,12 +64,13 @@ const GetBalance =
     };
   };
 
-const SetBalance =
-  ({ storage }) =>
-  ({ balance }) => {
+const UploadBackup =
+  ({ storage, dataParser }) =>
+  ({ file }) => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
+        const balance = await getDataFromFile({ dataParser })({ file });
         await storage.setBalance({ balance });
         const fullEntriesWithFilledDates =
           getGroupedFilledEntriesByDate()(balance);
@@ -145,15 +147,17 @@ const RemoveEntry =
   };
 
 const GetBackupData =
-  ({ storage }) =>
+  ({ storage, dataParser }) =>
   () => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
         const balance = storage.getBalance();
-        const csvBackup = json2csv(balance);
+        const csvBackup = dataParser.jsonToCsv({ json: balance });
         dispatch(setAppLoading(false));
-        return csvBackup;
+
+        const fileName = `balance-backup-${getCurrentTimestamp()}`;
+        return { csvContent: csvBackup, fileName };
       } catch (error) {
         console.log(error);
       }
@@ -178,18 +182,18 @@ const ClearAllData =
     };
   };
 
-export const ActionCreators = ({ storage }) => {
+export const ActionCreators = ({ storage, dataParser }) => {
   return {
     addExpense: AddExpense({ storage }),
     addIncome: AddIncome({ storage }),
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
-    setBalance: SetBalance({ storage }),
+    uploadBackup: UploadBackup({ storage, dataParser }),
     clearAllData: ClearAllData({ storage }),
     setSelectedDate: SetSelectedDate(),
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
-    getBackupData: GetBackupData({ storage }),
+    getBackupData: GetBackupData({ storage, dataParser }),
   };
 };
