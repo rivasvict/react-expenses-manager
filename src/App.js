@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 /**
  * TODO:
  * Reinstate <AuthenticatedApp />
@@ -9,8 +9,8 @@ import Dashboard from "./components/Dashboard";
 // import AuthenticatedApp from './components/AuthenticatedApp';
 import { Provider, connect } from "react-redux";
 import { setUser } from "./redux/userManager/actionCreators";
-import WithBalance from "./components/WithBalance";
-import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
+// import WithBalance from "./components/WithBalance";
+// import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
 
 const mapStateToProps = (state) => ({ user: state.userManager.user });
 
@@ -36,11 +36,15 @@ const Routes = connect(
        * is configured again
        */}
       {/* <AuthenticatedApp /> */}
-      <WithBalance>
+      {/**
+       * TODO: Reinstate this part for full v1.0.0 release
+       */}
+      {/* <WithBalance>
         <WithDataDisclaimer>
           <Dashboard />
         </WithDataDisclaimer>
-      </WithBalance>
+      </WithBalance> */}
+      <div>Comin soon!</div>
     </>
   );
 });
