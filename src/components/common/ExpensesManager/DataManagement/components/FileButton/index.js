@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const FileButton = ({ handleFileSelection, children, ...props }) => {
+const FileButton = ({ onClick: handleFileSelection, children, ...props }) => {
   const fileRef = useRef(null);
 
   const openFileDialog = () => {

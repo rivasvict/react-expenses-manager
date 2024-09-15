@@ -28,16 +28,16 @@ class EntryForm extends Component {
   };
 
   render() {
+    const entryNameForDisplay = capitalize(this.state.type);
     const categoryOptions = getEntryCategoryOption(this.state.type);
     const operationTitle = this.props.operationTitle
       ? `${this.props.operationTitle} `
       : "";
+    const title = `${operationTitle}${entryNameForDisplay}`;
 
     return (
-      <MainContentContainer>
-        <ContentTileSection>
-          {`${operationTitle}${capitalize(this.state.type)}`}
-        </ContentTileSection>
+      <MainContentContainer pageTitle={`Operation: ${title}`}>
+        <ContentTileSection>{title}</ContentTileSection>
         <FormContent
           formProps={{
             onSubmit: (event) =>
@@ -53,7 +53,7 @@ class EntryForm extends Component {
                 <InputNumber
                   type="number"
                   name="amount"
-                  placeholder={capitalize(this.props.type)}
+                  placeholder={`Insert ${capitalize(this.state.type)} amount`}
                   value={this.state.amount}
                   onChange={this.handleInputChange}
                 ></InputNumber>
@@ -70,7 +70,7 @@ class EntryForm extends Component {
               </Form.Group>
               <Form.Group>
                 <CategorySelector
-                  name="category"
+                  name="categories"
                   value={this.state.categories_path}
                   handleChange={this.setCategory}
                   categoryOptions={categoryOptions}
