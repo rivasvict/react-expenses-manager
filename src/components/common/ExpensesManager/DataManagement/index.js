@@ -47,24 +47,8 @@ const downloadFileFromData = (
   URL.revokeObjectURL();
 };
 
-const DataManagement = ({
-  onGetBackupData,
-  onUploadBackup,
-  onClearAllData,
-  history,
-}) => {
-  const handleBackup = async () => {
-    try {
-      const csvContent = await onGetBackupData();
-      downloadFileFromData(csvContent, {
-        fileName: `balance-backup-${getCurrentTimestamp()}`,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const handleUpload = (event) => {
-    const file = event.target.files[0];
+const getDataFromFile = (file) => {
+  return new Promise((resolve, reject) => {
     if (file) {
       const expensesList = getEntryCategoryOption(
         ENTRY_TYPES_SINGULAR.EXPENSE
@@ -91,11 +75,35 @@ const DataManagement = ({
             return value.replace(',"', "");
           },
         });
-        await onUploadBackup({ balance });
-        history.goBack();
+        resolve(balance);
       });
+      reader.addEventListener("error", (error) => reject(error));
       reader.readAsText(file);
     }
+  });
+};
+
+const DataManagement = ({
+  onGetBackupData,
+  onUploadBackup,
+  onClearAllData,
+  history,
+}) => {
+  const handleBackup = async () => {
+    try {
+      const csvContent = await onGetBackupData();
+      downloadFileFromData(csvContent, {
+        fileName: `balance-backup-${getCurrentTimestamp()}`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleUpload = async (event) => {
+    const file = event.target.files[0];
+    const balance = await getDataFromFile(file);
+    await onUploadBackup({ balance });
+    history.goBack();
   };
   const handleClearAllData = () => {
     onClearAllData();
