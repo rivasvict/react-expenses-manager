@@ -3,18 +3,20 @@ import EntryForm from "../EntryForm";
 import {
   getEntryById,
   editEntry,
-  // removeEntry,
+  removeEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 
+const EDIT = "Edit";
 const EditEntry = ({
   entryType,
   selectedDate,
-  onGetEntry,
   history,
+  onGetEntry,
   onSaveEntry,
+  onRemoveEntry,
 }) => {
   const params = useParams();
   const { entryId } = params;
@@ -25,14 +27,8 @@ const EditEntry = ({
       setEntry(entryToDisplay);
     })();
   }, [entryId, onGetEntry]);
-  /**
-   * Next steps:
-   * 4. Add a callback handler for the submit action
-   * 5. Add the deletion flow (including button and callback)
-   */
-  /* TODO: Use back history navigation instead of a specific route for cancel action */
-  const navigateToDashboard = () => {
-    history.push("/dashboard");
+  const navigateBack = () => {
+    history.goBack();
   };
 
   const handleSubmit = (event, { entryToAdd }) => {
@@ -43,8 +39,14 @@ const EditEntry = ({
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
       onSaveEntry({ entry });
-      navigateToDashboard();
+      navigateBack();
     }
+  };
+
+  const handleEntryRemoval = ({ entryId }) => {
+    onRemoveEntry({ entryId });
+    // TODO: Try using back navigation instead
+    navigateBack();
   };
 
   return entry ? (
@@ -53,6 +55,9 @@ const EditEntry = ({
       selectedDate={selectedDate}
       type={entryType}
       handleSubmit={handleSubmit}
+      handleEntryRemoval={handleEntryRemoval}
+      operationTitle={EDIT}
+      onCancel={navigateBack}
     />
   ) : (
     <>Entry not found</>
@@ -66,7 +71,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = (dispatch) => ({
   onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
   onSaveEntry: ({ entryId, entry }) => dispatch(editEntry({ entryId, entry })),
-  // onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
+  onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
 });
 
 export default connect(

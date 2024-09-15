@@ -8,6 +8,7 @@ import {
   GET_BALANCE,
   SET_SELECTED_DATE,
   EDIT_ENTRY,
+  REMOVE_ENTRY,
 } from "./actions";
 
 const initialState = {
@@ -91,6 +92,14 @@ export const reducer = (state = initialState, action) => {
         currentState: state,
       });
     case EDIT_ENTRY:
+      return {
+        ...state,
+        entries: {
+          ...state.entries,
+          ...payload.entries,
+        },
+      };
+    case REMOVE_ENTRY:
       return {
         ...state,
         entries: {

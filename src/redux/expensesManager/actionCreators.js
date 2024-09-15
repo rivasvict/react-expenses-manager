@@ -16,4 +16,5 @@ export const {
   setSelectedDate,
   getEntryById,
   editEntry,
+  removeEntry,
 } = ActionCreators({ storage });
