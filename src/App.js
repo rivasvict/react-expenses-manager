@@ -36,11 +36,15 @@ const Routes = connect(
        * is configured again
        */}
       {/* <AuthenticatedApp /> */}
-      <WithBalance>
+      {/**
+       * TODO: Reinstate this part for full v1.0.0 release
+       */}
+      {/* <WithBalance>
         <WithDataDisclaimer>
           <Dashboard />
         </WithDataDisclaimer>
-      </WithBalance>
+      </WithBalance> */}
+      <div>Comin soon!</div>
     </>
   );
 });
