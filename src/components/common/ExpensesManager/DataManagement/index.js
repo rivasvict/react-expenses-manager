@@ -16,6 +16,10 @@ const DataManagement = ({
   onClearAllData,
   history,
 }) => {
+  const goBack = () => {
+    history.goBack();
+  };
+
   const handleBackup = async () => {
     try {
       const { csvContent, fileName } = await onGetBackupData();
@@ -31,7 +35,7 @@ const DataManagement = ({
     try {
       const file = event.target.files[0];
       await onUploadBackup({ file });
-      history.goBack();
+      goBack();
     } catch (error) {
       console.log(error);
     }
@@ -39,8 +43,11 @@ const DataManagement = ({
 
   const handleClearAllData = () => {
     onClearAllData();
-    history.goBack();
+    goBack();
   };
+
+  const handleCancel = () => goBack();
+
   return (
     <MainContentContainer
       className="data-management"
@@ -57,6 +64,9 @@ const DataManagement = ({
       />
       <Button block type="submit" variant="danger" onClick={handleClearAllData}>
         CLEAR ALL DATA
+      </Button>
+      <Button block type="submit" variant="secondary" onClick={handleCancel}>
+        Cancel
       </Button>
     </MainContentContainer>
   );
