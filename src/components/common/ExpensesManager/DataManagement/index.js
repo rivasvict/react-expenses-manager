@@ -11,6 +11,7 @@ import { ENTRY_TYPES_SINGULAR } from "../../../../constants";
 import { getCurrentTimestamp } from "../../../../helpers/date";
 import { csv2json } from "json-2-csv";
 import { withRouter } from "react-router-dom";
+import { MainContentContainer } from "../../MainContentContainer";
 
 const downloadFileFromData = (
   data,
@@ -101,7 +102,10 @@ const DataManagement = ({
     history.goBack();
   };
   return (
-    <>
+    <MainContentContainer
+      className="data-management"
+      pageTitle="Data Management"
+    >
       <Button block type="submit" variant="primary" onClick={handleBackup}>
         Download Backup
       </Button>
@@ -114,7 +118,7 @@ const DataManagement = ({
       <Button block type="submit" variant="danger" onClick={handleClearAllData}>
         CLEAR ALL DATA
       </Button>
-    </>
+    </MainContentContainer>
   );
 };
 
