@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import AddEntry from "../common/ExpensesManager/AddEntry/AddEntry";
+import AddEntry from "../common/ExpensesManager/AddEntry";
 import Summary from "../common/ExpensesManager/Summaries/Summary";
 import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesSummaryWithFilter";
 
@@ -12,6 +12,7 @@ import "./styles.scss";
 import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
 import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
+import EditEntry from "../common/ExpensesManager/EditEntry";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -34,8 +35,14 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}add-income`}>
               <AddEntry entryType="income" selectedDate={selectedDate} />
             </Route>
+            <Route path={`${match.url}edit-income/:entryId`}>
+              <EditEntry entryType="income" selectedDate={selectedDate} />
+            </Route>
             <Route path={`${match.url}add-expense`}>
               <AddEntry entryType="expense" selectedDate={selectedDate} />
+            </Route>
+            <Route path={`${match.url}edit-expense/:entryId`}>
+              <EditEntry entryType="income" selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}incomes`}>
               <EntrySummaryWithFilter

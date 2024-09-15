@@ -14,4 +14,6 @@ export const {
   categoryChange,
   getBalance,
   setSelectedDate,
+  getEntryById,
+  editEntry,
 } = ActionCreators({ storage });

@@ -4,6 +4,7 @@ export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
 export const GET_BALANCE = "GET_BALANCE";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
+export const EDIT_ENTRY = "EDIT_ENTRY";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -18,12 +19,12 @@ const setAppLoading = (isLoading) => ({
 const AddExpense =
   ({ storage }) =>
   ({ entry, selectedDate }) =>
-    setRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
+    setNewRecord({ entry, type: ADD_OUTCOME, selectedDate }, { storage });
 
 const AddIncome =
   ({ storage }) =>
   ({ entry, selectedDate }) =>
-    setRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
+    setNewRecord({ entry, type: ADD_INCOME, selectedDate }, { storage });
 
 const SetSelectedDate = () => (newSelectedDate) => ({
   type: SET_SELECTED_DATE,
@@ -55,11 +56,11 @@ const GetBalance =
     };
   };
 
-const setRecord = ({ entry, type, selectedDate }, { storage }) => {
+const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      await storage.setRecord(entry);
+      await storage.setNewRecord(entry);
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry, selectedDate } });
       dispatch(setAppLoading(false));
@@ -69,6 +70,37 @@ const setRecord = ({ entry, type, selectedDate }, { storage }) => {
   };
 };
 
+const GetEntryById =
+  ({ storage }) =>
+  ({ entryId }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const entry = await storage.getEntryById(entryId);
+        dispatch(setAppLoading(false));
+        return entry;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const EditEntry =
+  ({ storage }) =>
+  ({ entry }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const newBalance = await storage.editEntry({ entry });
+        const entries = getGroupedFilledEntriesByDate()(newBalance);
+        dispatch({ type: EDIT_ENTRY, payload: { entries } });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
 export const ActionCreators = ({ storage }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -76,5 +108,7 @@ export const ActionCreators = ({ storage }) => {
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
     setSelectedDate: SetSelectedDate(),
+    getEntryById: GetEntryById({ storage }),
+    editEntry: EditEntry({ storage }),
   };
 };

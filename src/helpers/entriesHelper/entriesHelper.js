@@ -280,6 +280,17 @@ const getEntriesWithFilledDates =
     return entries;
   };
 
+/**
+ * TODO: Remove the callback pattern here as it is not necessary
+ */
+/**
+ * Function to group expenses data based on year > month
+ * and fill empty data spaces (where no entries are registered
+ * in a month or a year)
+ * @function
+ * @returns {function} a callback that does the intended purpose
+ * @param {Arrat<Objec>} entries - Array of entries
+ */
 const getGroupedFilledEntriesByDate = () => (entries) => {
   const groupedEntriesByDate = getGroupEntriesByDate()(entries);
   return getEntriesWithFilledDates()({

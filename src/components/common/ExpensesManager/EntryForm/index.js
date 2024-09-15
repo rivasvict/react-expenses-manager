@@ -1,44 +1,18 @@
 import React, { Component } from "react";
 import CategorySelector from "../CategorySelector";
-import { connect } from "react-redux";
-import {
-  addIncome,
-  addExpense,
-} from "../../../../redux/expensesManager/actionCreators";
-import {
-  getEntryModel,
-  getEntryCategoryOption,
-} from "../../../../helpers/entriesHelper/entriesHelper";
+import { getEntryCategoryOption } from "../../../../helpers/entriesHelper/entriesHelper";
 
-import { withRouter } from "react-router-dom";
-import { getTimestampFromMonthAndYear } from "../../../../helpers/date";
 import { Button, Form, Col, Row } from "react-bootstrap";
 import { FormButton, FormContent, InputNumber, InputText } from "../../Forms";
 import { capitalize } from "lodash";
 import ContentTileSection from "../../ContentTitleSection";
 import { MainContentContainer } from "../../MainContentContainer";
 
-const getActionFromEntryType = ({ entryType, props }) => {
-  const entryTypeToActionDictionary = {
-    income: props["onAddIncome"],
-    expense: props["onAddExpense"],
-  };
-
-  return entryTypeToActionDictionary[entryType];
-};
-
 // TODO: Change this to a function component instead of a class component
-class AddEntry extends Component {
+class EntryForm extends Component {
   constructor(props) {
     super();
-    this.state = getEntryModel({
-      entryType: props.entryType,
-      // TODO: Make sure the date calculation takes the hours and seconds into account
-      timestamp: getTimestampFromMonthAndYear({
-        month: props.selectedDate.month,
-        year: props.selectedDate.year,
-      }),
-    });
+    this.state = props.entry;
   }
 
   handleInputChange = (event) => {
@@ -53,42 +27,19 @@ class AddEntry extends Component {
     this.setState(() => ({ categories_path: value }));
   };
 
-  handleSubmit = (event, { handleEntry, history, selectedDate }) => {
-    event.preventDefault();
-    const entry = Object.assign({}, this.state);
-    const digitMatcher = /^\d*(\.)*\d+$/;
-    const amount = entry.amount;
-    // TODO: review the validation for the missing category
-    if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
-      handleEntry({ entry, selectedDate });
-      this.navigateToDashboard(history);
-    }
-  };
-
-  /* TODO: Use back history navigation instead of a specific route for cancel action */
-  navigateToDashboard = (history) => {
-    history.push("/dashboard");
-  };
-
   render() {
-    const handleEntry = getActionFromEntryType({
-      entryType: this.props.entryType,
-      props: this.props,
-    });
-    const categoryOptions = getEntryCategoryOption(this.props.entryType);
+    const categoryOptions = getEntryCategoryOption(this.state.type);
 
     return (
       <MainContentContainer>
         <ContentTileSection>
-          Add new {capitalize(this.props.entryType)}
+          Add new {capitalize(this.props.type)}
         </ContentTileSection>
         <FormContent
           formProps={{
             onSubmit: (event) =>
-              this.handleSubmit(event, {
-                handleEntry: handleEntry,
-                history: this.props.history,
-                selectedDate: this.props.selectedDate,
+              this.props.handleSubmit(event, {
+                entryToAdd: this.state,
               }),
             className: "app-form",
           }}
@@ -99,7 +50,7 @@ class AddEntry extends Component {
                 <InputNumber
                   type="number"
                   name="amount"
-                  placeholder={capitalize(this.props.entryType)}
+                  placeholder={capitalize(this.props.type)}
                   value={this.state.amount}
                   onChange={this.handleInputChange}
                 ></InputNumber>
@@ -130,11 +81,10 @@ class AddEntry extends Component {
               <FormButton variant="primary" name="submit" type="submit">
                 Submit
               </FormButton>
-              {/* TODO: Use back history navigation instead of a specific route for cancel action */}
               <Button
                 variant="secondary"
                 className="vertical-standard-space"
-                onClick={() => this.navigateToDashboard(this.props.history)}
+                onClick={() => this.props.onCancel()}
               >
                 Cancel
               </Button>
@@ -146,11 +96,4 @@ class AddEntry extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
-
-const mapActionToProps = (dispatch) => ({
-  onAddIncome: (income) => dispatch(addIncome(income)),
-  onAddExpense: (expense) => dispatch(addExpense(expense)),
-});
-
-export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));
+export default EntryForm;

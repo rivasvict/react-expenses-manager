@@ -2,13 +2,13 @@ import EntriesSummaryChart from "../ExpensesManager/Summaries/EntriesSummaryWith
 import EntriesSummary from "../ExpensesManager/Summaries/EntriesSummary";
 import ChartContainerRowWrapper from "../ChartContainerRowWrapper";
 
-const SummaryWithChart = ({ entries, name }) => {
+const SummaryWithChart = ({ entries, name, entryType }) => {
   return (
     <>
       <ChartContainerRowWrapper>
         <EntriesSummaryChart data={entries} />
       </ChartContainerRowWrapper>
-      <EntriesSummary entries={entries} name={name} />
+      <EntriesSummary entries={entries} name={name} entryType={entryType} />
     </>
   );
 };
