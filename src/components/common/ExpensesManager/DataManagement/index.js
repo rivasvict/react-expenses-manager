@@ -5,10 +5,12 @@ import {
   uploadBackup,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
+import { FileButton } from "./components";
+import "./styles.scss";
 
 const DataManagement = ({
   onGetBackupData,
@@ -53,21 +55,48 @@ const DataManagement = ({
       className="data-management"
       pageTitle="Data Management"
     >
-      <Button block type="submit" variant="primary" onClick={handleBackup}>
-        Download Backup
-      </Button>
-      <Form.Control
-        block
-        type="file"
-        variant="secondary"
-        onChange={handleUpload}
-      />
-      <Button block type="submit" variant="danger" onClick={handleClearAllData}>
-        CLEAR ALL DATA
-      </Button>
-      <Button block type="submit" variant="secondary" onClick={handleCancel}>
-        Cancel
-      </Button>
+      <Container className="buttons-container" fluid>
+        <Container className="top-content" fluid>
+          <Row>
+            <Col>
+              <Button type="submit" variant="primary" onClick={handleBackup}>
+                Download Backup File
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FileButton
+                type="submit"
+                variant="secondary"
+                onClick={handleUpload}
+              >
+                Restore Backup From File
+              </FileButton>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button
+                type="submit"
+                variant="danger"
+                onClick={handleClearAllData}
+              >
+                CLEAR ALL DATA
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+        <Container className="bottom-content" fluid>
+          <Row>
+            <Col>
+              <Button type="submit" variant="secondary" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
     </MainContentContainer>
   );
 };
