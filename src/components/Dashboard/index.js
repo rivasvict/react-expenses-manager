@@ -13,6 +13,7 @@ import WorkAreaContentContainer from "../common/WorkAreaContentContainer";
 import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
 import EditEntry from "../common/ExpensesManager/EditEntry";
+import DataManagement from "../common/ExpensesManager/DataManagement";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -59,6 +60,9 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}summary`}>
               {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
               <Summary entries={entries} selectedDate={selectedDate} />
+            </Route>
+            <Route path={`${match.url}data-management`}>
+              <DataManagement />
             </Route>
             <Route path={`${match.url}dashboard`}>
               <DashboardContent {...{ entries, match }} />

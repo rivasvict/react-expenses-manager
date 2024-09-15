@@ -9,6 +9,8 @@ import {
   SET_SELECTED_DATE,
   EDIT_ENTRY,
   REMOVE_ENTRY,
+  SET_BALANCE,
+  CLEAR_ALL_DATA,
 } from "./actions";
 
 const initialState = {
@@ -86,6 +88,14 @@ export const reducer = (state = initialState, action) => {
           ...payload.entries,
         },
       };
+    case SET_BALANCE:
+      return {
+        ...state,
+        entries: {
+          ...state.entries,
+          ...payload.entries,
+        },
+      };
     case SET_SELECTED_DATE:
       return changeSelectedDate({
         newSelectedDateValue: payload,
@@ -100,6 +110,14 @@ export const reducer = (state = initialState, action) => {
         },
       };
     case REMOVE_ENTRY:
+      return {
+        ...state,
+        entries: {
+          ...state.entries,
+          ...payload.entries,
+        },
+      };
+    case CLEAR_ALL_DATA:
       return {
         ...state,
         entries: {

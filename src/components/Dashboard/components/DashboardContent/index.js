@@ -57,7 +57,10 @@ const DashboardContent = ({
   });
   const totalSum = calculateTotal(incomesSum, expensesSum);
   return (
-    <MainContentContainer className="dashboard-content">
+    <MainContentContainer
+      className="dashboard-content"
+      pageTitle="Monthly Balance"
+    >
       <ContentTileSection title="Summary" to={summaryUrl}>
         {`Savings `}
         <IconRemote inLine={true} />
