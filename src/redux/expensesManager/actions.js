@@ -1,9 +1,14 @@
 import { json2csv } from "json-2-csv";
-import { getGroupedFilledEntriesByDate } from "../../helpers/entriesHelper/entriesHelper";
+import {
+  getCurrentEmptyMonth,
+  getGroupedFilledEntriesByDate,
+} from "../../helpers/entriesHelper/entriesHelper";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
 export const GET_BALANCE = "GET_BALANCE";
+export const SET_BALANCE = "SET_BALANCE";
+export const CLEAR_ALL_DATA = "CLEAR_ALL_DATA";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
 export const REMOVE_ENTRY = "REMOVE_ENTRY";
@@ -49,6 +54,26 @@ const GetBalance =
           getGroupedFilledEntriesByDate()(response);
         dispatch({
           type: GET_BALANCE,
+          payload: { entries: fullEntriesWithFilledDates },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const SetBalance =
+  ({ storage }) =>
+  ({ balance }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        await storage.setBalance({ balance });
+        const fullEntriesWithFilledDates =
+          getGroupedFilledEntriesByDate()(balance);
+        dispatch({
+          type: SET_BALANCE,
           payload: { entries: fullEntriesWithFilledDates },
         });
         dispatch(setAppLoading(false));
@@ -135,7 +160,23 @@ const GetBackupData =
     };
   };
 
-const UploadBackup = () => () => {};
+const ClearAllData =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        await storage.clearAllData();
+        dispatch({
+          type: CLEAR_ALL_DATA,
+          payload: { entries: getCurrentEmptyMonth() },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
 
 export const ActionCreators = ({ storage }) => {
   return {
@@ -143,11 +184,12 @@ export const ActionCreators = ({ storage }) => {
     addIncome: AddIncome({ storage }),
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
+    setBalance: SetBalance({ storage }),
+    clearAllData: ClearAllData({ storage }),
     setSelectedDate: SetSelectedDate(),
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
     getBackupData: GetBackupData({ storage }),
-    uploadBackup: UploadBackup({ storage }),
   };
 };

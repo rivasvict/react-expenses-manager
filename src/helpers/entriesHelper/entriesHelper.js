@@ -158,7 +158,7 @@ const getCurrentEmptyMonth = () => ({
 const getGroupEntriesByDate = () => (entries) => {
   if (entries.length) {
     return entries.reduce((parsedEntries, newEntry) => {
-      const newEntryDate = dayjs(newEntry.date);
+      const newEntryDate = dayjs(parseInt(newEntry.date));
       const newEntryYear = newEntryDate.year();
       const newEntryMonth = newEntryDate.month();
 
@@ -218,7 +218,7 @@ const fillYear = ({ entries, pointerYear }) => {
 const getEntriesWithFilledDates =
   () =>
   ({ entries, firstEntryDate }) => {
-    const pointerDate = dayjs(firstEntryDate);
+    const pointerDate = dayjs(parseInt(firstEntryDate));
     let pointerYear = pointerDate.year();
     let pointerMonth = pointerDate.month();
     const endDate = dayjs();
@@ -324,4 +324,5 @@ export {
   getFilteredEntriesByCategory,
   getDatedEntries,
   getCategoryPercentagesFromEntries,
+  getCurrentEmptyMonth,
 };

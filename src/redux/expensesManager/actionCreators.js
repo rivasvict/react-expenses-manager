@@ -13,10 +13,11 @@ export const {
   addIncome,
   categoryChange,
   getBalance,
+  setBalance,
+  clearAllData,
   setSelectedDate,
   getEntryById,
   editEntry,
   removeEntry,
   getBackupData,
-  uploadBackup,
 } = ActionCreators({ storage });

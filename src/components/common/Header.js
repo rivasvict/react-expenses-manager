@@ -6,10 +6,14 @@ import { logOut } from "../../redux/userManager/actionCreators";
 import ButtonLikeLink from "./ButtonLikeLink";
 import "./Header.scss";
 import {
+  clearAllData,
   getBackupData,
-  uploadBackup,
+  setBalance,
 } from "../../redux/expensesManager/actionCreators";
 import { getCurrentTimestamp } from "../../helpers/date";
+import { csv2json } from "json-2-csv";
+import { getEntryCategoryOption } from "../../helpers/entriesHelper/entriesHelper";
+import { ENTRY_TYPES_PLURAL, ENTRY_TYPES_SINGULAR } from "../../constants";
 
 const downloadFileFromData = (
   data,
@@ -45,7 +49,11 @@ const downloadFileFromData = (
   URL.revokeObjectURL();
 };
 
-const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
+const Header = ({
+  /*onLogOut,*/ onGetBackupData,
+  onUploadBackup,
+  onClearAllData,
+}) => {
   const handleBackup = async () => {
     try {
       const csvContent = await onGetBackupData();
@@ -59,14 +67,36 @@ const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
   const handleUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      const expensesList = getEntryCategoryOption(
+        ENTRY_TYPES_SINGULAR.EXPENSE
+      ).map((item) => item.value);
+      const incomesList = getEntryCategoryOption(
+        ENTRY_TYPES_SINGULAR.INCOME
+      ).map((item) => item.value);
+      const categoriesList = [...expensesList, ...incomesList];
       const reader = new FileReader();
       reader.addEventListener("load", (onloadEvent) => {
         const fileContent = onloadEvent.target.result;
         console.log(fileContent);
+        const balance = csv2json(fileContent, {
+          parseValue: (value) => {
+            const hasPotentialWrapper = value.includes(',"');
+            const isCategory =
+              hasPotentialWrapper &&
+              categoriesList.includes(value.replace(/,"/g, "").toLowerCase());
+            if (hasPotentialWrapper && isCategory) {
+              return value
+                .replace(/,"/g, "")
+                .replace(/^/g, ",")
+                .replace(/$/g, ",");
+            }
+            return value.replace(',"', "");
+          },
+        });
+        onUploadBackup({ balance });
       });
       reader.readAsText(file);
     }
-    // onUploadBackup();
   };
   return (
     <header>
@@ -92,6 +122,9 @@ const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
             variant="secondary"
             onChange={handleUpload}
           />
+          <Button block type="submit" variant="danger" onClick={onClearAllData}>
+            CLEAR ALL DATA
+          </Button>
         </Navbar.Collapse>
       </Navbar>
       <Container>
@@ -108,7 +141,8 @@ const Header = ({ /*onLogOut,*/ onGetBackupData, onUploadBackup }) => {
 const mapActionsToProps = (dispatch) => ({
   onLogOut: () => dispatch(logOut()),
   onGetBackupData: () => dispatch(getBackupData()),
-  onUploadBackup: () => dispatch(uploadBackup()),
+  onUploadBackup: ({ balance }) => dispatch(setBalance({ balance })),
+  onClearAllData: () => dispatch(clearAllData()),
 });
 
 export default connect(null, mapActionsToProps)(Header);

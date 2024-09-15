@@ -10,6 +10,8 @@ const storeBalance = (balance) =>
 
 const LocalStorage = () => ({
   getBalance: () => getBalanceFromLocalStorage(),
+  setBalance: ({ balance }) => storeBalance(balance),
+  clearAllData: () => localStorage.clear(),
   setNewRecord: (entry) => {
     if (!entry) throw new Error("No entry was added");
     const balance = getBalanceFromLocalStorage();
