@@ -20,6 +20,8 @@ import {
   ENTRY_TYPES_SINGULAR,
 } from "../../../../../constants";
 import ChartContainerRowWrapper from "../../../ChartContainerRowWrapper";
+import { withRouter } from "react-router-dom";
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 /**
  * TODO: Turn this into a functional component
@@ -162,40 +164,64 @@ class Summary extends Component {
       : this.getByEntryTypeChartData();
   }
 
+  goBack = () => {
+    this?.props?.history?.goBack();
+  };
+
+  handleCancel = () => this.goBack();
+
   render() {
     const chartProps = this.getChartProps();
     return (
-      <MainContentContainer className="summary-container">
-        <ContentTileSection title="Summary">
-          {/** TODO: Make sure the totalization is done here */}
-          {`${capitalize(getMonthNameDisplay(this.selectedDate.month))} `}
-          <IconRemote inLine={true} />
-          {` ${this.state.selectedEntriesSum}`}
-        </ContentTileSection>
-        {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-        <FormSelect
-          name="filler"
-          value={this.state.filter}
-          onChange={this.handleChange}
-          className="select-entry-type"
-        >
-          <option value="">All incomes and expenses</option>
-          <option value={ENTRY_TYPES_PLURAL.INCOMES}>
-            {capitalize(ENTRY_TYPES_PLURAL.INCOMES)}
-          </option>
-          <option value={ENTRY_TYPES_PLURAL.EXPENSES}>
-            {capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
-          </option>
-        </FormSelect>
-        {!this.state.filter && (
-          <ChartContainerRowWrapper>
-            <SummaryChart {...chartProps} />
-          </ChartContainerRowWrapper>
-        )}
-        {this.state.selectedEntries}
+      <MainContentContainer
+        className="summary-container"
+        pageTitle="Monthly Summary"
+      >
+        <Container fluid className="top-content">
+          <ContentTileSection title="Summary">
+            {/** TODO: Make sure the totalization is done here */}
+            {`${capitalize(getMonthNameDisplay(this.selectedDate.month))} `}
+            <IconRemote inLine={true} />
+            {` ${this.state.selectedEntriesSum}`}
+          </ContentTileSection>
+          {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
+          <FormSelect
+            name="filler"
+            value={this.state.filter}
+            onChange={this.handleChange}
+            className="select-entry-type"
+          >
+            <option value="">All incomes and expenses</option>
+            <option value={ENTRY_TYPES_PLURAL.INCOMES}>
+              {capitalize(ENTRY_TYPES_PLURAL.INCOMES)}
+            </option>
+            <option value={ENTRY_TYPES_PLURAL.EXPENSES}>
+              {capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
+            </option>
+          </FormSelect>
+          {!this.state.filter && (
+            <ChartContainerRowWrapper>
+              <SummaryChart {...chartProps} />
+            </ChartContainerRowWrapper>
+          )}
+          {this.state.selectedEntries}
+        </Container>
+        <Container className="bottom-content" fluid>
+          <Row>
+            <Col>
+              <Button
+                type="submit"
+                variant="secondary"
+                onClick={this.handleCancel}
+              >
+                Go Back
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       </MainContentContainer>
     );
   }
 }
 
-export default Summary;
+export default withRouter(Summary);
