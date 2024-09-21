@@ -44,7 +44,7 @@ const Routes = connect(
           <Dashboard />
         </WithDataDisclaimer>
       </WithBalance> */}
-      <div>Comin soon!</div>
+      <div>Coming soon!</div>
     </>
   );
 });
