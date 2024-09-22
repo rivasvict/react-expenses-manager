@@ -14,6 +14,7 @@ import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
 import EditEntry from "../common/ExpensesManager/EditEntry";
 import DataManagement from "../common/ExpensesManager/DataManagement";
+import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -63,6 +64,9 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}data-management`}>
               <DataManagement />
+            </Route>
+            <Route path={`${match.url}buckets`}>
+              <Buckets selectedDate={selectedDate} />
             </Route>
             <Route path={`${match.url}dashboard`}>
               <DashboardContent {...{ entries, match }} />

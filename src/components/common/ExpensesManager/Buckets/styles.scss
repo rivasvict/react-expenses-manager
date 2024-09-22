@@ -1,0 +1,13 @@
+@import '../../../../variables.scss';
+.buckets-container {
+  .month-header {
+    margin-top: $section_header_vertical-margin;
+    margin-bottom: $section_header_vertical-margin;
+    align-items: center;
+
+    div:nth-child(3) {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
