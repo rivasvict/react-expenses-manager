@@ -1,6 +1,7 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import "./styles.scss";
+import { formatNumberForDisplay } from "../../../../../../helpers/entriesHelper/entriesHelper";
 
 const Bucket = ({ category, currentValue, limitAmount }) => {
   const usagePercentage = (currentValue / limitAmount) * 100;
@@ -24,7 +25,7 @@ const Bucket = ({ category, currentValue, limitAmount }) => {
         <Col>
           <Row className="bucket-legend">
             <Col>{category}</Col>
-            <Col className="rest">{`$${currentValue} of $${limitAmount}`}</Col>
+            <Col className="rest">{`${formatNumberForDisplay(currentValue)} of ${formatNumberForDisplay(limitAmount)}`}</Col>
           </Row>
           <Row>
             <Col xs={12}>
