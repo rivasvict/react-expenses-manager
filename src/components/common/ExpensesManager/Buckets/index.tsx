@@ -3,7 +3,7 @@ import { MainContentContainer } from "../../MainContentContainer";
 import { Bucket } from "./components/index.ts";
 import "./styles.scss";
 import ContentTileSection from "../../ContentTitleSection.js";
-import { Col, Row, Button } from "react-bootstrap";
+import { Col, Row, Button, Container } from "react-bootstrap";
 import ScreenTitle from "../../ScreenTitle.js";
 import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import {
@@ -27,7 +27,7 @@ const bucketsMap = {
   Education: 86.45,
 };
 
-const Buckets = ({ selectedDate, entries /*, entriesByCategory = {}*/ }) => {
+const Buckets = ({ selectedDate, entries, history }) => {
   const screenTitle = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;
 
   /**
@@ -53,29 +53,30 @@ const Buckets = ({ selectedDate, entries /*, entriesByCategory = {}*/ }) => {
     },
     {}
   );
-  const monthlyBuckets = Object.keys(bucketsMap).reduce(
-    (buckets, bucketName) => ({
-      ...buckets,
-      [bucketName.toLowerCase()]: {
-        limit: bucketsMap[bucketName],
-        currentValue:
-          summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0,
-        label: bucketName,
-      },
-    }),
-    {}
-  );
+  const monthlyBuckets = Object.keys(bucketsMap)
+    .map((bucketName) => ({
+      name: bucketName.toLowerCase(),
+      limit: bucketsMap[bucketName],
+      currentValue:
+        summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0,
+      label: bucketName,
+    }))
+    .sort((a, b) => {
+      const aPercentage = (a.currentValue / a.limit) * 100;
+      const bPercentage = (b.currentValue / b.limit) * 100;
+      return bPercentage - aPercentage;
+    });
   const totalBucketAllocation = Object.keys(bucketsMap).reduce(
     (sum, bucketName) => bucketsMap[bucketName] + sum,
     0
   );
-  console.log(summarizedEntriesByCategory);
+  const handleGoBack = () => history.goBack();
   return (
-    // @ts-expect-error temporarily ignore this typescript error
     <MainContentContainer
       className="buckets-container"
       pageTitle="Monthly Buckets"
     >
+      {/*@ts-expect-error temporarily ignore this typescript error */}
       <ContentTileSection title="Summary">
         {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
       </ContentTileSection>
@@ -90,13 +91,27 @@ const Buckets = ({ selectedDate, entries /*, entriesByCategory = {}*/ }) => {
           {true ? <Button onClick={() => {}}>Next</Button> : null}
         </Col>
       </Row>
-      {Object.keys(monthlyBuckets).map((bucketName) => (
+      {monthlyBuckets.map((bucket) => (
         <Bucket
-          category={monthlyBuckets[bucketName].label}
-          limitAmount={monthlyBuckets[bucketName].limit}
-          currentValue={monthlyBuckets[bucketName].currentValue}
+          category={bucket.label}
+          limitAmount={bucket.limit}
+          currentValue={bucket.currentValue}
         />
       ))}
+      <Container fluid>
+        <Row>
+          <Col>
+            <Button
+              type="submit"
+              variant="secondary"
+              onClick={handleGoBack}
+              className="full"
+            >
+              Go Back
+            </Button>
+          </Col>
+        </Row>
+      </Container>
     </MainContentContainer>
   );
 };

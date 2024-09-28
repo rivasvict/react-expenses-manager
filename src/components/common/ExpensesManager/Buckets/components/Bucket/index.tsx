@@ -40,7 +40,7 @@ const Bucket = ({ category, currentValue, limitAmount }) => {
             <Col
               xs={12}
               className="usage-percentage"
-            >{`${usagePercentage}%`}</Col>
+            >{`${usagePercentage.toFixed(2)}%`}</Col>
           </Row>
         </Col>
       </Row>
