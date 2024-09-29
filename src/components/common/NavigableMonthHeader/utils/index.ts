@@ -38,6 +38,7 @@ const getAdjacentDate = ({ dateAdjacencyType, referenceDate }) => {
   }
   return { year, month };
 };
+
 const getNewSelectedDate = ({
   currentSelectedDate,
   dateAdjacencyType,

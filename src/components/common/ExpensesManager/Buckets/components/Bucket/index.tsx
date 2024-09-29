@@ -3,11 +3,15 @@ import { Row, Col } from "react-bootstrap";
 import "./styles.scss";
 import { formatNumberForDisplay } from "../../../../../../helpers/entriesHelper/entriesHelper";
 
-const Bucket = ({ category, currentValue, limitAmount }) => {
-  const usagePercentage = (currentValue / limitAmount) * 100;
+const Bucket = ({
+  category,
+  currentValue,
+  limitAmount,
+  consuptionPercentage,
+}) => {
   const colorMapClass = {
-    warning: usagePercentage >= 65,
-    danger: usagePercentage > 85,
+    warning: consuptionPercentage >= 65,
+    danger: consuptionPercentage > 85,
   };
   const colorClass = Object.keys(colorMapClass).reduceRight(
     (selectedColor, mapKey) => {
@@ -30,7 +34,7 @@ const Bucket = ({ category, currentValue, limitAmount }) => {
           <Row>
             <Col xs={12}>
               <progress
-                value={usagePercentage}
+                value={consuptionPercentage}
                 max={100}
                 className={colorClass}
               />
@@ -40,7 +44,7 @@ const Bucket = ({ category, currentValue, limitAmount }) => {
             <Col
               xs={12}
               className="usage-percentage"
-            >{`${usagePercentage.toFixed(2)}%`}</Col>
+            >{`${consuptionPercentage}%`}</Col>
           </Row>
         </Col>
       </Row>

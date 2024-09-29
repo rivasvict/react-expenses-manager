@@ -6,6 +6,7 @@ import ContentTileSection from "../../ContentTitleSection.js";
 import { Col, Row, Button, Container } from "react-bootstrap";
 import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import {
+  calculatePercentage,
   formatNumberForDisplay,
   getFilteredEntriesByCategory,
 } from "../../../../helpers/entriesHelper/entriesHelper.js";
@@ -53,18 +54,25 @@ const Buckets = ({ selectedDate, entries, history }) => {
     },
     {}
   );
+
+  /** TODO: Put into a separate util file */
   const monthlyBuckets = Object.keys(bucketsMap)
-    .map((bucketName) => ({
-      name: bucketName.toLowerCase(),
-      limit: bucketsMap[bucketName],
-      currentValue:
-        summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0,
-      label: bucketName,
-    }))
+    .map((bucketName) => {
+      const limit = bucketsMap[bucketName];
+      const currentValue =
+        summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0;
+      const consuptionPercentage = calculatePercentage(currentValue, limit);
+      return {
+        name: bucketName.toLowerCase(),
+        limit: bucketsMap[bucketName],
+        currentValue:
+          summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0,
+        label: bucketName,
+        consuptionPercentage,
+      };
+    })
     .sort((a, b) => {
-      const aPercentage = (a.currentValue / a.limit) * 100;
-      const bPercentage = (b.currentValue / b.limit) * 100;
-      return bPercentage - aPercentage;
+      return b.consuptionPercentage - a.consuptionPercentage;
     });
   const totalBucketAllocation = Object.keys(bucketsMap).reduce(
     (sum, bucketName) => bucketsMap[bucketName] + sum,
@@ -88,6 +96,7 @@ const Buckets = ({ selectedDate, entries, history }) => {
           category={bucket.label}
           limitAmount={bucket.limit}
           currentValue={bucket.currentValue}
+          consuptionPercentage={bucket.consuptionPercentage}
         />
       ))}
       <Container fluid>
@@ -97,7 +106,7 @@ const Buckets = ({ selectedDate, entries, history }) => {
               type="submit"
               variant="secondary"
               onClick={handleGoBack}
-              className="full"
+              className="cancel"
             >
               Go Back
             </Button>
