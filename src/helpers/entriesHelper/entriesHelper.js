@@ -34,6 +34,14 @@ const getDatedEntries = ({ entries, year, month }) => {
   return entries?.[year]?.[month] || { incomes: [], expenses: [] };
 };
 
+const calculatePercentage = (part, whole, numberOfDigits = 2) => {
+  if (!whole)
+    throw new Error(
+      `The whole of the part cannot be undefined or 0. got: ${whole}`
+    );
+  return parseFloat(((part / whole) * 100).toFixed(numberOfDigits));
+};
+
 /**
  * Calculates the percentage of each category's total amount relative to the total sum.
  *
@@ -53,7 +61,7 @@ const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
     const { amount: rawAmount, categories_path } = entry;
     const category = capitalize(categories_path.split(",")[1]);
     const amount = Math.abs(parseFloat(rawAmount));
-    const percentageAmount = (amount / totalSum) * 100;
+    const percentageAmount = calculatePercentage(amount, totalSum);
     return {
       ...consolidatedCategories,
       [category]:
@@ -117,21 +125,28 @@ function getEntryCategoryOption(entryType) {
   const incomeCategories = ["Salary", "Deposit", "Saving"];
 
   const expenseCategories = [
+    "House (Rent)",
+    "Transportation",
+    "Mobile phone plan",
+    "Subscriptions",
+    "Bank fees",
+    "Laundry",
+    "Internet",
+    "Hydro",
+    "Donation",
+    "Eating out",
+    "Fun activities",
     "Food",
     "Alcohol",
-    "Clothes",
-    "Fixed expenses",
-    "Health",
-    "House",
-    "House insurance",
-    "Electricity",
-    "Internet",
-    "Laundry",
-    "Others",
-    "Parents",
-    "Mobile",
-    "Tech",
-    "Transport",
+    "Travel",
+    "Sports",
+    "House stuff",
+    "Unexpected",
+    "Beauty",
+    "Cathy bucket",
+    "Victor bucket",
+    "Education",
+    "Insurance",
   ];
 
   const categoryOptions = {
@@ -325,4 +340,5 @@ export {
   getDatedEntries,
   getCategoryPercentagesFromEntries,
   getCurrentEmptyMonth,
+  calculatePercentage,
 };
