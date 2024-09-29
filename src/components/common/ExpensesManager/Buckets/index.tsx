@@ -4,7 +4,6 @@ import { Bucket } from "./components/index.ts";
 import "./styles.scss";
 import ContentTileSection from "../../ContentTitleSection.js";
 import { Col, Row, Button, Container } from "react-bootstrap";
-import ScreenTitle from "../../ScreenTitle.js";
 import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import {
   formatNumberForDisplay,
@@ -13,6 +12,7 @@ import {
 import { ENTRY_TYPES_PLURAL } from "../../../../constants.js";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { NavigableMonthHeader } from "../../NavigableMonthHeader/index.ts";
 const bucketsMap = {
   "Eating out": 300,
   Alcohol: 150,
@@ -70,6 +70,7 @@ const Buckets = ({ selectedDate, entries, history }) => {
     (sum, bucketName) => bucketsMap[bucketName] + sum,
     0
   );
+
   const handleGoBack = () => history.goBack();
   return (
     <MainContentContainer
@@ -80,19 +81,10 @@ const Buckets = ({ selectedDate, entries, history }) => {
       <ContentTileSection title="Summary">
         {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
       </ContentTileSection>
-      <Row className="month-header">
-        <Col xs={3}>
-          {true ? <Button onClick={() => {}}>Prev</Button> : null}
-        </Col>
-        <Col xs={6}>
-          <ScreenTitle screenTitle={screenTitle} />
-        </Col>
-        <Col xs={3}>
-          {true ? <Button onClick={() => {}}>Next</Button> : null}
-        </Col>
-      </Row>
-      {monthlyBuckets.map((bucket) => (
+      <NavigableMonthHeader />
+      {monthlyBuckets.map((bucket, index) => (
         <Bucket
+          key={`bucket-${bucket.name}-${bucket.limit}-${bucket.currentValue}-${index}`}
           category={bucket.label}
           limitAmount={bucket.limit}
           currentValue={bucket.currentValue}
