@@ -108,15 +108,8 @@ const Buckets = ({ selectedDate, entries, history }) => {
   );
 };
 
-// export default Buckets;
-
 const mapStateToProps = (state) => ({
-  // category: state.expensesManager.category,
   entries: state.expensesManager.entries,
 });
 
-const mapActionsToProps = (dispatch) => ({
-  // onCategoryChange: (event) => dispatch(categoryChange(event)),
-});
-
-export default connect(mapStateToProps, mapActionsToProps)(withRouter(Buckets));
+export default connect(mapStateToProps)(withRouter(Buckets));
