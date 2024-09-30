@@ -13,6 +13,9 @@ export const CLEAR_ALL_DATA = "CLEAR_ALL_DATA";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
 export const REMOVE_ENTRY = "REMOVE_ENTRY";
+export const GET_BUCKETS = "GET_BUCKETS";
+export const GET_BUCKET = "GET_BUCKET";
+export const EDIT_BUCKET = "SET_BUCKET";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -182,6 +185,61 @@ const ClearAllData =
     };
   };
 
+const GetBuckets =
+  ({ storage }) =>
+  ({ buckets }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const response = await storage.getBuckets({ buckets });
+        /** YOU NEED TO FIND A BETTER WAY TO INITIALIZE THIS VARIABLE IN src/services/storageSelector/LocalStorage/index.js:77 */
+        response?.length !== 0
+          ? dispatch({
+              type: GET_BUCKETS,
+              payload: { buckets: response },
+            })
+          : dispatch({ type: GET_BUCKETS });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const EditBucket =
+  ({ storage }) =>
+  ({ bucket }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const response = await storage.editBucket({ bucket });
+        dispatch({
+          type: EDIT_BUCKET,
+          payload: { buckets: response },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const GetBucket =
+  ({ storage }) =>
+  ({ bucketName }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const response = await storage.getBucket({ bucketName });
+        console.log(response);
+        dispatch(setAppLoading(false));
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
 export const ActionCreators = ({ storage, dataParser }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -195,5 +253,8 @@ export const ActionCreators = ({ storage, dataParser }) => {
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
     getBackupData: GetBackupData({ storage, dataParser }),
+    getBuckets: GetBuckets({ storage }),
+    editBucket: EditBucket({ storage }),
+    getBucket: GetBucket({ storage }),
   };
 };

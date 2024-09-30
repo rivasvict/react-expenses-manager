@@ -15,6 +15,7 @@ import { addViewHeightMobileConfig } from "../../helpers/general";
 import EditEntry from "../common/ExpensesManager/EditEntry";
 import DataManagement from "../common/ExpensesManager/DataManagement";
 import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
+import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -67,6 +68,10 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />
+            </Route>
+            {/** TODO: Work with a bucketId instead of a bucketName */}
+            <Route path={`${match.url}edit-bucket/:bucketName`}>
+              <EditBucket />
             </Route>
             <Route path={`${match.url}dashboard`}>
               <DashboardContent {...{ entries, match }} />

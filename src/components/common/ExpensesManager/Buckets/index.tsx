@@ -14,21 +14,8 @@ import { ENTRY_TYPES_PLURAL } from "../../../../constants.js";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { NavigableMonthHeader } from "../../NavigableMonthHeader/index.ts";
-const bucketsMap = {
-  "Eating out": 300,
-  Alcohol: 150,
-  "House stuff": 100,
-  Beauty: 100,
-  Transportation: 300,
-  "Fun activities": 200,
-  Unexpected: 300,
-  Sports: 250,
-  "Cathy bucket": 200,
-  "Victor bucket": 200,
-  Education: 86.45,
-};
 
-const Buckets = ({ selectedDate, entries, history }) => {
+const Buckets = ({ selectedDate, entries, history, buckets }) => {
   const screenTitle = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;
 
   /**
@@ -56,15 +43,15 @@ const Buckets = ({ selectedDate, entries, history }) => {
   );
 
   /** TODO: Put into a separate util file */
-  const monthlyBuckets = Object.keys(bucketsMap)
+  const monthlyBuckets = Object.keys(buckets)
     .map((bucketName) => {
-      const limit = bucketsMap[bucketName];
+      const limit = buckets[bucketName];
       const currentValue =
         summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0;
       const consuptionPercentage = calculatePercentage(currentValue, limit);
       return {
         name: bucketName.toLowerCase(),
-        limit: bucketsMap[bucketName],
+        limit: buckets[bucketName],
         currentValue:
           summarizedEntriesByCategory[`,${bucketName.toLowerCase()},`] || 0,
         label: bucketName,
@@ -74,12 +61,14 @@ const Buckets = ({ selectedDate, entries, history }) => {
     .sort((a, b) => {
       return b.consuptionPercentage - a.consuptionPercentage;
     });
-  const totalBucketAllocation = Object.keys(bucketsMap).reduce(
-    (sum, bucketName) => bucketsMap[bucketName] + sum,
+
+  const totalBucketAllocation = Object.keys(buckets).reduce(
+    (sum, bucketName) => buckets[bucketName] + sum,
     0
   );
 
   const handleGoBack = () => history.goBack();
+
   return (
     <MainContentContainer
       className="buckets-container"
@@ -119,6 +108,7 @@ const Buckets = ({ selectedDate, entries, history }) => {
 
 const mapStateToProps = (state) => ({
   entries: state.expensesManager.entries,
+  buckets: state.expensesManager.buckets,
 });
 
 export default connect(mapStateToProps)(withRouter(Buckets));
