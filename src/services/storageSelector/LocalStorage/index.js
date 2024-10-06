@@ -99,7 +99,7 @@ const LocalStorage = () => ({
        */
       return bucketKey.toLowerCase().replace(/\s/g, "-") === bucketName;
     });
-    const bucket = buckets[selectedBucketKey];
+    const bucket = { [selectedBucketKey]: buckets[selectedBucketKey] };
     return bucket;
   },
 });

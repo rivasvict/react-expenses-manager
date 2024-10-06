@@ -231,7 +231,6 @@ const GetBucket =
       try {
         dispatch(setAppLoading(true));
         const response = await storage.getBucket({ bucketName });
-        console.log(response);
         dispatch(setAppLoading(false));
         return response;
       } catch (error) {
