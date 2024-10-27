@@ -1,16 +1,9 @@
 import React from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Results from "../../../Results";
-import { getMonthNameDisplay } from "../../../../helpers/date";
-import {
-  getNewSelectedDate,
-  doesAdjacentDateExist,
-  calculateTotal,
-} from "../../../../helpers/general";
-import ScreenTitle from "../../../common/ScreenTitle";
+import { calculateTotal } from "../../../../helpers/general";
 import { connect } from "react-redux";
-import { setSelectedDate } from "../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getSum,
@@ -21,27 +14,9 @@ import ContentTileSection from "../../../common/ContentTitleSection";
 import { MainContentContainer } from "../../../common/MainContentContainer";
 import BalanceChart from "./components/BalanceChart";
 import ChartContainerRowWrapper from "../../../common/ChartContainerRowWrapper";
+import { NavigableMonthHeader } from "../../../common/NavigableMonthHeader/index.ts";
 
-const handleDateSelectionPointers = ({
-  entries,
-  selectedDate,
-  onSelectedDateChange,
-  dateAdjacencyType,
-}) =>
-  onSelectedDateChange(
-    getNewSelectedDate({
-      entries,
-      dateAdjacencyType,
-      currentSelectedDate: selectedDate,
-    })
-  );
-
-const DashboardContent = ({
-  entries,
-  match,
-  selectedDate,
-  onSelectedDateChange,
-}) => {
+const DashboardContent = ({ entries, match, selectedDate }) => {
   const monthBalance = (entries[selectedDate.year] &&
     entries[selectedDate.year][selectedDate.month]) || {
     incomes: [],
@@ -66,53 +41,7 @@ const DashboardContent = ({
         <IconRemote inLine={true} />
         {` ${formatNumberForDisplay(totalSum)}`}
       </ContentTileSection>
-      <Row className="month-header">
-        <Col xs={3}>
-          {doesAdjacentDateExist({
-            dateAdjacencyType: "prev",
-            selectedDate,
-            entries,
-          }) ? (
-            <Button
-              onClick={() =>
-                handleDateSelectionPointers({
-                  entries,
-                  selectedDate,
-                  onSelectedDateChange,
-                  dateAdjacencyType: "prev",
-                })
-              }
-            >
-              Prev
-            </Button>
-          ) : null}
-        </Col>
-        <Col xs={6}>
-          <ScreenTitle
-            screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`}
-          />
-        </Col>
-        <Col xs={3}>
-          {doesAdjacentDateExist({
-            dateAdjacencyType: "next",
-            selectedDate,
-            entries,
-          }) ? (
-            <Button
-              onClick={() =>
-                handleDateSelectionPointers({
-                  entries,
-                  selectedDate,
-                  onSelectedDateChange,
-                  dateAdjacencyType: "next",
-                })
-              }
-            >
-              Next
-            </Button>
-          ) : null}
-        </Col>
-      </Row>
+      <NavigableMonthHeader />
       <ChartContainerRowWrapper>
         <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
       </ChartContainerRowWrapper>
@@ -152,9 +81,4 @@ const mapStateToProps = (state) => ({
   selectedDate: state.expensesManager.selectedDate,
 });
 
-const mapActionsToProps = (dispatch) => ({
-  onSelectedDateChange: (newSelectedDate) =>
-    dispatch(setSelectedDate(newSelectedDate)),
-});
-
-export default connect(mapStateToProps, mapActionsToProps)(DashboardContent);
+export default connect(mapStateToProps)(DashboardContent);
