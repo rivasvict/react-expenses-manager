@@ -35,7 +35,6 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
   const saveBucket = async (editedBucketValue) => {
     try {
       await onEditBucket({ bucket: editedBucketValue });
-      history.goBack();
     } catch (error) {
       throw error;
     }
