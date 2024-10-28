@@ -30,7 +30,7 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
       const [name, value] = Object.entries(bucketFromDb)[0];
       setBucket({ name, value });
     })();
-  }, []);
+  }, [bucketName, onGetBucket]);
 
   const saveBucket = async (editedBucketValue) => {
     try {
@@ -107,8 +107,6 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
     </MainContentContainer>
   );
 };
-
-const mapStateToProps = (state) => ({ buckets: state.expensesManager.buckets });
 
 const mapActionsToProps = (dispatch) => ({
   onGetBucket: ({ bucketName }) => dispatch(getBucket({ bucketName })),
