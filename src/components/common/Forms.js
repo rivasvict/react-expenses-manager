@@ -35,7 +35,7 @@ const FormSelect = (props) => (
   </Form.Control>
 );
 
-const FormContent = ({ children, render, formProps = {}, className }) => (
+const FormContent = ({ children, render, formProps = {} }) => (
   <Container className="form-container" fluid>
     <Row as={Form} {...formProps}>
       {render ? render() : children}

@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import "./styles.scss";
 import { formatNumberForDisplay } from "../../../../../../helpers/entriesHelper/entriesHelper";
+import RowLink from "../../../../RowLink";
 
 const Bucket = ({
   category,
@@ -25,7 +26,11 @@ const Bucket = ({
 
   return (
     <>
-      <Row className="bucket-container">
+      <RowLink
+        to={`edit-bucket/${category.toLowerCase().replace(/\s/g, "-")}`}
+        title={`Edit ${category}`}
+        className="bucket-container"
+      >
         <Col>
           <Row className="bucket-legend">
             <Col>{category}</Col>
@@ -47,7 +52,7 @@ const Bucket = ({
             >{`${consuptionPercentage}%`}</Col>
           </Row>
         </Col>
-      </Row>
+      </RowLink>
       <hr />
     </>
   );

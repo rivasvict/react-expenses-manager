@@ -11,11 +11,32 @@ import {
   REMOVE_ENTRY,
   SET_BALANCE,
   CLEAR_ALL_DATA,
+  GET_BUCKETS,
+  EDIT_BUCKET,
 } from "./actions";
 
 const initialState = {
   entries: {},
   category: "",
+  /** TODO: When buckets will be fully implemented,
+   * make sure these values do not exist and this
+   * `buckets` object is empty. The buckets are
+   * meant to be added by the user and stored for
+   * later retrieval
+   */
+  buckets: {
+    "Eating out": 300,
+    Alcohol: 150,
+    "House stuff": 100,
+    Beauty: 100,
+    Transportation: 300,
+    "Fun activities": 200,
+    Unexpected: 300,
+    Sports: 250,
+    "Cathy bucket": 200,
+    "Victor bucket": 200,
+    Education: 86.45,
+  },
   selectedDate: {
     // Current month and year by default
     // So the app is always up to date
@@ -123,6 +144,24 @@ export const reducer = (state = initialState, action) => {
         entries: {
           ...state.entries,
           ...payload.entries,
+        },
+      };
+    case GET_BUCKETS:
+      return payload
+        ? {
+            ...state,
+            buckets: {
+              ...state.buckets,
+              ...payload.buckets,
+            },
+          }
+        : state;
+    case EDIT_BUCKET:
+      return {
+        ...state,
+        buckets: {
+          ...state.buckets,
+          ...payload.buckets,
         },
       };
     default:
