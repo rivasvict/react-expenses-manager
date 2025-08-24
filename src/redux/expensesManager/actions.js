@@ -155,7 +155,7 @@ const GetBackupData =
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        const balance = storage.getBalance();
+        const balance = await storage.getBalance();
         const csvBackup = dataParser.jsonToCsv({ json: balance });
         dispatch(setAppLoading(false));
 
