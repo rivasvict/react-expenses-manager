@@ -34,8 +34,8 @@ const initialState = {
     "Fun activities": 200,
     Unexpected: 300,
     Sports: 250,
-    "Cathy bucket": 200,
-    "Victor bucket": 200,
+    "Person 1 bucket": 200,
+    "Person 2 bucket": 200,
     Education: 86.45,
   },
   selectedDate: {

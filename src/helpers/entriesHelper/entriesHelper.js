@@ -143,8 +143,8 @@ function getEntryCategoryOption(entryType) {
     "House stuff",
     "Unexpected",
     "Beauty",
-    "Cathy bucket",
-    "Victor bucket",
+    "Person 1 bucket",
+    "Person 2 bucket",
     "Education",
     "Insurance",
   ];
