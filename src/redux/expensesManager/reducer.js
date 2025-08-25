@@ -37,6 +37,7 @@ const initialState = {
     "Person 1 bucket": 200,
     "Person 2 bucket": 200,
     Education: 86.45,
+    "Baby stuff": 350,
   },
   selectedDate: {
     // Current month and year by default

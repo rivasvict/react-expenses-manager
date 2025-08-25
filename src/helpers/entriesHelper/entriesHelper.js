@@ -146,7 +146,14 @@ function getEntryCategoryOption(entryType) {
     "Person 1 bucket",
     "Person 2 bucket",
     "Education",
-    "Insurance",
+    "Insurance House",
+    "Health",
+    "Baby Stuff",
+    "Car",
+    "Car parking",
+    "Car insurance",
+    "Gas",
+    "Car expenses",
   ];
 
   const categoryOptions = {
