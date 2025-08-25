@@ -156,11 +156,23 @@ const GetBackupData =
       try {
         dispatch(setAppLoading(true));
         const balance = await storage.getBalance();
-        const csvBackup = dataParser.jsonToCsv({ json: balance });
+        const balanceCsv = dataParser.jsonToCsv({ json: balance });
+
+        const buckets = await storage.getBuckets();
+        const bucketsCsv = dataParser.jsonToCsv({ json: buckets });
+
         dispatch(setAppLoading(false));
 
-        const fileName = `balance-backup-${getCurrentTimestamp()}`;
-        return { csvContent: csvBackup, fileName };
+        const ts = getCurrentTimestamp();
+        const balanceFileName = `balance-backup-${ts}.csv`;
+        const bucketsFileName = `buckets-backup-${ts}.csv`;
+
+        return {
+          balanceCsv,
+          balanceFileName,
+          bucketsCsv,
+          bucketsFileName,
+        };
       } catch (error) {
         console.log(error);
       }

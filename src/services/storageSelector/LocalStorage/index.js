@@ -70,9 +70,13 @@ const LocalStorage = () => ({
     storeBalanceInLocalStorage(newBalance);
     return newBalance;
   },
-  getBuckets: async ({ buckets }) => {
+  getBuckets: async ({ buckets } = {}) => {
     const bucketsFromLocalStorage = await getBucketsFromLocalStorage();
-    if (!buckets && !bucketsFromLocalStorage?.length)
+    const isBucketsFromLocalStorageEmpty =
+      bucketsFromLocalStorage === null ||
+      (bucketsFromLocalStorage.constructor === Object &&
+        Object.keys(bucketsFromLocalStorage).length === 0);
+    if (!buckets && isBucketsFromLocalStorageEmpty)
       throw new Error("No buckets were set");
     /** YOU NEED TO FIND A BETTER WAY TO INITIALIZE THIS VARIABLE */
     if (bucketsFromLocalStorage?.length !== 0) return bucketsFromLocalStorage;
