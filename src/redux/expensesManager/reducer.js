@@ -13,6 +13,7 @@ import {
   CLEAR_ALL_DATA,
   GET_BUCKETS,
   EDIT_BUCKET,
+  SET_BUCKETS,
 } from "./actions";
 
 const initialState = {
@@ -157,6 +158,14 @@ export const reducer = (state = initialState, action) => {
           }
         : state;
     case EDIT_BUCKET:
+      return {
+        ...state,
+        buckets: {
+          ...state.buckets,
+          ...payload.buckets,
+        },
+      };
+    case SET_BUCKETS:
       return {
         ...state,
         buckets: {

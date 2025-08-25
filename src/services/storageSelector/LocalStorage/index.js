@@ -31,6 +31,14 @@ const storeBucketsInLocalStorage = storeInLocalStorageFactory({
   itemType: BUCKET,
 });
 
+const editBucketData = async ({ bucketData }) => {
+  if (!bucketData) throw new Error("No bucket data was set");
+  const storedBuckets = await getBucketsFromLocalStorage();
+  const newBuckets = { ...storedBuckets, ...bucketData };
+  await storeBucketsInLocalStorage({ data: newBuckets });
+  return newBuckets;
+};
+
 const LocalStorage = () => ({
   getBalance: () => getBalanceFromLocalStorage(),
   setBalance: ({ balance }) => storeBalanceInLocalStorage({ data: balance }),
@@ -70,9 +78,13 @@ const LocalStorage = () => ({
     storeBalanceInLocalStorage(newBalance);
     return newBalance;
   },
-  getBuckets: async ({ buckets }) => {
+  getBuckets: async ({ buckets } = {}) => {
     const bucketsFromLocalStorage = await getBucketsFromLocalStorage();
-    if (!buckets && !bucketsFromLocalStorage?.length)
+    const isBucketsFromLocalStorageEmpty =
+      bucketsFromLocalStorage === null ||
+      (bucketsFromLocalStorage.constructor === Object &&
+        Object.keys(bucketsFromLocalStorage).length === 0);
+    if (!buckets && isBucketsFromLocalStorageEmpty)
       throw new Error("No buckets were set");
     /** YOU NEED TO FIND A BETTER WAY TO INITIALIZE THIS VARIABLE */
     if (bucketsFromLocalStorage?.length !== 0) return bucketsFromLocalStorage;
@@ -80,11 +92,10 @@ const LocalStorage = () => ({
     return getBucketsFromLocalStorage();
   },
   editBucket: async ({ bucket }) => {
-    if (!bucket) throw new Error("No bucket was set");
-    const storedBuckets = await getBucketsFromLocalStorage();
-    const newBuckets = { ...storedBuckets, ...bucket };
-    await storeBucketsInLocalStorage({ data: newBuckets });
-    return newBuckets;
+    return editBucketData({ bucketData: bucket });
+  },
+  editBuckets: async ({ buckets }) => {
+    return editBucketData({ bucketData: buckets });
   },
   getBucket: async ({ bucketName }) => {
     const buckets = await getBucketsFromLocalStorage();

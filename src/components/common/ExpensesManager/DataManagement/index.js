@@ -10,6 +10,9 @@ import { withRouter } from "react-router-dom";
 import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
 import { FileButton } from "./components";
+import jszipModule from "jszip";
+import { getCurrentTimestamp } from "../../../../helpers/date";
+
 import "./styles.scss";
 
 const DataManagement = ({
@@ -24,19 +27,44 @@ const DataManagement = ({
 
   const handleBackup = async () => {
     try {
-      const { csvContent, fileName } = await onGetBackupData();
-      downloadFileFromData(csvContent, {
-        fileName,
+      const { balanceCsv, balanceFileName, bucketsCsv, bucketsFileName } =
+        await onGetBackupData();
+
+      // Create a zip containing both CSV files and trigger download.
+      const JSZip = jszipModule.default ?? jszipModule;
+      const zip = new JSZip();
+
+      zip.file(balanceFileName || "balance.csv", balanceCsv);
+      zip.file(bucketsFileName || "buckets.csv", bucketsCsv);
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const ts = getCurrentTimestamp();
+      const zipFileName = `backup_${ts}`;
+
+      return downloadFileFromData(zipBlob, {
+        fileName: zipFileName,
+        extension: "zip",
+        mimeType: "application/zip",
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleUpload = async (event) => {
+  const handleUploadEntries = async (event) => {
     try {
       const file = event.target.files[0];
-      await onUploadBackup({ file });
+      await onUploadBackup({ file, type: "balance" });
+      goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUploadBuckets = async (event) => {
+    try {
+      const file = event.target.files[0];
+      await onUploadBackup({ file, type: "buckets" });
       goBack();
     } catch (error) {
       console.log(error);
@@ -60,7 +88,7 @@ const DataManagement = ({
           <Row>
             <Col>
               <Button type="submit" variant="primary" onClick={handleBackup}>
-                Download Backup File
+                Download Backup Data
               </Button>
             </Col>
           </Row>
@@ -69,9 +97,20 @@ const DataManagement = ({
               <FileButton
                 type="submit"
                 variant="secondary"
-                onClick={handleUpload}
+                onClick={handleUploadEntries}
               >
-                Restore Backup From File
+                Restore Income/Expenses Data
+              </FileButton>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FileButton
+                type="submit"
+                variant="secondary"
+                onClick={handleUploadBuckets}
+              >
+                Restore Buckets Data
               </FileButton>
             </Col>
           </Row>
@@ -103,7 +142,7 @@ const DataManagement = ({
 
 const mapActionsToProps = (dispatch) => ({
   onGetBackupData: () => dispatch(getBackupData()),
-  onUploadBackup: ({ file }) => dispatch(uploadBackup({ file })),
+  onUploadBackup: ({ file, type }) => dispatch(uploadBackup({ file, type })),
   onClearAllData: () => dispatch(clearAllData()),
 });
 

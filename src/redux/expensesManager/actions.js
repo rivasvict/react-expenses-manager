@@ -14,6 +14,7 @@ export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
 export const REMOVE_ENTRY = "REMOVE_ENTRY";
 export const GET_BUCKETS = "GET_BUCKETS";
+export const SET_BUCKETS = "SET_BUCKETS";
 export const GET_BUCKET = "GET_BUCKET";
 export const EDIT_BUCKET = "SET_BUCKET";
 
@@ -67,7 +68,7 @@ const GetBalance =
     };
   };
 
-const UploadBackup =
+const UploadBalanceBackup =
   ({ storage, dataParser }) =>
   ({ file }) => {
     return async (dispatch) => {
@@ -86,6 +87,48 @@ const UploadBackup =
         console.log(error);
       }
     };
+  };
+
+const UploadBucketsBackup =
+  ({ storage, dataParser }) =>
+  ({ file }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const bucketsData = await getDataFromFile({ dataParser })({ file });
+        // We know that buckets is an array with a single object
+        const [rawBuckets] = bucketsData;
+        // We need to ensure that all bucket values are numbers
+        const buckets = Object.fromEntries(
+          Object.entries(rawBuckets).map(([k, v]) => {
+            const n = Number(v);
+            return [k, Number.isNaN(n) ? 0 : n];
+          })
+        );
+        const response = await storage.editBuckets({ buckets });
+        dispatch({
+          type: SET_BUCKETS,
+          payload: { buckets: response },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const uploadCallbackMap = {
+  balance: UploadBalanceBackup,
+  buckets: UploadBucketsBackup,
+};
+
+const UploadBackup =
+  ({ storage, dataParser }) =>
+  ({ file, type }) => {
+    const uploadCallback = uploadCallbackMap[type];
+    if (uploadCallback) {
+      return uploadCallback({ storage, dataParser })({ file });
+    }
   };
 
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
@@ -156,11 +199,23 @@ const GetBackupData =
       try {
         dispatch(setAppLoading(true));
         const balance = await storage.getBalance();
-        const csvBackup = dataParser.jsonToCsv({ json: balance });
+        const balanceCsv = dataParser.jsonToCsv({ json: balance });
+
+        const buckets = await storage.getBuckets();
+        const bucketsCsv = dataParser.jsonToCsv({ json: buckets });
+
         dispatch(setAppLoading(false));
 
-        const fileName = `balance-backup-${getCurrentTimestamp()}`;
-        return { csvContent: csvBackup, fileName };
+        const ts = getCurrentTimestamp();
+        const balanceFileName = `balance-backup-${ts}.csv`;
+        const bucketsFileName = `buckets-backup-${ts}.csv`;
+
+        return {
+          balanceCsv,
+          balanceFileName,
+          bucketsCsv,
+          bucketsFileName,
+        };
       } catch (error) {
         console.log(error);
       }
