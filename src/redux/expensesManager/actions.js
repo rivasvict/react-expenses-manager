@@ -104,9 +104,7 @@ const UploadBucketsBackup =
             return [k, Number.isNaN(n) ? 0 : n];
           })
         );
-        // TODO: Make we use proper editBuckets and buckets function and object's attribute
-        // This is in order to make sure we have consistent naming conventions
-        const response = await storage.editBucket({ bucket: buckets });
+        const response = await storage.editBuckets({ buckets });
         dispatch({
           type: SET_BUCKETS,
           payload: { buckets: response },

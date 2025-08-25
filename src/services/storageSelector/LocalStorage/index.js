@@ -31,6 +31,14 @@ const storeBucketsInLocalStorage = storeInLocalStorageFactory({
   itemType: BUCKET,
 });
 
+const editBucketData = async ({ bucketData }) => {
+  if (!bucketData) throw new Error("No bucket data was set");
+  const storedBuckets = await getBucketsFromLocalStorage();
+  const newBuckets = { ...storedBuckets, ...bucketData };
+  await storeBucketsInLocalStorage({ data: newBuckets });
+  return newBuckets;
+};
+
 const LocalStorage = () => ({
   getBalance: () => getBalanceFromLocalStorage(),
   setBalance: ({ balance }) => storeBalanceInLocalStorage({ data: balance }),
@@ -84,12 +92,10 @@ const LocalStorage = () => ({
     return getBucketsFromLocalStorage();
   },
   editBucket: async ({ bucket }) => {
-    console.log("bucket to edit", bucket);
-    if (!bucket) throw new Error("No bucket was set");
-    const storedBuckets = await getBucketsFromLocalStorage();
-    const newBuckets = { ...storedBuckets, ...bucket };
-    await storeBucketsInLocalStorage({ data: newBuckets });
-    return newBuckets;
+    return editBucketData({ bucketData: bucket });
+  },
+  editBuckets: async ({ buckets }) => {
+    return editBucketData({ bucketData: buckets });
   },
   getBucket: async ({ bucketName }) => {
     const buckets = await getBucketsFromLocalStorage();
