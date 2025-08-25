@@ -14,6 +14,7 @@ const WithBalance = ({ onGetBalance, children, onGetBuckets, buckets }) => {
     onGetBalance();
     /** Get/set buckets from redux */
     onGetBuckets({ buckets });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return children;
 };
