@@ -84,6 +84,7 @@ const LocalStorage = () => ({
     return getBucketsFromLocalStorage();
   },
   editBucket: async ({ bucket }) => {
+    console.log("bucket to edit", bucket);
     if (!bucket) throw new Error("No bucket was set");
     const storedBuckets = await getBucketsFromLocalStorage();
     const newBuckets = { ...storedBuckets, ...bucket };

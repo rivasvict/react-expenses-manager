@@ -14,6 +14,7 @@ export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
 export const REMOVE_ENTRY = "REMOVE_ENTRY";
 export const GET_BUCKETS = "GET_BUCKETS";
+export const SET_BUCKETS = "SET_BUCKETS";
 export const GET_BUCKET = "GET_BUCKET";
 export const EDIT_BUCKET = "SET_BUCKET";
 
@@ -67,7 +68,7 @@ const GetBalance =
     };
   };
 
-const UploadBackup =
+const UploadBalanceBackup =
   ({ storage, dataParser }) =>
   ({ file }) => {
     return async (dispatch) => {
@@ -86,6 +87,49 @@ const UploadBackup =
         console.log(error);
       }
     };
+  };
+
+const UploadBucketsBackup =
+  ({ storage, dataParser }) =>
+  ({ file }) => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const bucketsData = await getDataFromFile({ dataParser })({ file });
+        // We know that buckets is an array with a single object
+        const [rawBuckets] = bucketsData;
+        const buckets = Object.fromEntries(
+          Object.entries(rawBuckets).map(([k, v]) => {
+            const n = Number(v);
+            return [k, Number.isNaN(n) ? 0 : n];
+          })
+        );
+        // TODO: Make we use proper editBuckets and buckets function and object's attribute
+        // This is in order to make sure we have consistent naming conventions
+        const response = await storage.editBucket({ bucket: buckets });
+        dispatch({
+          type: SET_BUCKETS,
+          payload: { buckets: response },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+const uploadCallbackMap = {
+  balance: UploadBalanceBackup,
+  buckets: UploadBucketsBackup,
+};
+
+const UploadBackup =
+  ({ storage, dataParser }) =>
+  ({ file, type }) => {
+    const uploadCallback = uploadCallbackMap[type];
+    if (uploadCallback) {
+      return uploadCallback({ storage, dataParser })({ file });
+    }
   };
 
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {

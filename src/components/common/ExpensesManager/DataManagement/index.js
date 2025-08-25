@@ -54,7 +54,7 @@ const DataManagement = ({
   const handleUploadEntries = async (event) => {
     try {
       const file = event.target.files[0];
-      await onUploadBackup({ file });
+      await onUploadBackup({ file, type: "balance" });
       goBack();
     } catch (error) {
       console.log(error);
@@ -62,7 +62,13 @@ const DataManagement = ({
   };
 
   const handleUploadBuckets = async (event) => {
-    console.log("Upload Buckets - To be implemented");
+    try {
+      const file = event.target.files[0];
+      await onUploadBackup({ file, type: "buckets" });
+      goBack();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClearAllData = () => {
@@ -136,7 +142,7 @@ const DataManagement = ({
 
 const mapActionsToProps = (dispatch) => ({
   onGetBackupData: () => dispatch(getBackupData()),
-  onUploadBackup: ({ file }) => dispatch(uploadBackup({ file })),
+  onUploadBackup: ({ file, type }) => dispatch(uploadBackup({ file, type })),
   onClearAllData: () => dispatch(clearAllData()),
 });
 
