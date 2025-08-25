@@ -98,6 +98,7 @@ const UploadBucketsBackup =
         const bucketsData = await getDataFromFile({ dataParser })({ file });
         // We know that buckets is an array with a single object
         const [rawBuckets] = bucketsData;
+        // We need to ensure that all bucket values are numbers
         const buckets = Object.fromEntries(
           Object.entries(rawBuckets).map(([k, v]) => {
             const n = Number(v);
