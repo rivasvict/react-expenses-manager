@@ -65,3 +65,4 @@ Node version is pinned in `.nvmrc`.
 
 * Make sure to run `npm test -- --testPathPattern="integrationTests"` on every edition such that we make sure no functionality is broken.
 * Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
+* Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).
