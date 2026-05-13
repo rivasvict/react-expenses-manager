@@ -74,13 +74,7 @@ describe("navigation", () => {
     expect(await screen.findByText("May 2026")).toBeInTheDocument();
   });
 
-  // TODO: BUG — getEntriesWithFilledDates (src/helpers/entriesHelper/entriesHelper.js) uses
-  // `while (pointerYear <= endYear && pointerMonth <= endMonth)` which exits immediately when
-  // the seed entry's month index is greater than the current month's index but in a prior year
-  // (e.g., November 2025 month=10 > May 2026 month=4 → 10 <= 4 is false so the loop never runs).
-  // As a result, months between November 2025 and May 2026 are never filled, and the Prev arrow
-  // does not appear on the dashboard. Re-enable once the while condition is fixed.
-  it.skip("shows empty months between the earliest entry and the current month", async () => {
+  it("shows empty months between the earliest entry and the current month", async () => {
     // Seed a single entry in November 2025 — the app should fill Dec 2025 → May 2026 as empty months
     seedEntries([
       { date: ts(2025, 10), amount: "200", type: "expense", categories_path: ",food," },

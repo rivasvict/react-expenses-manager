@@ -282,7 +282,7 @@ const getEntriesWithFilledDates =
       }
     };
 
-    while (pointerYear <= endYear && pointerMonth <= endMonth) {
+    while (pointerYear < endYear || (pointerYear === endYear && pointerMonth <= endMonth)) {
       const currentEntriesYear = entries[pointerYear];
       if (!currentEntriesYear) {
         fillAYearOfMonthsWithEmptyEntries();
