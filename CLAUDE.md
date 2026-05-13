@@ -9,7 +9,9 @@ npm start          # Dev server at http://localhost:3000
 npm test           # Run tests in watch mode
 npm test -- --watchAll=false  # Run tests once (CI mode)
 npm test -- -t "test name"    # Run a single test by name
+npm test -- --testPathPattern="integrationTests"
 npm run build      # Production build
+npm run typecheck  # TypeScript type check (no emit)
 npm run lint       # Check linting
 npm run lint:fix   # Auto-fix lint issues
 ```
@@ -58,3 +60,9 @@ Node version is pinned in `.nvmrc`.
 - Action creators are injected via `mapActionToProps` — components never import storage directly
 - Categories are hardcoded in `src/helpers/entriesHelper/entriesHelper.js` (`getEntryCategoryOption`) and must match the bucket names in the reducer's `initialState`
 - Mixed JS/TS: existing JS files stay `.js`; new components use `.tsx`. TypeScript errors in JSX are sometimes suppressed with `{/* @ts-expect-error */}` or `{/** @ts-ignore */}`
+
+## General guidelines for development
+
+* Make sure to run `npm test -- --testPathPattern="integrationTests"` on every edition such that we make sure no functionality is broken.
+* Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
+* Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).

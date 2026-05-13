@@ -135,9 +135,9 @@ const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      await storage.setNewRecord(entry);
+      const savedEntry = await storage.setNewRecord(entry);
       // TODO: Revisit this against the pattern of action creators
-      dispatch({ type, payload: { entry, selectedDate } });
+      dispatch({ type, payload: { entry: savedEntry, selectedDate } });
       dispatch(setAppLoading(false));
     } catch (error) {
       console.log(error);

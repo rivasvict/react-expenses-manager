@@ -39,6 +39,7 @@
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect=0.0.0.0 test --runInBand --no-cache",
     "eject": "react-scripts eject",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix"
   },
@@ -57,8 +58,16 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@iconify-icons/)"
+    ]
+  },
   "devDependencies": {
     "@iconify-icons/codicon": "^1.1.26",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
     "prettier": "^3.3.3"

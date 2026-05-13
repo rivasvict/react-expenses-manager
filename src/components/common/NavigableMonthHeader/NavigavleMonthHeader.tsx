@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import {
   doesAdjacentDateExist,
   handleDateSelectionPointers,
-} from "./utils/index.ts";
+} from "./utils/index";
 
 const NavigableMonthHeader = ({
   entries,
