@@ -1,6 +1,6 @@
 import React from "react";
 import { MainContentContainer } from "../../MainContentContainer";
-import { Bucket } from "./components/index.ts";
+import { Bucket } from "./components/index";
 import "./styles.scss";
 import ContentTileSection from "../../ContentTitleSection.js";
 import { Col, Row, Button, Container } from "react-bootstrap";
@@ -13,7 +13,7 @@ import {
 import { ENTRY_TYPES_PLURAL } from "../../../../constants.js";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { NavigableMonthHeader } from "../../NavigableMonthHeader/index.ts";
+import { NavigableMonthHeader } from "../../NavigableMonthHeader/index";
 
 const Buckets = ({ selectedDate, entries, history, buckets }) => {
   const screenTitle = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;

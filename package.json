@@ -39,6 +39,7 @@
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect=0.0.0.0 test --runInBand --no-cache",
     "eject": "react-scripts eject",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix"
   },

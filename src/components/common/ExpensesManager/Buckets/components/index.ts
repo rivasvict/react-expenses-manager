@@ -1,1 +1,1 @@
-export { default as Bucket } from "./Bucket/index.tsx";
+export { default as Bucket } from "./Bucket/index";

@@ -1,1 +1,1 @@
-export { default as EditBucket } from "./EditBucket.tsx";
+export { default as EditBucket } from "./EditBucket";

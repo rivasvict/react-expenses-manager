@@ -1,1 +1,1 @@
-export { default as NavigableMonthHeader } from "./NavigavleMonthHeader.tsx";
+export { default as NavigableMonthHeader } from "./NavigavleMonthHeader";

@@ -11,6 +11,7 @@ npm test -- --watchAll=false  # Run tests once (CI mode)
 npm test -- -t "test name"    # Run a single test by name
 npm test -- --testPathPattern="integrationTests"
 npm run build      # Production build
+npm run typecheck  # TypeScript type check (no emit)
 npm run lint       # Check linting
 npm run lint:fix   # Auto-fix lint issues
 ```
@@ -63,3 +64,4 @@ Node version is pinned in `.nvmrc`.
 ## General guidelines for development
 
 * Make sure to run `npm test -- --testPathPattern="integrationTests"` on every edition such that we make sure no functionality is broken.
+* Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
