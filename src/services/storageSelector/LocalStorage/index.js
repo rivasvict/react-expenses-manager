@@ -46,8 +46,10 @@ const LocalStorage = () => ({
   setNewRecord: async (entry) => {
     if (!entry) throw new Error("No entry was added");
     const balance = await getBalanceFromLocalStorage();
-    const newBalance = [...balance, { ...entry, id: uuidv4() }];
+    const newEntry = { ...entry, id: uuidv4() };
+    const newBalance = [...balance, newEntry];
     storeBalanceInLocalStorage({ data: newBalance });
+    return newEntry;
   },
   getEntryById: async (entryId) => {
     const balance = await getBalanceFromLocalStorage();

@@ -50,12 +50,7 @@ describe("entry creation", () => {
     expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
   });
 
-  // TODO: BUG — After AddEntry submits, dispatch(ADD_OUTCOME) is called with
-  // the entry object before storage.setNewRecord() assigns a UUID, so the entry
-  // lands in Redux with id=undefined. Clicking it navigates to
-  // /edit-expense/undefined, which renders "Entry not found".
-  // Re-enable once the action creator returns and dispatches the UUID from storage.
-  it.skip("user can edit an entry immediately after creating it", async () => {
+  it("user can edit an entry immediately after creating it", async () => {
     const { user } = await renderApp("/");
 
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
