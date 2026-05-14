@@ -314,10 +314,13 @@ const getEntriesWithFilledDates =
  * @param {Arrat<Objec>} entries - Array of entries
  */
 const getGroupedFilledEntriesByDate = () => (entries) => {
+  if (!entries.length) {
+    return getCurrentEmptyMonth();
+  }
   const groupedEntriesByDate = getGroupEntriesByDate()(entries);
   return getEntriesWithFilledDates()({
     entries: groupedEntriesByDate,
-    firstEntryDate: entries.length && entries[0].date,
+    firstEntryDate: entries[0].date,
   });
 };
 
