@@ -15,6 +15,15 @@ afterEach(() => {
 });
 
 describe("navigation", () => {
+  it("does not show a Prev button when there is no data", async () => {
+    // localStorage has no entries — the app should show only the current month
+    // with no possibility to navigate to previous months
+    await renderApp("/");
+
+    await screen.findByText("May 2026");
+    expect(screen.queryByRole("button", { name: /prev/i })).not.toBeInTheDocument();
+  });
+
   it("shows the current month (May 2026) when opening the app", async () => {
     seedEntries([
       { date: ts(2026, MAY), amount: "100", type: "income", categories_path: ",salary," },
