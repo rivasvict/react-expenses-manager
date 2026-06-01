@@ -42,15 +42,17 @@ const AddEntry = ({
 
   const handleSubmit = (event, { entryToAdd }) => {
     event.preventDefault();
-    const entry = Object.assign({}, entryToAdd);
+    const entry = {
+      ...entryToAdd,
+      date: getTimestampFromMonthAndYear({
+        month: selectedDate.month,
+        year: selectedDate.year,
+      }),
+    };
     const digitMatcher = /^\d*(\.)*\d+$/;
     const amount = entry.amount;
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
-      entry.date = getTimestampFromMonthAndYear({
-        month: selectedDate.month,
-        year: selectedDate.year,
-      });
       handleEntry({ entry, selectedDate });
       navigateBack();
     }
