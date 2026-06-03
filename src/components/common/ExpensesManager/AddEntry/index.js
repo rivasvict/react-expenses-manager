@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { getCurrentTimestamp } from "../../../../helpers/date";
+import { getTimestampFromMonthAndYear } from "../../../../helpers/date";
 import { getEntryModel } from "../../../../helpers/entriesHelper/entriesHelper";
 import EntryForm from "../EntryForm";
 import { withRouter } from "react-router-dom";
@@ -26,16 +26,7 @@ const AddEntry = ({
   onAddExpense,
   history,
 }) => {
-  const newEntry = getEntryModel({
-    entryType,
-    // TODO: Make sure the date calculation takes the hours and seconds into account
-    // also, make sure the timestamp calculation happens at the actual entry creation
-    // Not at the component rendering time
-    timestamp: getCurrentTimestamp({
-      month: selectedDate.month,
-      year: selectedDate.year,
-    }),
-  });
+  const newEntry = getEntryModel({ entryType });
 
   const navigateBack = () => {
     history.goBack();
@@ -51,7 +42,13 @@ const AddEntry = ({
 
   const handleSubmit = (event, { entryToAdd }) => {
     event.preventDefault();
-    const entry = Object.assign({}, entryToAdd);
+    const entry = {
+      ...entryToAdd,
+      date: getTimestampFromMonthAndYear({
+        month: selectedDate.month,
+        year: selectedDate.year,
+      }),
+    };
     const digitMatcher = /^\d*(\.)*\d+$/;
     const amount = entry.amount;
     // TODO: review the validation for the missing category

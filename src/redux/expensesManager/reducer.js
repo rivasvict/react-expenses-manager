@@ -16,7 +16,7 @@ import {
   SET_BUCKETS,
 } from "./actions";
 
-const initialState = {
+const staticInitialState = {
   entries: {},
   category: "",
   /** TODO: When buckets will be fully implemented,
@@ -39,14 +39,14 @@ const initialState = {
     Education: 86.45,
     "Baby stuff": 350,
   },
-  selectedDate: {
-    // Current month and year by default
-    // So the app is always up to date
-    // when it first load
-    month: getCurrentMonth(),
-    year: getCurrentYear(),
-  },
 };
+
+// selectedDate must be evaluated lazily (inside the reducer, not at module-load
+// time) so that tests using jest.setSystemTime() see the fake clock value.
+const getInitialSelectedDate = () => ({
+  month: getCurrentMonth(),
+  year: getCurrentYear(),
+});
 
 const getEntryWithCalculableAmount = (entry) => ({
   amount: parseFloat(entry.amount),
@@ -84,7 +84,10 @@ const changeSelectedDate = ({ newSelectedDateValue, currentState }) => {
   return { ...currentState, selectedDate: newSelectedDateValue };
 };
 
-export const reducer = (state = initialState, action) => {
+export const reducer = (state, action) => {
+  if (state === undefined) {
+    state = { ...staticInitialState, selectedDate: getInitialSelectedDate() };
+  }
   const { type, payload } = action;
   switch (type) {
     case ADD_OUTCOME:
