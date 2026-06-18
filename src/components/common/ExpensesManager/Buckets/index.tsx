@@ -84,7 +84,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
         />
       ))}
       <Container fluid>
-        <Row>
+        <Row className="vertical-standard-space">
           <Col>
             <Link
               to="/add-bucket"

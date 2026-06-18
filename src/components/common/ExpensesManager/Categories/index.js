@@ -42,7 +42,7 @@ const Categories = ({ buckets, categories, history }) => {
         })}
       </ListGroup>
       <Container fluid>
-        <Row>
+        <Row className="vertical-standard-space">
           <Col>
             <Link
               to="/add-category"
