@@ -325,6 +325,141 @@ const getGroupedFilledEntriesByDate = () => (entries) => {
 };
 
 /**
+ * Sums the expense amounts of a single month grouped by bucket.
+ *
+ * Spending for a bucket is the accumulated amount of every expense whose
+ * `categories_path` matches the (lowercased) bucket name, following the
+ * `,<category>,` convention used across the app.
+ *
+ * @param {Object} params
+ * @param {Array<Object>} params.expenses - Expense entries of a single month.
+ * @param {Array<string>} params.bucketNames - The bucket names to compute spending for.
+ * @returns {Object} bucketName -> total spent in the month for that bucket.
+ */
+const getMonthSpendingByBucket = ({ expenses, bucketNames }) => {
+  const spendingByPath = expenses.reduce((accumulatedSpending, entry) => {
+    accumulatedSpending[entry.categories_path] =
+      (accumulatedSpending[entry.categories_path] || 0) +
+      parseFloat(entry.amount);
+    return accumulatedSpending;
+  }, {});
+
+  return bucketNames.reduce((spending, bucketName) => {
+    spending[bucketName] =
+      spendingByPath[`,${bucketName.toLowerCase()},`] || 0;
+    return spending;
+  }, {});
+};
+
+/**
+ * Returns the chronologically ordered `{ year, month }` pairs that have been
+ * recorded, from the earliest one up to (and including) the given date.
+ *
+ * @param {Object} params
+ * @param {Object} params.entries - The nested `entries[year][month]` tree.
+ * @param {Object} params.until - `{ year, month }` upper bound (inclusive).
+ * @returns {Array<{ year: number, month: number }>}
+ */
+const getRecordedMonthsUntil = ({ entries, until }) => {
+  const recordedMonths = [];
+  const years = Object.keys(entries)
+    .map(Number)
+    .sort((firstYear, secondYear) => firstYear - secondYear);
+
+  for (const year of years) {
+    if (year > until.year) break;
+    const months = Object.keys(entries[year])
+      .map(Number)
+      .sort((firstMonth, secondMonth) => firstMonth - secondMonth);
+    for (const month of months) {
+      if (year === until.year && month > until.month) break;
+      recordedMonths.push({ year, month });
+    }
+  }
+
+  return recordedMonths;
+};
+
+/**
+ * Computes the carry-on state of every bucket for the selected month.
+ *
+ * Walking chronologically from the first recorded month up to the selected
+ * one, the following recurrence is applied per bucket:
+ *
+ *   availability = allowance + previousMonthRemainder
+ *   remainder    = availability - monthSpending
+ *
+ * `remainder` becomes the `carryOver` for the next month, which lets the user
+ * save unused allowance (positive remainder) or carry debt forward (negative
+ * remainder). The walk is a single pass over the recorded months
+ * (O(months * buckets)), keeping the calculation efficient.
+ *
+ * Months before the first recorded month default to a plain allowance with no
+ * carry-on, since there is nothing to accumulate yet.
+ *
+ * @param {Object} params
+ * @param {Object} params.entries - The nested `entries[year][month]` tree.
+ * @param {Object} params.buckets - `{ [bucketName]: allowance }`.
+ * @param {Object} params.selectedDate - `{ year, month }` of the viewed month.
+ * @returns {Object} bucketName -> { allowance, carryOver, availability, spending, remainder }
+ */
+const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
+  const bucketNames = Object.keys(buckets);
+  const recordedMonths = getRecordedMonthsUntil({
+    entries,
+    until: selectedDate,
+  });
+
+  const remainders = bucketNames.reduce((accumulatedRemainders, bucketName) => {
+    accumulatedRemainders[bucketName] = 0;
+    return accumulatedRemainders;
+  }, {});
+
+  const carriedBuckets = bucketNames.reduce((carried, bucketName) => {
+    const allowance = buckets[bucketName];
+    carried[bucketName] = {
+      allowance,
+      carryOver: 0,
+      availability: allowance,
+      spending: 0,
+      remainder: allowance,
+    };
+    return carried;
+  }, {});
+
+  for (const { year, month } of recordedMonths) {
+    const expenses = entries?.[year]?.[month]?.expenses || [];
+    const spendingByBucket = getMonthSpendingByBucket({ expenses, bucketNames });
+    const isSelectedMonth =
+      year === selectedDate.year && month === selectedDate.month;
+
+    bucketNames.forEach((bucketName) => {
+      const allowance = buckets[bucketName];
+      const carryOver = remainders[bucketName];
+      const availability = allowance + carryOver;
+      const spending = spendingByBucket[bucketName];
+      const remainder = availability - spending;
+
+      remainders[bucketName] = remainder;
+
+      if (isSelectedMonth) {
+        carriedBuckets[bucketName] = {
+          allowance,
+          carryOver,
+          availability,
+          spending,
+          remainder,
+        };
+      }
+    });
+
+    if (isSelectedMonth) break;
+  }
+
+  return carriedBuckets;
+};
+
+/**
  * Function to convert quantities in percentages
  * @param {[number]} quantities
  * @returns {[number]} percentages
@@ -351,4 +486,7 @@ export {
   getCategoryPercentagesFromEntries,
   getCurrentEmptyMonth,
   calculatePercentage,
+  getMonthSpendingByBucket,
+  getRecordedMonthsUntil,
+  getCarriedBucketsForMonth,
 };

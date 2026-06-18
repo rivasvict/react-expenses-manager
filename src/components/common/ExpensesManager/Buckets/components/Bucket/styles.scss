@@ -19,13 +19,17 @@
       background-color: red;
     }
   }
-  .usage-percentage {
-    display: flex;
-    justify-content: center;
-  }
   .rest {
-    display: flex;
-    justify-content: flex-end;
+    text-align: right;
+  }
+  .bucket-carry-on {
+    font-size: 0.8em;
+    opacity: 0.85;
+    align-items: flex-end;
+
+    .usage-percentage {
+      text-align: right;
+    }
   }
   progress {
     width: 100%;
