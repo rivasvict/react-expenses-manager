@@ -28,6 +28,13 @@ const Bucket = ({
 
   const testId = `bucket-${category.toLowerCase().replace(/\s/g, "-")}`;
 
+  // A carried-over debt is shown as "$0.00 (-$10.00)": no money is available
+  // from previous months, and the parenthesised amount makes the deficit clear.
+  const formatCarried = (value) =>
+    value < 0
+      ? `${formatNumberForDisplay(0)} (${formatNumberForDisplay(value)})`
+      : formatNumberForDisplay(value);
+
   return (
     <>
       <RowLink
@@ -64,7 +71,7 @@ const Bucket = ({
               className="carry-on-detail"
               data-testid={`${testId}-carry-over`}
             >
-              {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatNumberForDisplay(carryOver)}`}
+              {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatCarried(carryOver)}`}
             </Col>
             <Col
               xs={4}

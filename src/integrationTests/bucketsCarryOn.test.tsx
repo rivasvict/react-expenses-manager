@@ -128,25 +128,31 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketAvailability("bucket-eating-out")).toBe("$450.00");
   });
 
-  it("carries debt forward as a negative remainder", async () => {
-    seedIssueExample();
-    await renderApp("/buckets");
+  it("carries debt forward into the next month as $0.00 (-deficit)", async () => {
+    // Food overspends in May (allowance 200, spend 210 -> remainder -10); the
+    // -10 debt is carried into June. Pin to June so that month is viewable.
+    jest.setSystemTime(new Date("2026-06-15T12:00:00Z"));
+    seedEntries([
+      { date: ts(2026, MAY), amount: "210", type: "expense", categories_path: ",food," },
+    ]);
 
-    // May 2026 is the current (default) month.
-    await screen.findByText("May 2026");
+    const { user } = await renderApp("/buckets");
 
-    // Food: carry 0 (April remainder), availability 200, spend 210 (remainder -10)
+    // June 2026 (current month): the -10 debt is carried in and shown clearly.
+    await screen.findByText("June 2026");
     expect(bucketCarryOver("bucket-food")).toBe(
-      "Allowance $200.00 + carried $0.00"
+      "Allowance $200.00 + carried $0.00 (-$10.00)"
     );
-    expect(bucketAvailability("bucket-food")).toBe("$200.00");
-    expect(bucketSpending("bucket-food")).toBe("$210.00");
+    expect(bucketAvailability("bucket-food")).toBe("$190.00");
+    expect(bucketSpending("bucket-food")).toBe("$0.00");
 
-    // Eating out: carry 400, availability (300 + 400) = 700, spend 210 (remainder 490)
-    expect(bucketCarryOver("bucket-eating-out")).toBe(
-      "Allowance $300.00 + carried $400.00"
+    // The May overspend itself reads as $210 of $200 (over budget, 105%).
+    await goToPrevMonth(user, "May 2026");
+    expect(bucketSpending("bucket-food")).toBe("$210.00");
+    expect(bucketAvailability("bucket-food")).toBe("$200.00");
+    expect(screen.getByTestId("bucket-food-percentage").textContent).toBe(
+      "105%"
     );
-    expect(bucketAvailability("bucket-eating-out")).toBe("$700.00");
   });
 
   it("recovers from carried debt once spending drops below availability", async () => {
@@ -162,8 +168,9 @@ describe("buckets carry-on (issue #97)", () => {
     await screen.findByText("May 2026");
     await goToPrevMonth(user, "April 2026");
 
+    // Negative carry is shown as "$0.00 (-$50.00)".
     expect(bucketCarryOver("bucket-food")).toBe(
-      "Allowance $200.00 + carried -$50.00"
+      "Allowance $200.00 + carried $0.00 (-$50.00)"
     );
     expect(bucketAvailability("bucket-food")).toBe("$150.00");
     expect(bucketSpending("bucket-food")).toBe("$100.00");
