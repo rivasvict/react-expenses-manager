@@ -74,7 +74,11 @@ const AddBucket = ({ buckets, categories, onAddBucket, history }) => {
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
+                  <Form.Label htmlFor="categoryName">
+                    Select your bucket from one of the existing categories below
+                  </Form.Label>
                   <FormSelect
+                    id="categoryName"
                     name="categoryName"
                     value={categoryName}
                     onChange={(event) => {
