@@ -29,11 +29,13 @@ class EntryForm extends Component {
 
   render() {
     const entryNameForDisplay = capitalize(this.state.type);
-    // Pass the user's buckets so newly created expense categories (each bucket
-    // is a 1:1 expense category) become selectable here (issue #100).
+    // Pass the user's buckets and standalone categories so newly created
+    // expense categories become selectable here, whether or not they have a
+    // bucket (spending limit) yet (issue #100).
     const categoryOptions = getEntryCategoryOption(
       this.state.type,
-      this.props.buckets
+      this.props.buckets,
+      this.props.categories
     );
     const operationTitle = this.props.operationTitle
       ? `${this.props.operationTitle} `

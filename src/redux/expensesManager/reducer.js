@@ -15,6 +15,8 @@ import {
   EDIT_BUCKET,
   SET_BUCKETS,
   ADD_BUCKET,
+  ADD_CATEGORY,
+  GET_CATEGORIES,
 } from "./actions";
 
 const staticInitialState = {
@@ -40,6 +42,9 @@ const staticInitialState = {
     Education: 86.45,
     "Baby stuff": 350,
   },
+  // Standalone categories the user created that do not have a bucket
+  // (spending limit) yet (issue #100/#71).
+  categories: [],
 };
 
 // selectedDate must be evaluated lazily (inside the reducer, not at module-load
@@ -185,6 +190,20 @@ export const reducer = (state, action) => {
           ...state.buckets,
           ...payload.buckets,
         },
+        categories: (state.categories || []).filter(
+          (categoryName) =>
+            categoryName.toLowerCase() !== payload.categoryName?.toLowerCase()
+        ),
+      };
+    case ADD_CATEGORY:
+      return {
+        ...state,
+        categories: payload.categories,
+      };
+    case GET_CATEGORIES:
+      return {
+        ...state,
+        categories: payload.categories,
       };
     default:
       return state;

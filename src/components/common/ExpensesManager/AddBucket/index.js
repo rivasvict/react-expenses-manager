@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { Col, Form, Row, Button } from "react-bootstrap";
 import { MainContentContainer } from "../../MainContentContainer";
-import { FormButton, FormContent, InputNumber, InputText } from "../../Forms";
+import { FormButton, FormContent, FormSelect, InputNumber } from "../../Forms";
 import ContentTileSection from "../../ContentTitleSection";
 import { addBucket } from "../../../../redux/expensesManager/actionCreators";
-import { getBucketValidationError } from "../../../../helpers/entriesHelper/entriesHelper";
+import {
+  getBucketValidationError,
+  getCategoriesWithoutBucket,
+} from "../../../../helpers/entriesHelper/entriesHelper";
 
 const DIGIT_MATCHER = /^\d*(\.)*\d+$/;
 const BUCKETS_ROUTE = "/buckets";
 
 /**
- * Lets the user create a brand new expense category together with its bucket
- * (issue #100). Because buckets are keyed 1:1 by their category name, creating
- * a bucket here is what makes a new expense category exist throughout the app.
+ * Lets the user set a spending limit (bucket) for an existing category
+ * (issue #100). Categories are created separately, in their own context (see
+ * AddCategory); this form only lists the categories that do not have a
+ * bucket yet, since a category needs to exist before it can get one.
  */
-const AddBucket = ({ buckets, onAddBucket, history }) => {
-  const [name, setName] = useState("");
+const AddBucket = ({ buckets, categories, onAddBucket, history }) => {
+  const categoriesWithoutBucket = getCategoriesWithoutBucket({
+    buckets,
+    categories,
+  });
+  const [categoryName, setCategoryName] = useState("");
   const [allowance, setAllowance] = useState("");
   const [error, setError] = useState(null);
 
@@ -26,9 +34,9 @@ const AddBucket = ({ buckets, onAddBucket, history }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const nameError = getBucketValidationError({ name, buckets });
-    if (nameError) {
-      setError(nameError);
+    const categoryError = getBucketValidationError({ categoryName, buckets });
+    if (categoryError) {
+      setError(categoryError);
       return;
     }
 
@@ -39,7 +47,7 @@ const AddBucket = ({ buckets, onAddBucket, history }) => {
 
     try {
       await onAddBucket({
-        bucket: { [name.trim()]: parseFloat(allowance) },
+        bucket: { [categoryName]: parseFloat(allowance) },
       });
       goToBuckets();
     } catch (submitError) {
@@ -53,7 +61,12 @@ const AddBucket = ({ buckets, onAddBucket, history }) => {
       className="add-bucket"
       pageTitle="Operation: Add new bucket"
     >
-      <ContentTileSection>Add new category bucket</ContentTileSection>
+      <ContentTileSection>Add new bucket</ContentTileSection>
+      {categoriesWithoutBucket.length === 0 ? (
+        <p className="add-bucket-no-categories">
+          Every category already has a bucket. <Link to="/add-category">Add a new category</Link> first.
+        </p>
+      ) : (
       <FormContent
         formProps={{ onSubmit: handleSubmit, className: "app-form" }}
         render={() => (
@@ -61,16 +74,21 @@ const AddBucket = ({ buckets, onAddBucket, history }) => {
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
-                  <InputText
-                    type="text"
-                    name="name"
-                    placeholder="Category name"
-                    value={name}
+                  <FormSelect
+                    name="categoryName"
+                    value={categoryName}
                     onChange={(event) => {
-                      setName(event.currentTarget.value);
+                      setCategoryName(event.currentTarget.value);
                       setError(null);
                     }}
-                  />
+                  >
+                    <option value="">Select a category</option>
+                    {categoriesWithoutBucket.map((category) => (
+                      <option value={category} key={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </FormSelect>
                 </Form.Group>
                 <Form.Group>
                   <InputNumber
@@ -114,12 +132,14 @@ const AddBucket = ({ buckets, onAddBucket, history }) => {
           </>
         )}
       />
+      )}
     </MainContentContainer>
   );
 };
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
+  categories: state.expensesManager.categories,
 });
 
 const mapActionsToProps = (dispatch) => ({

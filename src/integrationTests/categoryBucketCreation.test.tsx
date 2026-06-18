@@ -17,42 +17,55 @@ afterEach(() => {
 });
 
 describe("category + bucket creation (issue #100)", () => {
-  it("user can create a new bucket and see it on the buckets page", async () => {
-    const { user } = await renderApp("/buckets");
+  it("user can create a new category from the Categories context, without creating a bucket", async () => {
+    const { user } = await renderApp("/categories");
 
-    // Existing bucket is shown; the new one is not there yet.
+    // Existing bucket's category is shown; the new one is not there yet.
     await screen.findByText("Food");
     expect(screen.queryByText("Gym")).not.toBeInTheDocument();
 
-    await user.click(await screen.findByRole("link", { name: /add new bucket/i }));
-
+    await user.click(
+      await screen.findByRole("link", { name: /add new category/i })
+    );
     await user.type(await screen.findByPlaceholderText(/category name/i), "Gym");
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    // Redirected back to the categories list with the freshly created category,
+    // flagged as not having a bucket yet.
+    const gymEntry = await screen.findByTestId("category-gym");
+    expect(gymEntry).toHaveTextContent("Gym");
+    expect(gymEntry).toHaveTextContent(/no bucket/i);
+  });
+
+  it("a category can later get a bucket by selecting it from the Add bucket form", async () => {
+    localStorage.setItem("categories", JSON.stringify(["Gym"]));
+    const { user } = await renderApp("/add-bucket");
+
+    const categorySelect = screen.getByRole("combobox");
+    expect(screen.getByRole("option", { name: "Gym" })).toBeInTheDocument();
+    await user.selectOptions(categorySelect, "Gym");
     await user.type(
       screen.getByPlaceholderText(/insert bucket allowance/i),
       "120"
     );
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // Redirected back to the buckets list with the freshly created bucket.
+    // Redirected back to the buckets list with the freshly bucketed category.
     expect(await screen.findByText("Gym")).toBeInTheDocument();
     expect(screen.getByTestId("bucket-gym-availability").textContent).toBe(
       "$120.00"
     );
   });
 
-  it("a newly created category becomes selectable when adding an expense", async () => {
-    const { user } = await renderApp("/add-bucket");
+  it("a newly created category becomes selectable when adding an expense, even without a bucket", async () => {
+    const { user } = await renderApp("/add-category");
 
-    // Create the "Gym" category/bucket.
+    // Create the standalone "Gym" category (no bucket).
     await user.type(await screen.findByPlaceholderText(/category name/i), "Gym");
-    await user.type(
-      screen.getByPlaceholderText(/insert bucket allowance/i),
-      "120"
-    );
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // Land on the buckets page, then head to the dashboard to add an expense.
-    await screen.findByText("Gym");
+    // Land on the categories page, then head to the dashboard to add an expense.
+    await screen.findByTestId("category-gym");
     await user.click(await screen.findByRole("link", { name: /home/i }));
 
     // Now add an expense and file it under the new category.
@@ -64,51 +77,33 @@ describe("category + bucket creation (issue #100)", () => {
     await user.type(screen.getByPlaceholderText(/description/i), "Monthly pass");
 
     const categorySelect = screen.getByRole("combobox");
-    // The brand new category is available as an option.
-    expect(
-      screen.getByRole("option", { name: "Gym" })
-    ).toBeInTheDocument();
+    // The brand new category is available as an option even without a bucket.
+    expect(screen.getByRole("option", { name: "Gym" })).toBeInTheDocument();
     await user.selectOptions(categorySelect, "Gym");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // The expense shows on the dashboard...
+    // The expense shows on the dashboard.
     expect(await screen.findByText("$30.00")).toBeInTheDocument();
-
-    // ...and is reflected as spending against the Gym bucket.
-    await user.click(await screen.findByRole("link", { name: /buckets/i }));
-    expect(await screen.findByText("Gym")).toBeInTheDocument();
-    expect(screen.getByTestId("bucket-gym-spending").textContent).toBe(
-      "$30.00"
-    );
   });
 
   it("rejects a duplicate category name (case-insensitive) and creates nothing", async () => {
-    const { user } = await renderApp("/add-bucket");
+    const { user } = await renderApp("/add-category");
 
     // "food" collides with the seeded "Food" bucket.
     await user.type(await screen.findByPlaceholderText(/category name/i), "food");
-    await user.type(
-      screen.getByPlaceholderText(/insert bucket allowance/i),
-      "50"
-    );
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/already exists/i);
 
-    // We must still be on the add-bucket form, and storage must be untouched.
+    // We must still be on the add-category form, and storage must be untouched.
     expect(screen.getByPlaceholderText(/category name/i)).toBeInTheDocument();
-    const storedBuckets = JSON.parse(localStorage.getItem("buckets") as string);
-    expect(Object.keys(storedBuckets)).toEqual(["Food"]);
+    expect(localStorage.getItem("categories")).toBeNull();
   });
 
   it("rejects an empty category name", async () => {
-    const { user } = await renderApp("/add-bucket");
+    const { user } = await renderApp("/add-category");
 
-    await user.type(
-      await screen.findByPlaceholderText(/insert bucket allowance/i),
-      "50"
-    );
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await user.click(await screen.findByRole("button", { name: /submit/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be empty/i);
   });

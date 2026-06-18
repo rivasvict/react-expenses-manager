@@ -18,6 +18,8 @@ export const SET_BUCKETS = "SET_BUCKETS";
 export const GET_BUCKET = "GET_BUCKET";
 export const EDIT_BUCKET = "SET_BUCKET";
 export const ADD_BUCKET = "ADD_BUCKET";
+export const ADD_CATEGORY = "ADD_CATEGORY";
+export const GET_CATEGORIES = "GET_CATEGORIES";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -280,9 +282,11 @@ const EditBucket =
     };
   };
 
-// Creates a new bucket and, implicitly, its expense category (issue #100). The
-// storage layer validates that the name is non-empty and unique, so the error
-// is surfaced to the caller (the AddBucket form) to display.
+// Creates a bucket (spending limit) for an already-existing category (issue
+// #100). The storage layer validates that the category is non-empty and does
+// not already have a bucket, so the error is surfaced to the caller (the
+// AddBucket form) to display. Once a category gets a bucket it is no longer a
+// standalone category, so it is removed from `state.categories`.
 const AddBucket =
   ({ storage }) =>
   ({ bucket }) => {
@@ -290,13 +294,53 @@ const AddBucket =
       dispatch(setAppLoading(true));
       try {
         const response = await storage.addBucket({ bucket });
+        const [categoryName] = Object.keys(bucket);
         dispatch({
           type: ADD_BUCKET,
-          payload: { buckets: response },
+          payload: { buckets: response, categoryName },
         });
         return response;
       } finally {
         dispatch(setAppLoading(false));
+      }
+    };
+  };
+
+// Creates a brand new expense category, independent of any bucket (issue
+// #100/#71). The category becomes selectable right away when adding an
+// expense or creating a bucket.
+const AddCategory =
+  ({ storage }) =>
+  ({ category }) => {
+    return async (dispatch) => {
+      dispatch(setAppLoading(true));
+      try {
+        const response = await storage.addCategory({ category });
+        dispatch({
+          type: ADD_CATEGORY,
+          payload: { categories: response },
+        });
+        return response;
+      } finally {
+        dispatch(setAppLoading(false));
+      }
+    };
+  };
+
+const GetCategories =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const response = await storage.getCategories();
+        dispatch({
+          type: GET_CATEGORIES,
+          payload: { categories: response || [] },
+        });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
       }
     };
   };
@@ -333,5 +377,7 @@ export const ActionCreators = ({ storage, dataParser }) => {
     editBucket: EditBucket({ storage }),
     addBucket: AddBucket({ storage }),
     getBucket: GetBucket({ storage }),
+    addCategory: AddCategory({ storage }),
+    getCategories: GetCategories({ storage }),
   };
 };

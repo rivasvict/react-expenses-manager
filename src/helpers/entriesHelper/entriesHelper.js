@@ -157,61 +157,112 @@ const EXPENSE_CATEGORIES = [
 /**
  * Builds the ordered list of expense category names the user can choose from.
  *
- * Because an expense bucket is keyed by its category name (1:1 relationship,
- * see issue #73), every bucket the user creates is also a brand new expense
- * category. This merges the seed categories with the user's bucket names so a
- * newly created bucket/category becomes immediately selectable, while keeping
- * the comparison case-insensitive to avoid duplicates like "Gym"/"gym".
+ * Categories can exist independently of buckets (issue #100/#71): the user
+ * creates a category on its own, and only later (optionally) attaches a
+ * spending limit by creating a bucket for it. This merges the seed
+ * categories, the user's standalone categories, and the user's bucket names
+ * so every one of them becomes immediately selectable, while keeping the
+ * comparison case-insensitive to avoid duplicates like "Gym"/"gym".
  *
  * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store.
+ * @param {Array<string>} [categories=[]] - Standalone categories without a bucket yet.
  * @returns {Array<string>} The deduplicated, ordered category names.
  */
-function getExpenseCategoryNames(buckets = {}) {
-  const categories = [...EXPENSE_CATEGORIES];
-  const seen = new Set(categories.map((category) => category.toLowerCase()));
+function getExpenseCategoryNames(buckets = {}, categories = []) {
+  const categoryNames = [...EXPENSE_CATEGORIES];
+  const seen = new Set(categoryNames.map((category) => category.toLowerCase()));
 
-  Object.keys(buckets || {}).forEach((bucketName) => {
-    const normalized = bucketName.toLowerCase();
+  [...(categories || []), ...Object.keys(buckets || {})].forEach((name) => {
+    const normalized = name.toLowerCase();
     if (!seen.has(normalized)) {
       seen.add(normalized);
-      categories.push(bucketName);
+      categoryNames.push(name);
     }
   });
 
-  return categories;
+  return categoryNames;
 }
 
 /**
  * Returns the category select options for an entry type. Expense categories are
- * augmented with the user-created buckets so newly added categories show up.
+ * augmented with the user-created categories and buckets so newly added ones show up.
  *
  * @param {string} entryType - "income" or "expense".
  * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store.
+ * @param {Array<string>} [categories=[]] - Standalone categories without a bucket yet.
  */
-function getEntryCategoryOption(entryType, buckets = {}) {
+function getEntryCategoryOption(entryType, buckets = {}, categories = []) {
   const categoryOptions = {
     income: getSelectOptionsForDisplay(INCOME_CATEGORIES),
-    expense: getSelectOptionsForDisplay(getExpenseCategoryNames(buckets)),
+    expense: getSelectOptionsForDisplay(
+      getExpenseCategoryNames(buckets, categories)
+    ),
   };
 
   return categoryOptions[entryType];
 }
 
 /**
- * Validates a category/bucket name before creation (issue #71/#100): the name
- * must be non-empty and unique (case-insensitive) among the existing buckets,
- * so we never create orphan or duplicated buckets.
+ * Validates a new category name (issue #71/#100): it must be non-empty and
+ * unique (case-insensitive) among the existing categories and buckets, so we
+ * never create orphan or duplicated categories.
  *
  * @param {Object} params
- * @param {string} params.name - The proposed category/bucket name.
+ * @param {string} params.name - The proposed category name.
  * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @param {Array<string>} [params.categories=[]] - Existing standalone categories.
  * @returns {string|null} An error message, or null when the name is valid.
  */
-function getBucketValidationError({ name, buckets = {} }) {
+function getCategoryValidationError({ name, buckets = {}, categories = [] }) {
   const trimmedName = (name || "").trim();
 
   if (!trimmedName) {
     return "Category name cannot be empty";
+  }
+
+  const alreadyExists = getExpenseCategoryNames(buckets, categories).some(
+    (existingName) => existingName.toLowerCase() === trimmedName.toLowerCase()
+  );
+
+  if (alreadyExists) {
+    return `A category for "${trimmedName}" already exists`;
+  }
+
+  return null;
+}
+
+/**
+ * Returns the categories that do not have a bucket (spending limit) yet, i.e.
+ * the ones selectable when creating a new bucket (issue #100).
+ *
+ * @param {Object} params
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @param {Array<string>} [params.categories=[]] - Standalone categories without a bucket yet.
+ * @returns {Array<string>}
+ */
+function getCategoriesWithoutBucket({ buckets = {}, categories = [] }) {
+  const bucketNames = new Set(
+    Object.keys(buckets || {}).map((bucketName) => bucketName.toLowerCase())
+  );
+  return (categories || []).filter(
+    (categoryName) => !bucketNames.has(categoryName.toLowerCase())
+  );
+}
+
+/**
+ * Validates a bucket (spending limit) creation request (issue #100): a
+ * category must be selected and must not already have a bucket.
+ *
+ * @param {Object} params
+ * @param {string} params.categoryName - The selected category name.
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @returns {string|null} An error message, or null when the selection is valid.
+ */
+function getBucketValidationError({ categoryName, buckets = {} }) {
+  const trimmedName = (categoryName || "").trim();
+
+  if (!trimmedName) {
+    return "Please select a category";
   }
 
   const alreadyExists = Object.keys(buckets || {}).some(
@@ -541,6 +592,8 @@ export {
   getEntryModel,
   getEntryCategoryOption,
   getExpenseCategoryNames,
+  getCategoryValidationError,
+  getCategoriesWithoutBucket,
   getBucketValidationError,
   getGroupedFilledEntriesByDate,
   quantitiesToPercentages,

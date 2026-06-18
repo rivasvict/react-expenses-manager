@@ -25,6 +25,7 @@ const AddEntry = ({
   onAddIncome,
   onAddExpense,
   buckets,
+  categories,
   history,
 }) => {
   const newEntry = getEntryModel({ entryType });
@@ -67,12 +68,14 @@ const AddEntry = ({
       onCancel={navigateBack}
       operationTitle={ADD_NEW}
       buckets={buckets}
+      categories={categories}
     />
   );
 };
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
+  categories: state.expensesManager.categories,
 });
 
 const mapActionToProps = (dispatch) => ({

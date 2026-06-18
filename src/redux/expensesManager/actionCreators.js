@@ -25,4 +25,6 @@ export const {
   editBucket,
   addBucket,
   getBucket,
+  addCategory,
+  getCategories,
 } = ActionCreators({ storage, dataParser });

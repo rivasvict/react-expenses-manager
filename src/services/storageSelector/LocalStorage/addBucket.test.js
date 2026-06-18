@@ -40,4 +40,12 @@ describe("LocalStorage.addBucket (issue #100)", () => {
       storage.addBucket({ bucket: { "   ": 50 } })
     ).rejects.toThrow(/cannot be empty/i);
   });
+
+  it("removes the category from the standalone categories list once it gets a bucket", async () => {
+    localStorage.setItem("categories", JSON.stringify(["Gym", "Yoga"]));
+
+    await storage.addBucket({ bucket: { Gym: 120 } });
+
+    expect(JSON.parse(localStorage.getItem("categories"))).toEqual(["Yoga"]);
+  });
 });
