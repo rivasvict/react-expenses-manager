@@ -97,9 +97,11 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketAvailability("bucket-eating-out")).toBe("$300.00");
     expect(bucketSpending("bucket-eating-out")).toBe("$300.00");
 
-    // The percentage and the standalone remaining line have been removed.
+    // Percentage is spending vs. carried availability (200 / 200 = 100%).
+    expect(screen.getByTestId("bucket-food-percentage").textContent).toBe("100%");
+
+    // The standalone remaining line has been removed.
     expect(screen.queryByTestId("bucket-food-remaining")).toBeNull();
-    expect(screen.queryByText("100%")).toBeNull();
   });
 
   it("accumulates a positive remainder into the next month's availability", async () => {

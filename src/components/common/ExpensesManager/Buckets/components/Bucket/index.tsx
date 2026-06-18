@@ -60,12 +60,17 @@ const Bucket = ({
           </Row>
           <Row className="bucket-carry-on">
             <Col
-              xs={12}
+              xs={8}
               className="carry-on-detail"
               data-testid={`${testId}-carry-over`}
             >
               {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatNumberForDisplay(carryOver)}`}
             </Col>
+            <Col
+              xs={4}
+              className="usage-percentage"
+              data-testid={`${testId}-percentage`}
+            >{`${consuptionPercentage}%`}</Col>
           </Row>
         </Col>
       </RowLink>

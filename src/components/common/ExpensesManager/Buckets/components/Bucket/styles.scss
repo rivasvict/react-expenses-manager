@@ -25,6 +25,11 @@
   .bucket-carry-on {
     font-size: 0.8em;
     opacity: 0.85;
+    align-items: flex-end;
+
+    .usage-percentage {
+      text-align: right;
+    }
   }
   progress {
     width: 100%;
