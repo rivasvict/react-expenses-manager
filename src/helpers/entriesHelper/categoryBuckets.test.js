@@ -96,12 +96,22 @@ describe("category/bucket helpers (issue #100)", () => {
   });
 
   describe("getCategoriesWithoutBucket", () => {
-    it("returns standalone categories that do not already have a bucket", () => {
+    it("includes the seed expense categories that do not already have a bucket", () => {
+      const result = getCategoriesWithoutBucket({
+        buckets: { Food: 200 },
+        categories: [],
+      });
+      expect(result).toContain("Travel");
+      expect(result).not.toContain("Food");
+    });
+
+    it("includes standalone categories that do not already have a bucket", () => {
       const result = getCategoriesWithoutBucket({
         buckets: { Food: 200 },
         categories: ["Gym", "Food"],
       });
-      expect(result).toEqual(["Gym"]);
+      expect(result).toContain("Gym");
+      expect(result).not.toContain("Food");
     });
   });
 

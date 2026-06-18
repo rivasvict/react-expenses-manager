@@ -233,7 +233,9 @@ function getCategoryValidationError({ name, buckets = {}, categories = [] }) {
 
 /**
  * Returns the categories that do not have a bucket (spending limit) yet, i.e.
- * the ones selectable when creating a new bucket (issue #100).
+ * the ones selectable when creating a new bucket (issue #100). This includes
+ * the seed expense categories as well as standalone user-created ones, since
+ * either kind can be picked when setting up a bucket.
  *
  * @param {Object} params
  * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
@@ -244,7 +246,7 @@ function getCategoriesWithoutBucket({ buckets = {}, categories = [] }) {
   const bucketNames = new Set(
     Object.keys(buckets || {}).map((bucketName) => bucketName.toLowerCase())
   );
-  return (categories || []).filter(
+  return getExpenseCategoryNames(buckets, categories).filter(
     (categoryName) => !bucketNames.has(categoryName.toLowerCase())
   );
 }
