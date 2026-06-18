@@ -175,4 +175,25 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketAvailability("bucket-food")).toBe("$150.00");
     expect(bucketSpending("bucket-food")).toBe("$100.00");
   });
+
+  it("shows negative availability as $0.00 (-deficit) when debt exceeds the allowance", async () => {
+    // Food overspends heavily in April (allowance 200, spend 500 -> remainder
+    // -300). In May the carried debt (-300) outweighs the allowance, so
+    // availability = 200 + (-300) = -100.
+    seedEntries([
+      { date: ts(2026, APRIL), amount: "500", type: "expense", categories_path: ",food," },
+    ]);
+
+    await renderApp("/buckets");
+
+    // May 2026 (current month).
+    await screen.findByText("May 2026");
+
+    expect(bucketCarryOver("bucket-food")).toBe(
+      "Allowance $200.00 + carried $0.00 (-$300.00)"
+    );
+    // Both the carried balance and the availability render with the deficit.
+    expect(bucketAvailability("bucket-food")).toBe("$0.00 (-$100.00)");
+    expect(bucketSpending("bucket-food")).toBe("$0.00");
+  });
 });
