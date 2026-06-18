@@ -5,6 +5,7 @@ import { Col, Container, ListGroup, Row, Button } from "react-bootstrap";
 import { MainContentContainer } from "../../MainContentContainer";
 import ContentTileSection from "../../ContentTitleSection";
 import { getExpenseCategoryNames } from "../../../../helpers/entriesHelper/entriesHelper";
+import "./styles.scss";
 
 /**
  * Lists every expense category (with or without a bucket) and lets the user
@@ -51,7 +52,7 @@ const Categories = ({ buckets, categories, history }) => {
             </Link>
           </Col>
         </Row>
-        <Row>
+        <Row className="vertical-standard-space">
           <Col>
             <Button
               type="submit"

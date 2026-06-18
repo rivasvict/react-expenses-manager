@@ -94,7 +94,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
             </Link>
           </Col>
         </Row>
-        <Row>
+        <Row className="vertical-standard-space">
           <Col>
             <Button
               type="submit"
