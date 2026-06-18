@@ -192,8 +192,9 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $0.00 (-$300.00)"
     );
-    // Both the carried balance and the availability render with the deficit.
-    expect(bucketAvailability("bucket-food")).toBe("$0.00 (-$100.00)");
+    // Carried uses the "$0.00 (-deficit)" form; availability shows the raw
+    // negative ("$0.00 of -$100.00").
+    expect(bucketAvailability("bucket-food")).toBe("-$100.00");
     expect(bucketSpending("bucket-food")).toBe("$0.00");
   });
 });
