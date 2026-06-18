@@ -117,51 +117,112 @@ function getSelectOptionsForDisplay(selectOptions) {
   }));
 }
 
-function getEntryCategoryOption(entryType) {
-  // TODO: These categories should live somewhere else
-  // in a settings or constant file
+// TODO: These categories should live somewhere else in a settings or constant
+// file and ultimately come from the database. They act as the seed list the
+// user starts with before creating their own categories (see issue #71).
+const INCOME_CATEGORIES = ["Salary", "Deposit", "Saving"];
 
-  // TODO: These categories should come from the database
-  const incomeCategories = ["Salary", "Deposit", "Saving"];
+const EXPENSE_CATEGORIES = [
+  "House (Rent)",
+  "Transportation",
+  "Mobile phone plan",
+  "Subscriptions",
+  "Bank fees",
+  "Laundry",
+  "Internet",
+  "Hydro",
+  "Donation",
+  "Eating out",
+  "Fun activities",
+  "Food",
+  "Alcohol",
+  "Travel",
+  "Sports",
+  "House stuff",
+  "Unexpected",
+  "Beauty",
+  "Person 1 bucket",
+  "Person 2 bucket",
+  "Education",
+  "Insurance House",
+  "Health",
+  "Baby Stuff",
+  "Car",
+  "Car parking",
+  "Car insurance",
+  "Gas",
+  "Car expenses",
+];
 
-  const expenseCategories = [
-    "House (Rent)",
-    "Transportation",
-    "Mobile phone plan",
-    "Subscriptions",
-    "Bank fees",
-    "Laundry",
-    "Internet",
-    "Hydro",
-    "Donation",
-    "Eating out",
-    "Fun activities",
-    "Food",
-    "Alcohol",
-    "Travel",
-    "Sports",
-    "House stuff",
-    "Unexpected",
-    "Beauty",
-    "Person 1 bucket",
-    "Person 2 bucket",
-    "Education",
-    "Insurance House",
-    "Health",
-    "Baby Stuff",
-    "Car",
-    "Car parking",
-    "Car insurance",
-    "Gas",
-    "Car expenses",
-  ];
+/**
+ * Builds the ordered list of expense category names the user can choose from.
+ *
+ * Because an expense bucket is keyed by its category name (1:1 relationship,
+ * see issue #73), every bucket the user creates is also a brand new expense
+ * category. This merges the seed categories with the user's bucket names so a
+ * newly created bucket/category becomes immediately selectable, while keeping
+ * the comparison case-insensitive to avoid duplicates like "Gym"/"gym".
+ *
+ * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store.
+ * @returns {Array<string>} The deduplicated, ordered category names.
+ */
+function getExpenseCategoryNames(buckets = {}) {
+  const categories = [...EXPENSE_CATEGORIES];
+  const seen = new Set(categories.map((category) => category.toLowerCase()));
 
+  Object.keys(buckets || {}).forEach((bucketName) => {
+    const normalized = bucketName.toLowerCase();
+    if (!seen.has(normalized)) {
+      seen.add(normalized);
+      categories.push(bucketName);
+    }
+  });
+
+  return categories;
+}
+
+/**
+ * Returns the category select options for an entry type. Expense categories are
+ * augmented with the user-created buckets so newly added categories show up.
+ *
+ * @param {string} entryType - "income" or "expense".
+ * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store.
+ */
+function getEntryCategoryOption(entryType, buckets = {}) {
   const categoryOptions = {
-    income: getSelectOptionsForDisplay(incomeCategories),
-    expense: getSelectOptionsForDisplay(expenseCategories),
+    income: getSelectOptionsForDisplay(INCOME_CATEGORIES),
+    expense: getSelectOptionsForDisplay(getExpenseCategoryNames(buckets)),
   };
 
   return categoryOptions[entryType];
+}
+
+/**
+ * Validates a category/bucket name before creation (issue #71/#100): the name
+ * must be non-empty and unique (case-insensitive) among the existing buckets,
+ * so we never create orphan or duplicated buckets.
+ *
+ * @param {Object} params
+ * @param {string} params.name - The proposed category/bucket name.
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @returns {string|null} An error message, or null when the name is valid.
+ */
+function getBucketValidationError({ name, buckets = {} }) {
+  const trimmedName = (name || "").trim();
+
+  if (!trimmedName) {
+    return "Category name cannot be empty";
+  }
+
+  const alreadyExists = Object.keys(buckets || {}).some(
+    (bucketName) => bucketName.toLowerCase() === trimmedName.toLowerCase()
+  );
+
+  if (alreadyExists) {
+    return `A bucket for "${trimmedName}" already exists`;
+  }
+
+  return null;
 }
 
 const getEmtpyMonthModel = () => ({
@@ -479,6 +540,8 @@ export {
   getSum,
   getEntryModel,
   getEntryCategoryOption,
+  getExpenseCategoryNames,
+  getBucketValidationError,
   getGroupedFilledEntriesByDate,
   quantitiesToPercentages,
   getFilteredEntriesByCategory,

@@ -17,6 +17,7 @@ export const GET_BUCKETS = "GET_BUCKETS";
 export const SET_BUCKETS = "SET_BUCKETS";
 export const GET_BUCKET = "GET_BUCKET";
 export const EDIT_BUCKET = "SET_BUCKET";
+export const ADD_BUCKET = "ADD_BUCKET";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -279,6 +280,27 @@ const EditBucket =
     };
   };
 
+// Creates a new bucket and, implicitly, its expense category (issue #100). The
+// storage layer validates that the name is non-empty and unique, so the error
+// is surfaced to the caller (the AddBucket form) to display.
+const AddBucket =
+  ({ storage }) =>
+  ({ bucket }) => {
+    return async (dispatch) => {
+      dispatch(setAppLoading(true));
+      try {
+        const response = await storage.addBucket({ bucket });
+        dispatch({
+          type: ADD_BUCKET,
+          payload: { buckets: response },
+        });
+        return response;
+      } finally {
+        dispatch(setAppLoading(false));
+      }
+    };
+  };
+
 const GetBucket =
   ({ storage }) =>
   ({ bucketName }) => {
@@ -309,6 +331,7 @@ export const ActionCreators = ({ storage, dataParser }) => {
     getBackupData: GetBackupData({ storage, dataParser }),
     getBuckets: GetBuckets({ storage }),
     editBucket: EditBucket({ storage }),
+    addBucket: AddBucket({ storage }),
     getBucket: GetBucket({ storage }),
   };
 };

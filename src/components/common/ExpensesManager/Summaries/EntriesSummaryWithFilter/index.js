@@ -37,7 +37,10 @@ class EntrySummaryWithFilter extends Component {
   handleCancel = () => this.goBack();
 
   render() {
-    const categoryOptions = getEntryCategoryOption(this.props.entryType);
+    const categoryOptions = getEntryCategoryOption(
+      this.props.entryType,
+      this.props.buckets
+    );
     const entryTypePlural = `${this.props.entryType}s`;
     const name = entryTypePlural;
     const entriesByCategory = getFilteredEntriesByCategory({
@@ -93,6 +96,7 @@ class EntrySummaryWithFilter extends Component {
 const mapStateToProps = (state) => ({
   category: state.expensesManager.category,
   entries: state.expensesManager.entries,
+  buckets: state.expensesManager.buckets,
 });
 
 const mapActionsToProps = (dispatch) => ({

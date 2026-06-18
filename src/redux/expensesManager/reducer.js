@@ -14,6 +14,7 @@ import {
   GET_BUCKETS,
   EDIT_BUCKET,
   SET_BUCKETS,
+  ADD_BUCKET,
 } from "./actions";
 
 const staticInitialState = {
@@ -170,6 +171,14 @@ export const reducer = (state, action) => {
         },
       };
     case SET_BUCKETS:
+      return {
+        ...state,
+        buckets: {
+          ...state.buckets,
+          ...payload.buckets,
+        },
+      };
+    case ADD_BUCKET:
       return {
         ...state,
         buckets: {

@@ -24,6 +24,7 @@ const AddEntry = ({
   selectedDate,
   onAddIncome,
   onAddExpense,
+  buckets,
   history,
 }) => {
   const newEntry = getEntryModel({ entryType });
@@ -65,11 +66,14 @@ const AddEntry = ({
       handleSubmit={handleSubmit}
       onCancel={navigateBack}
       operationTitle={ADD_NEW}
+      buckets={buckets}
     />
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  buckets: state.expensesManager.buckets,
+});
 
 const mapActionToProps = (dispatch) => ({
   onAddIncome: (income) => dispatch(addIncome(income)),

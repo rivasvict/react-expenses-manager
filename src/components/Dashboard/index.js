@@ -16,6 +16,7 @@ import EditEntry from "../common/ExpensesManager/EditEntry";
 import DataManagement from "../common/ExpensesManager/DataManagement";
 import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
 import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
+import AddBucket from "../common/ExpensesManager/AddBucket";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -65,6 +66,9 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}data-management`}>
               <DataManagement />
+            </Route>
+            <Route path={`${match.url}add-bucket`}>
+              <AddBucket />
             </Route>
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />

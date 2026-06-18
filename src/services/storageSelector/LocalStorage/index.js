@@ -39,6 +39,29 @@ const editBucketData = async ({ bucketData }) => {
   return newBuckets;
 };
 
+// Adds a brand new bucket (and, implicitly, its expense category). The name
+// must be non-empty and unique (case-insensitive) so we never create orphan or
+// duplicated buckets (issue #100). Existing buckets are edited via editBucket.
+const addBucketData = async ({ bucket }) => {
+  if (!bucket) throw new Error("No bucket data was set");
+
+  const [name, value] = Object.entries(bucket)[0] || [];
+  const trimmedName = (name || "").trim();
+  if (!trimmedName) throw new Error("Category name cannot be empty");
+
+  const storedBuckets = (await getBucketsFromLocalStorage()) || {};
+  const alreadyExists = Object.keys(storedBuckets).some(
+    (bucketName) => bucketName.toLowerCase() === trimmedName.toLowerCase()
+  );
+  if (alreadyExists) {
+    throw new Error(`A bucket for "${trimmedName}" already exists`);
+  }
+
+  const newBuckets = { ...storedBuckets, [trimmedName]: Number(value) || 0 };
+  await storeBucketsInLocalStorage({ data: newBuckets });
+  return newBuckets;
+};
+
 const LocalStorage = () => ({
   getBalance: () => getBalanceFromLocalStorage(),
   setBalance: ({ balance }) => storeBalanceInLocalStorage({ data: balance }),
@@ -93,6 +116,9 @@ const LocalStorage = () => ({
   },
   editBucket: async ({ bucket }) => {
     return editBucketData({ bucketData: bucket });
+  },
+  addBucket: async ({ bucket }) => {
+    return addBucketData({ bucket });
   },
   editBuckets: async ({ buckets }) => {
     return editBucketData({ bucketData: buckets });
