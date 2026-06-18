@@ -10,7 +10,6 @@ const Bucket = ({
   carryOver,
   availability,
   spending,
-  remainder,
   consuptionPercentage,
 }) => {
   const colorMapClass = {
@@ -44,7 +43,7 @@ const Bucket = ({
               <span data-testid={`${testId}-spending`}>
                 {formatNumberForDisplay(spending)}
               </span>
-              {" of "}
+              {" of "}
               <span data-testid={`${testId}-availability`}>
                 {formatNumberForDisplay(availability)}
               </span>
@@ -59,26 +58,13 @@ const Bucket = ({
               />
             </Col>
           </Row>
-          <Row>
-            <Col
-              xs={12}
-              className="usage-percentage"
-            >{`${consuptionPercentage}%`}</Col>
-          </Row>
           <Row className="bucket-carry-on">
             <Col
-              xs={6}
+              xs={12}
               className="carry-on-detail"
               data-testid={`${testId}-carry-over`}
             >
               {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatNumberForDisplay(carryOver)}`}
-            </Col>
-            <Col
-              xs={6}
-              className="carry-on-detail remaining"
-              data-testid={`${testId}-remaining`}
-            >
-              {`Remaining: ${formatNumberForDisplay(remainder)}`}
             </Col>
           </Row>
         </Col>
