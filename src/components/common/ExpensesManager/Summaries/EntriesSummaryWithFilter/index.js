@@ -40,7 +40,7 @@ class EntrySummaryWithFilter extends Component {
     const categoryOptions = getEntryCategoryOption(
       this.props.entryType,
       this.props.buckets,
-      this.props.categories
+      this.props.unbudgetedCategories
     );
     const entryTypePlural = `${this.props.entryType}s`;
     const name = entryTypePlural;
@@ -98,7 +98,7 @@ const mapStateToProps = (state) => ({
   category: state.expensesManager.category,
   entries: state.expensesManager.entries,
   buckets: state.expensesManager.buckets,
-  categories: state.expensesManager.categories,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch) => ({

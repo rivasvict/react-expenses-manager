@@ -5,7 +5,7 @@ describe("expensesManager reducer - ADD_BUCKET (issue #100)", () => {
   it("merges a newly created bucket into the existing buckets", () => {
     const initialState = {
       buckets: { Food: 200 },
-      categories: [],
+      unbudgetedCategories: [],
     };
 
     const nextState = reducer(initialState, {
@@ -17,7 +17,7 @@ describe("expensesManager reducer - ADD_BUCKET (issue #100)", () => {
   });
 
   it("does not mutate the previous state", () => {
-    const initialState = { buckets: { Food: 200 }, categories: [] };
+    const initialState = { buckets: { Food: 200 }, unbudgetedCategories: [] };
 
     reducer(initialState, {
       type: ADD_BUCKET,
@@ -27,38 +27,41 @@ describe("expensesManager reducer - ADD_BUCKET (issue #100)", () => {
     expect(initialState.buckets).toEqual({ Food: 200 });
   });
 
-  it("removes the newly bucketed category from the standalone categories list", () => {
-    const initialState = { buckets: { Food: 200 }, categories: ["Gym", "Yoga"] };
+  it("removes the newly bucketed category from the unbudgeted categories list", () => {
+    const initialState = {
+      buckets: { Food: 200 },
+      unbudgetedCategories: ["Gym", "Yoga"],
+    };
 
     const nextState = reducer(initialState, {
       type: ADD_BUCKET,
       payload: { buckets: { Food: 200, Gym: 120 }, categoryName: "Gym" },
     });
 
-    expect(nextState.categories).toEqual(["Yoga"]);
+    expect(nextState.unbudgetedCategories).toEqual(["Yoga"]);
   });
 });
 
 describe("expensesManager reducer - ADD_CATEGORY / GET_CATEGORIES (issue #100)", () => {
-  it("sets the standalone categories list on ADD_CATEGORY", () => {
-    const initialState = { buckets: {}, categories: [] };
+  it("sets the unbudgeted categories list on ADD_CATEGORY", () => {
+    const initialState = { buckets: {}, unbudgetedCategories: [] };
 
     const nextState = reducer(initialState, {
       type: ADD_CATEGORY,
-      payload: { categories: ["Gym"] },
+      payload: { unbudgetedCategories: ["Gym"] },
     });
 
-    expect(nextState.categories).toEqual(["Gym"]);
+    expect(nextState.unbudgetedCategories).toEqual(["Gym"]);
   });
 
-  it("sets the standalone categories list on GET_CATEGORIES", () => {
-    const initialState = { buckets: {}, categories: [] };
+  it("sets the unbudgeted categories list on GET_CATEGORIES", () => {
+    const initialState = { buckets: {}, unbudgetedCategories: [] };
 
     const nextState = reducer(initialState, {
       type: GET_CATEGORIES,
-      payload: { categories: ["Gym", "Yoga"] },
+      payload: { unbudgetedCategories: ["Gym", "Yoga"] },
     });
 
-    expect(nextState.categories).toEqual(["Gym", "Yoga"]);
+    expect(nextState.unbudgetedCategories).toEqual(["Gym", "Yoga"]);
   });
 });

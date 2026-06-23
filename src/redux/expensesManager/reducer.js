@@ -42,9 +42,9 @@ const staticInitialState = {
     Education: 86.45,
     "Baby stuff": 350,
   },
-  // Standalone categories the user created that do not have a bucket
-  // (spending limit) yet (issue #100/#71).
-  categories: [],
+  // Categories the user created that do not have a bucket (spending limit,
+  // i.e. an allowance/budget) yet (issue #100/#71).
+  unbudgetedCategories: [],
 };
 
 // selectedDate must be evaluated lazily (inside the reducer, not at module-load
@@ -190,7 +190,7 @@ export const reducer = (state, action) => {
           ...state.buckets,
           ...payload.buckets,
         },
-        categories: (state.categories || []).filter(
+        unbudgetedCategories: (state.unbudgetedCategories || []).filter(
           (categoryName) =>
             categoryName.toLowerCase() !== payload.categoryName?.toLowerCase()
         ),
@@ -198,12 +198,12 @@ export const reducer = (state, action) => {
     case ADD_CATEGORY:
       return {
         ...state,
-        categories: payload.categories,
+        unbudgetedCategories: payload.unbudgetedCategories,
       };
     case GET_CATEGORIES:
       return {
         ...state,
-        categories: payload.categories,
+        unbudgetedCategories: payload.unbudgetedCategories,
       };
     default:
       return state;

@@ -25,7 +25,7 @@ const AddEntry = ({
   onAddIncome,
   onAddExpense,
   buckets,
-  categories,
+  unbudgetedCategories,
   history,
 }) => {
   const newEntry = getEntryModel({ entryType });
@@ -68,14 +68,14 @@ const AddEntry = ({
       onCancel={navigateBack}
       operationTitle={ADD_NEW}
       buckets={buckets}
-      categories={categories}
+      unbudgetedCategories={unbudgetedCategories}
     />
   );
 };
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  categories: state.expensesManager.categories,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionToProps = (dispatch) => ({

@@ -35,7 +35,7 @@ class EntryForm extends Component {
     const categoryOptions = getEntryCategoryOption(
       this.state.type,
       this.props.buckets,
-      this.props.categories
+      this.props.unbudgetedCategories
     );
     const operationTitle = this.props.operationTitle
       ? `${this.props.operationTitle} `

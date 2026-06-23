@@ -286,7 +286,7 @@ const EditBucket =
 // #100). The storage layer validates that the category is non-empty and does
 // not already have a bucket, so the error is surfaced to the caller (the
 // AddBucket form) to display. Once a category gets a bucket it is no longer a
-// standalone category, so it is removed from `state.categories`.
+// standalone category, so it is removed from `state.unbudgetedCategories`.
 const AddBucket =
   ({ storage }) =>
   ({ bucket }) => {
@@ -318,7 +318,7 @@ const AddCategory =
         const response = await storage.addCategory({ category });
         dispatch({
           type: ADD_CATEGORY,
-          payload: { categories: response },
+          payload: { unbudgetedCategories: response },
         });
         return response;
       } finally {
@@ -336,7 +336,7 @@ const GetCategories =
         const response = await storage.getCategories();
         dispatch({
           type: GET_CATEGORIES,
-          payload: { categories: response || [] },
+          payload: { unbudgetedCategories: response || [] },
         });
         dispatch(setAppLoading(false));
       } catch (error) {

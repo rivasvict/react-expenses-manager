@@ -8,7 +8,7 @@ import ContentTileSection from "../../ContentTitleSection";
 import { addBucket } from "../../../../redux/expensesManager/actionCreators";
 import {
   getBucketValidationError,
-  getCategoriesWithoutBucket,
+  getUnbudgetedCategories,
 } from "../../../../helpers/entriesHelper/entriesHelper";
 
 const DIGIT_MATCHER = /^\d*(\.)*\d+$/;
@@ -20,10 +20,10 @@ const BUCKETS_ROUTE = "/buckets";
  * AddCategory); this form only lists the categories that do not have a
  * bucket yet, since a category needs to exist before it can get one.
  */
-const AddBucket = ({ buckets, categories, onAddBucket, history }) => {
-  const categoriesWithoutBucket = getCategoriesWithoutBucket({
+const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
+  const categoriesWithoutBucket = getUnbudgetedCategories({
     buckets,
-    categories,
+    unbudgetedCategories,
   });
   const [categoryName, setCategoryName] = useState("");
   const [allowance, setAllowance] = useState("");
@@ -143,7 +143,7 @@ const AddBucket = ({ buckets, categories, onAddBucket, history }) => {
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  categories: state.expensesManager.categories,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch) => ({

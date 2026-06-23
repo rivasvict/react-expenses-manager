@@ -13,8 +13,8 @@ import "./styles.scss";
  * require a spending limit; buckets are created afterwards by picking from
  * the categories that do not have one yet (see AddBucket).
  */
-const Categories = ({ buckets, categories, history }) => {
-  const categoryNames = getExpenseCategoryNames(buckets, categories);
+const Categories = ({ buckets, unbudgetedCategories, history }) => {
+  const categoryNames = getExpenseCategoryNames(buckets, unbudgetedCategories);
   const handleGoBack = () => history.goBack();
 
   return (
@@ -71,7 +71,7 @@ const Categories = ({ buckets, categories, history }) => {
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  categories: state.expensesManager.categories,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 export default connect(mapStateToProps)(withRouter(Categories));

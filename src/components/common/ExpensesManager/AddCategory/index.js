@@ -16,7 +16,7 @@ const CATEGORIES_ROUTE = "/categories";
  * selectable when adding an expense, and shows up as an option when later
  * creating a bucket (see AddBucket).
  */
-const AddCategory = ({ buckets, categories, onAddCategory, history }) => {
+const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
 
@@ -25,7 +25,11 @@ const AddCategory = ({ buckets, categories, onAddCategory, history }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const nameError = getCategoryValidationError({ name, buckets, categories });
+    const nameError = getCategoryValidationError({
+      name,
+      buckets,
+      unbudgetedCategories,
+    });
     if (nameError) {
       setError(nameError);
       return;
@@ -98,7 +102,7 @@ const AddCategory = ({ buckets, categories, onAddCategory, history }) => {
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  categories: state.expensesManager.categories,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch) => ({

@@ -2,7 +2,7 @@ const {
   getExpenseCategoryNames,
   getEntryCategoryOption,
   getCategoryValidationError,
-  getCategoriesWithoutBucket,
+  getUnbudgetedCategories,
   getBucketValidationError,
 } = require("./entriesHelper");
 
@@ -59,10 +59,10 @@ describe("category/bucket helpers (issue #100)", () => {
   describe("getCategoryValidationError", () => {
     it("rejects an empty or whitespace-only name", () => {
       expect(
-        getCategoryValidationError({ name: "", buckets: {}, categories: [] })
+        getCategoryValidationError({ name: "", buckets: {}, unbudgetedCategories: [] })
       ).toMatch(/cannot be empty/i);
       expect(
-        getCategoryValidationError({ name: "   ", buckets: {}, categories: [] })
+        getCategoryValidationError({ name: "   ", buckets: {}, unbudgetedCategories: [] })
       ).toMatch(/cannot be empty/i);
     });
 
@@ -70,7 +70,7 @@ describe("category/bucket helpers (issue #100)", () => {
       const error = getCategoryValidationError({
         name: "food",
         buckets: { Food: 200 },
-        categories: [],
+        unbudgetedCategories: [],
       });
       expect(error).toMatch(/already exists/i);
     });
@@ -79,7 +79,7 @@ describe("category/bucket helpers (issue #100)", () => {
       const error = getCategoryValidationError({
         name: "gym",
         buckets: {},
-        categories: ["Gym"],
+        unbudgetedCategories: ["Gym"],
       });
       expect(error).toMatch(/already exists/i);
     });
@@ -89,26 +89,26 @@ describe("category/bucket helpers (issue #100)", () => {
         getCategoryValidationError({
           name: "Gym",
           buckets: { Food: 200 },
-          categories: [],
+          unbudgetedCategories: [],
         })
       ).toBeNull();
     });
   });
 
-  describe("getCategoriesWithoutBucket", () => {
+  describe("getUnbudgetedCategories", () => {
     it("includes the seed expense categories that do not already have a bucket", () => {
-      const result = getCategoriesWithoutBucket({
+      const result = getUnbudgetedCategories({
         buckets: { Food: 200 },
-        categories: [],
+        unbudgetedCategories: [],
       });
       expect(result).toContain("Travel");
       expect(result).not.toContain("Food");
     });
 
     it("includes standalone categories that do not already have a bucket", () => {
-      const result = getCategoriesWithoutBucket({
+      const result = getUnbudgetedCategories({
         buckets: { Food: 200 },
-        categories: ["Gym", "Food"],
+        unbudgetedCategories: ["Gym", "Food"],
       });
       expect(result).toContain("Gym");
       expect(result).not.toContain("Food");
