@@ -19,7 +19,6 @@ const Categories = ({ buckets, unbudgetedCategories, history }) => {
 
   return (
     <MainContentContainer className="categories-container" pageTitle="Categories">
-      {/*@ts-expect-error temporarily ignore this typescript error */}
       <ContentTileSection title="Categories">
         Every expense category, with or without a bucket
       </ContentTileSection>

@@ -164,15 +164,15 @@ const EXPENSE_CATEGORIES = [
  * (bucket) names so every one of them becomes immediately selectable, while
  * keeping the comparison case-insensitive to avoid duplicates like "Gym"/"gym".
  *
- * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store; its keys are the budgeted category names.
+ * @param {Object} [budgetedCategories={}] - `{ [categoryName]: allowance }` from the store; its keys are the budgeted category names the list is derived from.
  * @param {Array<string>} [unbudgetedCategories=[]] - Categories without a bucket (allowance) yet.
  * @returns {Array<string>} The deduplicated, ordered category names.
  */
-function getExpenseCategoryNames(buckets = {}, unbudgetedCategories = []) {
+function getExpenseCategoryNames(budgetedCategories = {}, unbudgetedCategories = []) {
   const categoryNames = [...EXPENSE_CATEGORIES];
   const seen = new Set(categoryNames.map((category) => category.toLowerCase()));
 
-  [...(unbudgetedCategories || []), ...Object.keys(buckets || {})].forEach((name) => {
+  [...(unbudgetedCategories || []), ...Object.keys(budgetedCategories || {})].forEach((name) => {
     const normalized = name.toLowerCase();
     if (!seen.has(normalized)) {
       seen.add(normalized);
@@ -588,6 +588,7 @@ const quantitiesToPercentages = (quantities) => {
 };
 
 export {
+  EXPENSE_CATEGORIES,
   getSumFromEntries,
   formatNumberForDisplay,
   getSum,

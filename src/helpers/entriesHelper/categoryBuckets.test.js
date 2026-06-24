@@ -1,4 +1,5 @@
 const {
+  EXPENSE_CATEGORIES,
   getExpenseCategoryNames,
   getEntryCategoryOption,
   getCategoryValidationError,
@@ -8,11 +9,12 @@ const {
 
 describe("category/bucket helpers (issue #100)", () => {
   describe("getExpenseCategoryNames", () => {
-    it("returns the seed categories when no buckets or categories are provided", () => {
-      const names = getExpenseCategoryNames();
-      expect(names).toContain("Food");
-      expect(names).toContain("Eating out");
-    });
+    it.each(EXPENSE_CATEGORIES)(
+      "returns the seed category %s when no buckets or categories are provided",
+      (seedCategory) => {
+        expect(getExpenseCategoryNames()).toContain(seedCategory);
+      }
+    );
 
     it("appends user-created bucket names that are not seed categories", () => {
       const names = getExpenseCategoryNames({ Gym: 120, Food: 200 });
@@ -38,12 +40,12 @@ describe("category/bucket helpers (issue #100)", () => {
   });
 
   describe("getEntryCategoryOption", () => {
-    it("exposes new buckets as selectable expense options", () => {
+    it("exposes bucketed categories as selectable expense options", () => {
       const options = getEntryCategoryOption("expense", { Gym: 120 });
       expect(options).toContainEqual({ name: "Gym", value: "gym" });
     });
 
-    it("exposes new standalone categories as selectable expense options", () => {
+    it("exposes standalone categories as selectable expense options", () => {
       const options = getEntryCategoryOption("expense", {}, ["Gym"]);
       expect(options).toContainEqual({ name: "Gym", value: "gym" });
     });
