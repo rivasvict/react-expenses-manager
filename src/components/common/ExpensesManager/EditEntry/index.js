@@ -14,6 +14,8 @@ const EditEntry = ({
   entryType,
   selectedDate,
   history,
+  buckets,
+  unbudgetedCategories,
   onGetEntry,
   onSaveEntry,
   onRemoveEntry,
@@ -58,6 +60,8 @@ const EditEntry = ({
       handleEntryRemoval={handleEntryRemoval}
       operationTitle={EDIT}
       onCancel={navigateBack}
+      buckets={buckets}
+      unbudgetedCategories={unbudgetedCategories}
     />
   ) : (
     <>Entry not found</>
@@ -66,6 +70,8 @@ const EditEntry = ({
 
 const mapStateToProps = (state) => ({
   entries: state.expensesManager.entries,
+  buckets: state.expensesManager.buckets,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch) => ({

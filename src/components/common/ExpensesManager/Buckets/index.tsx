@@ -11,7 +11,7 @@ import {
   getCarriedBucketsForMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper.js";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { NavigableMonthHeader } from "../../NavigableMonthHeader/index";
 
 const Buckets = ({ selectedDate, entries, history, buckets }) => {
@@ -84,7 +84,17 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
         />
       ))}
       <Container fluid>
-        <Row>
+        <Row className="vertical-standard-space">
+          <Col>
+            <Link
+              to="/add-bucket"
+              className="btn btn-primary btn-block add-bucket-link"
+            >
+              Add new bucket
+            </Link>
+          </Col>
+        </Row>
+        <Row className="vertical-standard-space">
           <Col>
             <Button
               type="submit"

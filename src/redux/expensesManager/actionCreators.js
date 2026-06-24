@@ -23,5 +23,8 @@ export const {
   getBackupData,
   getBuckets,
   editBucket,
+  addBucket,
   getBucket,
+  addCategory,
+  getCategories,
 } = ActionCreators({ storage, dataParser });

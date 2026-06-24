@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 const BALANCE = "balance";
 const BUCKET = "buckets";
+const CATEGORIES = "categories";
 
 const getItemFromLocalStorageFactory =
   ({ itemType }) =>
@@ -18,6 +19,9 @@ const getBalanceFromLocalStorage = getItemFromLocalStorageFactory({
 const getBucketsFromLocalStorage = getItemFromLocalStorageFactory({
   itemType: BUCKET,
 });
+const getCategoriesFromLocalStorage = getItemFromLocalStorageFactory({
+  itemType: CATEGORIES,
+});
 
 const storeInLocalStorageFactory =
   ({ itemType }) =>
@@ -30,12 +34,71 @@ const storeBalanceInLocalStorage = storeInLocalStorageFactory({
 const storeBucketsInLocalStorage = storeInLocalStorageFactory({
   itemType: BUCKET,
 });
+const storeCategoriesInLocalStorage = storeInLocalStorageFactory({
+  itemType: CATEGORIES,
+});
 
 const editBucketData = async ({ bucketData }) => {
   if (!bucketData) throw new Error("No bucket data was set");
   const storedBuckets = await getBucketsFromLocalStorage();
   const newBuckets = { ...storedBuckets, ...bucketData };
   await storeBucketsInLocalStorage({ data: newBuckets });
+  return newBuckets;
+};
+
+// Creates a brand new expense category, independent of any bucket (issue #100).
+// The category becomes selectable when adding a bucket or an expense entry,
+// without requiring a spending limit to be set right away.
+const addCategoryData = async ({ category }) => {
+  const trimmedName = (category || "").trim();
+  if (!trimmedName) throw new Error("Category name cannot be empty");
+
+  const storedCategories = (await getCategoriesFromLocalStorage()) || [];
+  const storedBuckets = (await getBucketsFromLocalStorage()) || {};
+  const alreadyExists = [
+    ...storedCategories,
+    ...Object.keys(storedBuckets),
+  ].some((existingName) => existingName.toLowerCase() === trimmedName.toLowerCase());
+  if (alreadyExists) {
+    throw new Error(`A category for "${trimmedName}" already exists`);
+  }
+
+  const newCategories = [...storedCategories, trimmedName];
+  await storeCategoriesInLocalStorage({ data: newCategories });
+  return newCategories;
+};
+
+// Adds a bucket (a spending limit) for an existing category (issue #100). The
+// category name must be non-empty and unique among buckets (case-insensitive)
+// so we never create orphan or duplicated buckets. Existing buckets are edited
+// via editBucket. Once a category gets a bucket, it is removed from the
+// standalone categories list so it does not show up twice.
+const addBucketData = async ({ bucket }) => {
+  if (!bucket) throw new Error("No bucket data was set");
+
+  const [name, value] = Object.entries(bucket)[0] || [];
+  const trimmedName = (name || "").trim();
+  if (!trimmedName) throw new Error("Category name cannot be empty");
+
+  const storedBuckets = (await getBucketsFromLocalStorage()) || {};
+  const alreadyExists = Object.keys(storedBuckets).some(
+    (bucketName) => bucketName.toLowerCase() === trimmedName.toLowerCase()
+  );
+  if (alreadyExists) {
+    throw new Error(`A bucket for "${trimmedName}" already exists`);
+  }
+
+  const newBuckets = { ...storedBuckets, [trimmedName]: Number(value) || 0 };
+  await storeBucketsInLocalStorage({ data: newBuckets });
+
+  const storedCategories = (await getCategoriesFromLocalStorage()) || [];
+  const remainingCategories = storedCategories.filter(
+    (categoryName) => categoryName.toLowerCase() !== trimmedName.toLowerCase()
+  );
+  if (remainingCategories.length !== storedCategories.length) {
+    await storeCategoriesInLocalStorage({ data: remainingCategories });
+  }
+
   return newBuckets;
 };
 
@@ -93,6 +156,13 @@ const LocalStorage = () => ({
   },
   editBucket: async ({ bucket }) => {
     return editBucketData({ bucketData: bucket });
+  },
+  addBucket: async ({ bucket }) => {
+    return addBucketData({ bucket });
+  },
+  getCategories: async () => getCategoriesFromLocalStorage(),
+  addCategory: async ({ category }) => {
+    return addCategoryData({ category });
   },
   editBuckets: async ({ buckets }) => {
     return editBucketData({ bucketData: buckets });
