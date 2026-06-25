@@ -38,6 +38,11 @@ const Header = () => {
             onClick={closeToggle}
           />
           <ButtonLikeLink
+            to="/fixed-entries"
+            buttonTitle="Fixed Entries"
+            onClick={closeToggle}
+          />
+          <ButtonLikeLink
             to="/data-management"
             buttonTitle="Data Management"
             onClick={closeToggle}

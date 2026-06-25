@@ -20,6 +20,8 @@ export const EDIT_BUCKET = "SET_BUCKET";
 export const ADD_BUCKET = "ADD_BUCKET";
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
+export const GET_FIXED_ENTRIES = "GET_FIXED_ENTRIES";
+export const SET_FIXED_ENTRY = "SET_FIXED_ENTRY";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -51,18 +53,33 @@ const CategoryChange = () => (categoryValue) => ({
   payload: categoryValue,
 });
 
+// Reads the persisted balance together with the fixed-entries config (issue
+// #103) and groups them into the nested tree with the fixed incomes/expenses
+// materialized into every month. Centralized so every flow that rebuilds the
+// tree (load, edit, remove, fixed-entry changes) keeps fixed entries in sync.
+const getMaterializedEntries = async ({ storage }) => {
+  const balance = await storage.getBalance();
+  const fixedEntries = await storage.getFixedEntries();
+  const entries = getGroupedFilledEntriesByDate()(balance, fixedEntries);
+  return { entries, fixedEntries };
+};
+
 const GetBalance =
   ({ storage }) =>
   () => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        const response = await storage.getBalance();
-        const fullEntriesWithFilledDates =
-          getGroupedFilledEntriesByDate()(response);
+        const { entries, fixedEntries } = await getMaterializedEntries({
+          storage,
+        });
         dispatch({
           type: GET_BALANCE,
-          payload: { entries: fullEntriesWithFilledDates },
+          payload: { entries },
+        });
+        dispatch({
+          type: GET_FIXED_ENTRIES,
+          payload: { fixedEntries },
         });
         dispatch(setAppLoading(false));
       } catch (error) {
@@ -79,8 +96,11 @@ const UploadBalanceBackup =
         dispatch(setAppLoading(true));
         const balance = await getDataFromFile({ dataParser })({ file });
         await storage.setBalance({ balance });
-        const fullEntriesWithFilledDates =
-          getGroupedFilledEntriesByDate()(balance);
+        const fixedEntries = await storage.getFixedEntries();
+        const fullEntriesWithFilledDates = getGroupedFilledEntriesByDate()(
+          balance,
+          fixedEntries
+        );
         dispatch({
           type: SET_BALANCE,
           payload: { entries: fullEntriesWithFilledDates },
@@ -170,7 +190,11 @@ const EditEntry =
       try {
         dispatch(setAppLoading(true));
         const newBalance = await storage.editEntry({ entry });
-        const entries = getGroupedFilledEntriesByDate()(newBalance);
+        const fixedEntries = await storage.getFixedEntries();
+        const entries = getGroupedFilledEntriesByDate()(
+          newBalance,
+          fixedEntries
+        );
         dispatch({ type: EDIT_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
       } catch (error) {
@@ -186,7 +210,11 @@ const RemoveEntry =
       try {
         dispatch(setAppLoading(true));
         const newBalance = await storage.removeEntry({ entryId });
-        const entries = getGroupedFilledEntriesByDate()(newBalance);
+        const fixedEntries = await storage.getFixedEntries();
+        const entries = getGroupedFilledEntriesByDate()(
+          newBalance,
+          fixedEntries
+        );
         dispatch({ type: REMOVE_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
       } catch (error) {
@@ -360,6 +388,62 @@ const GetBucket =
     };
   };
 
+const GetFixedEntries =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch(setAppLoading(true));
+        const fixedEntries = await storage.getFixedEntries();
+        dispatch({ type: GET_FIXED_ENTRIES, payload: { fixedEntries } });
+        dispatch(setAppLoading(false));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+// Persists a forward-only change to a fixed income/expense and re-materializes
+// the balance so the new amount shows up in the affected month and forward
+// without touching past months (issue #103). `amount: null` removes it forward.
+const setFixedEntryAndRefresh =
+  ({ storage }) =>
+  ({ type, category, amount, from }) => {
+    return async (dispatch) => {
+      dispatch(setAppLoading(true));
+      try {
+        const fixedEntries = await storage.setFixedEntry({
+          type,
+          category,
+          amount,
+          from,
+        });
+        const balance = await storage.getBalance();
+        const entries = getGroupedFilledEntriesByDate()(balance, fixedEntries);
+        dispatch({ type: GET_BALANCE, payload: { entries } });
+        dispatch({ type: SET_FIXED_ENTRY, payload: { fixedEntries } });
+        return fixedEntries;
+      } finally {
+        dispatch(setAppLoading(false));
+      }
+    };
+  };
+
+const SetFixedEntry =
+  ({ storage }) =>
+  ({ type, category, amount, from }) =>
+    setFixedEntryAndRefresh({ storage })({ type, category, amount, from });
+
+const RemoveFixedEntry =
+  ({ storage }) =>
+  ({ type, category, from }) =>
+    setFixedEntryAndRefresh({ storage })({
+      type,
+      category,
+      amount: null,
+      from,
+    });
+
 export const ActionCreators = ({ storage, dataParser }) => {
   return {
     addExpense: AddExpense({ storage }),
@@ -379,5 +463,8 @@ export const ActionCreators = ({ storage, dataParser }) => {
     getBucket: GetBucket({ storage }),
     addCategory: AddCategory({ storage }),
     getCategories: GetCategories({ storage }),
+    getFixedEntries: GetFixedEntries({ storage }),
+    setFixedEntry: SetFixedEntry({ storage }),
+    removeFixedEntry: RemoveFixedEntry({ storage }),
   };
 };

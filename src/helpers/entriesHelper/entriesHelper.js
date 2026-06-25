@@ -3,6 +3,7 @@ import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
 import { ENTRY_TYPES_SINGULAR } from "../../constants";
 import { capitalize } from "lodash";
+import { materializeFixedEntries } from "../fixedEntriesHelper/fixedEntriesHelper";
 
 function getSumFromEntries({ entries, absolute = false }) {
   const entriesForSum = entries.map((entry) => {
@@ -425,18 +426,22 @@ const getEntriesWithFilledDates =
  * in a month or a year)
  * @function
  * @returns {function} a callback that does the intended purpose
- * @param {Arrat<Objec>} entries - Array of entries
+ * @param {Array<Object>} entries - Array of entries
+ * @param {Object} [fixedEntries] - Fixed (recurring) incomes/expenses config
+ *   (issue #103). When provided, its resolved amounts are materialized into
+ *   every month of the resulting tree so they appear automatically.
  */
-const getGroupedFilledEntriesByDate = () => (entries) => {
-  if (!entries.length) {
-    return getCurrentEmptyMonth();
-  }
-  const groupedEntriesByDate = getGroupEntriesByDate()(entries);
-  return getEntriesWithFilledDates()({
-    entries: groupedEntriesByDate,
-    firstEntryDate: entries[0].date,
-  });
-};
+const getGroupedFilledEntriesByDate =
+  () =>
+  (entries, fixedEntries) => {
+    const grouped = !entries.length
+      ? getCurrentEmptyMonth()
+      : getEntriesWithFilledDates()({
+          entries: getGroupEntriesByDate()(entries),
+          firstEntryDate: entries[0].date,
+        });
+    return materializeFixedEntries({ entries: grouped, fixedEntries });
+  };
 
 /**
  * Sums the expense amounts of a single month grouped by bucket.
@@ -589,6 +594,7 @@ const quantitiesToPercentages = (quantities) => {
 
 export {
   EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
   getSumFromEntries,
   formatNumberForDisplay,
   getSum,

@@ -19,6 +19,7 @@ import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
 import AddBucket from "../common/ExpensesManager/AddBucket";
 import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
+import FixedEntries from "../common/ExpensesManager/FixedEntries";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -77,6 +78,9 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}categories`}>
               <Categories />
+            </Route>
+            <Route path={`${match.url}fixed-entries`}>
+              <FixedEntries />
             </Route>
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />

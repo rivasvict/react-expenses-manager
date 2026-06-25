@@ -1,7 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
+import {
+  applyFixedEntry,
+  getEmptyFixedEntries,
+} from "../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 const BALANCE = "balance";
 const BUCKET = "buckets";
 const CATEGORIES = "categories";
+const FIXED_ENTRIES = "fixedEntries";
 
 const getItemFromLocalStorageFactory =
   ({ itemType }) =>
@@ -37,6 +42,36 @@ const storeBucketsInLocalStorage = storeInLocalStorageFactory({
 const storeCategoriesInLocalStorage = storeInLocalStorageFactory({
   itemType: CATEGORIES,
 });
+
+// Fixed (recurring) incomes/expenses are stored under their own key as the full
+// time-aware config (issue #103). Unlike balance/buckets, the empty value is an
+// object (not an array), so it has a dedicated getter.
+const getFixedEntriesFromLocalStorage = async () => {
+  const storedData = localStorage.getItem(FIXED_ENTRIES) || "";
+  return storedData ? JSON.parse(storedData) : getEmptyFixedEntries();
+};
+
+const storeFixedEntriesInLocalStorage = storeInLocalStorageFactory({
+  itemType: FIXED_ENTRIES,
+});
+
+// Applies a forward-only change (set, edit, or removal tombstone) to a single
+// category history and persists the whole config. Returns the updated config.
+const setFixedEntryData = async ({ type, category, amount, from }) => {
+  const trimmedCategory = (category || "").trim();
+  if (!trimmedCategory) throw new Error("Category name cannot be empty");
+  if (!from) throw new Error("An effective-from month is required");
+
+  const storedFixedEntries = await getFixedEntriesFromLocalStorage();
+  const newFixedEntries = applyFixedEntry(storedFixedEntries, {
+    type,
+    category: trimmedCategory,
+    amount,
+    from,
+  });
+  await storeFixedEntriesInLocalStorage({ data: newFixedEntries });
+  return newFixedEntries;
+};
 
 const editBucketData = async ({ bucketData }) => {
   if (!bucketData) throw new Error("No bucket data was set");
@@ -163,6 +198,17 @@ const LocalStorage = () => ({
   getCategories: async () => getCategoriesFromLocalStorage(),
   addCategory: async ({ category }) => {
     return addCategoryData({ category });
+  },
+  getFixedEntries: async () => getFixedEntriesFromLocalStorage(),
+  // Set or edit a fixed income/expense effective from a month (issue #103). The
+  // change persists from that month forward; earlier months are untouched.
+  setFixedEntry: async ({ type, category, amount, from }) => {
+    return setFixedEntryData({ type, category, amount, from });
+  },
+  // Remove a fixed income/expense from a month forward by writing a tombstone.
+  // Earlier months keep their value, mirroring the edition behaviour.
+  removeFixedEntry: async ({ type, category, from }) => {
+    return setFixedEntryData({ type, category, amount: null, from });
   },
   editBuckets: async ({ buckets }) => {
     return editBucketData({ bucketData: buckets });
