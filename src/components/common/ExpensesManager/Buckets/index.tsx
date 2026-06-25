@@ -56,7 +56,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
     });
 
   const totalBucketAllocation = Object.keys(buckets).reduce(
-    (sum, bucketName) => buckets[bucketName] + sum,
+    (sum, bucketName) => (carriedBuckets[bucketName]?.allowance ?? 0) + sum,
     0
   );
 
