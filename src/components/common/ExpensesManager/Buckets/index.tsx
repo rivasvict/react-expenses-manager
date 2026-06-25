@@ -13,9 +13,11 @@ import {
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { NavigableMonthHeader } from "../../NavigableMonthHeader/index";
+import emptyBucketsImage from "../../../../images/buckets-empty.png";
 
 const Buckets = ({ selectedDate, entries, history, buckets }) => {
   const screenTitle = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;
+  const hasBuckets = Object.keys(buckets).length > 0;
 
   /**
    * Carry-on buckets: each bucket's availability is the accumulation of its
@@ -67,22 +69,43 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
       className="buckets-container"
       pageTitle="Monthly Buckets"
     >
-      {/*@ts-expect-error temporarily ignore this typescript error */}
-      <ContentTileSection title="Summary">
-        {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
-      </ContentTileSection>
-      <NavigableMonthHeader />
-      {monthlyBuckets.map((bucket, index) => (
-        <Bucket
-          key={`bucket-${bucket.name}-${bucket.availability}-${bucket.spending}-${index}`}
-          category={bucket.label}
-          allowance={bucket.allowance}
-          carryOver={bucket.carryOver}
-          availability={bucket.availability}
-          spending={bucket.spending}
-          consuptionPercentage={bucket.consuptionPercentage}
-        />
-      ))}
+      {hasBuckets ? (
+        <>
+          {/*@ts-expect-error temporarily ignore this typescript error */}
+          <ContentTileSection title="Summary">
+            {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
+          </ContentTileSection>
+          <NavigableMonthHeader />
+          {monthlyBuckets.map((bucket, index) => (
+            <Bucket
+              key={`bucket-${bucket.name}-${bucket.availability}-${bucket.spending}-${index}`}
+              category={bucket.label}
+              allowance={bucket.allowance}
+              carryOver={bucket.carryOver}
+              availability={bucket.availability}
+              spending={bucket.spending}
+              consuptionPercentage={bucket.consuptionPercentage}
+            />
+          ))}
+        </>
+      ) : (
+        <Container fluid className="buckets-empty-state" data-testid="buckets-empty-state">
+          <Row>
+            <Col className="text-center">
+              <img
+                className="buckets-empty-state__image"
+                src={emptyBucketsImage}
+                alt="No buckets yet"
+              />
+              <h2 className="buckets-empty-state__title">No buckets yet</h2>
+              <p className="buckets-empty-state__message">
+                You haven&apos;t added any buckets. Add your first bucket to
+                start tracking your monthly spending limits.
+              </p>
+            </Col>
+          </Row>
+        </Container>
+      )}
       <Container fluid>
         <Row className="vertical-standard-space">
           <Col>
