@@ -70,15 +70,15 @@ const mergeBucketsData = async ({ bucketData }) => {
 const editBucketForMonth = async ({ bucketName, limit, fromYearMonth }) => {
   if (!bucketName) throw new Error("No bucket name was set");
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
-  const history = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
+  const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
 
-  const existingIndex = history.findIndex((e) => e.from === fromYearMonth);
+  const existingIndex = historyBuckets.findIndex((e) => e.from === fromYearMonth);
   const updatedHistory =
     existingIndex >= 0
-      ? history.map((e, i) =>
+      ? historyBuckets.map((e, i) =>
           i === existingIndex ? { from: fromYearMonth, limit } : e
         )
-      : [...history, { from: fromYearMonth, limit }];
+      : [...historyBuckets, { from: fromYearMonth, limit }];
 
   updatedHistory.sort((a, b) => (a.from <= b.from ? -1 : 1));
 

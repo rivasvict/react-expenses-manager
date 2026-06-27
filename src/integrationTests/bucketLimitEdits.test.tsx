@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, JANUARY, FEBRUARY, MARCH, APRIL, MAY } from "./helpers/seed";
+import { goToPrevMonth, goToNextMonth } from "./helpers/navigation";
 
 // Pinned to May 2026 so we can navigate from May back through earlier months.
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -14,22 +15,6 @@ beforeEach(() => {
 afterEach(() => {
   jest.useRealTimers();
 });
-
-async function goToPrevMonth(
-  user: Awaited<ReturnType<typeof renderApp>>["user"],
-  expectedTitle: string
-) {
-  await user.click(await screen.findByRole("button", { name: /prev/i }));
-  await screen.findByText(expectedTitle);
-}
-
-async function goToNextMonth(
-  user: Awaited<ReturnType<typeof renderApp>>["user"],
-  expectedTitle: string
-) {
-  await user.click(await screen.findByRole("button", { name: /next/i }));
-  await screen.findByText(expectedTitle);
-}
 
 function bucketAvailability(testIdBase: string): string {
   return screen.getByTestId(`${testIdBase}-availability`).textContent as string;

@@ -10,6 +10,7 @@ import {
   MAY,
   DECEMBER,
 } from "./helpers/seed";
+import { goToPrevMonth } from "./helpers/navigation";
 
 // Pinned to May 2026 so the filled month tree spans December 2025 -> May 2026
 // (the range used in issue #97's worked example).
@@ -53,14 +54,6 @@ function seedIssueExample() {
     { date: ts(2026, MAY), amount: "210", type: "expense", categories_path: ",food," },
     { date: ts(2026, MAY), amount: "210", type: "expense", categories_path: ",eating out," },
   ]);
-}
-
-async function goToPrevMonth(
-  user: Awaited<ReturnType<typeof renderApp>>["user"],
-  expectedTitle: string
-) {
-  await user.click(await screen.findByRole("button", { name: /prev/i }));
-  await screen.findByText(expectedTitle);
 }
 
 function bucketCarryOver(testIdBase: string): string {

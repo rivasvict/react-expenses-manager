@@ -18,10 +18,14 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
 
   useEffect(() => {
     (async () => {
-      const bucketFromDb = await onGetBucket({ bucketName });
-      const [name, history] = Object.entries(bucketFromDb)[0] as [string, any];
+      const bucketFromDb: Record<string, number | Array<{ from: string; limit: number }>> =
+        await onGetBucket({ bucketName });
+      const [name, bucketsHistory] = Object.entries(bucketFromDb)[0] as [
+        string,
+        number | Array<{ from: string; limit: number }>
+      ];
       const yearMonth = toYearMonth(selectedDate.year, selectedDate.month);
-      const value = getActiveLimitForMonth(history, yearMonth);
+      const value = getActiveLimitForMonth(bucketsHistory, yearMonth);
       setBucket({ name, value });
     })();
   }, [bucketName, onGetBucket, selectedDate]);
