@@ -9,32 +9,30 @@ import {
 } from "../../../../redux/expensesManager/actionCreators";
 import { FormButton, FormContent, InputNumber } from "../../Forms";
 import { Col, Form, Row, Button } from "react-bootstrap";
+import { getActiveLimitForMonth, toYearMonth } from "../../../../helpers/entriesHelper/entriesHelper";
 
-const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
+const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
   const params = useParams();
   const { bucketName } = params;
-  const [bucket, setBucket] = useState({ name: "", value: 0 });
+  const [bucket, setBucket] = useState<{ name: string; value: number | "" }>({ name: "", value: 0 });
 
   useEffect(() => {
     (async () => {
-      /**
-       * TODO: Define central expected type from the database
-       */
-      const bucketFromDb: Record<string, number> = await onGetBucket({
-        bucketName,
-      });
-      /**
-       * TODO: Temporary way to extract the value and name of the bucket
-       * while I find a better way to structure buckets in the database
-       **/
-      const [name, value] = Object.entries(bucketFromDb)[0];
+      const bucketFromDb: Record<string, number | Array<{ from: string; limit: number }>> =
+        await onGetBucket({ bucketName });
+      const [name, bucketsHistory] = Object.entries(bucketFromDb)[0] as [
+        string,
+        number | Array<{ from: string; limit: number }>
+      ];
+      const yearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+      const value = getActiveLimitForMonth(bucketsHistory, yearMonth);
       setBucket({ name, value });
     })();
-  }, [bucketName, onGetBucket]);
+  }, [bucketName, onGetBucket, selectedDate]);
 
   const saveBucket = async (editedBucketValue) => {
     try {
-      await onEditBucket({ bucket: editedBucketValue });
+      await onEditBucket({ bucket: editedBucketValue, selectedDate });
     } catch (error) {
       throw error;
     }
@@ -50,7 +48,7 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
         formProps={{
           onSubmit: (event) => {
             event.preventDefault();
-            const editedBucket = { [bucket.name]: bucket.value };
+            const editedBucket = { [bucket.name]: Number(bucket.value) };
             saveBucket(editedBucket);
             history.goBack();
           },
@@ -69,8 +67,12 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
                       value={bucket?.value}
                       onChange={(event) => {
                         const value = event?.currentTarget?.value;
+                        if (!value) {
+                          setBucket({ name: bucket?.name, value: "" });
+                          return;
+                        }
                         const digitMatcher = /^\d*(\.)*\d+$/;
-                        if (value && digitMatcher.test(value)) {
+                        if (digitMatcher.test(value)) {
                           setBucket({
                             name: bucket?.name,
                             value: parseFloat(value),
@@ -108,12 +110,17 @@ const EditBucket = ({ onGetBucket, onEditBucket, history }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  selectedDate: state.expensesManager.selectedDate,
+});
+
 const mapActionsToProps = (dispatch) => ({
   onGetBucket: ({ bucketName }) => dispatch(getBucket({ bucketName })),
-  onEditBucket: ({ bucket }) => dispatch(editBucket({ bucket })),
+  onEditBucket: ({ bucket, selectedDate }) =>
+    dispatch(editBucket({ bucket, selectedDate })),
 });
 
 export default connect(
-  mapActionsToProps,
+  mapStateToProps,
   mapActionsToProps
 )(withRouter(EditBucket));

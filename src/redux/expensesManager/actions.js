@@ -1,6 +1,7 @@
 import {
   getCurrentEmptyMonth,
   getGroupedFilledEntriesByDate,
+  toYearMonth,
 } from "../../helpers/entriesHelper/entriesHelper";
 import { getCurrentTimestamp } from "../../helpers/date";
 import { getDataFromFile } from "./utils";
@@ -266,11 +267,17 @@ const GetBuckets =
 
 const EditBucket =
   ({ storage }) =>
-  ({ bucket }) => {
+  ({ bucket, selectedDate }) => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        const response = await storage.editBucket({ bucket });
+        const [bucketName, limit] = Object.entries(bucket)[0];
+        const fromYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+        const response = await storage.editBucket({
+          bucketName,
+          limit,
+          fromYearMonth,
+        });
         dispatch({
           type: EDIT_BUCKET,
           payload: { buckets: response },

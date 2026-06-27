@@ -40,6 +40,7 @@ const Bucket = ({
       <RowLink
         to={`edit-bucket/${category.toLowerCase().replace(/\s/g, "-")}`}
         title={`Edit ${category}`}
+        aria-label={`Edit ${category}`}
         className="bucket-container"
         data-testid={testId}
       >
