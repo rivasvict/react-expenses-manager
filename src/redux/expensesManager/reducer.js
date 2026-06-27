@@ -25,26 +25,9 @@ import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntr
 const staticInitialState = {
   entries: {},
   category: "",
-  /** TODO: When buckets will be fully implemented,
-   * make sure these values do not exist and this
-   * `buckets` object is empty. The buckets are
-   * meant to be added by the user and stored for
-   * later retrieval
-   */
-  buckets: {
-    "Eating out": 300,
-    Alcohol: 150,
-    "House stuff": 100,
-    Beauty: 100,
-    Transportation: 300,
-    "Fun activities": 200,
-    Unexpected: 300,
-    Sports: 250,
-    "Person 1 bucket": 200,
-    "Person 2 bucket": 200,
-    Education: 86.45,
-    "Baby stuff": 350,
-  },
+  // Buckets start empty: they are created by the user and stored for later
+  // retrieval. The screen shows an empty state until the first bucket is added.
+  buckets: {},
   // Categories the user created that do not have a bucket (spending limit,
   // i.e. an allowance/budget) yet (issue #100/#71).
   unbudgetedCategories: [],

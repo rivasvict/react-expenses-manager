@@ -444,6 +444,41 @@ const getGroupedFilledEntriesByDate =
   };
 
 /**
+ * Converts a 0-indexed month + year to an ISO-style "YYYY-MM" string used as
+ * the `from` key in the per-month bucket limit history.
+ *
+ * @param {number} year
+ * @param {number} month - 0-indexed (0 = January, 11 = December)
+ * @returns {string} e.g. "2026-03"
+ */
+const toYearMonth = (year, month) =>
+  `${year}-${String(month + 1).padStart(2, "0")}`;
+
+/**
+ * Resolves the effective spending limit for a bucket in a given month.
+ *
+ * Bucket values in storage can be:
+ *   - a plain number (old format, backward-compatible) — returned as-is.
+ *   - an array of `{ from: "YYYY-MM", limit: number }` entries (new format) —
+ *     the most recent entry whose `from` <= `yearMonth` is used.
+ *
+ * If no entry is <= yearMonth (i.e. the bucket was created after the requested
+ * month), the oldest entry's limit is returned so the bucket still has a
+ * sensible value.
+ *
+ * @param {number|Array<{from: string, limit: number}>} bucketValue
+ * @param {string} yearMonth - "YYYY-MM" (1-indexed month)
+ * @returns {number}
+ */
+const getActiveLimitForMonth = (bucketValue, yearMonth) => {
+  if (typeof bucketValue === "number") return bucketValue;
+  if (!Array.isArray(bucketValue) || bucketValue.length === 0) return 0;
+  const sorted = [...bucketValue].sort((a, b) => (a.from > b.from ? -1 : 1));
+  const active = sorted.find((entry) => entry.from <= yearMonth);
+  return active ? active.limit : sorted[sorted.length - 1].limit;
+};
+
+/**
  * Sums the expense amounts of a single month grouped by bucket.
  *
  * Spending for a bucket is the accumulated amount of every expense whose
@@ -534,8 +569,10 @@ const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
     return accumulatedRemainders;
   }, {});
 
+  // Initial state (used when there are no recorded months to walk through).
+  const selectedYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
   const carriedBuckets = bucketNames.reduce((carried, bucketName) => {
-    const allowance = buckets[bucketName];
+    const allowance = getActiveLimitForMonth(buckets[bucketName], selectedYearMonth);
     carried[bucketName] = {
       allowance,
       carryOver: 0,
@@ -547,13 +584,14 @@ const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
   }, {});
 
   for (const { year, month } of recordedMonths) {
+    const yearMonth = toYearMonth(year, month);
     const expenses = entries?.[year]?.[month]?.expenses || [];
     const spendingByBucket = getMonthSpendingByBucket({ expenses, bucketNames });
     const isSelectedMonth =
       year === selectedDate.year && month === selectedDate.month;
 
     bucketNames.forEach((bucketName) => {
-      const allowance = buckets[bucketName];
+      const allowance = getActiveLimitForMonth(buckets[bucketName], yearMonth);
       const carryOver = remainders[bucketName];
       const availability = allowance + carryOver;
       const spending = spendingByBucket[bucketName];
@@ -614,4 +652,6 @@ export {
   getMonthSpendingByBucket,
   getRecordedMonthsUntil,
   getCarriedBucketsForMonth,
+  toYearMonth,
+  getActiveLimitForMonth,
 };

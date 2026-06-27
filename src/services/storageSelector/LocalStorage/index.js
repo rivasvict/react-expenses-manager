@@ -73,10 +73,51 @@ const setFixedEntryData = async ({ type, category, amount, from }) => {
   return newFixedEntries;
 };
 
-const editBucketData = async ({ bucketData }) => {
+// Converts an old-format number value to the new per-month history array so
+// that legacy data in localStorage remains readable after the migration.
+const normalizeBucketValue = (value) => {
+  if (Array.isArray(value)) return value;
+  return [{ from: "0000-00", limit: Number(value) || 0 }];
+};
+
+// Used by the CSV restore path: overwrites all bucket limits wholesale. Each
+// incoming value is stored as a new history array rooted at "0000-00" so the
+// restored data is immediately in the current format.
+const mergeBucketsData = async ({ bucketData }) => {
   if (!bucketData) throw new Error("No bucket data was set");
   const storedBuckets = await getBucketsFromLocalStorage();
-  const newBuckets = { ...storedBuckets, ...bucketData };
+  const normalizedIncoming = Object.fromEntries(
+    Object.entries(bucketData).map(([name, value]) => [
+      name,
+      normalizeBucketValue(value),
+    ])
+  );
+  const newBuckets = { ...storedBuckets, ...normalizedIncoming };
+  await storeBucketsInLocalStorage({ data: newBuckets });
+  return newBuckets;
+};
+
+// Writes a new limit entry for `bucketName` starting from `fromYearMonth`
+// ("YYYY-MM", 1-indexed). If an entry for that exact month already exists it
+// is replaced; otherwise a new entry is appended and the history is kept
+// sorted chronologically. Old-format number values are transparently migrated
+// to the array form on the first edit.
+const editBucketForMonth = async ({ bucketName, limit, fromYearMonth }) => {
+  if (!bucketName) throw new Error("No bucket name was set");
+  const storedBuckets = (await getBucketsFromLocalStorage()) || {};
+  const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
+
+  const existingIndex = historyBuckets.findIndex((e) => e.from === fromYearMonth);
+  const updatedHistory =
+    existingIndex >= 0
+      ? historyBuckets.map((e, i) =>
+          i === existingIndex ? { from: fromYearMonth, limit } : e
+        )
+      : [...historyBuckets, { from: fromYearMonth, limit }];
+
+  updatedHistory.sort((a, b) => (a.from <= b.from ? -1 : 1));
+
+  const newBuckets = { ...storedBuckets, [bucketName]: updatedHistory };
   await storeBucketsInLocalStorage({ data: newBuckets });
   return newBuckets;
 };
@@ -123,7 +164,10 @@ const addBucketData = async ({ bucket }) => {
     throw new Error(`A bucket for "${trimmedName}" already exists`);
   }
 
-  const newBuckets = { ...storedBuckets, [trimmedName]: Number(value) || 0 };
+  const newBuckets = {
+    ...storedBuckets,
+    [trimmedName]: [{ from: "0000-00", limit: Number(value) || 0 }],
+  };
   await storeBucketsInLocalStorage({ data: newBuckets });
 
   const storedCategories = (await getCategoriesFromLocalStorage()) || [];
@@ -189,8 +233,8 @@ const LocalStorage = () => ({
     await storeBucketsInLocalStorage({ data: buckets });
     return getBucketsFromLocalStorage();
   },
-  editBucket: async ({ bucket }) => {
-    return editBucketData({ bucketData: bucket });
+  editBucket: async ({ bucketName, limit, fromYearMonth }) => {
+    return editBucketForMonth({ bucketName, limit, fromYearMonth });
   },
   addBucket: async ({ bucket }) => {
     return addBucketData({ bucket });
@@ -211,7 +255,7 @@ const LocalStorage = () => ({
     return setFixedEntryData({ type, category, amount: null, from });
   },
   editBuckets: async ({ buckets }) => {
-    return editBucketData({ bucketData: buckets });
+    return mergeBucketsData({ bucketData: buckets });
   },
   getBucket: async ({ bucketName }) => {
     const buckets = await getBucketsFromLocalStorage();

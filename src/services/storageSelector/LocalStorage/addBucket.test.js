@@ -13,16 +13,19 @@ describe("LocalStorage.addBucket (issue #100)", () => {
 
     const result = await storage.addBucket({ bucket: { Gym: 120 } });
 
-    expect(result).toEqual({ Food: 200, Gym: 120 });
+    expect(result).toEqual({
+      Food: 200,
+      Gym: [{ from: "0000-00", limit: 120 }],
+    });
     expect(JSON.parse(localStorage.getItem("buckets"))).toEqual({
       Food: 200,
-      Gym: 120,
+      Gym: [{ from: "0000-00", limit: 120 }],
     });
   });
 
   it("trims the name and coerces the allowance to a number", async () => {
     const result = await storage.addBucket({ bucket: { "  Gym  ": "120" } });
-    expect(result).toEqual({ Gym: 120 });
+    expect(result).toEqual({ Gym: [{ from: "0000-00", limit: 120 }] });
   });
 
   it("rejects a duplicate name (case-insensitive) without persisting", async () => {
