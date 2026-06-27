@@ -14,7 +14,7 @@ import { getActiveLimitForMonth, toYearMonth } from "../../../../helpers/entries
 const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
   const params = useParams();
   const { bucketName } = params;
-  const [bucket, setBucket] = useState({ name: "", value: 0 });
+  const [bucket, setBucket] = useState<{ name: string; value: number | "" }>({ name: "", value: 0 });
 
   useEffect(() => {
     (async () => {
@@ -48,7 +48,7 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
         formProps={{
           onSubmit: (event) => {
             event.preventDefault();
-            const editedBucket = { [bucket.name]: bucket.value };
+            const editedBucket = { [bucket.name]: Number(bucket.value) };
             saveBucket(editedBucket);
             history.goBack();
           },
@@ -68,7 +68,7 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
                       onChange={(event) => {
                         const value = event?.currentTarget?.value;
                         if (!value) {
-                          setBucket({ name: bucket?.name, value: 0 });
+                          setBucket({ name: bucket?.name, value: "" });
                           return;
                         }
                         const digitMatcher = /^\d*(\.)*\d+$/;
