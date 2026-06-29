@@ -4,49 +4,111 @@ import {
   getEntryById,
   editEntry,
   removeEntry,
+  editFixedEntry,
+  removeFixedEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
+import { getMonthKey } from "../../../../helpers/date";
+import { resolveFixedEntryState } from "../../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 
 const EDIT = "Edit";
+
+// Materialized recurring entries carry a synthetic `fixed-<id>` id (issue #103).
+const FIXED_ID_PREFIX = "fixed-";
+const isFixedEntryId = (entryId) => entryId?.startsWith(FIXED_ID_PREFIX);
+const getFixedId = (entryId) => entryId.slice(FIXED_ID_PREFIX.length);
+
 const EditEntry = ({
   entryType,
   selectedDate,
   history,
   buckets,
   unbudgetedCategories,
+  fixedEntries,
   onGetEntry,
   onSaveEntry,
   onRemoveEntry,
+  onEditFixedEntry,
+  onRemoveFixedEntry,
 }) => {
   const params = useParams();
   const { entryId } = params;
+  const isFixed = isFixedEntryId(entryId);
+  const fixedId = isFixed ? getFixedId(entryId) : null;
+  // Edits/removals to a recurring entry are anchored to the viewed month, so
+  // they take effect from that month forward (issue #103).
+  const fromMonth = getMonthKey(selectedDate);
+
   const [entry, setEntry] = useState(null);
   useEffect(() => {
+    if (isFixed) {
+      // Resolve the recurring entry's active state for the viewed month from
+      // the store, so the form shows what currently applies that month.
+      const definition = (fixedEntries || []).find(
+        (candidate) => candidate.id === fixedId
+      );
+      const state = definition
+        ? resolveFixedEntryState(definition.history, fromMonth)
+        : null;
+      setEntry(
+        state
+          ? {
+              id: entryId,
+              fixedId,
+              isFixed: true,
+              type: definition.type,
+              amount: state.amount,
+              description: state.description,
+              categories_path: state.categories_path,
+            }
+          : null
+      );
+      return;
+    }
     (async () => {
       const entryToDisplay = await onGetEntry({ entryId });
       setEntry(entryToDisplay);
     })();
-  }, [entryId, onGetEntry]);
+  }, [entryId, isFixed, fixedId, fromMonth, fixedEntries, onGetEntry]);
+
   const navigateBack = () => {
     history.goBack();
   };
 
   const handleSubmit = (event, { entryToAdd }) => {
     event.preventDefault();
-    const entry = Object.assign({}, entryToAdd);
+    const editedEntry = Object.assign({}, entryToAdd);
     const digitMatcher = /^\d*(\.)*\d+$/;
-    const amount = entry.amount;
+    const amount = editedEntry.amount;
     // TODO: review the validation for the missing category
-    if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
-      onSaveEntry({ entry });
+    if (
+      amount &&
+      digitMatcher.test(amount) &&
+      editedEntry.categories_path !== ""
+    ) {
+      if (isFixed) {
+        onEditFixedEntry({
+          id: fixedId,
+          from: fromMonth,
+          amount: editedEntry.amount,
+          description: editedEntry.description,
+          categories_path: editedEntry.categories_path,
+        });
+      } else {
+        onSaveEntry({ entry: editedEntry });
+      }
       navigateBack();
     }
   };
 
-  const handleEntryRemoval = ({ entryId }) => {
-    onRemoveEntry({ entryId });
+  const handleEntryRemoval = () => {
+    if (isFixed) {
+      onRemoveFixedEntry({ id: fixedId, from: fromMonth });
+    } else {
+      onRemoveEntry({ entryId });
+    }
     // TODO: Try using back navigation instead
     navigateBack();
   };
@@ -60,6 +122,8 @@ const EditEntry = ({
       handleEntryRemoval={handleEntryRemoval}
       operationTitle={EDIT}
       onCancel={navigateBack}
+      allowRecurring={isFixed}
+      recurringReadOnly={isFixed}
       buckets={buckets}
       unbudgetedCategories={unbudgetedCategories}
     />
@@ -72,12 +136,17 @@ const mapStateToProps = (state) => ({
   entries: state.expensesManager.entries,
   buckets: state.expensesManager.buckets,
   unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  fixedEntries: state.expensesManager.fixedEntries,
 });
 
 const mapActionsToProps = (dispatch) => ({
   onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
   onSaveEntry: ({ entryId, entry }) => dispatch(editEntry({ entryId, entry })),
   onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
+  onEditFixedEntry: ({ id, from, amount, description, categories_path }) =>
+    dispatch(editFixedEntry({ id, from, amount, description, categories_path })),
+  onRemoveFixedEntry: ({ id, from }) =>
+    dispatch(removeFixedEntry({ id, from })),
 });
 
 export default connect(

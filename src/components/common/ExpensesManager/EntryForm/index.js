@@ -12,7 +12,13 @@ import { MainContentContainer } from "../../MainContentContainer";
 class EntryForm extends Component {
   constructor(props) {
     super();
-    this.state = props.entry;
+    // `isRecurring` drives the "fixed entry" toggle (issue #103). It is seeded
+    // from the entry being edited (an already-fixed entry) or the `recurring`
+    // prop, and defaults to off so the normal flow creates a one-off entry.
+    this.state = {
+      ...props.entry,
+      isRecurring: Boolean(props.entry?.isFixed || props.recurring),
+    };
   }
 
   handleInputChange = (event) => {
@@ -20,6 +26,11 @@ class EntryForm extends Component {
     this.setState(() => {
       return { [name]: value };
     });
+  };
+
+  toggleRecurring = (event) => {
+    const { checked } = event.currentTarget;
+    this.setState(() => ({ isRecurring: checked }));
   };
 
   setCategory = (event) => {
@@ -50,6 +61,7 @@ class EntryForm extends Component {
             onSubmit: (event) =>
               this.props.handleSubmit(event, {
                 entryToAdd: this.state,
+                isRecurring: this.state.isRecurring,
               }),
             className: "app-form",
           }}
@@ -84,6 +96,19 @@ class EntryForm extends Component {
                   className="vertical-standard-space"
                 />
               </Form.Group>
+              {this.props.allowRecurring && (
+                <Form.Group className="vertical-standard-space">
+                  <Form.Check
+                    type="switch"
+                    id="entry-recurring-switch"
+                    name="isRecurring"
+                    label="Recurring (applies every month)"
+                    checked={Boolean(this.state.isRecurring)}
+                    disabled={Boolean(this.props.recurringReadOnly)}
+                    onChange={this.toggleRecurring}
+                  />
+                </Form.Group>
+              )}
             </Col>
           </Row>
           <Row className="bottom-container container-fluid vertical-standard-space">

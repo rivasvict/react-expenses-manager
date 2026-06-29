@@ -1,4 +1,5 @@
 import { screen, waitFor } from "@testing-library/react";
+import { UserEvent } from "@testing-library/user-event";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH } from "./helpers/seed";
 
@@ -7,14 +8,11 @@ const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
 beforeEach(() => {
   localStorage.clear();
-  // A "Food" bucket guarantees the "Food" expense category is available in the
-  // fixed-expenses table.
-  localStorage.setItem("buckets", JSON.stringify({ Food: 200 }));
   // A single real income in March makes March, April and May navigable.
   seedEntries([
     {
       date: ts(2026, MARCH),
-      amount: "100",
+      amount: "1000",
       type: "income",
       categories_path: ",salary,",
     },
@@ -27,80 +25,106 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-const foodInput = () =>
-  screen.getByTestId("fixed-input-expense-food") as HTMLInputElement;
+const goPrev = async (user: UserEvent, expected: string) => {
+  await user.click(screen.getByRole("button", { name: "Prev" }));
+  await screen.findByText(expected);
+};
+const goNext = async (user: UserEvent, expected: string) => {
+  await user.click(screen.getByRole("button", { name: "Next" }));
+  await screen.findByText(expected);
+};
 
-const expectFoodValue = async (value: string) =>
-  waitFor(() => expect(foodInput().value).toBe(value));
+// Adds a recurring expense from the dashboard using the normal Add Expense
+// form with the "Recurring" toggle switched on.
+const addRecurringExpense = async (
+  user: UserEvent,
+  { amount, description }: { amount: string; description: string }
+) => {
+  await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+  await user.type(
+    await screen.findByPlaceholderText(/insert expense amount/i),
+    amount
+  );
+  await user.type(screen.getByPlaceholderText(/description/i), description);
+  await user.selectOptions(
+    screen.getByRole("combobox"),
+    screen.getByRole("option", { name: "Food" })
+  );
+  await user.click(screen.getByLabelText(/recurring/i));
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  // Back on the dashboard after submitting.
+  await screen.findByRole("link", { name: /add expenses/i });
+};
 
-describe("fixed (recurring) incomes/expenses (issue #103)", () => {
-  it("starts with no fixed amounts for any category", async () => {
-    await renderApp("/fixed-entries");
+describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", () => {
+  it("creates recurring entries via the toggle, allows several per category, and recurs forward", async () => {
+    const { user } = await renderApp("/");
 
-    expect(foodInput().value).toBe("");
-    expect(
-      (screen.getByTestId("fixed-input-income-salary") as HTMLInputElement).value
-    ).toBe("");
+    // Work from March so the recurring entries apply March → May.
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+    await addRecurringExpense(user, { amount: "50", description: "Snacks" });
+
+    // The dedicated Fixed Entries list shows both same-category recurring
+    // expenses for March.
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
+
+    // They recur into the following months automatically.
+    await goNext(user, "April 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
   });
 
-  it("applies a fixed expense from a month forward, and edits/removals only affect that month onward", async () => {
-    const { user } = await renderApp("/fixed-entries");
+  it("edits and removes a recurring entry from the viewed month forward", async () => {
+    const { user } = await renderApp("/");
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+    await addRecurringExpense(user, { amount: "50", description: "Snacks" });
 
-    // Move the header from May back to March (two months back).
-    await user.click(screen.getByRole("button", { name: "Prev" }));
-    await screen.findByText("April 2026");
-    await user.click(screen.getByRole("button", { name: "Prev" }));
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
 
-    // Set a fixed Food expense of 200 effective from March.
-    await user.type(foodInput(), "200");
-    await user.click(screen.getByTestId("fixed-save-expense-food"));
-    await expectFoodValue("200");
+    // Edit "Snacks" while viewing April → 75 from April forward.
+    await goNext(user, "April 2026");
+    await user.click(await screen.findByText(/Food - Snacks/));
+    const amountInput = await screen.findByPlaceholderText(
+      /insert expense amount/i
+    );
+    await user.clear(amountInput);
+    await user.type(amountInput, "75");
+    await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // It is materialized as a real expense: the dashboard for March nets the
-    // 100 income against the 200 fixed expense (forward-only end-to-end).
-    await user.click(screen.getByRole("link", { name: /home/i }));
-    await waitFor(() =>
-      expect(screen.getByTitle("Summary")).toHaveTextContent("-$100.00")
+    // April now shows 75; March keeps the original 50 (forward-only edit).
+    // The amounts uniquely identify the Snacks row across the two months.
+    await screen.findByText("April 2026");
+    expect(await screen.findByText("$75.00")).toBeInTheDocument();
+    expect(screen.queryByText("$50.00")).not.toBeInTheDocument();
+
+    await goPrev(user, "March 2026");
+    expect(await screen.findByText("$50.00")).toBeInTheDocument();
+    expect(screen.queryByText("$75.00")).not.toBeInTheDocument();
+
+    // Remove "Groceries" while viewing May → gone from May, kept in March.
+    await goNext(user, "April 2026");
+    await goNext(user, "May 2026");
+    await user.click(await screen.findByText(/Food - Groceries/));
+    await user.click(
+      await screen.findByRole("button", { name: /remove entry/i })
     );
 
-    // Back to fixed entries (selected month is still March) and walk forward:
-    // the fixed amount applies to March, April and May.
-    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
-    await expectFoodValue("200");
-    await user.click(screen.getByRole("button", { name: "Next" }));
-    await screen.findByText("April 2026");
-    await expectFoodValue("200");
-    await user.click(screen.getByRole("button", { name: "Next" }));
     await screen.findByText("May 2026");
-    await expectFoodValue("200");
-
-    // Edit the amount while viewing May: it drops to 50 from May forward only.
-    await user.clear(foodInput());
-    await user.type(foodInput(), "50");
-    await user.click(screen.getByTestId("fixed-save-expense-food"));
-    await expectFoodValue("50");
-
-    // April and March keep the previous 200 (the edit did not reach back).
-    await user.click(screen.getByRole("button", { name: "Prev" }));
-    await screen.findByText("April 2026");
-    await expectFoodValue("200");
-
-    // Remove the fixed expense while viewing April: April onward loses it, but
-    // the later May change (50) and the earlier March value (200) are kept.
-    await user.click(screen.getByTestId("fixed-remove-expense-food"));
-    await expectFoodValue("");
-
-    await user.click(screen.getByRole("button", { name: "Prev" }));
-    await screen.findByText("March 2026");
-    await expectFoodValue("200");
-
-    await user.click(screen.getByRole("button", { name: "Next" }));
-    await screen.findByText("April 2026");
-    await expectFoodValue("");
-
-    await user.click(screen.getByRole("button", { name: "Next" }));
-    await screen.findByText("May 2026");
-    await expectFoodValue("50");
+    await waitFor(() =>
+      expect(screen.queryByText(/Food - Groceries/)).not.toBeInTheDocument()
+    );
+    // March still has Groceries.
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
   });
 });

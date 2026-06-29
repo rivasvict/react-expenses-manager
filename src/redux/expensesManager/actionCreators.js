@@ -28,6 +28,7 @@ export const {
   addCategory,
   getCategories,
   getFixedEntries,
-  setFixedEntry,
+  addFixedEntry,
+  editFixedEntry,
   removeFixedEntry,
 } = ActionCreators({ storage, dataParser });

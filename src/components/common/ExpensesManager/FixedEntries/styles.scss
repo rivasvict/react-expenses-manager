@@ -1,18 +1,6 @@
 .fixed-entries-container {
-  .fixed-entries-table {
-    margin-top: 1rem;
-
-    .fixed-entries-category {
-      vertical-align: middle;
-    }
-
-    .fixed-entries-actions {
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-  }
-
-  .fixed-entries-error {
-    margin-top: 0.5rem;
+  .fixed-entries-empty {
+    margin: 1.6rem 0;
+    text-align: center;
   }
 }

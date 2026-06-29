@@ -410,45 +410,51 @@ const GetFixedEntries =
     };
   };
 
-// Persists a forward-only change to a fixed income/expense and re-materializes
-// the balance so the new amount shows up in the affected month and forward
-// without touching past months (issue #103). `amount: null` removes it forward.
-const setFixedEntryAndRefresh =
-  ({ storage }) =>
-  ({ type, category, amount, from }) => {
-    return async (dispatch) => {
-      dispatch(setAppLoading(true));
-      try {
-        const fixedEntries = await storage.setFixedEntry({
-          type,
-          category,
-          amount,
-          from,
-        });
-        const balance = await storage.getBalance();
-        const entries = getGroupedFilledEntriesByDate()(balance, fixedEntries);
-        dispatch({ type: GET_BALANCE, payload: { entries } });
-        dispatch({ type: SET_FIXED_ENTRY, payload: { fixedEntries } });
-        return fixedEntries;
-      } finally {
-        dispatch(setAppLoading(false));
-      }
-    };
+// Persists a change to the recurring entries (add, forward edit, or forward
+// removal) via `persist`, then re-materializes the balance so the change shows
+// up in the affected month and forward without touching past months (#103).
+const persistFixedEntriesAndRefresh = ({ storage, persist }) => {
+  return async (dispatch) => {
+    dispatch(setAppLoading(true));
+    try {
+      const fixedEntries = await persist(storage);
+      const balance = await storage.getBalance();
+      const entries = getGroupedFilledEntriesByDate()(balance, fixedEntries);
+      dispatch({ type: GET_BALANCE, payload: { entries } });
+      dispatch({ type: SET_FIXED_ENTRY, payload: { fixedEntries } });
+      return fixedEntries;
+    } finally {
+      dispatch(setAppLoading(false));
+    }
   };
+};
 
-const SetFixedEntry =
+// Creates a recurring entry from the given month forward.
+const AddFixedEntry =
   ({ storage }) =>
-  ({ type, category, amount, from }) =>
-    setFixedEntryAndRefresh({ storage })({ type, category, amount, from });
+  ({ entry, from }) =>
+    persistFixedEntriesAndRefresh({
+      storage,
+      persist: (s) => s.addFixedEntry({ entry, from }),
+    });
 
+// Edits a recurring entry (by id) from the given month forward.
+const EditFixedEntry =
+  ({ storage }) =>
+  ({ id, from, amount, description, categories_path }) =>
+    persistFixedEntriesAndRefresh({
+      storage,
+      persist: (s) =>
+        s.editFixedEntry({ id, from, amount, description, categories_path }),
+    });
+
+// Removes a recurring entry (by id) from the given month forward.
 const RemoveFixedEntry =
   ({ storage }) =>
-  ({ type, category, from }) =>
-    setFixedEntryAndRefresh({ storage })({
-      type,
-      category,
-      amount: null,
-      from,
+  ({ id, from }) =>
+    persistFixedEntriesAndRefresh({
+      storage,
+      persist: (s) => s.removeFixedEntry({ id, from }),
     });
 
 export const ActionCreators = ({ storage, dataParser }) => {
@@ -471,7 +477,8 @@ export const ActionCreators = ({ storage, dataParser }) => {
     addCategory: AddCategory({ storage }),
     getCategories: GetCategories({ storage }),
     getFixedEntries: GetFixedEntries({ storage }),
-    setFixedEntry: SetFixedEntry({ storage }),
+    addFixedEntry: AddFixedEntry({ storage }),
+    editFixedEntry: EditFixedEntry({ storage }),
     removeFixedEntry: RemoveFixedEntry({ storage }),
   };
 };
