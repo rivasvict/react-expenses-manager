@@ -1,0 +1,15 @@
+.recurring-toggle-row {
+  min-height: 38px;
+  padding: 0.375rem 0;
+}
+
+.recurring-switch {
+  .form-check-input:checked {
+    background-color: #f8b62f;
+    border-color: #f8b62f;
+  }
+
+  .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(248, 182, 47, 0.25);
+  }
+}

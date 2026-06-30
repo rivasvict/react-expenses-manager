@@ -3,6 +3,7 @@ import CategorySelector from "../CategorySelector";
 import { getEntryCategoryOption } from "../../../../helpers/entriesHelper/entriesHelper";
 
 import { Button, Form, Col, Row } from "react-bootstrap";
+import "./styles.scss";
 import { FormButton, FormContent, InputNumber, InputText } from "../../Forms";
 import { capitalize } from "lodash";
 import ContentTileSection from "../../ContentTitleSection";
@@ -97,15 +98,18 @@ class EntryForm extends Component {
                 />
               </Form.Group>
               {this.props.allowRecurring && (
-                <Form.Group className="vertical-standard-space">
+                <Form.Group className="vertical-standard-space recurring-toggle-row d-flex justify-content-between align-items-center">
+                  <Form.Label className="mb-0" htmlFor="entry-recurring-switch">
+                    Recurring (applies every month)
+                  </Form.Label>
                   <Form.Check
                     type="switch"
                     id="entry-recurring-switch"
                     name="isRecurring"
-                    label="Recurring (applies every month)"
+                    label=""
                     checked={Boolean(this.state.isRecurring)}
-                    disabled={Boolean(this.props.recurringReadOnly)}
                     onChange={this.toggleRecurring}
+                    className="recurring-switch"
                   />
                 </Form.Group>
               )}

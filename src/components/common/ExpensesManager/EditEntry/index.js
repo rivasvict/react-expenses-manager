@@ -77,7 +77,7 @@ const EditEntry = ({
     history.goBack();
   };
 
-  const handleSubmit = (event, { entryToAdd }) => {
+  const handleSubmit = (event, { entryToAdd, isRecurring }) => {
     event.preventDefault();
     const editedEntry = Object.assign({}, entryToAdd);
     const digitMatcher = /^\d*(\.)*\d+$/;
@@ -89,13 +89,18 @@ const EditEntry = ({
       editedEntry.categories_path !== ""
     ) {
       if (isFixed) {
-        onEditFixedEntry({
-          id: fixedId,
-          from: fromMonth,
-          amount: editedEntry.amount,
-          description: editedEntry.description,
-          categories_path: editedEntry.categories_path,
-        });
+        if (isRecurring === false) {
+          // User switched off recurring → remove from this month forward.
+          onRemoveFixedEntry({ id: fixedId, from: fromMonth });
+        } else {
+          onEditFixedEntry({
+            id: fixedId,
+            from: fromMonth,
+            amount: editedEntry.amount,
+            description: editedEntry.description,
+            categories_path: editedEntry.categories_path,
+          });
+        }
       } else {
         onSaveEntry({ entry: editedEntry });
       }
@@ -123,7 +128,6 @@ const EditEntry = ({
       operationTitle={EDIT}
       onCancel={navigateBack}
       allowRecurring={isFixed}
-      recurringReadOnly={isFixed}
       buckets={buckets}
       unbudgetedCategories={unbudgetedCategories}
     />
