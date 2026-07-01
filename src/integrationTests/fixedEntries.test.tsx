@@ -56,6 +56,147 @@ const addRecurringExpense = async (
   await screen.findByRole("link", { name: /add expenses/i });
 };
 
+// Adds a one-off (non-recurring) expense via the same form but WITHOUT the toggle.
+const addRegularExpense = async (
+  user: UserEvent,
+  { amount, description }: { amount: string; description: string }
+) => {
+  await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+  await user.type(
+    await screen.findByPlaceholderText(/insert expense amount/i),
+    amount
+  );
+  await user.type(screen.getByPlaceholderText(/description/i), description);
+  await user.selectOptions(
+    screen.getByRole("combobox"),
+    screen.getByRole("option", { name: "Food" })
+  );
+  // Recurring toggle is intentionally NOT clicked.
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  await screen.findByRole("link", { name: /add expenses/i });
+};
+
+describe("toggle routing — recurring vs regular entries", () => {
+  it("a non-recurring expense is saved to the balance and NOT to fixedEntries", async () => {
+    const { user, store } = await renderApp("/");
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+
+    await addRegularExpense(user, { amount: "80", description: "One-off" });
+
+    // Fixed Entries page must not contain this expense.
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+    await waitFor(() =>
+      expect(screen.queryByText(/Food - One-off/)).not.toBeInTheDocument()
+    );
+
+    // Redux store must have no fixed entry definitions.
+    expect(store.getState().expensesManager.fixedEntries).toHaveLength(0);
+
+    // localStorage balance must contain the one-off entry.
+    const balance = JSON.parse(localStorage.getItem("balance") || "[]");
+    expect(balance.some((e: { description: string }) => e.description === "One-off")).toBe(true);
+
+    // localStorage fixedEntries must be empty.
+    const stored = JSON.parse(localStorage.getItem("fixedEntries") || "[]");
+    expect(stored).toHaveLength(0);
+  });
+
+  it("a recurring expense is saved to fixedEntries and NOT to the regular balance", async () => {
+    const { user, store } = await renderApp("/");
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+
+    await addRecurringExpense(user, { amount: "150", description: "Groceries" });
+
+    // Redux store must have exactly one fixed entry definition.
+    const { fixedEntries } = store.getState().expensesManager;
+    expect(fixedEntries).toHaveLength(1);
+    expect(fixedEntries[0].history[0]).toMatchObject({
+      from: "2026-03",
+      amount: "150",
+      description: "Groceries",
+    });
+
+    // The entry must be in localStorage fixedEntries, NOT in balance.
+    const balance = JSON.parse(localStorage.getItem("balance") || "[]");
+    expect(
+      balance.some((e: { description: string }) => e.description === "Groceries")
+    ).toBe(false);
+
+    const stored = JSON.parse(localStorage.getItem("fixedEntries") || "[]");
+    expect(stored).toHaveLength(1);
+    expect(stored[0].history[0]).toMatchObject({ from: "2026-03", amount: "150" });
+  });
+
+  it("a recurring expense also materialises into the dashboard monthly list", async () => {
+    const { user } = await renderApp("/");
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+
+    // Back on the dashboard — the fixed entry is materialised into the entries
+    // tree so the monthly expense total reflects it.
+    await screen.findByRole("link", { name: /add expenses/i });
+    expect(await screen.findByText("$200.00")).toBeInTheDocument();
+  });
+});
+
+describe("fixed entries without any prior regular entries", () => {
+  beforeEach(() => {
+    // Remove the seed added by the outer beforeEach so localStorage is empty.
+    localStorage.clear();
+  });
+
+  it("adds and displays a fixed expense for the current month", async () => {
+    // With no prior entries, only May 2026 (pinned today) is in the tree —
+    // no Prev / Next navigation buttons should be visible.
+    const { user } = await renderApp("/");
+    await screen.findByText("May 2026");
+    expect(screen.queryByRole("button", { name: "Prev" })).not.toBeInTheDocument();
+
+    await addRecurringExpense(user, { amount: "100", description: "Groceries" });
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("May 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(screen.getByText("$100.00")).toBeInTheDocument();
+  });
+});
+
+describe("unsetting recurring in the edit form removes from that month forward", () => {
+  it("toggling recurring off on edit is equivalent to a forward removal", async () => {
+    const { user } = await renderApp("/");
+    await goPrev(user, "April 2026");
+    await goPrev(user, "March 2026");
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+
+    // Navigate to Fixed Entries, go to April, edit, and switch recurring OFF.
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+    await goNext(user, "April 2026");
+    await user.click(await screen.findByText(/Food - Groceries/));
+    // The recurring toggle is on by default when editing a fixed entry.
+    const toggle = await screen.findByLabelText(/recurring/i);
+    expect((toggle as HTMLInputElement).checked).toBe(true);
+    // Switch it off.
+    await user.click(toggle);
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    // April no longer shows Groceries.
+    await screen.findByText("April 2026");
+    await waitFor(() =>
+      expect(screen.queryByText(/Food - Groceries/)).not.toBeInTheDocument()
+    );
+
+    // March still has Groceries (forward-only removal).
+    await goPrev(user, "March 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+  });
+});
+
 describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", () => {
   it("creates recurring entries via the toggle, allows several per category, and recurs forward", async () => {
     const { user } = await renderApp("/");
