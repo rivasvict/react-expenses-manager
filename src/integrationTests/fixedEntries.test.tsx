@@ -171,6 +171,56 @@ describe("fixed entries without any prior regular entries", () => {
   });
 });
 
+describe("toggling recurring ON in the edit form converts a one-off entry to a fixed one", () => {
+  it("promotes a regular expense to recurring via the edit form recurring toggle", async () => {
+    // Seed a known coffee expense so we can navigate to its edit URL directly.
+    // (Replaces the outer beforeEach seed — March income not needed here.)
+    const [coffeeEntry] = seedEntries([
+      {
+        date: ts(2026, MARCH),
+        amount: "90",
+        description: "Coffee",
+        type: "expense",
+        categories_path: ",food,",
+      },
+    ]);
+
+    // Open its edit form directly (PINNED_DATE is May 2026 so selectedDate = May).
+    const { user, store } = await renderApp(`/edit-expense/${coffeeEntry.id}`);
+
+    // The recurring toggle must be OFF for a plain one-off entry.
+    const toggle = await screen.findByLabelText(/recurring/i);
+    expect((toggle as HTMLInputElement).checked).toBe(false);
+
+    // Switch it to recurring and submit.
+    await user.click(toggle);
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    // The entry must now be in fixedEntries (Redux store) with from = May 2026
+    // (the currently viewed month when the promotion happens).
+    await waitFor(() => {
+      const { fixedEntries } = store.getState().expensesManager;
+      expect(fixedEntries).toHaveLength(1);
+      expect(fixedEntries[0].history[0]).toMatchObject({
+        from: "2026-05",
+        amount: "90",
+        description: "Coffee",
+      });
+    });
+
+    // The regular balance must no longer contain the one-off entry.
+    const balance = JSON.parse(localStorage.getItem("balance") || "[]");
+    expect(
+      balance.some((e: { description: string }) => e.description === "Coffee")
+    ).toBe(false);
+
+    // Fixed Entries page must list it for the current month (May 2026).
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("May 2026");
+    expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
+  });
+});
+
 describe("unsetting recurring in the edit form removes from that month forward", () => {
   it("toggling recurring off on edit is equivalent to a forward removal", async () => {
     const { user } = await renderApp("/");

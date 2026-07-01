@@ -4,6 +4,7 @@ import {
   getEntryById,
   editEntry,
   removeEntry,
+  addFixedEntry,
   editFixedEntry,
   removeFixedEntry,
 } from "../../../../redux/expensesManager/actionCreators";
@@ -30,6 +31,7 @@ const EditEntry = ({
   onGetEntry,
   onSaveEntry,
   onRemoveEntry,
+  onAddFixedEntry,
   onEditFixedEntry,
   onRemoveFixedEntry,
 }) => {
@@ -101,6 +103,11 @@ const EditEntry = ({
             categories_path: editedEntry.categories_path,
           });
         }
+      } else if (isRecurring) {
+        // User switched a one-off entry to recurring: promote it to a fixed
+        // entry effective from the viewed month and remove it from the balance.
+        onAddFixedEntry({ entry: editedEntry, from: fromMonth });
+        onRemoveEntry({ entryId });
       } else {
         onSaveEntry({ entry: editedEntry });
       }
@@ -127,7 +134,7 @@ const EditEntry = ({
       handleEntryRemoval={handleEntryRemoval}
       operationTitle={EDIT}
       onCancel={navigateBack}
-      allowRecurring={isFixed}
+      allowRecurring={true}
       buckets={buckets}
       unbudgetedCategories={unbudgetedCategories}
     />
@@ -146,7 +153,8 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = (dispatch) => ({
   onGetEntry: (entryId) => dispatch(getEntryById(entryId)),
   onSaveEntry: ({ entryId, entry }) => dispatch(editEntry({ entryId, entry })),
-  onRemoveEntry: (entryId) => dispatch(removeEntry(entryId)),
+  onRemoveEntry: ({ entryId }) => dispatch(removeEntry({ entryId })),
+  onAddFixedEntry: ({ entry, from }) => dispatch(addFixedEntry({ entry, from })),
   onEditFixedEntry: ({ id, from, amount, description, categories_path }) =>
     dispatch(editFixedEntry({ id, from, amount, description, categories_path })),
   onRemoveFixedEntry: ({ id, from }) =>

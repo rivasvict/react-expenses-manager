@@ -229,7 +229,7 @@ const LocalStorage = () => ({
       }
       return originalEntry;
     });
-    storeBalanceInLocalStorage(newBalance);
+    storeBalanceInLocalStorage({ data: newBalance });
     return newBalance;
   },
   removeEntry: async ({ entryId }) => {
@@ -237,7 +237,7 @@ const LocalStorage = () => ({
     const newBalance = balance.filter(
       (originalEntry) => originalEntry.id !== entryId
     );
-    storeBalanceInLocalStorage(newBalance);
+    storeBalanceInLocalStorage({ data: newBalance });
     return newBalance;
   },
   getBuckets: async ({ buckets } = {}) => {
