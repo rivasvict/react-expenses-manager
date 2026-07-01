@@ -107,34 +107,9 @@ const mapStateToProps = (state) => ({
   selectedDate: state.expensesManager.selectedDate,
 });
 
-// TODO: Fix this propTypes and add it through the whole application
+// entries is a nested tree: { [year]: { [month]: { incomes: [], expenses: [] } } }
 Dashboard.propTypes = {
-  entries: PropTypes.shape({
-    incomes: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        description: PropTypes.string,
-        timestamp: PropTypes.number.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.shape({
-          id: PropTypes.number,
-          name: PropTypes.string.isRequired,
-        }),
-      }).isRequired
-    ).isRequired,
-    expenses: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        description: PropTypes.string,
-        timestamp: PropTypes.number.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.shape({
-          id: PropTypes.number,
-          name: PropTypes.string.isRequired,
-        }),
-      }).isRequired
-    ).isRequired,
-  }).isRequired,
+  entries: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(Dashboard);

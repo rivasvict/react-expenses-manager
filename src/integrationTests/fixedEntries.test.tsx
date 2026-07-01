@@ -130,7 +130,7 @@ describe("toggle routing — recurring vs regular entries", () => {
     expect(stored[0].history[0]).toMatchObject({ from: "2026-03", amount: "150" });
   });
 
-  it("a recurring expense also materialises into the dashboard monthly list", async () => {
+  it("a recurring expense materialises into the dashboard total and is visible on the Fixed Entries page", async () => {
     const { user } = await renderApp("/");
     await goPrev(user, "April 2026");
     await goPrev(user, "March 2026");
@@ -141,6 +141,11 @@ describe("toggle routing — recurring vs regular entries", () => {
     // tree so the monthly expense total reflects it.
     await screen.findByRole("link", { name: /add expenses/i });
     expect(await screen.findByText("$200.00")).toBeInTheDocument();
+
+    // The Fixed Entries page must also list the new recurring entry.
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
   });
 });
 
