@@ -72,7 +72,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
         <Row className="vertical-standard-space">
           <Col>
             <Link
-              to="/add-income"
+              to={{ pathname: "/add-income", state: { recurring: true } }}
               className="btn btn-primary btn-block add-fixed-income-link"
             >
               Add Income
@@ -82,7 +82,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
         <Row className="vertical-standard-space">
           <Col>
             <Link
-              to="/add-expense"
+              to={{ pathname: "/add-expense", state: { recurring: true } }}
               className="btn btn-secondary btn-block add-fixed-expense-link"
             >
               Add Expense

@@ -171,6 +171,31 @@ describe("fixed entries without any prior regular entries", () => {
   });
 });
 
+describe("Recurring toggle is pre-checked when adding from the Fixed Entries page", () => {
+  it("Add Expense from Fixed Entries opens the form with the Recurring toggle already ON", async () => {
+    const { user } = await renderApp("/");
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("May 2026");
+
+    await user.click(screen.getByRole("link", { name: /add expense/i }));
+
+    // The toggle must be checked without the user touching it.
+    const toggle = await screen.findByLabelText(/recurring/i);
+    expect((toggle as HTMLInputElement).checked).toBe(true);
+  });
+
+  it("Add Income from Fixed Entries opens the form with the Recurring toggle already ON", async () => {
+    const { user } = await renderApp("/");
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("May 2026");
+
+    await user.click(screen.getByRole("link", { name: /add income/i }));
+
+    const toggle = await screen.findByLabelText(/recurring/i);
+    expect((toggle as HTMLInputElement).checked).toBe(true);
+  });
+});
+
 describe("toggling recurring ON in the edit form converts a one-off entry to a fixed one", () => {
   it("promotes a regular expense to recurring via the edit form recurring toggle", async () => {
     // Seed a known coffee expense so we can navigate to its edit URL directly.

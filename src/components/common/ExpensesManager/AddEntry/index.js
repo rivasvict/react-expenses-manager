@@ -32,6 +32,7 @@ const AddEntry = ({
   buckets,
   unbudgetedCategories,
   history,
+  location,
 }) => {
   const newEntry = getEntryModel({ entryType });
 
@@ -80,6 +81,7 @@ const AddEntry = ({
       onCancel={navigateBack}
       operationTitle={ADD_NEW}
       allowRecurring={true}
+      recurring={Boolean(location?.state?.recurring)}
       buckets={buckets}
       unbudgetedCategories={unbudgetedCategories}
     />
