@@ -95,7 +95,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               type="button"
               variant="secondary"
               onClick={() => history.goBack()}
-              className="cancel btn-block"
+              className="cancel btn-block w-100"
             >
               Go Back
             </Button>
