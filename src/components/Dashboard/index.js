@@ -107,7 +107,8 @@ const mapStateToProps = (state) => ({
   selectedDate: state.expensesManager.selectedDate,
 });
 
-// entries is a nested tree: { [year]: { [month]: { incomes: [], expenses: [] } } }
+// TODO(#108): Replace with a precise PropTypes.shape that mirrors the real
+// nested tree { [year]: { [month]: { incomes: Entry[], expenses: Entry[] } } }.
 Dashboard.propTypes = {
   entries: PropTypes.object.isRequired,
 };

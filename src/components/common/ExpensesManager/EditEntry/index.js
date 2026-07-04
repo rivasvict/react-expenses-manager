@@ -11,7 +11,7 @@ import {
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { getMonthKey } from "../../../../helpers/date";
+import { getYearMonthKey } from "../../../../helpers/date";
 import { resolveFixedEntryState } from "../../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 
 const EDIT = "Edit";
@@ -41,7 +41,7 @@ const EditEntry = ({
   const fixedId = isFixed ? getFixedId(entryId) : null;
   // Edits/removals to a recurring entry are anchored to the viewed month, so
   // they take effect from that month forward (issue #103).
-  const fromMonth = getMonthKey(selectedDate);
+  const fromMonth = getYearMonthKey(selectedDate);
 
   const [entry, setEntry] = useState(null);
   useEffect(() => {

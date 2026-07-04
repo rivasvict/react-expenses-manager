@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import {
-  getMonthKey,
+  getYearMonthKey,
   getTimestampFromMonthAndYear,
 } from "../../../../helpers/date";
 import { getEntryModel } from "../../../../helpers/entriesHelper/entriesHelper";
@@ -65,7 +65,7 @@ const AddEntry = ({
       // A recurring entry is stored as a fixed entry effective from the viewed
       // month (issue #103); otherwise it is a one-off entry for that month.
       if (isRecurring) {
-        onAddFixedEntry({ entry, from: getMonthKey(selectedDate) });
+        onAddFixedEntry({ entry, from: getYearMonthKey(selectedDate) });
       } else {
         handleEntry({ entry, selectedDate });
       }

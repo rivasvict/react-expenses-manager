@@ -1,4 +1,4 @@
-import { getMonthKey, getTimestampFromMonthAndYear } from "../date";
+import { getYearMonthKey, getTimestampFromMonthAndYear } from "../date";
 
 /**
  * Fixed (recurring) incomes and expenses (issue #103).
@@ -121,8 +121,10 @@ const materializeFixedEntries = ({ entries, fixedEntries }) => {
     materialized[year] = {};
     Object.keys(entries[year]).forEach((month) => {
       const numericMonth = Number(month);
-      const monthKey = getMonthKey({ year: numericYear, month: numericMonth });
+      const monthKey = getYearMonthKey({ year: numericYear, month: numericMonth });
       const monthEntries = entries[year][month];
+      // Shallow copy so we can replace the incomes/expenses arrays without
+      // mutating the original entries tree.
       const monthCopy = { ...monthEntries };
 
       fixedEntries.forEach((definition) => {

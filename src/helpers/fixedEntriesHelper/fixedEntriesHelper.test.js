@@ -95,9 +95,10 @@ describe("fixedEntriesHelper (issue #103)", () => {
 
       // Source untouched.
       expect(original[0].history).toHaveLength(1);
-      // March keeps 200, May onward becomes 250.
+      // March–April keep 200; May and onward become 250.
       expect(resolveFixedEntryState(updated[0].history, "2026-04").amount).toBe(200);
       expect(resolveFixedEntryState(updated[0].history, "2026-05").amount).toBe(250);
+      expect(resolveFixedEntryState(updated[0].history, "2026-06").amount).toBe(250);
     });
 
     it("removes a definition from a month forward via a tombstone", () => {

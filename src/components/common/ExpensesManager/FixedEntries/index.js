@@ -38,7 +38,6 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
       className="fixed-entries-container"
       pageTitle="Fixed entries"
     >
-      {/*@ts-expect-error temporarily ignore this typescript error */}
       <ContentTileSection title="Fixed entries">
         {`Recurring incomes and expenses applying to ${monthLabel}`}
       </ContentTileSection>
