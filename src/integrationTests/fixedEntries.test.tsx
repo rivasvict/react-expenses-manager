@@ -69,19 +69,22 @@ const addRegularExpense = async (
 };
 
 describe("toggle routing — recurring vs regular entries", () => {
-  it("a non-recurring expense is saved to the balance and NOT to fixedEntries", async () => {
+  it("a non-recurring expense appears in the regular expenses view and NOT in Fixed Entries", async () => {
     const { user } = await renderApp("/");
     await goToPrevMonth(user, "April 2026");
     await goToPrevMonth(user, "March 2026");
 
     await addRegularExpense(user, { amount: "80", description: "One-off" });
 
-    // Back on the dashboard — the one-off expense shows in the monthly total.
-    // The "Add Expenses" link is present only on the dashboard.
+    // The "Add Expenses" link is only rendered on the dashboard, confirming we
+    // are back there after submitting.
     await screen.findByRole("link", { name: /add expenses/i });
-    expect(await screen.findByText("$80.00")).toBeInTheDocument();
 
-    // Fixed Entries page must not contain this expense.
+    // The expense must be visible in the regular expenses view.
+    await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
+    expect(await screen.findByText(/Food - One-off/)).toBeInTheDocument();
+
+    // It must NOT appear on the Fixed Entries page.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
     await waitFor(() =>
@@ -89,14 +92,22 @@ describe("toggle routing — recurring vs regular entries", () => {
     );
   });
 
-  it("a recurring expense is saved to fixedEntries and NOT to the regular balance", async () => {
+  it("a recurring expense appears in both the regular expenses view and the Fixed Entries page", async () => {
     const { user } = await renderApp("/");
     await goToPrevMonth(user, "April 2026");
     await goToPrevMonth(user, "March 2026");
 
     await addRecurringExpense(user, { amount: "150", description: "Groceries" });
 
-    // The entry must appear on the Fixed Entries page with the correct amount.
+    // The "Add Expenses" link is only rendered on the dashboard.
+    await screen.findByRole("link", { name: /add expenses/i });
+
+    // Fixed entries are materialised into the entries tree, so the entry must
+    // appear in the regular expenses view as well as the Fixed Entries page.
+    await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+
+    // It must also appear on the dedicated Fixed Entries page.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
     expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
@@ -204,6 +215,13 @@ describe("toggling recurring ON in the edit form converts a one-off entry to a f
     await screen.findByText("May 2026");
     expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
     expect(screen.getByText("$90.00")).toBeInTheDocument();
+
+    // Fixed entries are also materialised into the regular expenses view.
+    await user.click(screen.getByRole("link", { name: /home/i }));
+    // The "Add Expenses" link is only rendered on the dashboard.
+    await screen.findByRole("link", { name: /add expenses/i });
+    await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
+    expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
   });
 });
 
