@@ -27,6 +27,14 @@
         "type": "expense",
         "categories_path": ",eating out,",
         "date": 1776211200000
+      },
+      {
+        "id": "seed-hobby-may",
+        "amount": "40",
+        "description": "Painting supplies",
+        "type": "expense",
+        "categories_path": ",hobby,",
+        "date": 1778803200000
       }
     ],
     "buckets": {
@@ -38,7 +46,7 @@
         { "from": "0000-00", "limit": 50 }
       ]
     },
-    "categories": ["Gifts"],
+    "categories": ["Gifts", "Hobby", "Pet Care"],
     "fixedEntries": [
       {
         "id": "fx-salary",
@@ -95,6 +103,18 @@
           {
             "from": "2026-05",
             "removed": true
+          }
+        ]
+      },
+      {
+        "id": "fx-petcare",
+        "type": "expense",
+        "history": [
+          {
+            "from": "2026-01",
+            "amount": 25,
+            "description": "Dog food",
+            "categories_path": ",pet care,"
           }
         ]
       }

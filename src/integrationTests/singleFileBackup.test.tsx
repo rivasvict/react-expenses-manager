@@ -458,10 +458,33 @@ describe("restore — committed sample backup file", () => {
       screen.queryByText(/Subscriptions - Spotify/)
     ).not.toBeInTheDocument();
 
-    // The sample's unbudgeted category is restored too.
+    // The sample also exercises "Pet Care", a user-created category (no seed
+    // bucket for it) used as a fixed recurring entry.
+    expect(
+      await screen.findByText(/Pet Care - Dog food/)
+    ).toBeInTheDocument();
+    expect(screen.getByText("$25.00")).toBeInTheDocument();
+
+    // The sample's three user-created categories are restored, each in its
+    // right state: "Gifts" is unused (created but filed nowhere), "Hobby" is
+    // used on a regular entry, and "Pet Care" is used on a fixed entry above.
     await clickNav(user, /categories/i);
     expect(await screen.findByTestId("category-gifts")).toHaveTextContent(
-      "Gifts"
+      /Gifts.*no bucket/i
     );
+    expect(screen.getByTestId("category-hobby")).toHaveTextContent(
+      /Hobby.*no bucket/i
+    );
+    expect(screen.getByTestId("category-pet care")).toHaveTextContent(
+      /Pet Care.*no bucket/i
+    );
+
+    // "Hobby" is not just a name in the categories list — it was actually used
+    // to file a regular expense, which must show up in the Expenses view.
+    await clickNav(user, /home/i);
+    await clickNav(user, /^Expenses \$/);
+    expect(
+      await screen.findByText(/Hobby - Painting supplies/)
+    ).toBeInTheDocument();
   });
 });
