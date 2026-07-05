@@ -24,7 +24,7 @@ import sampleBackup from "./fixtures/expenses-backup.sample.json";
 // Records every call the app makes to the download util so the round-trip test
 // can inspect the produced file. Named `mock*` so jest's hoisting allows the
 // factory below to reference it.
-const mockDownloadCalls: Array<{ data: unknown; config: any }> = [];
+let mockDownloadCalls: Array<{ data: unknown; config: any }> = [];
 jest.mock(
   "../components/common/ExpensesManager/DataManagement/utils",
   () => ({
@@ -38,7 +38,7 @@ const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
 beforeEach(() => {
   localStorage.clear();
-  mockDownloadCalls.length = 0;
+  mockDownloadCalls = [];
   jest.useFakeTimers();
   jest.setSystemTime(PINNED_DATE);
 });
@@ -363,7 +363,9 @@ describe("restore — invalid files", () => {
 
 describe("round trip — download produces a single JSON file that restores the app", () => {
   it("exports one JSON file with every section and re-imports it into a cleared app", async () => {
-    // Seed a full app across all four persisted keys.
+    // Seed a full app across all four persisted keys, including a regular
+    // (non-recurring) expense so the round trip exercises every section:
+    // an income, an expense, a bucket, a standalone category, and a fixed entry.
     localStorage.setItem(
       "balance",
       JSON.stringify([
@@ -373,6 +375,14 @@ describe("round trip — download produces a single JSON file that restores the 
           description: "Pay",
           type: "income",
           categories_path: ",salary,",
+          date: PINNED_DATE.getTime(),
+        },
+        {
+          id: "e2",
+          amount: "50",
+          description: "Snacks",
+          type: "expense",
+          categories_path: ",food,",
           date: PINNED_DATE.getTime(),
         },
       ])
@@ -415,7 +425,7 @@ describe("round trip — download produces a single JSON file that restores the 
     // The single file carries the whole application state.
     expect(envelope.app).toBe("react-expenses-manager");
     expect(envelope.schemaVersion).toBe(1);
-    expect(envelope.data.balance).toHaveLength(1);
+    expect(envelope.data.balance).toHaveLength(2);
     expect(envelope.data.buckets).toHaveProperty("Food");
     expect(envelope.data.categories).toContain("Gifts");
     expect(envelope.data.fixedEntries).toHaveLength(1);
@@ -427,9 +437,30 @@ describe("round trip — download produces a single JSON file that restores the 
     const { user, container } = await renderApp("/data-management");
     await restoreFrom(user, container, asFile(text));
 
-    // Entries came back.
+    // The income came back on the dashboard.
     await clickNav(user, /home/i);
     expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
+
+    // The regular (non-recurring) expense came back too.
+    await clickNav(user, /^Expenses \$/);
+    expect(await screen.findByText(/Snacks/)).toBeInTheDocument();
+
+    // The bucket came back with its limit, and the just-restored $50 Snacks
+    // expense is reflected in this month's availability (200 - 50 = 150).
+    await clickNav(user, /buckets/i);
+    await screen.findByText("May 2026");
+    expect(screen.getByTestId("bucket-food-carry-over").textContent).toMatch(
+      /\$200\.00/
+    );
+    expect(screen.getByTestId("bucket-food-availability").textContent).toBe(
+      "$150.00"
+    );
+
+    // The standalone category came back.
+    await clickNav(user, /categories/i);
+    expect(await screen.findByTestId("category-gifts")).toHaveTextContent(
+      /Gifts.*no bucket/i
+    );
 
     // Fixed entries came back and materialise into the month.
     await clickNav(user, /fixed entries/i);
@@ -447,8 +478,9 @@ describe("restore — committed sample backup file", () => {
     const { user, container } = await renderApp("/data-management");
     await restoreFrom(user, container, asFile(sampleBackup));
 
-    // The sample raises Netflix to 18 from April, so May shows 18 and Spotify
-    // has been cancelled (tombstone) from May.
+    // The sample raises Netflix to 18 from April, so May shows 18. Spotify has
+    // a `removed: true` tombstone effective 2026-05 in the fixture, i.e. it was
+    // cancelled as a fixed expense from May forward, so it must NOT appear here.
     await clickNav(user, /fixed entries/i);
     await screen.findByText("May 2026");
     const netflix = await screen.findByText(/Subscriptions - Netflix/);
