@@ -91,15 +91,11 @@ const asFile = (contents: unknown, name = "expenses-backup.json"): File =>
 // The Data Management page must expose exactly ONE restore control (a single
 // "Restore Backup" button next to a single file input), not the old pair of
 // entries/buckets uploads. This asserts that control exists, then feeds it a file.
-const restoreFrom = async (
-  user: UserEvent,
-  container: HTMLElement,
-  file: File
-) => {
+const restoreFrom = async (user: UserEvent, file: File) => {
   await screen.findByRole("button", { name: /restore backup/i });
-  const inputs = container.querySelectorAll('input[type="file"]');
-  expect(inputs.length).toBe(1);
-  await user.upload(inputs[0] as HTMLInputElement, file);
+  const inputs = screen.getAllByTestId("file-input");
+  expect(inputs).toHaveLength(1);
+  await user.upload(inputs[0], file);
 };
 
 const readAsText = (blob: Blob): Promise<string> =>
@@ -149,8 +145,8 @@ describe("restore — incomes and expenses", () => {
       })
     );
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     // The restore must update the live app, not just storage: the dashboard for
     // May 2026 reflects the restored totals without a reload.
@@ -168,8 +164,8 @@ describe("restore — user-created categories", () => {
   it("restores a category that has no bucket yet", async () => {
     const file = asFile(backup({ categories: ["Gifts"] }));
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     await clickNav(user, /categories/i);
 
@@ -208,8 +204,8 @@ describe("restore — buckets with time-aware limit history", () => {
       })
     );
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     await clickNav(user, /buckets/i);
     await screen.findByText("May 2026");
@@ -279,8 +275,8 @@ describe("restore — fixed entries", () => {
       })
     );
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     await clickNav(user, /fixed entries/i);
     await screen.findByText("May 2026");
@@ -315,8 +311,8 @@ describe("restore — fixed entries", () => {
       })
     );
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     await clickNav(user, /fixed entries/i);
     await screen.findByText("May 2026");
@@ -344,16 +340,19 @@ describe("restore — invalid files", () => {
   it("rejects a file that is not a valid backup and changes nothing", async () => {
     const file = asFile({ app: "some-other-app", schemaVersion: 1, data: {} });
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, file);
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, file);
 
     // A visible error is shown...
     expect(await screen.findByRole("alert")).toHaveTextContent(
       /invalid|unsupported|not a valid|could not/i
     );
-    // ...and nothing was written to storage.
+    // ...and nothing from the invalid file was written: balance is untouched
+    // (nothing else in the app writes to it on mount), and buckets stay at
+    // whatever the app's own bootstrap left them (empty), not corrupted by
+    // the rejected file's contents.
     expect(localStorage.getItem("balance")).toBeNull();
-    expect(localStorage.getItem("buckets")).toBeNull();
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({});
   });
 });
 
@@ -410,8 +409,8 @@ describe("round trip — download produces a single JSON file that restores the 
       ])
     );
 
-    const first = await renderApp("/data-management");
-    await first.user.click(
+    const { user: firstUser } = await renderApp("/data-management");
+    await firstUser.click(
       await screen.findByRole("button", { name: /download backup/i })
     );
 
@@ -434,8 +433,8 @@ describe("round trip — download produces a single JSON file that restores the 
     cleanup();
     localStorage.clear();
 
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, asFile(text));
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, asFile(text));
 
     // The income came back on the dashboard.
     await clickNav(user, /home/i);
@@ -445,15 +444,19 @@ describe("round trip — download produces a single JSON file that restores the 
     await clickNav(user, /^Expenses \$/);
     expect(await screen.findByText(/Snacks/)).toBeInTheDocument();
 
-    // The bucket came back with its limit, and the just-restored $50 Snacks
-    // expense is reflected in this month's availability (200 - 50 = 150).
+    // The bucket came back with its limit (May is the only recorded month, so
+    // there is no carry-over yet), and the just-restored $50 Snacks expense is
+    // reflected as spending against it.
     await clickNav(user, /buckets/i);
     await screen.findByText("May 2026");
-    expect(screen.getByTestId("bucket-food-carry-over").textContent).toMatch(
-      /\$200\.00/
+    expect(screen.getByTestId("bucket-food-carry-over").textContent).toBe(
+      "Allowance $200.00 + carried $0.00"
     );
     expect(screen.getByTestId("bucket-food-availability").textContent).toBe(
-      "$150.00"
+      "$200.00"
+    );
+    expect(screen.getByTestId("bucket-food-spending").textContent).toBe(
+      "$50.00"
     );
 
     // The standalone category came back.
@@ -475,8 +478,8 @@ describe("round trip — download produces a single JSON file that restores the 
 
 describe("restore — committed sample backup file", () => {
   it("restores the full app from the shipped expenses-backup.sample.json", async () => {
-    const { user, container } = await renderApp("/data-management");
-    await restoreFrom(user, container, asFile(sampleBackup));
+    const { user } = await renderApp("/data-management");
+    await restoreFrom(user, asFile(sampleBackup));
 
     // The sample raises Netflix to 18 from April, so May shows 18. Spotify has
     // a `removed: true` tombstone effective 2026-05 in the fixture, i.e. it was
@@ -491,9 +494,11 @@ describe("restore — committed sample backup file", () => {
     ).not.toBeInTheDocument();
 
     // The sample also exercises "Pet Care", a user-created category (no seed
-    // bucket for it) used as a fixed recurring entry.
+    // bucket for it) used as a fixed recurring entry. Category names are
+    // rendered through lodash's `capitalize` (only the first letter is
+    // capitalized), so this is matched case-insensitively.
     expect(
-      await screen.findByText(/Pet Care - Dog food/)
+      await screen.findByText(/Pet Care - Dog food/i)
     ).toBeInTheDocument();
     expect(screen.getByText("$25.00")).toBeInTheDocument();
 

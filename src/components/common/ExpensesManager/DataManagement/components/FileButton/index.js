@@ -16,6 +16,7 @@ const FileButton = ({ onClick: handleFileSelection, children, ...props }) => {
         onChange={handleFileSelection}
         className="file"
         ref={fileRef}
+        data-testid="file-input"
       />
       <Button
         type="submit"

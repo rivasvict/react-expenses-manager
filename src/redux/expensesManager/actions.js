@@ -4,18 +4,20 @@ import {
   toYearMonth,
 } from "../../helpers/entriesHelper/entriesHelper";
 import { getCurrentTimestamp } from "../../helpers/date";
-import { getDataFromFile } from "./utils";
+import { readFileAsText } from "./utils";
+import {
+  buildBackupEnvelope,
+  parseBackupEnvelope,
+} from "../../helpers/backupHelper/backupHelper";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
 export const GET_BALANCE = "GET_BALANCE";
-export const SET_BALANCE = "SET_BALANCE";
 export const CLEAR_ALL_DATA = "CLEAR_ALL_DATA";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 export const EDIT_ENTRY = "EDIT_ENTRY";
 export const REMOVE_ENTRY = "REMOVE_ENTRY";
 export const GET_BUCKETS = "GET_BUCKETS";
-export const SET_BUCKETS = "SET_BUCKETS";
 export const GET_BUCKET = "GET_BUCKET";
 export const EDIT_BUCKET = "SET_BUCKET";
 export const ADD_BUCKET = "ADD_BUCKET";
@@ -23,6 +25,7 @@ export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_FIXED_ENTRIES = "GET_FIXED_ENTRIES";
 export const SET_FIXED_ENTRY = "SET_FIXED_ENTRY";
+export const RESTORE_BACKUP = "RESTORE_BACKUP";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -87,72 +90,6 @@ const GetBalance =
         console.log(error);
       }
     };
-  };
-
-const UploadBalanceBackup =
-  ({ storage, dataParser }) =>
-  ({ file }) => {
-    return async (dispatch) => {
-      try {
-        dispatch(setAppLoading(true));
-        const balance = await getDataFromFile({ dataParser })({ file });
-        await storage.setBalance({ balance });
-        const fixedEntries = await storage.getFixedEntries();
-        const fullEntriesWithFilledDates = getGroupedFilledEntriesByDate()(
-          balance,
-          fixedEntries
-        );
-        dispatch({
-          type: SET_BALANCE,
-          payload: { entries: fullEntriesWithFilledDates },
-        });
-        dispatch(setAppLoading(false));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  };
-
-const UploadBucketsBackup =
-  ({ storage, dataParser }) =>
-  ({ file }) => {
-    return async (dispatch) => {
-      try {
-        dispatch(setAppLoading(true));
-        const bucketsData = await getDataFromFile({ dataParser })({ file });
-        // We know that buckets is an array with a single object
-        const [rawBuckets] = bucketsData;
-        // We need to ensure that all bucket values are numbers
-        const buckets = Object.fromEntries(
-          Object.entries(rawBuckets).map(([k, v]) => {
-            const n = Number(v);
-            return [k, Number.isNaN(n) ? 0 : n];
-          })
-        );
-        const response = await storage.editBuckets({ buckets });
-        dispatch({
-          type: SET_BUCKETS,
-          payload: { buckets: response },
-        });
-        dispatch(setAppLoading(false));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  };
-
-const uploadCallbackMap = {
-  balance: UploadBalanceBackup,
-  buckets: UploadBucketsBackup,
-};
-
-const UploadBackup =
-  ({ storage, dataParser }) =>
-  ({ file, type }) => {
-    const uploadCallback = uploadCallbackMap[type];
-    if (uploadCallback) {
-      return uploadCallback({ storage, dataParser })({ file });
-    }
   };
 
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
@@ -224,32 +161,53 @@ const RemoveEntry =
     };
   };
 
+// Builds the single-file backup (issue #109): one JSON envelope with the
+// whole persisted state (balance, buckets, categories, fixedEntries), so a
+// restore can rebuild the app exactly without a lossy CSV round trip.
 const GetBackupData =
-  ({ storage, dataParser }) =>
+  ({ storage }) =>
   () => {
     return async (dispatch) => {
+      dispatch(setAppLoading(true));
       try {
-        dispatch(setAppLoading(true));
-        const balance = await storage.getBalance();
-        const balanceCsv = dataParser.jsonToCsv({ json: balance });
-
-        const buckets = await storage.getBuckets();
-        const bucketsCsv = dataParser.jsonToCsv({ json: buckets });
-
+        const data = await storage.exportData();
+        const envelope = buildBackupEnvelope(data);
+        const json = JSON.stringify(envelope, null, 2);
+        const fileName = `expenses-backup-${getCurrentTimestamp()}`;
+        return { json, fileName };
+      } finally {
         dispatch(setAppLoading(false));
+      }
+    };
+  };
 
-        const ts = getCurrentTimestamp();
-        const balanceFileName = `balance-backup-${ts}.csv`;
-        const bucketsFileName = `buckets-backup-${ts}.csv`;
-
-        return {
-          balanceCsv,
-          balanceFileName,
-          bucketsCsv,
-          bucketsFileName,
-        };
-      } catch (error) {
-        console.log(error);
+// Restores the whole app from a single backup file (issue #109): validates
+// the file before writing anything, then replaces storage and the live Redux
+// state wholesale so the app matches the file exactly.
+const RestoreBackup =
+  ({ storage }) =>
+  ({ file }) => {
+    return async (dispatch) => {
+      dispatch(setAppLoading(true));
+      try {
+        const text = await readFileAsText({ file });
+        const data = parseBackupEnvelope(text);
+        await storage.importData(data);
+        const entries = getGroupedFilledEntriesByDate()(
+          data.balance,
+          data.fixedEntries
+        );
+        dispatch({
+          type: RESTORE_BACKUP,
+          payload: {
+            entries,
+            buckets: data.buckets,
+            unbudgetedCategories: data.categories,
+            fixedEntries: data.fixedEntries,
+          },
+        });
+      } finally {
+        dispatch(setAppLoading(false));
       }
     };
   };
@@ -457,19 +415,19 @@ const RemoveFixedEntry =
       persist: (s) => s.removeFixedEntry({ id, from }),
     });
 
-export const ActionCreators = ({ storage, dataParser }) => {
+export const ActionCreators = ({ storage }) => {
   return {
     addExpense: AddExpense({ storage }),
     addIncome: AddIncome({ storage }),
     categoryChange: CategoryChange(),
     getBalance: GetBalance({ storage }),
-    uploadBackup: UploadBackup({ storage, dataParser }),
+    restoreBackup: RestoreBackup({ storage }),
     clearAllData: ClearAllData({ storage }),
     setSelectedDate: SetSelectedDate(),
     getEntryById: GetEntryById({ storage }),
     editEntry: EditEntry({ storage }),
     removeEntry: RemoveEntry({ storage }),
-    getBackupData: GetBackupData({ storage, dataParser }),
+    getBackupData: GetBackupData({ storage }),
     getBuckets: GetBuckets({ storage }),
     editBucket: EditBucket({ storage }),
     addBucket: AddBucket({ storage }),
