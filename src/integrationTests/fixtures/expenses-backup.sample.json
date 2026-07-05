@@ -1,0 +1,103 @@
+{
+  "app": "react-expenses-manager",
+  "schemaVersion": 1,
+  "exportedAt": "2026-05-31T12:00:00.000Z",
+  "data": {
+    "balance": [
+      {
+        "id": "seed-bonus-may",
+        "amount": "500",
+        "description": "Bonus",
+        "type": "income",
+        "categories_path": ",deposit,",
+        "date": 1778803200000
+      },
+      {
+        "id": "seed-groceries-may",
+        "amount": "120",
+        "description": "Groceries",
+        "type": "expense",
+        "categories_path": ",food,",
+        "date": 1778803200000
+      },
+      {
+        "id": "seed-restaurant-apr",
+        "amount": "60",
+        "description": "Restaurant",
+        "type": "expense",
+        "categories_path": ",eating out,",
+        "date": 1776211200000
+      }
+    ],
+    "buckets": {
+      "Food": [
+        { "from": "0000-00", "limit": 400 },
+        { "from": "2026-05", "limit": 300 }
+      ],
+      "Subscriptions": [
+        { "from": "0000-00", "limit": 50 }
+      ]
+    },
+    "categories": ["Gifts"],
+    "fixedEntries": [
+      {
+        "id": "fx-salary",
+        "type": "income",
+        "history": [
+          {
+            "from": "2026-01",
+            "amount": 3000,
+            "description": "Monthly salary",
+            "categories_path": ",salary,"
+          }
+        ]
+      },
+      {
+        "id": "fx-rent",
+        "type": "expense",
+        "history": [
+          {
+            "from": "2026-01",
+            "amount": 1200,
+            "description": "Rent",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      {
+        "id": "fx-netflix",
+        "type": "expense",
+        "history": [
+          {
+            "from": "2026-01",
+            "amount": 15,
+            "description": "Netflix",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "from": "2026-04",
+            "amount": 18,
+            "description": "Netflix",
+            "categories_path": ",subscriptions,"
+          }
+        ]
+      },
+      {
+        "id": "fx-spotify",
+        "type": "expense",
+        "history": [
+          {
+            "from": "2026-01",
+            "amount": 10,
+            "description": "Spotify",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "from": "2026-05",
+            "removed": true
+          }
+        ]
+      }
+    ]
+  }
+}

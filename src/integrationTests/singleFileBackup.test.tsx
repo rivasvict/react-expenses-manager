@@ -1,0 +1,467 @@
+import { screen, cleanup, waitFor } from "@testing-library/react";
+import { UserEvent } from "@testing-library/user-event";
+import { renderApp } from "./helpers/renderApp";
+import { goToPrevMonth } from "./helpers/navigation";
+import sampleBackup from "./fixtures/expenses-backup.sample.json";
+
+/**
+ * Integration tests for the single-file backup & restore feature (issue #109).
+ *
+ * These are written TDD-first, against the *intended* behaviour, before any
+ * implementation exists. They will fail until the feature is built. They express
+ * the acceptance criteria from the issue:
+ *   - one Download control produces a single JSON file with the whole app
+ *     (entries, buckets, categories, fixed entries);
+ *   - one Restore control rebuilds the whole app from that single file, live,
+ *     preserving time-aware bucket history and per-entry fixed-entry history
+ *     (including `removed` tombstones) and fixed-entry identities;
+ *   - invalid files are rejected with a visible message.
+ *
+ * The download seam is `downloadFileFromData` in the Data Management utils; the
+ * round-trip test mocks it to capture what the app hands the browser to save.
+ */
+
+// Records every call the app makes to the download util so the round-trip test
+// can inspect the produced file. Named `mock*` so jest's hoisting allows the
+// factory below to reference it.
+const mockDownloadCalls: Array<{ data: unknown; config: any }> = [];
+jest.mock(
+  "../components/common/ExpensesManager/DataManagement/utils",
+  () => ({
+    downloadFileFromData: (data: unknown, config: any) => {
+      mockDownloadCalls.push({ data, config });
+    },
+  })
+);
+
+const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
+
+beforeEach(() => {
+  localStorage.clear();
+  mockDownloadCalls.length = 0;
+  jest.useFakeTimers();
+  jest.setSystemTime(PINNED_DATE);
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+interface BackupData {
+  balance: unknown[];
+  buckets: Record<string, unknown>;
+  categories: string[];
+  fixedEntries: unknown[];
+}
+
+interface BackupEnvelope {
+  app: string;
+  schemaVersion: number;
+  exportedAt?: string;
+  data: BackupData;
+}
+
+const emptyData = (): BackupData => ({
+  balance: [],
+  buckets: {},
+  categories: [],
+  fixedEntries: [],
+});
+
+// Builds a valid backup envelope, overriding only the data sections a test cares
+// about so each case stays small and focused.
+const backup = (data: Partial<BackupData>): BackupEnvelope => ({
+  app: "react-expenses-manager",
+  schemaVersion: 1,
+  exportedAt: "2026-05-15T12:00:00.000Z",
+  data: { ...emptyData(), ...data },
+});
+
+const asFile = (contents: unknown, name = "expenses-backup.json"): File =>
+  new File(
+    [typeof contents === "string" ? contents : JSON.stringify(contents)],
+    name,
+    { type: "application/json" }
+  );
+
+// The Data Management page must expose exactly ONE restore control (a single
+// "Restore Backup" button next to a single file input), not the old pair of
+// entries/buckets uploads. This asserts that control exists, then feeds it a file.
+const restoreFrom = async (
+  user: UserEvent,
+  container: HTMLElement,
+  file: File
+) => {
+  await screen.findByRole("button", { name: /restore backup/i });
+  const inputs = container.querySelectorAll('input[type="file"]');
+  expect(inputs.length).toBe(1);
+  await user.upload(inputs[0] as HTMLInputElement, file);
+};
+
+const readAsText = (blob: Blob): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(String((e.target as FileReader).result));
+    reader.onerror = () => reject(new Error("Could not read blob"));
+    reader.readAsText(blob);
+  });
+
+const resolveDownloadText = async (data: unknown): Promise<string> => {
+  if (typeof data === "string") return data;
+  if (data instanceof Blob) return readAsText(data);
+  return String(data);
+};
+
+const clickNav = async (user: UserEvent, name: RegExp) => {
+  await user.click(await screen.findByRole("link", { name }));
+};
+
+// ---------------------------------------------------------------------------
+// Restore: entries
+// ---------------------------------------------------------------------------
+
+describe("restore — incomes and expenses", () => {
+  it("rebuilds this month's incomes and expenses from a single backup file", async () => {
+    const file = asFile(
+      backup({
+        balance: [
+          {
+            id: "e1",
+            amount: "1000",
+            description: "Pay",
+            type: "income",
+            categories_path: ",salary,",
+            date: PINNED_DATE.getTime(),
+          },
+          {
+            id: "e2",
+            amount: "200",
+            description: "Dinner",
+            type: "expense",
+            categories_path: ",eating out,",
+            date: PINNED_DATE.getTime(),
+          },
+        ],
+      })
+    );
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    // The restore must update the live app, not just storage: the dashboard for
+    // May 2026 reflects the restored totals without a reload.
+    await clickNav(user, /home/i);
+    expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
+    expect(screen.getByText("$200.00")).toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Restore: categories
+// ---------------------------------------------------------------------------
+
+describe("restore — user-created categories", () => {
+  it("restores a category that has no bucket yet", async () => {
+    const file = asFile(backup({ categories: ["Gifts"] }));
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    await clickNav(user, /categories/i);
+
+    const gifts = await screen.findByTestId("category-gifts");
+    expect(gifts).toHaveTextContent("Gifts");
+    expect(gifts).toHaveTextContent(/no bucket/i);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Restore: buckets with time-aware history
+// ---------------------------------------------------------------------------
+
+describe("restore — buckets with time-aware limit history", () => {
+  it("keeps a per-month bucket-limit history so past and current months differ", async () => {
+    const file = asFile(
+      backup({
+        // Food started at 200 and was raised to 150... no: raised down to 150 in May.
+        buckets: {
+          Food: [
+            { from: "0000-00", limit: 200 },
+            { from: "2026-05", limit: 150 },
+          ],
+        },
+        // A January entry makes the tree span Jan–May so Prev navigation exists.
+        balance: [
+          {
+            id: "anchor",
+            amount: "100",
+            description: "Pay",
+            type: "income",
+            categories_path: ",salary,",
+            date: new Date(2026, 0, 15).getTime(),
+          },
+        ],
+      })
+    );
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    await clickNav(user, /buckets/i);
+    await screen.findByText("May 2026");
+
+    // May: the most recent limit (150).
+    expect(screen.getByTestId("bucket-food-carry-over").textContent).toMatch(
+      /\$150\.00/
+    );
+
+    // April: the earlier limit (200) — proving the history survived, not just
+    // the latest value.
+    await goToPrevMonth(user, "April 2026");
+    expect(screen.getByTestId("bucket-food-carry-over").textContent).toMatch(
+      /\$200\.00/
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Restore: fixed (recurring) entries — multiplicity + tombstones
+// ---------------------------------------------------------------------------
+
+describe("restore — fixed entries", () => {
+  it("restores multiple same-category recurring entries and honours removal tombstones", async () => {
+    const file = asFile(
+      backup({
+        // Anchor entry so the tree spans Jan–May and the recurring entries
+        // materialise into every month.
+        balance: [
+          {
+            id: "anchor",
+            amount: "100",
+            description: "Pay",
+            type: "income",
+            categories_path: ",salary,",
+            date: new Date(2026, 0, 15).getTime(),
+          },
+        ],
+        fixedEntries: [
+          {
+            id: "fx-groceries",
+            type: "expense",
+            history: [
+              {
+                from: "2026-01",
+                amount: 200,
+                description: "Groceries",
+                categories_path: ",food,",
+              },
+            ],
+          },
+          {
+            id: "fx-snacks",
+            type: "expense",
+            history: [
+              {
+                from: "2026-01",
+                amount: 50,
+                description: "Snacks",
+                categories_path: ",food,",
+              },
+              // Cancelled from May forward (tombstone).
+              { from: "2026-05", removed: true },
+            ],
+          },
+        ],
+      })
+    );
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    await clickNav(user, /fixed entries/i);
+    await screen.findByText("May 2026");
+
+    // May: Snacks was cancelled (tombstone), Groceries still recurs.
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(screen.queryByText(/Food - Snacks/)).not.toBeInTheDocument();
+
+    // April (before the tombstone): both same-category recurring entries exist.
+    await goToPrevMonth(user, "April 2026");
+    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
+  });
+
+  it("preserves a fixed entry's identity so a restored recurring entry can be edited", async () => {
+    const file = asFile(
+      backup({
+        fixedEntries: [
+          {
+            id: "fx-gym",
+            type: "expense",
+            history: [
+              {
+                from: "2026-01",
+                amount: 60,
+                description: "Gym",
+                categories_path: ",food,",
+              },
+            ],
+          },
+        ],
+      })
+    );
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    await clickNav(user, /fixed entries/i);
+    await screen.findByText("May 2026");
+
+    // Clicking a materialised fixed entry routes to its edit form via `fixedId`;
+    // that only works if the restored entry kept its identity.
+    await user.click(await screen.findByText(/Food - Gym/));
+
+    const amountInput = (await screen.findByPlaceholderText(
+      /insert expense amount/i
+    )) as HTMLInputElement;
+    expect(amountInput.value).toBe("60");
+    const toggle = (await screen.findByLabelText(
+      /recurring/i
+    )) as HTMLInputElement;
+    expect(toggle.checked).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Restore: validation
+// ---------------------------------------------------------------------------
+
+describe("restore — invalid files", () => {
+  it("rejects a file that is not a valid backup and changes nothing", async () => {
+    const file = asFile({ app: "some-other-app", schemaVersion: 1, data: {} });
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, file);
+
+    // A visible error is shown...
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /invalid|unsupported|not a valid|could not/i
+    );
+    // ...and nothing was written to storage.
+    expect(localStorage.getItem("balance")).toBeNull();
+    expect(localStorage.getItem("buckets")).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Round trip: download → restore
+// ---------------------------------------------------------------------------
+
+describe("round trip — download produces a single JSON file that restores the app", () => {
+  it("exports one JSON file with every section and re-imports it into a cleared app", async () => {
+    // Seed a full app across all four persisted keys.
+    localStorage.setItem(
+      "balance",
+      JSON.stringify([
+        {
+          id: "e1",
+          amount: "1000",
+          description: "Pay",
+          type: "income",
+          categories_path: ",salary,",
+          date: PINNED_DATE.getTime(),
+        },
+      ])
+    );
+    localStorage.setItem(
+      "buckets",
+      JSON.stringify({ Food: [{ from: "0000-00", limit: 200 }] })
+    );
+    localStorage.setItem("categories", JSON.stringify(["Gifts"]));
+    localStorage.setItem(
+      "fixedEntries",
+      JSON.stringify([
+        {
+          id: "fx-rent",
+          type: "expense",
+          history: [
+            {
+              from: "2026-01",
+              amount: 1200,
+              description: "Rent",
+              categories_path: ",rent,",
+            },
+          ],
+        },
+      ])
+    );
+
+    const first = await renderApp("/data-management");
+    await first.user.click(
+      await screen.findByRole("button", { name: /download backup/i })
+    );
+
+    // Exactly one file is produced, and it is JSON.
+    await waitFor(() => expect(mockDownloadCalls).toHaveLength(1));
+    expect(mockDownloadCalls[0].config?.extension).toBe("json");
+
+    const text = await resolveDownloadText(mockDownloadCalls[0].data);
+    const envelope = JSON.parse(text) as BackupEnvelope;
+
+    // The single file carries the whole application state.
+    expect(envelope.app).toBe("react-expenses-manager");
+    expect(envelope.schemaVersion).toBe(1);
+    expect(envelope.data.balance).toHaveLength(1);
+    expect(envelope.data.buckets).toHaveProperty("Food");
+    expect(envelope.data.categories).toContain("Gifts");
+    expect(envelope.data.fixedEntries).toHaveLength(1);
+
+    // Now wipe everything and restore from the exported file into a fresh app.
+    cleanup();
+    localStorage.clear();
+
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, asFile(text));
+
+    // Entries came back.
+    await clickNav(user, /home/i);
+    expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
+
+    // Fixed entries came back and materialise into the month.
+    await clickNav(user, /fixed entries/i);
+    await screen.findByText("May 2026");
+    expect(await screen.findByText(/Rent - Rent/)).toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Restore: the committed sample backup file
+// ---------------------------------------------------------------------------
+
+describe("restore — committed sample backup file", () => {
+  it("restores the full app from the shipped expenses-backup.sample.json", async () => {
+    const { user, container } = await renderApp("/data-management");
+    await restoreFrom(user, container, asFile(sampleBackup));
+
+    // The sample raises Netflix to 18 from April, so May shows 18 and Spotify
+    // has been cancelled (tombstone) from May.
+    await clickNav(user, /fixed entries/i);
+    await screen.findByText("May 2026");
+    const netflix = await screen.findByText(/Subscriptions - Netflix/);
+    expect(netflix).toBeInTheDocument();
+    expect(screen.getByText("$18.00")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Subscriptions - Spotify/)
+    ).not.toBeInTheDocument();
+
+    // The sample's unbudgeted category is restored too.
+    await clickNav(user, /categories/i);
+    expect(await screen.findByTestId("category-gifts")).toHaveTextContent(
+      "Gifts"
+    );
+  });
+});
