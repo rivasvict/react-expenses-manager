@@ -17,7 +17,10 @@ import {
   ADD_BUCKET,
   ADD_CATEGORY,
   GET_CATEGORIES,
+  GET_FIXED_ENTRIES,
+  SET_FIXED_ENTRY,
 } from "./actions";
+import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 
 const staticInitialState = {
   entries: {},
@@ -28,6 +31,9 @@ const staticInitialState = {
   // Categories the user created that do not have a bucket (spending limit,
   // i.e. an allowance/budget) yet (issue #100/#71).
   unbudgetedCategories: [],
+  // Fixed (recurring) incomes/expenses per category, time-aware so edits and
+  // removals propagate from a month forward (issue #103). Empty by default.
+  fixedEntries: getEmptyFixedEntries(),
 };
 
 // selectedDate must be evaluated lazily (inside the reducer, not at module-load
@@ -187,6 +193,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         unbudgetedCategories: payload.unbudgetedCategories,
+      };
+    case GET_FIXED_ENTRIES:
+    case SET_FIXED_ENTRY:
+      return {
+        ...state,
+        fixedEntries: payload.fixedEntries,
       };
     default:
       return state;

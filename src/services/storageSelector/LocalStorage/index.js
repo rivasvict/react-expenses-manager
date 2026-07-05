@@ -1,7 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
+import {
+  addFixedEntryDefinition,
+  updateFixedEntryDefinition,
+  getEmptyFixedEntries,
+} from "../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 const BALANCE = "balance";
 const BUCKET = "buckets";
 const CATEGORIES = "categories";
+const FIXED_ENTRIES = "fixedEntries";
 
 const getItemFromLocalStorageFactory =
   ({ itemType }) =>
@@ -37,6 +43,55 @@ const storeBucketsInLocalStorage = storeInLocalStorageFactory({
 const storeCategoriesInLocalStorage = storeInLocalStorageFactory({
   itemType: CATEGORIES,
 });
+
+// Fixed (recurring) incomes/expenses are stored under their own key as a flat
+// list of recurring-entry definitions (issue #103). The empty value is an
+// array, so it has a dedicated getter.
+const getFixedEntriesFromLocalStorage = async () => {
+  const storedData = localStorage.getItem(FIXED_ENTRIES) || "";
+  return storedData ? JSON.parse(storedData) : getEmptyFixedEntries();
+};
+
+const storeFixedEntriesInLocalStorage = storeInLocalStorageFactory({
+  itemType: FIXED_ENTRIES,
+});
+
+// Creates a new recurring entry effective from `from` ("YYYY-MM"). The entry
+// carries the same fields as a regular one, so several can share a category.
+const addFixedEntryData = async ({ entry, from }) => {
+  if (!entry) throw new Error("No entry was added");
+  if (!from) throw new Error("An effective-from month is required");
+  if (entry.categories_path === undefined || entry.categories_path === "")
+    throw new Error("A category is required");
+
+  const storedFixedEntries = await getFixedEntriesFromLocalStorage();
+  const newFixedEntries = addFixedEntryDefinition(storedFixedEntries, {
+    id: uuidv4(),
+    type: entry.type,
+    from,
+    amount: entry.amount,
+    description: entry.description,
+    categories_path: entry.categories_path,
+  });
+  await storeFixedEntriesInLocalStorage({ data: newFixedEntries });
+  return newFixedEntries;
+};
+
+// Applies a forward-only change to a single recurring entry, identified by id.
+// `state` is the edited fields, or `{ removed: true }` for a removal tombstone.
+const setFixedEntryData = async ({ id, from, ...state }) => {
+  if (!id) throw new Error("A fixed entry id is required");
+  if (!from) throw new Error("An effective-from month is required");
+
+  const storedFixedEntries = await getFixedEntriesFromLocalStorage();
+  const newFixedEntries = updateFixedEntryDefinition(storedFixedEntries, {
+    id,
+    from,
+    ...state,
+  });
+  await storeFixedEntriesInLocalStorage({ data: newFixedEntries });
+  return newFixedEntries;
+};
 
 // Converts an old-format number value to the new per-month history array so
 // that legacy data in localStorage remains readable after the migration.
@@ -174,7 +229,7 @@ const LocalStorage = () => ({
       }
       return originalEntry;
     });
-    storeBalanceInLocalStorage(newBalance);
+    storeBalanceInLocalStorage({ data: newBalance });
     return newBalance;
   },
   removeEntry: async ({ entryId }) => {
@@ -182,7 +237,7 @@ const LocalStorage = () => ({
     const newBalance = balance.filter(
       (originalEntry) => originalEntry.id !== entryId
     );
-    storeBalanceInLocalStorage(newBalance);
+    storeBalanceInLocalStorage({ data: newBalance });
     return newBalance;
   },
   getBuckets: async ({ buckets } = {}) => {
@@ -207,6 +262,21 @@ const LocalStorage = () => ({
   getCategories: async () => getCategoriesFromLocalStorage(),
   addCategory: async ({ category }) => {
     return addCategoryData({ category });
+  },
+  getFixedEntries: async () => getFixedEntriesFromLocalStorage(),
+  // Create a recurring income/expense effective from a month (issue #103). It
+  // then shows up automatically in that month and every month forward.
+  addFixedEntry: async ({ entry, from }) => {
+    return addFixedEntryData({ entry, from });
+  },
+  // Edit a recurring entry from a month forward; earlier months are untouched.
+  editFixedEntry: async ({ id, from, amount, description, categories_path }) => {
+    return setFixedEntryData({ id, from, amount, description, categories_path });
+  },
+  // Remove a recurring entry from a month forward by writing a tombstone.
+  // Earlier months keep it, mirroring the edition behaviour.
+  removeFixedEntry: async ({ id, from }) => {
+    return setFixedEntryData({ id, from, removed: true });
   },
   editBuckets: async ({ buckets }) => {
     return mergeBucketsData({ bucketData: buckets });
