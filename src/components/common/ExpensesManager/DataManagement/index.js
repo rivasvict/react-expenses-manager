@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   clearAllData,
   getBackupData,
-  uploadBackup,
+  restoreBackup,
 } from "../../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -10,64 +10,52 @@ import { withRouter } from "react-router-dom";
 import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
 import { FileButton } from "./components";
-import jszipModule from "jszip";
-import { getCurrentTimestamp } from "../../../../helpers/date";
 
 import "./styles.scss";
 
+/**
+ * Single-file backup & restore (issue #109): one Download control produces a
+ * single JSON file with the whole app (entries, buckets, categories, fixed
+ * entries), and one Restore control rebuilds the app from that file.
+ */
 const DataManagement = ({
   onGetBackupData,
-  onUploadBackup,
+  onRestoreBackup,
   onClearAllData,
   history,
 }) => {
+  const [restoreError, setRestoreError] = useState(null);
+
   const goBack = () => {
     history.goBack();
   };
 
   const handleBackup = async () => {
     try {
-      const { balanceCsv, balanceFileName, bucketsCsv, bucketsFileName } =
-        await onGetBackupData();
-
-      // Create a zip containing both CSV files and trigger download.
-      const JSZip = jszipModule.default ?? jszipModule;
-      const zip = new JSZip();
-
-      zip.file(balanceFileName || "balance.csv", balanceCsv);
-      zip.file(bucketsFileName || "buckets.csv", bucketsCsv);
-
-      const zipBlob = await zip.generateAsync({ type: "blob" });
-      const ts = getCurrentTimestamp();
-      const zipFileName = `backup_${ts}`;
-
-      return downloadFileFromData(zipBlob, {
-        fileName: zipFileName,
-        extension: "zip",
-        mimeType: "application/zip",
+      const { json, fileName } = await onGetBackupData();
+      return downloadFileFromData(json, {
+        fileName,
+        extension: "json",
+        mimeType: "application/json",
       });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleUploadEntries = async (event) => {
+  const handleRestoreBackup = async (event) => {
     try {
       const file = event.target.files[0];
-      await onUploadBackup({ file, type: "balance" });
-      goBack();
+      await onRestoreBackup({ file });
+      setRestoreError(null);
+      // Reading the file is async, so by the time this resolves the user may
+      // have navigated elsewhere in the meantime. Push an absolute route
+      // (not `goBack()`, which is relative to whatever the current history
+      // entry happens to be by then) so landing on the dashboard is
+      // deterministic regardless of how long the restore took.
+      history.push("/");
     } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleUploadBuckets = async (event) => {
-    try {
-      const file = event.target.files[0];
-      await onUploadBackup({ file, type: "buckets" });
-      goBack();
-    } catch (error) {
-      console.log(error);
+      setRestoreError(error.message || "The backup could not be restored");
     }
   };
 
@@ -88,7 +76,7 @@ const DataManagement = ({
           <Row>
             <Col>
               <Button type="submit" variant="primary" onClick={handleBackup}>
-                Download Backup Data
+                Download Backup
               </Button>
             </Col>
           </Row>
@@ -97,23 +85,21 @@ const DataManagement = ({
               <FileButton
                 type="submit"
                 variant="secondary"
-                onClick={handleUploadEntries}
+                onClick={handleRestoreBackup}
               >
-                Restore Income/Expenses Data
+                Restore Backup
               </FileButton>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <FileButton
-                type="submit"
-                variant="secondary"
-                onClick={handleUploadBuckets}
-              >
-                Restore Buckets Data
-              </FileButton>
-            </Col>
-          </Row>
+          {restoreError && (
+            <Row>
+              <Col>
+                <p className="restore-backup-error text-danger" role="alert">
+                  {restoreError}
+                </p>
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
               <Button
@@ -142,7 +128,7 @@ const DataManagement = ({
 
 const mapActionsToProps = (dispatch) => ({
   onGetBackupData: () => dispatch(getBackupData()),
-  onUploadBackup: ({ file, type }) => dispatch(uploadBackup({ file, type })),
+  onRestoreBackup: ({ file }) => dispatch(restoreBackup({ file })),
   onClearAllData: () => dispatch(clearAllData()),
 });
 

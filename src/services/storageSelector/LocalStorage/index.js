@@ -100,23 +100,6 @@ const normalizeBucketValue = (value) => {
   return [{ from: "0000-00", limit: Number(value) || 0 }];
 };
 
-// Used by the CSV restore path: overwrites all bucket limits wholesale. Each
-// incoming value is stored as a new history array rooted at "0000-00" so the
-// restored data is immediately in the current format.
-const mergeBucketsData = async ({ bucketData }) => {
-  if (!bucketData) throw new Error("No bucket data was set");
-  const storedBuckets = await getBucketsFromLocalStorage();
-  const normalizedIncoming = Object.fromEntries(
-    Object.entries(bucketData).map(([name, value]) => [
-      name,
-      normalizeBucketValue(value),
-    ])
-  );
-  const newBuckets = { ...storedBuckets, ...normalizedIncoming };
-  await storeBucketsInLocalStorage({ data: newBuckets });
-  return newBuckets;
-};
-
 // Writes a new limit entry for `bucketName` starting from `fromYearMonth`
 // ("YYYY-MM", 1-indexed). If an entry for that exact month already exists it
 // is replaced; otherwise a new entry is appended and the history is kept
@@ -201,6 +184,38 @@ const addBucketData = async ({ bucket }) => {
   return newBuckets;
 };
 
+// Reads the whole persisted state for a single-file backup (issue #109).
+// `buckets` is normalized to an object: the empty-state getter returns `[]`
+// (see the TODO above `getItemFromLocalStorageFactory`), and `{...[]}` is
+// harmless, but keeping the exported shape an object avoids surprises for
+// anything that inspects the file directly.
+const exportAllData = async () => {
+  const [balance, buckets, categories, fixedEntries] = await Promise.all([
+    getBalanceFromLocalStorage(),
+    getBucketsFromLocalStorage(),
+    getCategoriesFromLocalStorage(),
+    getFixedEntriesFromLocalStorage(),
+  ]);
+  return {
+    balance,
+    buckets: Array.isArray(buckets) ? {} : buckets,
+    categories,
+    fixedEntries,
+  };
+};
+
+// Replaces the whole persisted state from a single-file backup (issue #109):
+// every key is overwritten wholesale so the app matches the file exactly,
+// rather than merging with whatever was there before.
+const importAllData = async ({ balance, buckets, categories, fixedEntries }) => {
+  await storeBalanceInLocalStorage({ data: balance || [] });
+  await storeBucketsInLocalStorage({ data: buckets || {} });
+  await storeCategoriesInLocalStorage({ data: categories || [] });
+  await storeFixedEntriesInLocalStorage({
+    data: fixedEntries || getEmptyFixedEntries(),
+  });
+};
+
 const LocalStorage = () => ({
   getBalance: () => getBalanceFromLocalStorage(),
   setBalance: ({ balance }) => storeBalanceInLocalStorage({ data: balance }),
@@ -278,9 +293,6 @@ const LocalStorage = () => ({
   removeFixedEntry: async ({ id, from }) => {
     return setFixedEntryData({ id, from, removed: true });
   },
-  editBuckets: async ({ buckets }) => {
-    return mergeBucketsData({ bucketData: buckets });
-  },
   getBucket: async ({ bucketName }) => {
     const buckets = await getBucketsFromLocalStorage();
     const selectedBucketKey = Object.keys(buckets).find((bucketKey) => {
@@ -297,6 +309,10 @@ const LocalStorage = () => ({
     const bucket = { [selectedBucketKey]: buckets[selectedBucketKey] };
     return bucket;
   },
+  // Single-file backup & restore (issue #109): reads/writes the whole
+  // persisted state in one shot.
+  exportData: async () => exportAllData(),
+  importData: async (data) => importAllData(data),
 });
 
 export default LocalStorage;

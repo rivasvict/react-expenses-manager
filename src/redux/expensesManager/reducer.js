@@ -9,16 +9,15 @@ import {
   SET_SELECTED_DATE,
   EDIT_ENTRY,
   REMOVE_ENTRY,
-  SET_BALANCE,
   CLEAR_ALL_DATA,
   GET_BUCKETS,
   EDIT_BUCKET,
-  SET_BUCKETS,
   ADD_BUCKET,
   ADD_CATEGORY,
   GET_CATEGORIES,
   GET_FIXED_ENTRIES,
   SET_FIXED_ENTRY,
+  RESTORE_BACKUP,
 } from "./actions";
 import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 
@@ -109,14 +108,6 @@ export const reducer = (state, action) => {
           ...payload.entries,
         },
       };
-    case SET_BALANCE:
-      return {
-        ...state,
-        entries: {
-          ...state.entries,
-          ...payload.entries,
-        },
-      };
     case SET_SELECTED_DATE:
       return changeSelectedDate({
         newSelectedDateValue: payload,
@@ -164,14 +155,6 @@ export const reducer = (state, action) => {
           ...payload.buckets,
         },
       };
-    case SET_BUCKETS:
-      return {
-        ...state,
-        buckets: {
-          ...state.buckets,
-          ...payload.buckets,
-        },
-      };
     case ADD_BUCKET:
       return {
         ...state,
@@ -198,6 +181,17 @@ export const reducer = (state, action) => {
     case SET_FIXED_ENTRY:
       return {
         ...state,
+        fixedEntries: payload.fixedEntries,
+      };
+    // Single-file backup restore (issue #109): replaces every slice wholesale
+    // so the live app matches the imported file exactly, rather than merging
+    // with whatever was there before the restore.
+    case RESTORE_BACKUP:
+      return {
+        ...state,
+        entries: payload.entries,
+        buckets: payload.buckets,
+        unbudgetedCategories: payload.unbudgetedCategories,
         fixedEntries: payload.fixedEntries,
       };
     default:

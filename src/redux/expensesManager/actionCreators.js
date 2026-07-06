@@ -1,6 +1,5 @@
 import { ActionCreators } from "./actions";
 import storageSelector from "../../services/storageSelector";
-import dataParser from "../../services/dataParser";
 import { STORAGE_TYPES } from "../../constants";
 /**
  * TODO: Use STORAGE_TYPES.REMOTE
@@ -14,7 +13,7 @@ export const {
   addIncome,
   categoryChange,
   getBalance,
-  uploadBackup,
+  restoreBackup,
   clearAllData,
   setSelectedDate,
   getEntryById,
@@ -31,4 +30,4 @@ export const {
   addFixedEntry,
   editFixedEntry,
   removeFixedEntry,
-} = ActionCreators({ storage, dataParser });
+} = ActionCreators({ storage });
