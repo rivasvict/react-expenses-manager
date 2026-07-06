@@ -3,6 +3,7 @@ import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
 import { ENTRY_TYPES_SINGULAR } from "../../constants";
 import { capitalize } from "lodash";
+import { materializeFixedEntries } from "../fixedEntriesHelper/fixedEntriesHelper";
 
 function getSumFromEntries({ entries, absolute = false }) {
   const entriesForSum = entries.map((entry) => {
@@ -34,6 +35,14 @@ const getDatedEntries = ({ entries, year, month }) => {
   return entries?.[year]?.[month] || { incomes: [], expenses: [] };
 };
 
+const calculatePercentage = (part, whole, numberOfDigits = 2) => {
+  if (!whole)
+    throw new Error(
+      `The whole of the part cannot be undefined or 0. got: ${whole}`
+    );
+  return parseFloat(((part / whole) * 100).toFixed(numberOfDigits));
+};
+
 /**
  * Calculates the percentage of each category's total amount relative to the total sum.
  *
@@ -53,7 +62,7 @@ const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
     const { amount: rawAmount, categories_path } = entry;
     const category = capitalize(categories_path.split(",")[1]);
     const amount = Math.abs(parseFloat(rawAmount));
-    const percentageAmount = (amount / totalSum) * 100;
+    const percentageAmount = calculatePercentage(amount, totalSum);
     return {
       ...consolidatedCategories,
       [category]:
@@ -109,37 +118,165 @@ function getSelectOptionsForDisplay(selectOptions) {
   }));
 }
 
-function getEntryCategoryOption(entryType) {
-  // TODO: These categories should live somewhere else
-  // in a settings or constant file
+// TODO: These categories should live somewhere else in a settings or constant
+// file and ultimately come from the database. They act as the seed list the
+// user starts with before creating their own categories (see issue #71).
+const INCOME_CATEGORIES = ["Salary", "Deposit", "Saving"];
 
-  // TODO: These categories should come from the database
-  const incomeCategories = ["Salary", "Deposit", "Saving"];
+const EXPENSE_CATEGORIES = [
+  "House (Rent)",
+  "Transportation",
+  "Mobile phone plan",
+  "Subscriptions",
+  "Bank fees",
+  "Laundry",
+  "Internet",
+  "Hydro",
+  "Donation",
+  "Eating out",
+  "Fun activities",
+  "Food",
+  "Alcohol",
+  "Travel",
+  "Sports",
+  "House stuff",
+  "Unexpected",
+  "Beauty",
+  "Person 1 bucket",
+  "Person 2 bucket",
+  "Education",
+  "Insurance House",
+  "Health",
+  "Baby Stuff",
+  "Car",
+  "Car parking",
+  "Car insurance",
+  "Gas",
+  "Car expenses",
+];
 
-  const expenseCategories = [
-    "Food",
-    "Alcohol",
-    "Clothes",
-    "Fixed expenses",
-    "Health",
-    "House",
-    "House insurance",
-    "Electricity",
-    "Internet",
-    "Laundry",
-    "Others",
-    "Parents",
-    "Mobile",
-    "Tech",
-    "Transport",
-  ];
+/**
+ * Builds the ordered list of expense category names the user can choose from.
+ *
+ * Categories can exist independently of buckets (issue #100/#71): the user
+ * creates a category on its own, and only later (optionally) attaches a
+ * spending limit by creating a bucket for it. This merges the seed
+ * categories, the user's unbudgeted categories, and the user's budgeted
+ * (bucket) names so every one of them becomes immediately selectable, while
+ * keeping the comparison case-insensitive to avoid duplicates like "Gym"/"gym".
+ *
+ * @param {Object} [budgetedCategories={}] - `{ [categoryName]: allowance }` from the store; its keys are the budgeted category names the list is derived from.
+ * @param {Array<string>} [unbudgetedCategories=[]] - Categories without a bucket (allowance) yet.
+ * @returns {Array<string>} The deduplicated, ordered category names.
+ */
+function getExpenseCategoryNames(budgetedCategories = {}, unbudgetedCategories = []) {
+  const categoryNames = [...EXPENSE_CATEGORIES];
+  const seen = new Set(categoryNames.map((category) => category.toLowerCase()));
 
+  [...(unbudgetedCategories || []), ...Object.keys(budgetedCategories || {})].forEach((name) => {
+    const normalized = name.toLowerCase();
+    if (!seen.has(normalized)) {
+      seen.add(normalized);
+      categoryNames.push(name);
+    }
+  });
+
+  return categoryNames;
+}
+
+/**
+ * Returns the category select options for an entry type. Expense categories are
+ * augmented with the user's unbudgeted categories and buckets so newly added ones show up.
+ *
+ * @param {string} entryType - "income" or "expense".
+ * @param {Object} [buckets={}] - `{ [bucketName]: allowance }` from the store.
+ * @param {Array<string>} [unbudgetedCategories=[]] - Categories without a bucket (allowance) yet.
+ */
+function getEntryCategoryOption(entryType, buckets = {}, unbudgetedCategories = []) {
   const categoryOptions = {
-    income: getSelectOptionsForDisplay(incomeCategories),
-    expense: getSelectOptionsForDisplay(expenseCategories),
+    income: getSelectOptionsForDisplay(INCOME_CATEGORIES),
+    expense: getSelectOptionsForDisplay(
+      getExpenseCategoryNames(buckets, unbudgetedCategories)
+    ),
   };
 
   return categoryOptions[entryType];
+}
+
+/**
+ * Validates a new category name (issue #71/#100): it must be non-empty and
+ * unique (case-insensitive) among the existing categories and buckets, so we
+ * never create orphan or duplicated categories.
+ *
+ * @param {Object} params
+ * @param {string} params.name - The proposed category name.
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @param {Array<string>} [params.unbudgetedCategories=[]] - Existing categories without a bucket yet.
+ * @returns {string|null} An error message, or null when the name is valid.
+ */
+function getCategoryValidationError({ name, buckets = {}, unbudgetedCategories = [] }) {
+  const trimmedName = (name || "").trim();
+
+  if (!trimmedName) {
+    return "Category name cannot be empty";
+  }
+
+  const alreadyExists = getExpenseCategoryNames(buckets, unbudgetedCategories).some(
+    (existingName) => existingName.toLowerCase() === trimmedName.toLowerCase()
+  );
+
+  if (alreadyExists) {
+    return `A category for "${trimmedName}" already exists`;
+  }
+
+  return null;
+}
+
+/**
+ * Returns the categories that do not have a bucket (spending limit) yet, i.e.
+ * the unbudgeted ones selectable when creating a new bucket (issue #100).
+ * This includes the seed expense categories as well as user-created ones,
+ * since either kind can be picked when setting up a bucket.
+ *
+ * @param {Object} params
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @param {Array<string>} [params.unbudgetedCategories=[]] - Categories without a bucket yet.
+ * @returns {Array<string>}
+ */
+function getUnbudgetedCategories({ buckets = {}, unbudgetedCategories = [] }) {
+  const bucketNames = new Set(
+    Object.keys(buckets || {}).map((bucketName) => bucketName.toLowerCase())
+  );
+  return getExpenseCategoryNames(buckets, unbudgetedCategories).filter(
+    (categoryName) => !bucketNames.has(categoryName.toLowerCase())
+  );
+}
+
+/**
+ * Validates a bucket (spending limit) creation request (issue #100): a
+ * category must be selected and must not already have a bucket.
+ *
+ * @param {Object} params
+ * @param {string} params.categoryName - The selected category name.
+ * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @returns {string|null} An error message, or null when the selection is valid.
+ */
+function getBucketValidationError({ categoryName, buckets = {} }) {
+  const trimmedName = (categoryName || "").trim();
+
+  if (!trimmedName) {
+    return "Please select a category";
+  }
+
+  const alreadyExists = Object.keys(buckets || {}).some(
+    (bucketName) => bucketName.toLowerCase() === trimmedName.toLowerCase()
+  );
+
+  if (alreadyExists) {
+    return `A bucket for "${trimmedName}" already exists`;
+  }
+
+  return null;
 }
 
 const getEmtpyMonthModel = () => ({
@@ -260,7 +397,7 @@ const getEntriesWithFilledDates =
       }
     };
 
-    while (pointerYear <= endYear && pointerMonth <= endMonth) {
+    while (pointerYear < endYear || (pointerYear === endYear && pointerMonth <= endMonth)) {
       const currentEntriesYear = entries[pointerYear];
       if (!currentEntriesYear) {
         fillAYearOfMonthsWithEmptyEntries();
@@ -289,14 +426,194 @@ const getEntriesWithFilledDates =
  * in a month or a year)
  * @function
  * @returns {function} a callback that does the intended purpose
- * @param {Arrat<Objec>} entries - Array of entries
+ * @param {Array<Object>} entries - Array of entries
+ * @param {Object} [fixedEntries] - Fixed (recurring) incomes/expenses config
+ *   (issue #103). When provided, its resolved amounts are materialized into
+ *   every month of the resulting tree so they appear automatically.
  */
-const getGroupedFilledEntriesByDate = () => (entries) => {
-  const groupedEntriesByDate = getGroupEntriesByDate()(entries);
-  return getEntriesWithFilledDates()({
-    entries: groupedEntriesByDate,
-    firstEntryDate: entries.length && entries[0].date,
+const getGroupedFilledEntriesByDate =
+  () =>
+  (entries, fixedEntries) => {
+    const grouped = !entries.length
+      ? getCurrentEmptyMonth()
+      : getEntriesWithFilledDates()({
+          entries: getGroupEntriesByDate()(entries),
+          firstEntryDate: entries[0].date,
+        });
+    return materializeFixedEntries({ entries: grouped, fixedEntries });
+  };
+
+/**
+ * Converts a 0-indexed month + year to an ISO-style "YYYY-MM" string used as
+ * the `from` key in the per-month bucket limit history.
+ *
+ * @param {number} year
+ * @param {number} month - 0-indexed (0 = January, 11 = December)
+ * @returns {string} e.g. "2026-03"
+ */
+const toYearMonth = (year, month) =>
+  `${year}-${String(month + 1).padStart(2, "0")}`;
+
+/**
+ * Resolves the effective spending limit for a bucket in a given month.
+ *
+ * Bucket values in storage can be:
+ *   - a plain number (old format, backward-compatible) — returned as-is.
+ *   - an array of `{ from: "YYYY-MM", limit: number }` entries (new format) —
+ *     the most recent entry whose `from` <= `yearMonth` is used.
+ *
+ * If no entry is <= yearMonth (i.e. the bucket was created after the requested
+ * month), the oldest entry's limit is returned so the bucket still has a
+ * sensible value.
+ *
+ * @param {number|Array<{from: string, limit: number}>} bucketValue
+ * @param {string} yearMonth - "YYYY-MM" (1-indexed month)
+ * @returns {number}
+ */
+const getActiveLimitForMonth = (bucketValue, yearMonth) => {
+  if (typeof bucketValue === "number") return bucketValue;
+  if (!Array.isArray(bucketValue) || bucketValue.length === 0) return 0;
+  const sorted = [...bucketValue].sort((a, b) => (a.from > b.from ? -1 : 1));
+  const active = sorted.find((entry) => entry.from <= yearMonth);
+  return active ? active.limit : sorted[sorted.length - 1].limit;
+};
+
+/**
+ * Sums the expense amounts of a single month grouped by bucket.
+ *
+ * Spending for a bucket is the accumulated amount of every expense whose
+ * `categories_path` matches the (lowercased) bucket name, following the
+ * `,<category>,` convention used across the app.
+ *
+ * @param {Object} params
+ * @param {Array<Object>} params.expenses - Expense entries of a single month.
+ * @param {Array<string>} params.bucketNames - The bucket names to compute spending for.
+ * @returns {Object} bucketName -> total spent in the month for that bucket.
+ */
+const getMonthSpendingByBucket = ({ expenses, bucketNames }) => {
+  const spendingByPath = expenses.reduce((accumulatedSpending, entry) => {
+    accumulatedSpending[entry.categories_path] =
+      (accumulatedSpending[entry.categories_path] || 0) +
+      parseFloat(entry.amount);
+    return accumulatedSpending;
+  }, {});
+
+  return bucketNames.reduce((spending, bucketName) => {
+    spending[bucketName] =
+      spendingByPath[`,${bucketName.toLowerCase()},`] || 0;
+    return spending;
+  }, {});
+};
+
+/**
+ * Returns the chronologically ordered `{ year, month }` pairs that have been
+ * recorded, from the earliest one up to (and including) the given date.
+ *
+ * @param {Object} params
+ * @param {Object} params.entries - The nested `entries[year][month]` tree.
+ * @param {Object} params.until - `{ year, month }` upper bound (inclusive).
+ * @returns {Array<{ year: number, month: number }>}
+ */
+const getRecordedMonthsUntil = ({ entries, until }) => {
+  const recordedMonths = [];
+  const years = Object.keys(entries)
+    .map(Number)
+    .sort((firstYear, secondYear) => firstYear - secondYear);
+
+  for (const year of years) {
+    if (year > until.year) break;
+    const months = Object.keys(entries[year])
+      .map(Number)
+      .sort((firstMonth, secondMonth) => firstMonth - secondMonth);
+    for (const month of months) {
+      if (year === until.year && month > until.month) break;
+      recordedMonths.push({ year, month });
+    }
+  }
+
+  return recordedMonths;
+};
+
+/**
+ * Computes the carry-on state of every bucket for the selected month.
+ *
+ * Walking chronologically from the first recorded month up to the selected
+ * one, the following recurrence is applied per bucket:
+ *
+ *   availability = allowance + previousMonthRemainder
+ *   remainder    = availability - monthSpending
+ *
+ * `remainder` becomes the `carryOver` for the next month, which lets the user
+ * save unused allowance (positive remainder) or carry debt forward (negative
+ * remainder). The walk is a single pass over the recorded months
+ * (O(months * buckets)), keeping the calculation efficient.
+ *
+ * Months before the first recorded month default to a plain allowance with no
+ * carry-on, since there is nothing to accumulate yet.
+ *
+ * @param {Object} params
+ * @param {Object} params.entries - The nested `entries[year][month]` tree.
+ * @param {Object} params.buckets - `{ [bucketName]: allowance }`.
+ * @param {Object} params.selectedDate - `{ year, month }` of the viewed month.
+ * @returns {Object} bucketName -> { allowance, carryOver, availability, spending, remainder }
+ */
+const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
+  const bucketNames = Object.keys(buckets);
+  const recordedMonths = getRecordedMonthsUntil({
+    entries,
+    until: selectedDate,
   });
+
+  const remainders = bucketNames.reduce((accumulatedRemainders, bucketName) => {
+    accumulatedRemainders[bucketName] = 0;
+    return accumulatedRemainders;
+  }, {});
+
+  // Initial state (used when there are no recorded months to walk through).
+  const selectedYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+  const carriedBuckets = bucketNames.reduce((carried, bucketName) => {
+    const allowance = getActiveLimitForMonth(buckets[bucketName], selectedYearMonth);
+    carried[bucketName] = {
+      allowance,
+      carryOver: 0,
+      availability: allowance,
+      spending: 0,
+      remainder: allowance,
+    };
+    return carried;
+  }, {});
+
+  for (const { year, month } of recordedMonths) {
+    const yearMonth = toYearMonth(year, month);
+    const expenses = entries?.[year]?.[month]?.expenses || [];
+    const spendingByBucket = getMonthSpendingByBucket({ expenses, bucketNames });
+    const isSelectedMonth =
+      year === selectedDate.year && month === selectedDate.month;
+
+    bucketNames.forEach((bucketName) => {
+      const allowance = getActiveLimitForMonth(buckets[bucketName], yearMonth);
+      const carryOver = remainders[bucketName];
+      const availability = allowance + carryOver;
+      const spending = spendingByBucket[bucketName];
+      const remainder = availability - spending;
+
+      remainders[bucketName] = remainder;
+
+      if (isSelectedMonth) {
+        carriedBuckets[bucketName] = {
+          allowance,
+          carryOver,
+          availability,
+          spending,
+          remainder,
+        };
+      }
+    });
+
+    if (isSelectedMonth) break;
+  }
+
+  return carriedBuckets;
 };
 
 /**
@@ -314,15 +631,27 @@ const quantitiesToPercentages = (quantities) => {
 };
 
 export {
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
   getSumFromEntries,
   formatNumberForDisplay,
   getSum,
   getEntryModel,
   getEntryCategoryOption,
+  getExpenseCategoryNames,
+  getCategoryValidationError,
+  getUnbudgetedCategories,
+  getBucketValidationError,
   getGroupedFilledEntriesByDate,
   quantitiesToPercentages,
   getFilteredEntriesByCategory,
   getDatedEntries,
   getCategoryPercentagesFromEntries,
   getCurrentEmptyMonth,
+  calculatePercentage,
+  getMonthSpendingByBucket,
+  getRecordedMonthsUntil,
+  getCarriedBucketsForMonth,
+  toYearMonth,
+  getActiveLimitForMonth,
 };

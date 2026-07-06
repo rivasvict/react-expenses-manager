@@ -1,11 +1,15 @@
 import { connect } from "react-redux";
-import { getCurrentTimestamp } from "../../../../helpers/date";
+import {
+  getYearMonthKey,
+  getTimestampFromMonthAndYear,
+} from "../../../../helpers/date";
 import { getEntryModel } from "../../../../helpers/entriesHelper/entriesHelper";
 import EntryForm from "../EntryForm";
 import { withRouter } from "react-router-dom";
 import {
   addExpense,
   addIncome,
+  addFixedEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 
 const ADD_NEW = "Add new";
@@ -24,18 +28,13 @@ const AddEntry = ({
   selectedDate,
   onAddIncome,
   onAddExpense,
+  onAddFixedEntry,
+  buckets,
+  unbudgetedCategories,
   history,
+  location,
 }) => {
-  const newEntry = getEntryModel({
-    entryType,
-    // TODO: Make sure the date calculation takes the hours and seconds into account
-    // also, make sure the timestamp calculation happens at the actual entry creation
-    // Not at the component rendering time
-    timestamp: getCurrentTimestamp({
-      month: selectedDate.month,
-      year: selectedDate.year,
-    }),
-  });
+  const newEntry = getEntryModel({ entryType });
 
   const navigateBack = () => {
     history.goBack();
@@ -49,14 +48,27 @@ const AddEntry = ({
     },
   });
 
-  const handleSubmit = (event, { entryToAdd }) => {
+  const handleSubmit = (event, { entryToAdd, isRecurring }) => {
     event.preventDefault();
-    const entry = Object.assign({}, entryToAdd);
+    const entry = {
+      ...entryToAdd,
+      type: entryType,
+      date: getTimestampFromMonthAndYear({
+        month: selectedDate.month,
+        year: selectedDate.year,
+      }),
+    };
     const digitMatcher = /^\d*(\.)*\d+$/;
     const amount = entry.amount;
     // TODO: review the validation for the missing category
     if (amount && digitMatcher.test(amount) && entry.categories_path !== "") {
-      handleEntry({ entry, selectedDate });
+      // A recurring entry is stored as a fixed entry effective from the viewed
+      // month (issue #103); otherwise it is a one-off entry for that month.
+      if (isRecurring) {
+        onAddFixedEntry({ entry, from: getYearMonthKey(selectedDate) });
+      } else {
+        handleEntry({ entry, selectedDate });
+      }
       navigateBack();
     }
   };
@@ -68,15 +80,23 @@ const AddEntry = ({
       handleSubmit={handleSubmit}
       onCancel={navigateBack}
       operationTitle={ADD_NEW}
+      allowRecurring={true}
+      recurring={Boolean(location?.state?.recurring)}
+      buckets={buckets}
+      unbudgetedCategories={unbudgetedCategories}
     />
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  buckets: state.expensesManager.buckets,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+});
 
 const mapActionToProps = (dispatch) => ({
   onAddIncome: (income) => dispatch(addIncome(income)),
   onAddExpense: (expense) => dispatch(addExpense(expense)),
+  onAddFixedEntry: ({ entry, from }) => dispatch(addFixedEntry({ entry, from })),
 });
 
 export default connect(mapStateToProps, mapActionToProps)(withRouter(AddEntry));

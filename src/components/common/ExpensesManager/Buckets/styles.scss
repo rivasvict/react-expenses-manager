@@ -1,0 +1,29 @@
+@import '../../../../variables.scss';
+.buckets-container {
+  .cancel {
+    width: 100%;
+  }
+
+  .buckets-empty-state {
+    padding: 2rem 1rem 1rem;
+
+    &__image {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    &__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    &__message {
+      color: #6c757d;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+  }
+}

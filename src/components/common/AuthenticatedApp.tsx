@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
-import Dashboard from "../Dashboard/Dashboard";
+import Dashboard from "../Dashboard";
 import SignUp from "../SignUp/SignUp";
 import Lobby from "../Lobby";
 

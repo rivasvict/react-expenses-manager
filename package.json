@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@iconify/react": "^1.1.4",
@@ -13,13 +13,12 @@
     "chart.js": "^4.4.4",
     "create-react-app": "^1.2.1",
     "dayjs": "^1.10.7",
-    "json-2-csv": "^5.5.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "node-sass": "^7.0.3",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.5.0",
+    "react-bootstrap": "^2.10.4",
     "react-dom": "^18.2.0",
     "react-icons": "^4.3.1",
     "react-redux": "^8.0.4",
@@ -38,6 +37,7 @@
     "test": "react-scripts test",
     "test:debug": "react-scripts --inspect=0.0.0.0 test --runInBand --no-cache",
     "eject": "react-scripts eject",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix"
   },
@@ -56,8 +56,16 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@iconify-icons/)"
+    ]
+  },
   "devDependencies": {
     "@iconify-icons/codicon": "^1.1.26",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
     "prettier": "^3.3.3"

@@ -9,21 +9,38 @@ import {
   SET_SELECTED_DATE,
   EDIT_ENTRY,
   REMOVE_ENTRY,
-  SET_BALANCE,
   CLEAR_ALL_DATA,
+  GET_BUCKETS,
+  EDIT_BUCKET,
+  ADD_BUCKET,
+  ADD_CATEGORY,
+  GET_CATEGORIES,
+  GET_FIXED_ENTRIES,
+  SET_FIXED_ENTRY,
+  RESTORE_BACKUP,
 } from "./actions";
+import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 
-const initialState = {
+const staticInitialState = {
   entries: {},
   category: "",
-  selectedDate: {
-    // Current month and year by default
-    // So the app is always up to date
-    // when it first load
-    month: getCurrentMonth(),
-    year: getCurrentYear(),
-  },
+  // Buckets start empty: they are created by the user and stored for later
+  // retrieval. The screen shows an empty state until the first bucket is added.
+  buckets: {},
+  // Categories the user created that do not have a bucket (spending limit,
+  // i.e. an allowance/budget) yet (issue #100/#71).
+  unbudgetedCategories: [],
+  // Fixed (recurring) incomes/expenses per category, time-aware so edits and
+  // removals propagate from a month forward (issue #103). Empty by default.
+  fixedEntries: getEmptyFixedEntries(),
 };
+
+// selectedDate must be evaluated lazily (inside the reducer, not at module-load
+// time) so that tests using jest.setSystemTime() see the fake clock value.
+const getInitialSelectedDate = () => ({
+  month: getCurrentMonth(),
+  year: getCurrentYear(),
+});
 
 const getEntryWithCalculableAmount = (entry) => ({
   amount: parseFloat(entry.amount),
@@ -61,7 +78,10 @@ const changeSelectedDate = ({ newSelectedDateValue, currentState }) => {
   return { ...currentState, selectedDate: newSelectedDateValue };
 };
 
-export const reducer = (state = initialState, action) => {
+export const reducer = (state, action) => {
+  if (state === undefined) {
+    state = { ...staticInitialState, selectedDate: getInitialSelectedDate() };
+  }
   const { type, payload } = action;
   switch (type) {
     case ADD_OUTCOME:
@@ -81,14 +101,6 @@ export const reducer = (state = initialState, action) => {
     case CATEGORY_CHANGE:
       return changeCategory({ categoryValue: payload, currentState: state });
     case GET_BALANCE:
-      return {
-        ...state,
-        entries: {
-          ...state.entries,
-          ...payload.entries,
-        },
-      };
-    case SET_BALANCE:
       return {
         ...state,
         entries: {
@@ -124,6 +136,63 @@ export const reducer = (state = initialState, action) => {
           ...state.entries,
           ...payload.entries,
         },
+      };
+    case GET_BUCKETS:
+      return payload
+        ? {
+            ...state,
+            buckets: {
+              ...state.buckets,
+              ...payload.buckets,
+            },
+          }
+        : state;
+    case EDIT_BUCKET:
+      return {
+        ...state,
+        buckets: {
+          ...state.buckets,
+          ...payload.buckets,
+        },
+      };
+    case ADD_BUCKET:
+      return {
+        ...state,
+        buckets: {
+          ...state.buckets,
+          ...payload.buckets,
+        },
+        unbudgetedCategories: (state.unbudgetedCategories || []).filter(
+          (categoryName) =>
+            categoryName.toLowerCase() !== payload.categoryName?.toLowerCase()
+        ),
+      };
+    case ADD_CATEGORY:
+      return {
+        ...state,
+        unbudgetedCategories: payload.unbudgetedCategories,
+      };
+    case GET_CATEGORIES:
+      return {
+        ...state,
+        unbudgetedCategories: payload.unbudgetedCategories,
+      };
+    case GET_FIXED_ENTRIES:
+    case SET_FIXED_ENTRY:
+      return {
+        ...state,
+        fixedEntries: payload.fixedEntries,
+      };
+    // Single-file backup restore (issue #109): replaces every slice wholesale
+    // so the live app matches the imported file exactly, rather than merging
+    // with whatever was there before the restore.
+    case RESTORE_BACKUP:
+      return {
+        ...state,
+        entries: payload.entries,
+        buckets: payload.buckets,
+        unbudgetedCategories: payload.unbudgetedCategories,
+        fixedEntries: payload.fixedEntries,
       };
     default:
       return state;

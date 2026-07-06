@@ -14,6 +14,12 @@ import DashboardContent from "./components/DashboardContent";
 import { addViewHeightMobileConfig } from "../../helpers/general";
 import EditEntry from "../common/ExpensesManager/EditEntry";
 import DataManagement from "../common/ExpensesManager/DataManagement";
+import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
+import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
+import AddBucket from "../common/ExpensesManager/AddBucket";
+import AddCategory from "../common/ExpensesManager/AddCategory";
+import Categories from "../common/ExpensesManager/Categories";
+import FixedEntries from "../common/ExpensesManager/FixedEntries";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -64,6 +70,25 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}data-management`}>
               <DataManagement />
             </Route>
+            <Route path={`${match.url}add-bucket`}>
+              <AddBucket />
+            </Route>
+            <Route path={`${match.url}add-category`}>
+              <AddCategory />
+            </Route>
+            <Route path={`${match.url}categories`}>
+              <Categories />
+            </Route>
+            <Route path={`${match.url}fixed-entries`}>
+              <FixedEntries />
+            </Route>
+            <Route path={`${match.url}buckets`}>
+              <Buckets selectedDate={selectedDate} />
+            </Route>
+            {/** TODO: Work with a bucketId instead of a bucketName */}
+            <Route path={`${match.url}edit-bucket/:bucketName`}>
+              <EditBucket />
+            </Route>
             <Route path={`${match.url}dashboard`}>
               <DashboardContent {...{ entries, match }} />
             </Route>
@@ -82,34 +107,10 @@ const mapStateToProps = (state) => ({
   selectedDate: state.expensesManager.selectedDate,
 });
 
-// TODO: Fix this propTypes and add it through the whole application
+// TODO(#108): Replace with a precise PropTypes.shape that mirrors the real
+// nested tree { [year]: { [month]: { incomes: Entry[], expenses: Entry[] } } }.
 Dashboard.propTypes = {
-  entries: PropTypes.shape({
-    incomes: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        description: PropTypes.string,
-        timestamp: PropTypes.number.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.shape({
-          id: PropTypes.number,
-          name: PropTypes.string.isRequired,
-        }),
-      }).isRequired
-    ).isRequired,
-    expenses: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        description: PropTypes.string,
-        timestamp: PropTypes.number.isRequired,
-        type: PropTypes.string.isRequired,
-        category: PropTypes.shape({
-          id: PropTypes.number,
-          name: PropTypes.string.isRequired,
-        }),
-      }).isRequired
-    ).isRequired,
-  }).isRequired,
+  entries: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(Dashboard);

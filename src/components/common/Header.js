@@ -28,6 +28,21 @@ const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <ButtonLikeLink to="/" buttonTitle="Home" onClick={closeToggle} />
           <ButtonLikeLink
+            to="/categories"
+            buttonTitle="Categories"
+            onClick={closeToggle}
+          />
+          <ButtonLikeLink
+            to="/buckets"
+            buttonTitle="Buckets"
+            onClick={closeToggle}
+          />
+          <ButtonLikeLink
+            to="/fixed-entries"
+            buttonTitle="Fixed Entries"
+            onClick={closeToggle}
+          />
+          <ButtonLikeLink
             to="/data-management"
             buttonTitle="Data Management"
             onClick={closeToggle}
