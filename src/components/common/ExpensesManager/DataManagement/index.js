@@ -49,10 +49,11 @@ const DataManagement = ({
       await onRestoreBackup({ file });
       setRestoreError(null);
       // Reading the file is async, so by the time this resolves the user may
-      // already have navigated elsewhere; unlike the other actions here, we
-      // don't navigate away on success (a relative `goBack()` could revert
-      // wherever they've since gone). The restored data is already live via
-      // Redux everywhere else in the app.
+      // have navigated elsewhere in the meantime. Push an absolute route
+      // (not `goBack()`, which is relative to whatever the current history
+      // entry happens to be by then) so landing on the dashboard is
+      // deterministic regardless of how long the restore took.
+      history.push("/");
     } catch (error) {
       setRestoreError(error.message || "The backup could not be restored");
     }

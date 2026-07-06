@@ -90,12 +90,23 @@ const asFile = (contents: unknown, name = "expenses-backup.json"): File =>
 
 // The Data Management page must expose exactly ONE restore control (a single
 // "Restore Backup" button next to a single file input), not the old pair of
-// entries/buckets uploads. This asserts that control exists, then feeds it a file.
+// entries/buckets uploads. This asserts that control exists, then feeds it a
+// file and waits for the (asynchronous file-read-driven) restore to settle:
+// on success the app navigates to the dashboard; on failure it stays put with
+// a visible alert. Callers can rely on the restore having fully applied.
 const restoreFrom = async (user: UserEvent, file: File) => {
   await screen.findByRole("button", { name: /restore backup/i });
   const inputs = screen.getAllByTestId("file-input");
   expect(inputs).toHaveLength(1);
   await user.upload(inputs[0], file);
+
+  await waitFor(() => {
+    const stillOnDataManagement = screen.queryByRole("button", {
+      name: /restore backup/i,
+    });
+    const hasError = screen.queryByRole("alert");
+    expect(stillOnDataManagement === null || hasError !== null).toBe(true);
+  });
 };
 
 const readAsText = (blob: Blob): Promise<string> =>
