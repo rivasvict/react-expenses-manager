@@ -5,11 +5,10 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [0.2.0] - 2026-07-05
+## [1.0.0] - 2026-07-05
 
-A mature beta. This version consolidates the buckets, categories,
-fixed-entries, and backup/restore work into a single supported release,
-but is not yet declared stable.
+First stable release. This version consolidates the buckets, categories,
+fixed-entries, and backup/restore work into a single supported release.
 
 ### Added
 - Single-file backup & restore for the entire app's data (#109)
@@ -48,4 +47,4 @@ but is not yet declared stable.
   Entries pages
 - Stale personal references and ESLint warnings removed; license file fixed
 
-[0.2.0]: https://github.com/rivasvict/react-expenses-manager/releases/tag/v0.2.0
+[1.0.0]: https://github.com/rivasvict/react-expenses-manager/releases/tag/v1.0.0
