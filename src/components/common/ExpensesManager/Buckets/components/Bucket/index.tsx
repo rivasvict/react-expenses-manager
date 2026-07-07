@@ -8,8 +8,8 @@ const Bucket = ({
   category,
   allowance,
   carryOver,
-  availability,
   spending,
+  remainder,
   consuptionPercentage,
 }) => {
   const colorMapClass = {
@@ -49,11 +49,11 @@ const Bucket = ({
             <Col>{category}</Col>
             <Col className="rest">
               <span data-testid={`${testId}-spending`}>
-                {formatNumberForDisplay(spending)}
+                {`Spent: ${formatNumberForDisplay(spending)}`}
               </span>
-              {" of "}
-              <span data-testid={`${testId}-availability`}>
-                {formatNumberForDisplay(availability)}
+              {" / "}
+              <span data-testid={`${testId}-remaining`}>
+                {`Remaining: ${formatNumberForDisplay(remainder)}`}
               </span>
             </Col>
           </Row>

@@ -16,8 +16,8 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-function bucketAvailability(testIdBase: string): string {
-  return screen.getByTestId(`${testIdBase}-availability`).textContent as string;
+function bucketRemaining(testIdBase: string): string {
+  return screen.getByTestId(`${testIdBase}-remaining`).textContent as string;
 }
 
 function bucketCarryOver(testIdBase: string): string {
@@ -39,7 +39,10 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await goToPrevMonth(user, "February 2026");
     await goToPrevMonth(user, "January 2026");
 
-    expect(bucketAvailability("bucket-food")).toBe("$200.00");
+    expect(bucketCarryOver("bucket-food")).toBe(
+      "Allowance $200.00 + carried $0.00"
+    );
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $150.00");
   });
 
   it("new-format buckets display the effective limit for each month", async () => {
@@ -203,8 +206,10 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await goToPrevMonth(user, "April 2026");
     await goToPrevMonth(user, "March 2026");
 
-    // March: allowance 300, carry-over -50 → availability 250.
-    expect(bucketCarryOver("bucket-food")).toMatch(/\$300\.00/);
-    expect(bucketAvailability("bucket-food")).toBe("$250.00");
+    // March: allowance 300, carry-over -50 → availability 250, spend 0 → remaining 250.
+    expect(bucketCarryOver("bucket-food")).toBe(
+      "Allowance $300.00 + carried $0.00 (-$50.00)"
+    );
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $250.00");
   });
 });

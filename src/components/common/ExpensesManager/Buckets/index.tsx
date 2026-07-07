@@ -82,8 +82,8 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
               category={bucket.label}
               allowance={bucket.allowance}
               carryOver={bucket.carryOver}
-              availability={bucket.availability}
               spending={bucket.spending}
+              remainder={bucket.remainder}
               consuptionPercentage={bucket.consuptionPercentage}
             />
           ))}
