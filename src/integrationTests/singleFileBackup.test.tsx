@@ -463,11 +463,11 @@ describe("round trip — download produces a single JSON file that restores the 
     expect(screen.getByTestId("bucket-food-carry-over").textContent).toBe(
       "Allowance $200.00 + carried $0.00"
     );
-    expect(screen.getByTestId("bucket-food-availability").textContent).toBe(
-      "$200.00"
-    );
     expect(screen.getByTestId("bucket-food-spending").textContent).toBe(
-      "$50.00"
+      "Spent: $50.00"
+    );
+    expect(screen.getByTestId("bucket-food-remaining").textContent).toBe(
+      "Remaining: $150.00"
     );
 
     // The standalone category came back.

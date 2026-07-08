@@ -59,8 +59,8 @@ function seedIssueExample() {
 function bucketCarryOver(testIdBase: string): string {
   return screen.getByTestId(`${testIdBase}-carry-over`).textContent as string;
 }
-function bucketAvailability(testIdBase: string): string {
-  return screen.getByTestId(`${testIdBase}-availability`).textContent as string;
+function bucketRemaining(testIdBase: string): string {
+  return screen.getByTestId(`${testIdBase}-remaining`).textContent as string;
 }
 function bucketSpending(testIdBase: string): string {
   return screen.getByTestId(`${testIdBase}-spending`).textContent as string;
@@ -80,21 +80,18 @@ describe("buckets carry-on (issue #97)", () => {
     await goToPrevMonth(user, "December 2025");
 
     // Food: availability (200 + 0) = 200, spend 200 -> remainder 0
-    expect(bucketAvailability("bucket-food")).toBe("$200.00");
-    expect(bucketSpending("bucket-food")).toBe("$200.00");
+    expect(bucketSpending("bucket-food")).toBe("Spent: $200.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $0.00");
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $0.00"
     );
 
     // Eating out: availability (300 + 0) = 300, spend 300 -> remainder 0
-    expect(bucketAvailability("bucket-eating-out")).toBe("$300.00");
-    expect(bucketSpending("bucket-eating-out")).toBe("$300.00");
+    expect(bucketSpending("bucket-eating-out")).toBe("Spent: $300.00");
+    expect(bucketRemaining("bucket-eating-out")).toBe("Remaining: $0.00");
 
     // Percentage is spending vs. carried availability (200 / 200 = 100%).
     expect(screen.getByTestId("bucket-food-percentage").textContent).toBe("100%");
-
-    // The standalone remaining line has been removed.
-    expect(screen.queryByTestId("bucket-food-remaining")).toBeNull();
   });
 
   it("accumulates a positive remainder into the next month's availability", async () => {
@@ -111,14 +108,14 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $50.00"
     );
-    expect(bucketAvailability("bucket-food")).toBe("$250.00");
-    expect(bucketSpending("bucket-food")).toBe("$20.00");
+    expect(bucketSpending("bucket-food")).toBe("Spent: $20.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $230.00");
 
     // Eating out: carry 150, availability (300 + 150) = 450, spend 20 (remainder 430)
     expect(bucketCarryOver("bucket-eating-out")).toBe(
       "Allowance $300.00 + carried $150.00"
     );
-    expect(bucketAvailability("bucket-eating-out")).toBe("$450.00");
+    expect(bucketRemaining("bucket-eating-out")).toBe("Remaining: $430.00");
   });
 
   it("carries debt forward into the next month as $0.00 (-deficit)", async () => {
@@ -136,13 +133,13 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $0.00 (-$10.00)"
     );
-    expect(bucketAvailability("bucket-food")).toBe("$190.00");
-    expect(bucketSpending("bucket-food")).toBe("$0.00");
+    expect(bucketSpending("bucket-food")).toBe("Spent: $0.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $190.00");
 
-    // The May overspend itself reads as $210 of $200 (over budget, 105%).
+    // The May overspend itself reads as Spent $210.00, Remaining -$10.00 (over budget, 105%).
     await goToPrevMonth(user, "May 2026");
-    expect(bucketSpending("bucket-food")).toBe("$210.00");
-    expect(bucketAvailability("bucket-food")).toBe("$200.00");
+    expect(bucketSpending("bucket-food")).toBe("Spent: $210.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: -$10.00");
     expect(screen.getByTestId("bucket-food-percentage").textContent).toBe(
       "105%"
     );
@@ -165,8 +162,8 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $0.00 (-$50.00)"
     );
-    expect(bucketAvailability("bucket-food")).toBe("$150.00");
-    expect(bucketSpending("bucket-food")).toBe("$100.00");
+    expect(bucketSpending("bucket-food")).toBe("Spent: $100.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: $50.00");
   });
 
   it("shows negative availability as $0.00 (-deficit) when debt exceeds the allowance", async () => {
@@ -185,9 +182,9 @@ describe("buckets carry-on (issue #97)", () => {
     expect(bucketCarryOver("bucket-food")).toBe(
       "Allowance $200.00 + carried $0.00 (-$300.00)"
     );
-    // Carried uses the "$0.00 (-deficit)" form; availability shows the raw
-    // negative ("$0.00 of -$100.00").
-    expect(bucketAvailability("bucket-food")).toBe("-$100.00");
-    expect(bucketSpending("bucket-food")).toBe("$0.00");
+    // Carried uses the "$0.00 (-deficit)" form; Remaining shows the raw
+    // negative amount.
+    expect(bucketSpending("bucket-food")).toBe("Spent: $0.00");
+    expect(bucketRemaining("bucket-food")).toBe("Remaining: -$100.00");
   });
 });
