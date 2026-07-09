@@ -13,6 +13,9 @@ import "./styles.scss";
 const getFixedOfType = (monthEntries, plural) =>
   (monthEntries?.[plural] || []).filter((entry) => entry.isFixed);
 
+const sumAmounts = (entries) =>
+  entries.reduce((total, entry) => total + Number(entry.amount), 0);
+
 /**
  * Lists the recurring (fixed) incomes and expenses that apply to the viewed
  * month (issue #103), reusing the same row component as the regular monthly
@@ -50,6 +53,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               entries={fixedIncomes}
               name="incomes"
               entryType="income"
+              total={sumAmounts(fixedIncomes)}
             />
           )}
           {fixedExpenses.length > 0 && (
@@ -57,6 +61,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               entries={fixedExpenses}
               name="expenses"
               entryType="expense"
+              total={sumAmounts(fixedExpenses)}
             />
           )}
         </>

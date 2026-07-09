@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.2] - 2026-07-09
+
+### Added
+- Fixed Entries: section totals for the Incomes and Expenses lists, showing
+  the sum of the recurring entries applying to the viewed month (#113)
+
 ## [1.0.0] - 2026-07-05
 
 First stable release. This version consolidates the buckets, categories,
@@ -47,4 +53,5 @@ fixed-entries, and backup/restore work into a single supported release.
   Entries pages
 - Stale personal references and ESLint warnings removed; license file fixed
 
+[1.0.2]: https://github.com/rivasvict/react-expenses-manager/releases/tag/v1.0.2
 [1.0.0]: https://github.com/rivasvict/react-expenses-manager/releases/tag/v1.0.0

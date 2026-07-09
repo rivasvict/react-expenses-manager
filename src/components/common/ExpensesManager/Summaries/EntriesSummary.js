@@ -33,14 +33,19 @@ function GetEntriesList({ entries, entryType }) {
   });
 }
 
-function EntriesSummary({ entries, name, entryType }) {
+function EntriesSummary({ entries, name, entryType, total }) {
   const entriesList = GetEntriesList({ entries, entryType });
   return (
     <Container className="entries-summary">
       <Row>
-        <Col xs={12} className="item-type">
+        <Col xs={total === undefined ? 12 : 8} className="item-type">
           {capitalize(name)}
         </Col>
+        {total !== undefined && (
+          <Col xs={4} className="item-total">
+            {formatNumberForDisplay(total)}
+          </Col>
+        )}
       </Row>
       {entriesList.length ? entriesList : null}
     </Container>

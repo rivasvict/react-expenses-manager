@@ -48,6 +48,28 @@ const addRecurringExpense = async (
   await screen.findByRole("link", { name: /add expenses/i });
 };
 
+// Adds a recurring income from the dashboard using the normal Add Income form
+// with the "Recurring" toggle switched on.
+const addRecurringIncome = async (
+  user: UserEvent,
+  { amount, description }: { amount: string; description: string }
+) => {
+  await user.click(await screen.findByRole("link", { name: /add income/i }));
+  await user.type(
+    await screen.findByPlaceholderText(/insert income amount/i),
+    amount
+  );
+  await user.type(screen.getByPlaceholderText(/description/i), description);
+  await user.selectOptions(
+    screen.getByRole("combobox"),
+    screen.getByRole("option", { name: "Salary" })
+  );
+  await user.click(screen.getByLabelText(/recurring/i));
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+  // Back on the dashboard after submitting.
+  await screen.findByRole("link", { name: /add income/i });
+};
+
 // Adds a one-off (non-recurring) expense via the same form but WITHOUT the toggle.
 const addRegularExpense = async (
   user: UserEvent,
@@ -111,7 +133,9 @@ describe("toggle routing — recurring vs regular entries", () => {
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
     expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.getByText("$150.00")).toBeInTheDocument();
+    // $150.00 appears twice: the entry's own amount and the section total
+    // (only one fixed expense this month, so the total equals it).
+    expect(screen.getAllByText("$150.00")).toHaveLength(2);
   });
 
   it("a recurring expense materialises into the dashboard total and is visible on the Fixed Entries page", async () => {
@@ -153,7 +177,8 @@ describe("fixed entries without any prior regular entries", () => {
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("May 2026");
     expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.getByText("$100.00")).toBeInTheDocument();
+    // $100.00 appears twice: the entry's own amount and the section total.
+    expect(screen.getAllByText("$100.00")).toHaveLength(2);
   });
 });
 
@@ -214,7 +239,8 @@ describe("toggling recurring ON in the edit form converts a one-off entry to a f
     // the promotion happens) with the correct amount.
     await screen.findByText("May 2026");
     expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
-    expect(screen.getByText("$90.00")).toBeInTheDocument();
+    // $90.00 appears twice: the entry's own amount and the section total.
+    expect(screen.getAllByText("$90.00")).toHaveLength(2);
 
     // Fixed entries are also materialised into the regular expenses view.
     await user.click(screen.getByRole("link", { name: /home/i }));
@@ -326,5 +352,119 @@ describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", 
     await goToPrevMonth(user, "April 2026");
     await goToPrevMonth(user, "March 2026");
     expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+  });
+});
+
+describe("Fixed Entries totals (issue #113)", () => {
+  it("shows the sum of each section when both incomes and expenses exist", async () => {
+    const { user } = await renderApp("/");
+    await goToPrevMonth(user, "April 2026");
+    await goToPrevMonth(user, "March 2026");
+
+    await addRecurringIncome(user, { amount: "1000", description: "Salary" });
+    await addRecurringIncome(user, { amount: "500", description: "Bonus" });
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+    await addRecurringExpense(user, { amount: "50", description: "Snacks" });
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+
+    // Line items.
+    expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
+    expect(screen.getByText("$500.00")).toBeInTheDocument();
+    expect(screen.getByText("$200.00")).toBeInTheDocument();
+    expect(screen.getByText("$50.00")).toBeInTheDocument();
+
+    // Section totals: incomes 1000 + 500 = 1500, expenses 200 + 50 = 250.
+    expect(screen.getByText("$1,500.00")).toBeInTheDocument();
+    expect(screen.getByText("$250.00")).toBeInTheDocument();
+  });
+
+  it("shows only the expenses total when there are no fixed incomes", async () => {
+    const { user } = await renderApp("/");
+    await goToPrevMonth(user, "April 2026");
+    await goToPrevMonth(user, "March 2026");
+
+    await addRecurringExpense(user, { amount: "200", description: "Rent" });
+    await addRecurringExpense(user, { amount: "50", description: "Netflix" });
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+
+    // No fixed incomes, so the Incomes section is not rendered at all.
+    expect(screen.queryByText("Incomes")).not.toBeInTheDocument();
+
+    // Expenses total: 200 + 50 = 250, distinct from either line item.
+    expect(await screen.findByText("$250.00")).toBeInTheDocument();
+    expect(screen.getByText("$200.00")).toBeInTheDocument();
+    expect(screen.getByText("$50.00")).toBeInTheDocument();
+  });
+
+  it("shows only the incomes total when there are no fixed expenses", async () => {
+    const { user } = await renderApp("/");
+    await goToPrevMonth(user, "April 2026");
+    await goToPrevMonth(user, "March 2026");
+
+    await addRecurringIncome(user, { amount: "1000", description: "Salary" });
+    await addRecurringIncome(user, { amount: "300", description: "Bonus" });
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+
+    // No fixed expenses, so the Expenses section is not rendered at all.
+    expect(screen.queryByText("Expenses")).not.toBeInTheDocument();
+
+    // Incomes total: 1000 + 300 = 1300, distinct from either line item.
+    expect(await screen.findByText("$1,300.00")).toBeInTheDocument();
+    expect(screen.getByText("$1,000.00")).toBeInTheDocument();
+    expect(screen.getByText("$300.00")).toBeInTheDocument();
+  });
+
+  it("shows no totals when there are no fixed entries at all", async () => {
+    const { user } = await renderApp("/");
+    await goToPrevMonth(user, "April 2026");
+    await goToPrevMonth(user, "March 2026");
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+
+    expect(
+      await screen.findByText(/no recurring entries apply to this month yet/i)
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Incomes")).not.toBeInTheDocument();
+    expect(screen.queryByText("Expenses")).not.toBeInTheDocument();
+  });
+
+  it("recomputes totals after navigating to a month with a different amount", async () => {
+    const { user } = await renderApp("/");
+    await goToPrevMonth(user, "April 2026");
+    await goToPrevMonth(user, "March 2026");
+    await addRecurringExpense(user, { amount: "200", description: "Groceries" });
+    await addRecurringExpense(user, { amount: "50", description: "Snacks" });
+
+    await user.click(screen.getByRole("link", { name: /fixed entries/i }));
+    await screen.findByText("March 2026");
+    // March total: 200 + 50 = 250.
+    expect(await screen.findByText("$250.00")).toBeInTheDocument();
+
+    // Edit "Snacks" while viewing April → 75 from April forward.
+    await goToNextMonth(user, "April 2026");
+    await user.click(await screen.findByText(/Food - Snacks/));
+    const amountInput = await screen.findByPlaceholderText(
+      /insert expense amount/i
+    );
+    await user.clear(amountInput);
+    await user.type(amountInput, "75");
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    // April total: 200 + 75 = 275.
+    await screen.findByText("April 2026");
+    expect(await screen.findByText("$275.00")).toBeInTheDocument();
+    expect(screen.queryByText("$250.00")).not.toBeInTheDocument();
+
+    // March keeps its original total (forward-only edit).
+    await goToPrevMonth(user, "March 2026");
+    expect(await screen.findByText("$250.00")).toBeInTheDocument();
+    expect(screen.queryByText("$275.00")).not.toBeInTheDocument();
   });
 });

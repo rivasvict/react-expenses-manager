@@ -2,6 +2,11 @@
 
 .entries-summary {
 
+  .item-total {
+    @include adjust-text-in-vertical-axis();
+    justify-content: flex-end;
+  }
+
   .entries-item {
     margin-top: $vertical-standard-margin;
     margin-bottom: $vertical-standard-margin;
