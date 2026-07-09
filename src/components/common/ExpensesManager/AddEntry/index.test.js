@@ -1,3 +1,6 @@
+// TODO(#116): This suite imports a nonexistent "./AddEntry" module and
+// drives entryModel/categoryOptions/handleEntry props the current AddEntry
+// component doesn't accept. Needs a full rewrite against the real component.
 import React from "react";
 import AddEntry from "./AddEntry";
 import { render, unmountComponentAtNode } from "react-dom";

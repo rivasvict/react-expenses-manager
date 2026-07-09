@@ -1,3 +1,7 @@
+// TODO(#116): This suite mocks a nonexistent "../helpers/entriesHelper" path
+// and asserts against a category-keyed entry shape. The current
+// EntriesSummary takes entries/name/entryType/total props and reads
+// categories_path. Needs a full rewrite against the real component.
 import React from "react";
 import EntriesSummary from "./EntriesSummary";
 import renderer from "react-test-renderer";

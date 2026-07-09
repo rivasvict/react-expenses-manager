@@ -1,3 +1,6 @@
+// TODO(#116): This suite targets a removed class-based Dashboard API
+// (state.entries, addEntry/addIncome/addExpense/getSum) and needs a full
+// rewrite against the current functional, Redux-connected Dashboard.
 import React from "react";
 import Dashboard from "./Dashboard";
 import renderer from "react-test-renderer";
