@@ -2,20 +2,24 @@
 
 exports[`Renders CategorySelector component properly 1`] = `
 <select
+  className="form-control"
   name="CategorySelector"
   onChange={[MockFunction]}
   value=""
 >
   <option
     value=""
-  />
+  >
+    All 
+    CategorySelector
+  </option>
   <option
-    value="cat1"
+    value=",cat1,"
   >
     Cat1
   </option>
   <option
-    value="cat2"
+    value=",cat2,"
   >
     Cat2
   </option>
