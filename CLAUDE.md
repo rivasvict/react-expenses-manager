@@ -73,3 +73,4 @@ Node version is pinned in `.nvmrc`.
 * Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
 * Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).
 * In integration tests, verify behaviour through what the user sees on screen (`screen.findByText`, `screen.getByRole`, etc.) rather than inspecting Redux store state or `localStorage` directly. Raw data-structure checks are an implementation detail; UI assertions test what actually matters.
+* Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there.
