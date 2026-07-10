@@ -30,7 +30,9 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
     entries: monthBalance,
   });
   const totalSum = calculateTotal(incomesSum, expensesSum);
-  const balanceTone = totalSum < 0 ? "negative" : "positive";
+  // A zero balance stays neutral rather than reading as "positive".
+  const balanceTone =
+    totalSum < 0 ? "negative" : totalSum > 0 ? "positive" : "neutral";
   return (
     <MainContentContainer
       className="dashboard-content"

@@ -52,6 +52,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   seeded scenario has no expenses, so both legitimately read $1,000.00)
 - `CategorySelector.test.js.snap`: refreshed — the empty option renders the
   same DOM from a single template string
+- `fixedEntries.test.tsx`: the "no Prev/Next on a single-month tree"
+  assertions now match the buttons' new accessible names (`/prev/i`,
+  `/next/i`) so the guard is no longer vacuous
 
 ## [1.0.4] - 2026-07-10
 

@@ -182,7 +182,8 @@ input[type="number"].form-control {
 }
 
 ::selection {
-  background-color: $accent-soft;
+  // Strong enough to actually read as a selection on the dark surfaces.
+  background-color: rgba($accent, 0.35);
 }
 
 // -----------------------------------------------------------------------------

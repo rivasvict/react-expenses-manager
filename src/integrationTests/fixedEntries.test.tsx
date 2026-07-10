@@ -169,8 +169,8 @@ describe("fixed entries without any prior regular entries", () => {
     // no Prev / Next navigation buttons should be visible.
     const { user } = await renderApp("/");
     await screen.findByText("May 2026");
-    expect(screen.queryByRole("button", { name: "Prev" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Next" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /prev/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /next/i })).not.toBeInTheDocument();
 
     await addRecurringExpense(user, { amount: "100", description: "Groceries" });
 

@@ -1,6 +1,9 @@
 @import '../../../../variables.scss';
 
-.entry-form-heading {
+// Doubled class beats the base tile's `border` shorthand regardless of which
+// stylesheet the bundler emits first (both selectors are otherwise equal
+// specificity and the import order is not guaranteed).
+.content-title-selection.entry-form-heading {
   border-left: 3px solid $accent;
 
   &.entry-form-heading--income {

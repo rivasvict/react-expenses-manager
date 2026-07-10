@@ -152,7 +152,13 @@ class Summary extends Component {
       entries: this.getEntriesToSum(datedEntries),
     });
     const selectedEntriesSum = formatNumberForDisplay(totalSum);
-    const toneClass = totalSum < 0 ? "tile-tone--expense" : "tile-tone--income";
+    // A zero total stays neutral — green would misread as "money in".
+    const toneClass =
+      totalSum < 0
+        ? "tile-tone--expense"
+        : totalSum > 0
+          ? "tile-tone--income"
+          : "";
     return (
       <MainContentContainer
         className="summary-container"
