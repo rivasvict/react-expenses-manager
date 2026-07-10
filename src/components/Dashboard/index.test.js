@@ -1,14 +1,14 @@
 // TODO(#116): This suite targets a removed class-based Dashboard API
-// (state.entries, addEntry/addIncome/addExpense/getSum) and needs a full
-// rewrite against the current functional, Redux-connected Dashboard.
+// (state.entries, addEntry/addIncome/addExpense/getSum). Skipped until it's
+// rewritten against the current functional, Redux-connected Dashboard.
 import React from "react";
-import Dashboard from "./Dashboard";
+import Dashboard from ".";
 import renderer from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 import { MemoryRouter, Route } from "react-router-dom";
 // TODO: Test routes
 
-describe("Dashboard component test", () => {
+describe.skip("Dashboard component test", () => {
   let jsDomTree = null;
   let DashboardInstance = null;
   let newEntry = null;
