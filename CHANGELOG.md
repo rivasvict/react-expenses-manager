@@ -5,6 +5,54 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-10
+
+### Changed
+- Complete UX/UI overhaul on a new design-token system (`variables.scss`):
+  refined dark "calm fintech" palette, consistent card surfaces, radii,
+  focus-visible rings, and semantic income (green) / expense (rose) colors
+  used across rows, totals, icon chips and charts
+- Navigation: the Bootstrap navbar was replaced by an app bar with an
+  icon+label nav — inline at the top on wide screens, a fixed bottom tab bar
+  on narrow ones — with active-route highlighting; the same links (Home,
+  Categories, Buckets, Fixed Entries, Data Management) stay in the DOM in
+  both layouts
+- Dashboard: savings now lead as a hero balance card (tone-colored by sign),
+  followed by the month navigator, balance donut and tappable income/expense
+  stat rows; Add Income / Add Expenses sit side by side
+- Month navigation: Prev/Next became round chevron buttons with
+  "Previous month" / "Next month" accessible names
+- Buckets: each bucket is a card with a rounded progress bar (green → amber
+  at 65% → red past 85%), a colored usage percentage and clearer
+  Spent / Remaining / Allowance rows
+- Forms: visible field labels (Amount, Description, Category, Monthly
+  allowance…), helper hints, a styled recurring toggle, and the entry
+  category select now prompts "Select a category" instead of "All categories"
+- Summary tiles show plain text totals ("July total: …", "Expenses total: …")
+  instead of the meaningless "remote" glyph; entry rows and totals use
+  money-in/money-out arrow chips
+- Data Management: reorganized into explanatory cards ("Keep your data
+  safe" / "Danger zone"); clearing all data now asks for confirmation first
+- Charts: doughnuts use a CVD-validated categorical palette with
+  surface-colored slice gaps, softer legend, and a semantic green/red pair
+  for income-vs-expense charts
+- Data disclaimer modal restyled and reworded; button label fixed
+  ("I Aknowledge" → "Got it")
+
+### Fixed
+- Refreshing (or landing directly) on `/summary` no longer shows an empty
+  $0.00 report: the Summary screen derives its data from the store at render
+  time instead of freezing whatever was loaded at mount
+- Link-styled primary buttons no longer inherit the global link color, which
+  washed out the gold "Add …" buttons with light text
+
+### Tests
+- `entryCreation.test.tsx`: the income-creation assertion now tolerates the
+  same amount appearing in both the savings hero and the incomes row (the
+  seeded scenario has no expenses, so both legitimately read $1,000.00)
+- `CategorySelector.test.js.snap`: refreshed — the empty option renders the
+  same DOM from a single template string
+
 ## [1.0.4] - 2026-07-10
 
 ### Added

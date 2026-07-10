@@ -1,8 +1,11 @@
 @import '../../../../../variables.scss';
 
 .entry-summary-with-filter {
-  .category-select {
+  .form-label {
     margin-top: $vertical-standard-margin;
+  }
+
+  .category-select {
     margin-bottom: $vertical-standard-margin;
   }
 

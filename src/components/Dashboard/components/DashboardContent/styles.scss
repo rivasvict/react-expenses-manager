@@ -2,4 +2,42 @@
 
 .dashboard-content {
   height: 100%;
+
+  .balance-hero {
+    padding: 1.1rem 1.15rem;
+
+    .tile-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+    }
+
+    .balance-hero__label {
+      color: $text-secondary;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .balance-hero__amount {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .balance-hero__amount--positive {
+      color: $income;
+    }
+
+    .balance-hero__amount--negative {
+      color: $expense;
+    }
+  }
+
+  .dashboard-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+  }
 }

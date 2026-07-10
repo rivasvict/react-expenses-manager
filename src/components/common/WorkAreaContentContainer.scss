@@ -1,12 +1,15 @@
 @import '../../variables.scss';
 
 .work-area-content-container {
-  background-color: $color_dark_2;
-  border-radius: $standard-container-radius;
+  background-color: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-shell;
+  box-shadow: $shadow-card;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 1.1rem 1rem;
 
   .top-container {
     flex: 1 1;

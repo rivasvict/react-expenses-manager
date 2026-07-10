@@ -44,10 +44,7 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
   };
 
   return (
-    <MainContentContainer
-      className="add-category"
-      pageTitle="Operation: Add new category"
-    >
+    <MainContentContainer className="add-category" pageTitle="Categories">
       <ContentTileSection>Add new category</ContentTileSection>
       <FormContent
         formProps={{ onSubmit: handleSubmit, className: "app-form" }}
@@ -56,8 +53,14 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
+                  <Form.Label htmlFor="category-name">Name</Form.Label>
+                  <p className="field-hint">
+                    Categories group your expenses. You can add a spending
+                    limit (bucket) to a category later.
+                  </p>
                   <InputText
                     type="text"
+                    id="category-name"
                     name="name"
                     placeholder="Category name"
                     value={name}

@@ -13,14 +13,41 @@
     }
 
     .col {
-      * {
+      .btn {
         width: 100%;
       }
     }
-  
+
     .top-content {
       .row {
         margin-top: $vertical-standard-margin;
+      }
+    }
+
+    .data-section {
+      @include card();
+      padding: 1rem 1.1rem 1.1rem;
+
+      &__title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.35rem;
+        color: $text-primary;
+      }
+
+      &__description {
+        color: $text-secondary;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        margin-bottom: 0.9rem;
+      }
+    }
+
+    .data-section--danger {
+      border-color: rgba(248, 113, 113, 0.35);
+
+      .data-section__title {
+        color: $danger;
       }
     }
   }

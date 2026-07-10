@@ -1,44 +1,94 @@
 @import '../../../../../../variables.scss';
-.bucket-container {
-  progress {
-    appearance: none;
-    height: 12px;
 
-    &::-webkit-progress-bar {
-      background-color: $color_dark_3; /* Unfilled portion background */
-      border-radius: 10px; /* Rounded corners */
+// Progress bar tones: green while healthy, amber past 65%, red past 85%.
+$bucket-ok: #199e70;
+$bucket-warning: #c98500;
+$bucket-danger: #e66767;
+
+.bucket-container {
+  @include interactive-card();
+  margin: 0 0 $vertical-standard-margin;
+  padding: 0.85rem 0.9rem;
+  text-decoration: none;
+
+  .bucket-legend {
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+
+    .bucket-name {
+      font-weight: 600;
+      color: $text-primary;
     }
-    &::-webkit-progress-value {
-      background-color: green; /* Filled portion color */
-      border-radius: 10px; /* Rounded corners */
-    }
-    &.warning::-webkit-progress-value {
-      background-color: $color_clear_1;
-    }
-    &.danger::-webkit-progress-value {
-      background-color: red;
-    }
-  }
-  .rest {
-    text-align: right;
-  }
-  .bucket-carry-on {
-    font-size: 0.8em;
-    opacity: 0.85;
-    align-items: flex-end;
 
     .usage-percentage {
       text-align: right;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: $bucket-ok;
+
+      &.warning {
+        color: $bucket-warning;
+      }
+
+      &.danger {
+        color: $bucket-danger;
+      }
     }
   }
+
   progress {
+    appearance: none;
+    -webkit-appearance: none;
     width: 100%;
+    height: 8px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.09);
+    overflow: hidden;
+
+    // Chrome/Safari
+    &::-webkit-progress-bar {
+      background-color: rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+    }
+    &::-webkit-progress-value {
+      background-color: $bucket-ok;
+      border-radius: 10px;
+      transition: width $transition-quick;
+    }
+    &.warning::-webkit-progress-value {
+      background-color: $bucket-warning;
+    }
+    &.danger::-webkit-progress-value {
+      background-color: $bucket-danger;
+    }
+
+    // Firefox
+    &::-moz-progress-bar {
+      background-color: $bucket-ok;
+      border-radius: 10px;
+    }
+    &.warning::-moz-progress-bar {
+      background-color: $bucket-warning;
+    }
+    &.danger::-moz-progress-bar {
+      background-color: $bucket-danger;
+    }
   }
-  hr {
-    width: 100%;
-    height: 0.01em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    background-color: $color_clear_1;
+
+  .bucket-figures {
+    margin-top: 0.45rem;
+    font-size: 0.88rem;
+    color: $text-secondary;
+
+    .rest {
+      text-align: right;
+    }
+  }
+
+  .bucket-carry-on {
+    font-size: 0.78rem;
+    color: $text-muted;
+    margin-top: 0.2rem;
   }
 }

@@ -60,6 +60,11 @@ const DataManagement = ({
   };
 
   const handleClearAllData = () => {
+    // Guard the irreversible wipe behind an explicit confirmation.
+    const confirmed = window.confirm(
+      "This permanently deletes every entry, bucket and category stored on this device. Are you sure?"
+    );
+    if (!confirmed) return;
     onClearAllData();
     goBack();
   };
@@ -74,40 +79,47 @@ const DataManagement = ({
       <Container className="buttons-container" fluid>
         <Container className="top-content" fluid>
           <Row>
-            <Col>
+            <Col className="data-section">
+              <h2 className="data-section__title">Keep your data safe</h2>
+              <p className="data-section__description">
+                Everything you track lives only in this browser. Download a
+                backup file regularly so you can restore it here or on another
+                device.
+              </p>
               <Button type="submit" variant="primary" onClick={handleBackup}>
                 Download Backup
               </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
               <FileButton
                 type="submit"
                 variant="secondary"
                 onClick={handleRestoreBackup}
+                className="vertical-standard-space"
               >
                 Restore Backup
               </FileButton>
-            </Col>
-          </Row>
-          {restoreError && (
-            <Row>
-              <Col>
-                <p className="restore-backup-error text-danger" role="alert">
+              {restoreError && (
+                <p
+                  className="restore-backup-error text-danger vertical-standard-space"
+                  role="alert"
+                >
                   {restoreError}
                 </p>
-              </Col>
-            </Row>
-          )}
+              )}
+            </Col>
+          </Row>
           <Row>
-            <Col>
+            <Col className="data-section data-section--danger">
+              <h2 className="data-section__title">Danger zone</h2>
+              <p className="data-section__description">
+                Remove every entry, bucket and category from this device. This
+                cannot be undone.
+              </p>
               <Button
                 type="submit"
                 variant="danger"
                 onClick={handleClearAllData}
               >
-                CLEAR ALL DATA
+                Clear all data
               </Button>
             </Col>
           </Row>
@@ -116,7 +128,7 @@ const DataManagement = ({
           <Row>
             <Col>
               <Button type="submit" variant="secondary" onClick={handleCancel}>
-                Cancel
+                Go Back
               </Button>
             </Col>
           </Row>

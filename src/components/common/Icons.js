@@ -1,9 +1,7 @@
 import React from "react";
 import { InlineIcon, Icon as SimpleIcon } from "@iconify/react";
-import signOut from "@iconify-icons/codicon/sign-out";
-import signIn from "@iconify-icons/codicon/sign-in";
-import remote from "@iconify-icons/codicon/remote";
-import check from "@iconify-icons/codicon/check";
+import arrowDown from "@iconify-icons/codicon/arrow-small-down";
+import arrowUp from "@iconify-icons/codicon/arrow-small-up";
 
 const Icon = ({ inLine, icon }) => (
   <React.Fragment>
@@ -11,12 +9,9 @@ const Icon = ({ inLine, icon }) => (
   </React.Fragment>
 );
 
-const IconSignOut = (props) => <Icon {...props} icon={signOut} />;
+// Money movement: incoming (income) and outgoing (expense).
+const IconMoneyIn = (props) => <Icon {...props} icon={arrowDown} />;
 
-const IconSignIn = (props) => <Icon {...props} icon={signIn} />;
+const IconMoneyOut = (props) => <Icon {...props} icon={arrowUp} />;
 
-const IconRemote = (props) => <Icon {...props} icon={remote} />;
-
-const IconPlus = (props) => <Icon {...props} icon={check} />;
-
-export { IconSignOut, IconSignIn, IconRemote, IconPlus };
+export { IconMoneyIn, IconMoneyOut };

@@ -10,7 +10,6 @@ import {
 } from "../../../../../helpers/entriesHelper/entriesHelper";
 import { MainContentContainer } from "../../../MainContentContainer";
 import ContentTileSection from "../../../ContentTitleSection";
-import { IconRemote } from "../../../Icons";
 import { capitalize } from "lodash";
 import "./styles.scss";
 import SummaryWithChart from "../../../SummaryWithChart";
@@ -58,12 +57,14 @@ class EntrySummaryWithFilter extends Component {
       >
         <Container className="top-content" fluid>
           <ContentTileSection title="Summary">
-            {`${capitalize(entryTypePlural)} `}
-            <IconRemote inLine={true} />
-            {` ${formatNumberForDisplay(totalSum)}`}
+            {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
           </ContentTileSection>
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
+          <label className="form-label" htmlFor="category-filter">
+            Filter by category
+          </label>
           <CategorySelector
+            id="category-filter"
             name={entryTypePlural}
             value={this.props.category}
             handleChange={this.handleChange.bind(this)}

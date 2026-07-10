@@ -10,8 +10,7 @@ exports[`Renders CategorySelector component properly 1`] = `
   <option
     value=""
   >
-    All 
-    CategorySelector
+    All CategorySelector
   </option>
   <option
     value=",cat1,"

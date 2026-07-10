@@ -71,11 +71,11 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
     >
       {hasBuckets ? (
         <>
+          <NavigableMonthHeader />
           {/*@ts-expect-error temporarily ignore this typescript error */}
           <ContentTileSection title="Summary">
             {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
           </ContentTileSection>
-          <NavigableMonthHeader />
           {monthlyBuckets.map((bucket, index) => (
             <Bucket
               key={`bucket-${bucket.name}-${bucket.availability}-${bucket.spending}-${index}`}

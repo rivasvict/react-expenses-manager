@@ -20,7 +20,10 @@ const InputPassword = (props) => (
   <GenericInput {...{ ...props, type: "password" }} />
 );
 
-const FormButton = (props) => <Button {...props} block="true"></Button>;
+// react-bootstrap v2 dropped the `block` prop; full width comes from CSS.
+const FormButton = (props) => (
+  <Button {...props} className={`full-width ${props.className || ""}`}></Button>
+);
 
 /** 
   Once react-bootstrap is updated to v2,

@@ -9,7 +9,6 @@ import {
   getSum,
 } from "../../../../helpers/entriesHelper/entriesHelper";
 import "./styles.scss";
-import { IconRemote } from "../../../common/Icons";
 import ContentTileSection from "../../../common/ContentTitleSection";
 import { MainContentContainer } from "../../../common/MainContentContainer";
 import BalanceChart from "./components/BalanceChart";
@@ -31,17 +30,19 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
     entries: monthBalance,
   });
   const totalSum = calculateTotal(incomesSum, expensesSum);
+  const balanceTone = totalSum < 0 ? "negative" : "positive";
   return (
     <MainContentContainer
       className="dashboard-content"
       pageTitle="Monthly Balance"
     >
-      <ContentTileSection title="Summary" to={summaryUrl}>
-        {`Savings `}
-        <IconRemote inLine={true} />
-        {` ${formatNumberForDisplay(totalSum)}`}
-      </ContentTileSection>
       <NavigableMonthHeader />
+      <ContentTileSection title="Summary" to={summaryUrl} className="balance-hero">
+        <span className="balance-hero__label">Savings</span>
+        <span className={`balance-hero__amount balance-hero__amount--${balanceTone}`}>
+          {formatNumberForDisplay(totalSum)}
+        </span>
+      </ContentTileSection>
       <ChartContainerRowWrapper>
         <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
       </ChartContainerRowWrapper>
@@ -58,7 +59,7 @@ const MonthContent = ({ entries, match }) => (
       </Col>
     </Row>
     <Row className="bottom-container">
-      <Col xs={12} className="bottom-content">
+      <Col xs={12} className="bottom-content dashboard-actions">
         <Link
           to={`${match.url}add-income`}
           className="btn btn-primary btn-block"
@@ -67,7 +68,7 @@ const MonthContent = ({ entries, match }) => (
         </Link>
         <Link
           to={`${match.url}add-expense`}
-          className="btn btn-secondary btn-block vertical-standard-space"
+          className="btn btn-secondary btn-block"
         >
           Add Expenses
         </Link>

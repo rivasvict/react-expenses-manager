@@ -1,6 +1,26 @@
 @import '../../../../variables.scss';
+
 .categories-container {
   .cancel {
     width: 100%;
+  }
+
+  .categories-list {
+    margin-top: 0.25rem;
+
+    .list-group-item {
+      background-color: $bg-raised;
+      color: $text-primary;
+      border: 1px solid $border-subtle;
+      border-radius: $radius-card;
+      margin-bottom: $vertical-standard-margin;
+      padding: 0.85rem 1rem;
+      font-weight: 500;
+    }
+
+    .category-no-bucket {
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
   }
 }

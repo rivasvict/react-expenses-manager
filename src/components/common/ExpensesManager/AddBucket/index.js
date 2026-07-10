@@ -57,10 +57,7 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
   };
 
   return (
-    <MainContentContainer
-      className="add-bucket"
-      pageTitle="Operation: Add new bucket"
-    >
+    <MainContentContainer className="add-bucket" pageTitle="Buckets">
       <ContentTileSection>Add new bucket</ContentTileSection>
       {categoriesWithoutBucket.length === 0 ? (
         <p className="add-bucket-no-categories">
@@ -74,9 +71,11 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
-                  <Form.Label htmlFor="categoryName">
-                    Select your bucket from one of the existing categories below
-                  </Form.Label>
+                  <Form.Label htmlFor="categoryName">Category</Form.Label>
+                  <p className="field-hint">
+                    Pick one of your existing categories to give it a monthly
+                    spending limit.
+                  </p>
                   <FormSelect
                     id="categoryName"
                     name="categoryName"
@@ -94,9 +93,13 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
                     ))}
                   </FormSelect>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="bucket-allowance">
+                    Monthly allowance
+                  </Form.Label>
                   <InputNumber
                     type="number"
+                    id="bucket-allowance"
                     name="allowance"
                     placeholder="Insert bucket allowance"
                     value={allowance}
@@ -104,7 +107,6 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
                       setAllowance(event.currentTarget.value);
                       setError(null);
                     }}
-                    className="vertical-standard-space"
                   />
                 </Form.Group>
                 {error && (

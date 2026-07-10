@@ -2,24 +2,27 @@ import { capitalize } from "lodash";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { formatNumberForDisplay } from "../../../../helpers/entriesHelper/entriesHelper";
-import { IconPlus } from "../../Icons";
+import { IconMoneyIn, IconMoneyOut } from "../../Icons";
 import "./EntriesSummary.scss";
 import RowLink from "../../RowLink";
 
 function GetEntriesList({ entries, entryType }) {
+  const Icon = entryType === "income" ? IconMoneyIn : IconMoneyOut;
   return entries.map((entry, key) => {
     const category = entry.categories_path.split(",")[1];
     return (
       <RowLink
         to={`edit-${entryType}/${entry.id}`}
         key={key}
-        className="entries-item"
+        className={`entries-item entries-item--${entryType}`}
       >
         {/** Change the key of the entries to avoid matching the index of the array
           to avoid re-rendering in every state change
         */}
         <Col xs={1} className="item-icon">
-          <IconPlus />
+          <span className="item-icon-chip" aria-hidden="true">
+            <Icon />
+          </span>
         </Col>
         <Col xs={7} className="item-description">
           {capitalize(category)}
@@ -36,8 +39,8 @@ function GetEntriesList({ entries, entryType }) {
 function EntriesSummary({ entries, name, entryType, total }) {
   const entriesList = GetEntriesList({ entries, entryType });
   return (
-    <Container className="entries-summary">
-      <Row>
+    <Container className={`entries-summary entries-summary--${entryType}`}>
+      <Row className="entries-summary-header">
         <Col xs={total === undefined ? 12 : 8} className="item-type">
           {capitalize(name)}
         </Col>
@@ -47,7 +50,13 @@ function EntriesSummary({ entries, name, entryType, total }) {
           </Col>
         )}
       </Row>
-      {entriesList.length ? entriesList : null}
+      {entriesList.length ? (
+        entriesList
+      ) : (
+        <p className="entries-summary-empty">
+          Nothing here yet for this month.
+        </p>
+      )}
     </Container>
   );
 }

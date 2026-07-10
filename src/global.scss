@@ -17,33 +17,91 @@
   .form-group {
     margin-bottom: $vertical-standard-margin;
   }
+}
 
-  .form-control.text {
-    border-radius: $standard-radius;
-    height: 2.7rem;
-    font-size: 1em;
-    padding: 0.92em 1.625em;
+// -----------------------------------------------------------------------------
+// Form controls
+// -----------------------------------------------------------------------------
+.form-label {
+  color: $text-secondary;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-control.text,
+select.form-control {
+  background-color: $bg-raised;
+  color: $text-primary;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  transition: border-color $transition-quick, background-color $transition-quick;
+
+  &:focus {
+    background-color: $bg-raised;
+    color: $text-primary;
+    border-color: $accent;
+    box-shadow: 0 0 0 0.2rem $accent-soft;
   }
 }
 
-select.form-control, select.form-control:focus {
-  background-color: $color_dark_1;
-  color: $color_clear_2;
-  border-color: $color_dark_1;
+.form-control.text {
+  height: 3rem;
+  font-size: 1em;
+  padding: 0.92em 1.1em;
 }
 
-.form-control.text{
-  background-color: $color_dark_2;
-  color: $color_clear_3;
-  border-color: $color_dark_1;
+select.form-control {
+  height: 3rem;
+  padding: 0 2.4rem 0 1.1em;
+  appearance: none;
+  // Chevron affordance for the native select.
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
 }
 
 .form-control.text::placeholder {
-  color: $color_clear_2;
+  color: $text-muted;
+}
+
+// Hide number input spinners; the keyboard is the input method here.
+input[type="number"].form-control {
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.form-check-input {
+  background-color: $bg-raised;
+  border-color: $border-strong;
+
+  &:checked {
+    background-color: $accent;
+    border-color: $accent;
+  }
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 0.2rem $accent-soft;
+  }
 }
 
 .validation-message {
   color: rgb(255, 159, 128);
+}
+
+.field-hint {
+  color: $text-muted;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin-bottom: 0.45rem;
 }
 
 .main-content-container {
@@ -54,18 +112,46 @@ select.form-control, select.form-control:focus {
 
 @include buttons();
 
+// Bootstrap 5 dropped .btn-block; several links still use it for full width.
+.btn-block {
+  width: 100%;
+}
+
+// -----------------------------------------------------------------------------
+// Base document
+// -----------------------------------------------------------------------------
 #root {
-  color: $color_clear_3;
-  background-color: $color_dark_1;
+  color: $text-primary;
+  background-color: $bg-page;
 
   a {
-    color: $color_clear_3;
+    color: $text-primary;
+  }
+
+  a:hover {
+    color: $text-primary;
+  }
+
+  // Link-shaped buttons must keep button ink; the generic `#root a` color
+  // above would otherwise out-specify `.btn.btn-primary` and wash the gold
+  // buttons out with light text.
+  a.btn.btn-primary {
+    color: $text-on-accent;
+
+    &:hover,
+    &:focus {
+      color: $text-on-accent;
+    }
+  }
+
+  a.btn.btn-secondary {
+    color: $text-primary;
   }
 
   .vertical-standard-space {
     margin-top: $vertical-standard-margin;
   }
-  
+
   .vertical-standard-space-padding {
     padding-top: $vertical-standard-margin;
     padding-bottom: $vertical-standard-margin;
@@ -73,6 +159,8 @@ select.form-control, select.form-control:focus {
 
   h1.title {
     font-size: $h1-size-title;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     text-align: center;
   }
 
@@ -80,4 +168,53 @@ select.form-control, select.form-control:focus {
     padding-right:0;
     padding-left:0;
   }
+
+  hr {
+    border: none;
+    border-top: 1px solid $border-subtle;
+    opacity: 1;
+  }
+
+  .text-muted {
+    color: $text-secondary !important;
+  }
+}
+
+::selection {
+  background-color: $accent-soft;
+}
+
+// -----------------------------------------------------------------------------
+// Modal (rendered in a portal, outside #root)
+// -----------------------------------------------------------------------------
+.modal-content {
+  background-color: $bg-surface;
+  color: $text-primary;
+  border: 1px solid $border-strong;
+  border-radius: $radius-card;
+  box-shadow: $shadow-pop;
+}
+
+.modal-header {
+  border-bottom: 1px solid $border-subtle;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.modal-body {
+  color: $text-secondary;
+  line-height: 1.55;
+
+  .form-check {
+    margin-top: 1rem;
+    color: $text-primary;
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid $border-subtle;
+}
+
+.modal-backdrop.show {
+  opacity: 0.7;
 }

@@ -1,7 +1,28 @@
 import { Chart } from "chart.js/auto";
 import { useEffect, useRef } from "react";
 
-const DoughnutChart = ({ chartLabel, data, shouldShow = true }) => {
+/**
+ * Categorical palette validated for the app's dark surface (#161b22) with the
+ * dataviz six-checks validator (lightness band, chroma floor, adjacent-pair
+ * CVD separation, contrast). Hues are assigned in this fixed order — never
+ * cycled — and the surface-colored slice borders act as the spacer that keeps
+ * adjacent slices distinguishable for color-vision deficiencies.
+ */
+const CATEGORICAL_COLORS = [
+  "#3987e5", // blue
+  "#199e70", // aqua
+  "#c98500", // yellow
+  "#008300", // green
+  "#9085e9", // violet
+  "#e66767", // red
+  "#d55181", // magenta
+  "#d95926", // orange
+];
+
+const SURFACE_COLOR = "#161b22";
+const LEGEND_TEXT_COLOR = "#9aa4b2";
+
+const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
   const { labels, chartData } = data;
   const chartRef = useRef(null);
   useEffect(() => {
@@ -14,33 +35,29 @@ const DoughnutChart = ({ chartLabel, data, shouldShow = true }) => {
             {
               label: chartLabel,
               data: chartData,
-              hoverOffset: 4,
-              backgroundColor: [
-                "rgb(240 185 11)", // Yellowish
-                "rgb(112 122 138)", // Grayish-blue
-                "rgb(135, 60, 95)", // A reddish-pink color
-                "rgb(30, 150, 190)", // A light blue color
-                "rgb(60, 180, 75)", // A green color
-                "rgb(255, 105, 180)", // Hot pink
-                "rgb(190, 75, 220)", // Purple
-                "rgb(255, 140, 0)", // Dark orange
-                "rgb(0, 128, 128)", // Teal
-                "rgb(75, 0, 130)", // Indigo
-                "rgb(255, 69, 0)", // Red-orange
-                "rgb(0, 255, 127)", // Spring green
-                "rgb(0, 100, 0)", // Dark green
-                "rgb(255, 20, 147)", // Deep pink
-                "rgb(64, 224, 208)", // Turquoise
-              ],
+              hoverOffset: 6,
+              backgroundColor: colors || CATEGORICAL_COLORS,
+              // A surface-colored gap between slices (the "2px spacer").
+              borderColor: SURFACE_COLOR,
+              borderWidth: 2,
+              borderRadius: 3,
             },
           ],
         },
         options: {
+          cutout: "68%",
           plugins: {
             legend: {
               display: true,
+              position: "bottom",
               labels: {
-                color: "white",
+                color: LEGEND_TEXT_COLOR,
+                usePointStyle: true,
+                pointStyle: "circle",
+                boxWidth: 8,
+                boxHeight: 8,
+                padding: 14,
+                font: { size: 12 },
               },
             },
           },
@@ -50,7 +67,7 @@ const DoughnutChart = ({ chartLabel, data, shouldShow = true }) => {
         chart.destroy();
       };
     }
-  }, [labels, chartData, chartLabel]);
+  }, [labels, chartData, chartLabel, colors]);
 
   return !!chartData.length && shouldShow && <canvas ref={chartRef} />;
 };
