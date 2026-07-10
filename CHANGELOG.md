@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.0.4] - 2026-07-10
+
+### Added
+- CI: `unit-tests` and `integration-tests` GitHub Actions workflows, running
+  on push to `master` and on pull requests targeting `master`. Both pin
+  Node via `.nvmrc`, install with `npm ci`, and split the suite using the
+  existing `testPathPattern="integrationTests"` convention
+
 ## [1.0.3] - 2026-07-10
 
 ### Fixed
