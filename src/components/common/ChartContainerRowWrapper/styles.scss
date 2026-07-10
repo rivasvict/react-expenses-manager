@@ -4,4 +4,12 @@
   margin-bottom: $section_header_vertical-margin;
   display: flex;
   justify-content: center;
+
+  // One consistent chart size at every breakpoint (the old split of
+  // xs=10 / md=4 columns made the desktop chart smaller than the mobile one).
+  .chart-container__col {
+    flex: 0 1 auto;
+    width: 70%;
+    max-width: 250px;
+  }
 }

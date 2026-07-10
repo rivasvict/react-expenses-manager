@@ -56,7 +56,10 @@ class EntrySummaryWithFilter extends Component {
         pageTitle="Monthly report"
       >
         <Container className="top-content" fluid>
-          <ContentTileSection title="Summary">
+          <ContentTileSection
+            title="Summary"
+            className={`tile-tone--${this.props.entryType}`}
+          >
             {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
           </ContentTileSection>
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}

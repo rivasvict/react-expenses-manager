@@ -1,7 +1,5 @@
 @import '../../variables.scss';
 
-$nav-breakpoint: 768px;
-
 .app-header {
   .app-header__bar {
     max-width: $shell-max-width;
@@ -52,7 +50,7 @@ $nav-breakpoint: 768px;
     gap: 0.2rem;
     color: $text-secondary;
     text-decoration: none;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.01em;
     border-radius: $radius-control;
@@ -81,6 +79,7 @@ $nav-breakpoint: 768px;
 
   .app-nav__item--active {
     color: $accent;
+    background-color: $accent-soft;
 
     &:hover {
       color: $accent-hover;
@@ -100,7 +99,7 @@ $nav-breakpoint: 768px;
     height: $bottom-nav-height;
     padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
     justify-content: space-around;
-    background-color: rgba(14, 17, 22, 0.92);
+    background-color: rgba($bg-page, 0.92);
     backdrop-filter: blur(12px);
     border-top: 1px solid $border-subtle;
 

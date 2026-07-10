@@ -47,10 +47,13 @@ describe("entry creation", () => {
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // Back on dashboard: the new amount shows up. With a single income and no
-    // expenses the savings hero shows the same figure as the incomes row, so
-    // this uses the same getAll pattern as the savings assertions elsewhere.
-    expect((await screen.findAllByText("$1,000.00")).length).toBeGreaterThan(0);
+    // Back on dashboard: the Incomes row itself shows the new amount. (The
+    // savings hero also reads $1,000.00 in this expense-less scenario, so a
+    // bare findByText would be ambiguous; targeting the row keeps the
+    // regression coverage on the incomes figure.)
+    expect(
+      await screen.findByRole("link", { name: /^Incomes \$1,000\.00$/ })
+    ).toBeInTheDocument();
   });
 
   it("user can edit an entry immediately after creating it", async () => {

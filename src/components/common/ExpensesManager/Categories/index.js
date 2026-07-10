@@ -31,6 +31,7 @@ const Categories = ({ buckets, unbudgetedCategories, history }) => {
             <ListGroup.Item
               key={categoryName}
               data-testid={`category-${categoryName.toLowerCase()}`}
+              className={hasBucket ? "has-bucket" : ""}
             >
               {categoryName}
               {!hasBucket && (

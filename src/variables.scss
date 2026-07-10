@@ -29,8 +29,15 @@ $warning: #fbbf24;
 
 $text-primary: #f2f5f9;
 $text-secondary: #9aa4b2;
-$text-muted: #667085;
+$text-muted: #8b94a3; // ≥4.5:1 on $bg-raised — used for small print
 $text-on-accent: #1a1503; // dark text on gold buttons
+
+// Chart-grade semantic hues (validated for the dark surface with the dataviz
+// six-checks validator). The JS twin of these values lives in
+// src/components/common/DoughnutChart/index.js — keep both in sync.
+$chart-income: #199e70;
+$chart-expense: #e66767;
+$chart-warning: #c98500;
 
 // Legacy aliases (older stylesheets still import these names).
 $color_dark_1: $bg-page;
@@ -56,6 +63,7 @@ $h1-size-title: 1.15rem;
 
 $shell-max-width: 40rem; // app column width on large screens
 $bottom-nav-height: 4.25rem; // reserved space for the mobile tab bar
+$nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
 
 $shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
 $shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -77,8 +85,8 @@ $transition-quick: 140ms ease;
   box-shadow: $shadow-card;
 }
 
-@mixin interactive-card {
-  @include card();
+// Hover/active/focus states alone, for elements that already have card().
+@mixin card-interactions {
   transition:
     background-color $transition-quick,
     border-color $transition-quick,
@@ -98,6 +106,22 @@ $transition-quick: 140ms ease;
   &:focus-visible {
     @include focus-ring();
   }
+}
+
+@mixin interactive-card {
+  @include card();
+  @include card-interactions();
+}
+
+// Circular icon chip used beside money rows (income/expense variants are
+// applied by the caller with $income/$expense + soft backgrounds).
+@mixin icon-chip($size) {
+  width: $size;
+  height: $size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 @mixin button-like-style {

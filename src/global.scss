@@ -1,9 +1,5 @@
 @import './variables.scss';
 
-.form-container{
-  height: 100%;
-}
-
 .full-width {
   width: 100%;
 }
@@ -11,11 +7,16 @@
 .app-form {
   display: flex;
   flex-flow: column wrap;
-  height: 100%;
   align-items: center;
 
   .form-group {
     margin-bottom: $vertical-standard-margin;
+  }
+
+  // Actions follow the fields instead of being pushed to the bottom of the
+  // screen — short forms would otherwise show a large dead area before Submit.
+  .bottom-container {
+    margin-top: 1.25rem;
   }
 }
 

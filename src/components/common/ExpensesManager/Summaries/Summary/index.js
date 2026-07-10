@@ -45,28 +45,25 @@ class Summary extends Component {
     this.setState(() => ({ filter: value }));
   };
 
-  getDatedEntries() {
-    return getDatedEntries({
+  getDatedEntries = () =>
+    getDatedEntries({
       entries: this.props.entries,
       year: this.props.selectedDate.year,
       month: this.props.selectedDate.month,
     });
-  }
 
-  getEntriesToSum(filter = this.state.filter) {
-    const datedEntries = this.getDatedEntries();
-
+  getEntriesToSum = (datedEntries) => {
+    const { filter } = this.state;
     return (
       datedEntries?.[filter] || [
         ...(datedEntries?.[ENTRY_TYPES_PLURAL.INCOMES] || []),
         ...(datedEntries?.[ENTRY_TYPES_PLURAL.EXPENSES] || []),
-      ] ||
-      []
+      ]
     );
-  }
+  };
 
-  getFilteredEntries(filter = this.state.filter) {
-    const datedEntries = this.getDatedEntries();
+  getFilteredEntries = (datedEntries) => {
+    const { filter } = this.state;
     const entriesSummary = {
       incomes: !!filter ? (
         <SummaryWithChart
@@ -106,10 +103,9 @@ class Summary extends Component {
         </React.Fragment>
       )
     );
-  }
+  };
 
-  getSummaryChartData() {
-    const datedEntries = this.getDatedEntries();
+  getSummaryChartData = (datedEntries) => {
     const incomesSum = getSumFromEntries({
       entries: datedEntries[ENTRY_TYPES_PLURAL.INCOMES],
       absolute: true,
@@ -121,11 +117,10 @@ class Summary extends Component {
     const totalSum = incomesSum + expensesSum;
     const chartData = { incomes: incomesSum, expenses: expensesSum };
     return { data: chartData, totalSum };
-  }
+  };
 
-  getByEntryTypeChartData(filter = this.state.filter) {
-    const datedEntries = this.getDatedEntries();
-    const filteredEntries = datedEntries[filter];
+  getByEntryTypeChartData = (datedEntries) => {
+    const filteredEntries = datedEntries[this.state.filter];
     const entryTotalSum = getSumFromEntries({
       entries: filteredEntries,
       absolute: true,
@@ -135,13 +130,12 @@ class Summary extends Component {
       entries: filteredEntries,
     });
     return { data: chartData, totalSum: entryTotalSum };
-  }
+  };
 
-  getChartProps() {
-    return !this.state.filter
-      ? this.getSummaryChartData()
-      : this.getByEntryTypeChartData();
-  }
+  getChartProps = (datedEntries) =>
+    !this.state.filter
+      ? this.getSummaryChartData(datedEntries)
+      : this.getByEntryTypeChartData(datedEntries);
 
   goBack = () => {
     this?.props?.history?.goBack();
@@ -150,18 +144,22 @@ class Summary extends Component {
   handleCancel = () => this.goBack();
 
   render() {
-    const chartProps = this.getChartProps();
-    const selectedEntries = this.getFilteredEntries();
-    const selectedEntriesSum = formatNumberForDisplay(
-      getSumFromEntries({ entries: this.getEntriesToSum() })
-    );
+    // Derive the month's entries once per render; every figure below shares it.
+    const datedEntries = this.getDatedEntries();
+    const chartProps = this.getChartProps(datedEntries);
+    const selectedEntries = this.getFilteredEntries(datedEntries);
+    const totalSum = getSumFromEntries({
+      entries: this.getEntriesToSum(datedEntries),
+    });
+    const selectedEntriesSum = formatNumberForDisplay(totalSum);
+    const toneClass = totalSum < 0 ? "tile-tone--expense" : "tile-tone--income";
     return (
       <MainContentContainer
         className="summary-container"
         pageTitle="Monthly Summary"
       >
         <Container fluid className="top-content">
-          <ContentTileSection title="Summary">
+          <ContentTileSection title="Summary" className={toneClass}>
             {/** TODO: Make sure the totalization is done here */}
             {`${capitalize(getMonthNameDisplay(this.props.selectedDate.month))} total: ${selectedEntriesSum}`}
           </ContentTileSection>

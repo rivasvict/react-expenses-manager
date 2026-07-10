@@ -14,21 +14,6 @@
     padding: 0;
   }
 
-  .tile-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    min-width: 0;
-  }
-
-  .tile-eyebrow {
-    color: $text-secondary;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
   .tile-content {
     color: $text-primary;
     font-size: 1.05rem;
@@ -37,6 +22,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 0.3rem;
+    min-width: 0;
   }
 
   .tile-chevron {
@@ -48,10 +34,19 @@
 }
 
 a.content-title-selection {
-  @include interactive-card();
+  @include card-interactions();
 
   &:hover .tile-chevron {
     color: $text-primary;
     transform: translateX(2px);
   }
+}
+
+// Tone variants: color the money line to match the app's semantic colors.
+.content-title-selection.tile-tone--income .tile-content {
+  color: $income;
+}
+
+.content-title-selection.tile-tone--expense .tile-content {
+  color: $expense;
 }

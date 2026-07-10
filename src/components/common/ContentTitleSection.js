@@ -5,12 +5,9 @@ import chevronRight from "@iconify-icons/codicon/chevron-right";
 import RowLink from "./RowLink";
 import "./ContentTitleSelection.scss";
 
-const RowContent = ({ eyebrow, isLink, children }) => (
+const RowContent = ({ isLink, children }) => (
   <Col xs={12} className="tile-inner">
-    <div className="tile-text">
-      {eyebrow && <span className="tile-eyebrow">{eyebrow}</span>}
-      <span className="tile-content">{children}</span>
-    </div>
+    <span className="tile-content">{children}</span>
     {isLink && (
       <Icon icon={chevronRight} className="tile-chevron" aria-hidden="true" />
     )}
@@ -20,7 +17,7 @@ const RowContent = ({ eyebrow, isLink, children }) => (
 /**
  * A card-shaped section tile. With `to` it becomes a tappable link (chevron
  * affordance included); without it, it is a static heading card. The `title`
- * doubles as the small eyebrow label and the HTML title attribute.
+ * becomes the HTML title attribute (some tests locate tiles by it).
  */
 const ContentTileSection = ({ title = "", to, className = "", children }) => (
   <React.Fragment>
@@ -30,13 +27,11 @@ const ContentTileSection = ({ title = "", to, className = "", children }) => (
         to={to}
         className={`content-title-selection ${className}`}
       >
-        <RowContent eyebrow={title} isLink>
-          {children}
-        </RowContent>
+        <RowContent isLink>{children}</RowContent>
       </RowLink>
     ) : (
       <Row title={title} className={`content-title-selection ${className}`}>
-        <RowContent eyebrow={title}>{children}</RowContent>
+        <RowContent>{children}</RowContent>
       </Row>
     )}
   </React.Fragment>

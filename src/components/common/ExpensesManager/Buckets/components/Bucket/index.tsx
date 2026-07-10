@@ -12,19 +12,12 @@ const Bucket = ({
   remainder,
   consuptionPercentage,
 }) => {
-  const colorMapClass = {
-    warning: consuptionPercentage >= 65,
-    danger: consuptionPercentage > 85,
-  };
-  const colorClass = Object.keys(colorMapClass).reduceRight(
-    (selectedColor, mapKey) => {
-      if (selectedColor) return selectedColor;
-      const condition = colorMapClass[mapKey];
-      if (condition) return mapKey;
-      return selectedColor;
-    },
-    ""
-  );
+  const colorClass =
+    consuptionPercentage > 85
+      ? "danger"
+      : consuptionPercentage >= 65
+        ? "warning"
+        : "";
 
   const testId = `bucket-${category.toLowerCase().replace(/\s/g, "-")}`;
 
@@ -69,11 +62,7 @@ const Bucket = ({
           </Col>
         </Row>
         <Row className="bucket-carry-on">
-          <Col
-            xs={12}
-            className="carry-on-detail"
-            data-testid={`${testId}-carry-over`}
-          >
+          <Col xs={12} data-testid={`${testId}-carry-over`}>
             {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatCarried(carryOver)}`}
           </Col>
         </Row>

@@ -1,9 +1,9 @@
 @import '../../../../../../variables.scss';
 
 // Progress bar tones: green while healthy, amber past 65%, red past 85%.
-$bucket-ok: #199e70;
-$bucket-warning: #c98500;
-$bucket-danger: #e66767;
+$bucket-ok: $chart-income;
+$bucket-warning: $chart-warning;
+$bucket-danger: $chart-expense;
 
 .bucket-container {
   @include interactive-card();
@@ -80,6 +80,16 @@ $bucket-danger: #e66767;
     margin-top: 0.45rem;
     font-size: 0.88rem;
     color: $text-secondary;
+    // Keep Spent/Remaining on one line each; the row splits by content width
+    // instead of a rigid 50/50 that wraps large amounts.
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    > .col {
+      flex: 0 1 auto;
+      width: auto;
+      white-space: nowrap;
+    }
 
     .rest {
       text-align: right;

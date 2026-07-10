@@ -1,12 +1,9 @@
 import { capitalize } from "lodash";
-import DoughnutChart from "../../../../../common/DoughnutChart";
+import DoughnutChart, {
+  INCOME_EXPENSE_COLORS,
+} from "../../../../../common/DoughnutChart";
 import { ENTRY_TYPES_PLURAL } from "../../../../../../constants";
 import { quantitiesToPercentages } from "../../../../../../helpers/entriesHelper/entriesHelper";
-
-// Semantic pair (income green / expense red), validated for the dark
-// surface; the legend plus slice gaps carry identity beyond color. Kept at
-// module scope so the chart effect doesn't re-run on every render.
-const BALANCE_COLORS = ["#199e70", "#e66767"];
 
 const BalanceChart = ({ incomesSum, expensesSum }) => {
   const totalSum = incomesSum + Math.abs(expensesSum);
@@ -24,7 +21,7 @@ const BalanceChart = ({ incomesSum, expensesSum }) => {
         ],
         chartData: [incomePercentage, expensePercentage],
       }}
-      colors={BALANCE_COLORS}
+      colors={INCOME_EXPENSE_COLORS}
       shouldShow={!!totalSum}
     />
   );

@@ -23,7 +23,7 @@
   }
 
   // Keep the work area clear of the fixed bottom tab bar on narrow screens.
-  @media (max-width: 767px) {
+  @media (max-width: $nav-breakpoint - 1) {
     padding-bottom: calc(#{$bottom-nav-height} + env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
 }

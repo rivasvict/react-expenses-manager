@@ -14,7 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // Match the app background so overscroll areas don't flash white.
-  background-color: #0e1116;
+  background-color: $bg-page;
   // Tabular figures keep amounts vertically aligned in lists.
   font-feature-settings: "tnum";
 }

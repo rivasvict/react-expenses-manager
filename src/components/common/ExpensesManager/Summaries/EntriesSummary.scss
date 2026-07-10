@@ -36,6 +36,7 @@
     padding: 0.7rem 0.75rem;
     align-items: center;
     text-decoration: none;
+    flex-wrap: nowrap;
 
     .item-icon {
       @include adjust-text-in-vertical-axis();
@@ -44,12 +45,7 @@
     }
 
     .item-icon-chip {
-      width: 1.9rem;
-      height: 1.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
+      @include icon-chip(1.9rem);
       font-size: 0.95rem;
     }
 
@@ -61,12 +57,22 @@
       white-space: nowrap;
       display: block;
       line-height: 1.9rem;
+      // Let the description take whatever room the amount leaves, instead of
+      // truncating at a fixed column width while free space remains. A zero
+      // flex-basis lets long text shrink (and ellipsize) rather than push the
+      // amount onto a second line.
+      flex: 1 1 0%;
+      width: auto;
+      min-width: 0;
     }
 
     .item-amount {
       @include adjust-text-in-vertical-axis();
       justify-content: flex-end;
       font-weight: 600;
+      flex: 0 0 auto;
+      width: auto;
+      white-space: nowrap;
     }
   }
 
