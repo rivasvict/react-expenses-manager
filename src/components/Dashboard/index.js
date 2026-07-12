@@ -23,6 +23,9 @@ import FixedEntries from "../common/ExpensesManager/FixedEntries";
 import Account from "../Account";
 import SignUpScreen from "../Account/SignUpScreen";
 import SignInScreen from "../Account/SignInScreen";
+import Party from "../Party";
+import InviteScreen from "../Party/InviteScreen";
+import JoinScreen from "../Party/JoinScreen";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -98,6 +101,17 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}sign-in`}>
               <SignInScreen />
+            </Route>
+            {/* Party screens (multi-user sync, DESIGN §3). The specific
+                sub-routes must precede the bare /party path. */}
+            <Route path={`${match.url}party/invite`}>
+              <InviteScreen />
+            </Route>
+            <Route path={`${match.url}party/join`}>
+              <JoinScreen />
+            </Route>
+            <Route path={`${match.url}party`}>
+              <Party />
             </Route>
             {/** TODO: Work with a bucketId instead of a bucketName */}
             <Route path={`${match.url}edit-bucket/:bucketName`}>
