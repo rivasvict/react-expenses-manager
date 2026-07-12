@@ -4,13 +4,26 @@
 //
 // Versioned keys (compare-and-swap, used for parties) are stored as an
 // on-disk envelope { version, data } — the local stand-in for S3's ETag.
-// The single-process dev server serializes requests per event-loop tick,
-// so read-envelope/compare/write is race-free enough at family scale
-// (RFC §2.1: collisions are ~impossible; handlers still retry once).
+// The version check and the file write have `await` points between them,
+// so concurrent CAS writes are serialized through an in-process promise
+// chain below; without it, two overlapping requests could both pass the
+// version check and produce a lost update (e.g. the same invitation
+// redeemed twice).
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
 const createFsStorage = ({ dir }) => {
+  // Global (per-adapter) mutex for CAS writes: each writeJsonVersioned runs
+  // only after the previous one settled. Globally rather than per-key —
+  // this is a dev server; simplicity beats throughput.
+  let casChain = Promise.resolve();
+  const serialized = (operation) => {
+    const result = casChain.then(operation, operation);
+    // Keep the chain alive regardless of the operation's outcome.
+    casChain = result.catch(() => {});
+    return result;
+  };
+
   const filePath = (key) => {
     // Keys are logical paths like "users/{hash}"; keep them inside `dir`.
     const resolved = path.join(dir, `${key}.json`);
@@ -48,17 +61,18 @@ const createFsStorage = ({ dir }) => {
       const envelope = JSON.parse(raw);
       return { value: envelope.data, version: envelope.version };
     },
-    writeJsonVersioned: async (key, value, { expectedVersion }) => {
-      const raw = await readFileOrNull(key);
-      const currentVersion = raw === null ? null : JSON.parse(raw).version;
-      if (currentVersion !== expectedVersion) return null;
-      const newVersion = String(Number(currentVersion || "0") + 1);
-      await writeFileMkdir(
-        key,
-        JSON.stringify({ version: newVersion, data: value }, null, 2)
-      );
-      return newVersion;
-    },
+    writeJsonVersioned: (key, value, { expectedVersion }) =>
+      serialized(async () => {
+        const raw = await readFileOrNull(key);
+        const currentVersion = raw === null ? null : JSON.parse(raw).version;
+        if (currentVersion !== expectedVersion) return null;
+        const newVersion = String(Number(currentVersion || "0") + 1);
+        await writeFileMkdir(
+          key,
+          JSON.stringify({ version: newVersion, data: value }, null, 2)
+        );
+        return newVersion;
+      }),
   };
 };
 
