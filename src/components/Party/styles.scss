@@ -1,0 +1,152 @@
+@import "../../variables.scss";
+
+.party-screen {
+  .party-card {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    &__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: $text-primary;
+    }
+
+    &__header &__title {
+      margin-bottom: 0;
+    }
+
+    &__badge {
+      color: $accent;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    &__description {
+      color: $text-secondary;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+    }
+
+    &__hint {
+      color: $text-secondary;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      margin: 0.9rem 0;
+    }
+
+    &__members {
+      list-style: none;
+      margin: 0 0 0.4rem;
+      padding: 0;
+    }
+  }
+
+  .member-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid $border-subtle;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &__identity {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    &__name {
+      color: $text-primary;
+      font-weight: 600;
+    }
+
+    &__you {
+      color: $text-secondary;
+      font-weight: 400;
+    }
+
+    &__email {
+      color: $text-secondary;
+      font-size: 0.82rem;
+      overflow-wrap: anywhere;
+    }
+
+    &__badge {
+      color: $accent;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    &__blocked {
+      color: $text-muted;
+      font-size: 0.8rem;
+      flex: 0 0 auto;
+    }
+  }
+
+  .share-field {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+
+    &__label {
+      color: $text-secondary;
+      font-size: 0.82rem;
+      flex: 0 0 4.2rem;
+    }
+
+    &__value {
+      font-family: monospace;
+      min-width: 0;
+      flex: 1 1 auto;
+      color: $text-primary;
+      background-color: $bg-raised;
+      border: 1px solid $border-subtle;
+      border-radius: $radius-control;
+      padding: 0.45rem 0.6rem;
+
+      &:focus-visible {
+        @include focus-ring();
+      }
+    }
+
+    // Keep the icon buttons compact next to the field, overriding the
+    // global 3.1em .btn height.
+    .share-field__icon-button {
+      height: 2.4em;
+      width: 2.4em;
+      padding: 0;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:focus-visible {
+        @include focus-ring();
+      }
+    }
+
+    &__copied {
+      color: $income;
+      font-size: 0.8rem;
+      min-width: 3.2rem;
+      flex: 0 0 auto;
+    }
+  }
+}
