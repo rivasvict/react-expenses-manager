@@ -43,6 +43,18 @@ const makeToken = (userId: string): string => {
   return `${base64url(JSON.stringify(payload))}.fake-signature`;
 };
 
+// Inverse of makeToken's payload encoding; null on any malformed input.
+const decodeTokenPayload = (
+  token: string
+): { sub: string; iat: number; exp: number } | null => {
+  try {
+    const base64 = token.split(".")[0].replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(window.atob(base64));
+  } catch (error) {
+    return null;
+  }
+};
+
 export const installFakeSyncServer = (): FakeSyncServer => {
   const users: FakeUserRecord[] = [];
   let nextId = 1;
@@ -116,17 +128,23 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     }
 
     if (method === "GET" && path === "/api/me") {
-      const match = /^Bearer (.+)$/.exec(headers.Authorization || "");
-      const userId = match
-        ? (() => {
-            try {
-              return JSON.parse(window.atob(match[1].split(".")[0])).sub;
-            } catch (error) {
-              return null;
-            }
-          })()
-        : null;
-      const user = users.find((candidate) => candidate.id === userId);
+      // Like the real server: headers are matched case-insensitively (node
+      // lowercases them) and an expired token is rejected, not just a
+      // malformed one.
+      const authorizationKey = Object.keys(headers).find(
+        (key) => key.toLowerCase() === "authorization"
+      );
+      const match = /^Bearer (.+)$/.exec(
+        (authorizationKey && headers[authorizationKey]) || ""
+      );
+      const payload = match ? decodeTokenPayload(match[1]) : null;
+      const isExpired =
+        !payload ||
+        typeof payload.exp !== "number" ||
+        payload.exp * 1000 <= Date.now();
+      const user = isExpired
+        ? undefined
+        : users.find((candidate) => candidate.id === payload.sub);
       if (!user)
         return errorResponse(401, "UNAUTHORIZED", "You need to sign in again.");
       return jsonResponse(200, { user: publicUser(user), party: null });

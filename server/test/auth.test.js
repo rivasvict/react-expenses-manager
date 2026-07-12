@@ -4,7 +4,7 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const { createApp } = require("../core/router");
 const { createMemoryStorage } = require("../core/storage");
-const { signToken } = require("../core/crypto");
+const { signToken, sha256Hex } = require("../core/crypto");
 
 const TOKEN_SECRET = "test-secret";
 
@@ -69,11 +69,9 @@ test("signup stores no plaintext password (scrypt record only)", async () => {
   const app = makeApp({ storage });
   await signup(app);
 
-  // The reference storage serializes values; peek through the interface by
-  // re-reading the user record via a fresh signup collision below instead of
-  // internals — here we assert the record shape through a login round trip
-  // plus a duplicate check, and verify the stored record via readJson.
-  const { sha256Hex } = require("../core/crypto");
+  // Read the stored user record back through the storage interface and
+  // assert it holds only an scrypt record (algo/salt/hash) — never the
+  // plaintext password, anywhere in the serialized document (AC-1.2).
   const stored = await storage.readJson(
     `users/${sha256Hex("jane@example.com")}`
   );

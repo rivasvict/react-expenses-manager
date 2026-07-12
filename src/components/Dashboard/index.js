@@ -20,9 +20,9 @@ import AddBucket from "../common/ExpensesManager/AddBucket";
 import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
 import FixedEntries from "../common/ExpensesManager/FixedEntries";
-import Account from "../Account/index.tsx";
-import SignUpScreen from "../Account/SignUpScreen.tsx";
-import SignInScreen from "../Account/SignInScreen.tsx";
+import Account from "../Account";
+import SignUpScreen from "../Account/SignUpScreen";
+import SignInScreen from "../Account/SignInScreen";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
