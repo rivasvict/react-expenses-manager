@@ -62,16 +62,26 @@ const setHistoryState = (history = [], from, state) =>
     byFromAscending
   );
 
-// Appends a brand new recurring entry effective from `from`. Returns a new list.
+// Appends a brand new recurring entry effective from `from`. Returns a new
+// list. `addedBy` is the optional attribution stamp (AC-1.6) carried by the
+// initial history state.
 const addFixedEntryDefinition = (
   fixedEntries,
-  { id, type, from, amount, description, categories_path }
+  { id, type, from, amount, description, categories_path, addedBy }
 ) => [
   ...(fixedEntries || []),
   {
     id,
     type,
-    history: [{ from, amount, description, categories_path }],
+    history: [
+      {
+        from,
+        amount,
+        description,
+        categories_path,
+        ...(addedBy ? { addedBy } : {}),
+      },
+    ],
   },
 ];
 

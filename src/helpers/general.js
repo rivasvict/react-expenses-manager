@@ -47,10 +47,16 @@ const addViewHeightMobileConfig = () => {
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 };
 
+// "Jane" + "Doe" → "JD". Used by the header account chip and the account
+// screen (DESIGN §2).
+const getInitials = ({ firstName, lastName }) =>
+  `${(firstName || "").charAt(0)}${(lastName || "").charAt(0)}`.toUpperCase();
+
 export {
   calculateTotal,
   setObjectToSessionStorage,
   postConfig,
   postConfigAuthenticated,
   addViewHeightMobileConfig,
+  getInitials,
 };
