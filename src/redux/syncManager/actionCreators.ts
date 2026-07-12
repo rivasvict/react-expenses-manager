@@ -104,3 +104,30 @@ export const joinParty =
     setParty(dispatch, party);
     return party;
   };
+
+// AC-2.9: blocks a member (organizer only). The member keeps their record
+// — and their already-synced entries — but immediately loses sync access.
+export const blockMember =
+  ({ userId }: { userId: string }) =>
+  async (dispatch: Dispatch): Promise<Party> => {
+    const session = getSession();
+    if (!session) throw new Error("Not signed in");
+    const { party } = await syncApi.blockMember({
+      token: session.token,
+      userId,
+    });
+    setParty(dispatch, party);
+    return party;
+  };
+
+// AC-2.10: cancels the party (organizer only). Nobody's local data is
+// touched; the canceled state re-renders for every member on /me refresh.
+export const cancelParty =
+  () =>
+  async (dispatch: Dispatch): Promise<Party> => {
+    const session = getSession();
+    if (!session) throw new Error("Not signed in");
+    const { party } = await syncApi.cancelParty({ token: session.token });
+    setParty(dispatch, party);
+    return party;
+  };
