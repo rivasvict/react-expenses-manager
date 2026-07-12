@@ -16,6 +16,10 @@ export const SYNC_ERROR_CODES = {
   INVITATION_USED: "INVITATION_USED",
   BLOCKED: "BLOCKED",
   NO_BACKUP: "NO_BACKUP",
+  // 409 when the uploaded baseVersion no longer matches the stored backup.
+  VERSION_CONFLICT: "VERSION_CONFLICT",
+  // 413 from the transport layer when a request body exceeds 1 MB.
+  PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   // 409 when the server exhausts its CAS retry on a concurrent update.
   CONFLICT: "CONFLICT",
   // Used by the client for transport-level failures (server unreachable).
@@ -62,6 +66,31 @@ export interface MeResponse {
 
 export interface PartyResponse {
   party: Party;
+}
+
+// The single-file backup envelope shape (buildBackupEnvelope) — the sync
+// path reuses it verbatim (RFC §2.3).
+export interface BackupData {
+  balance: any[];
+  buckets: { [name: string]: any };
+  categories: string[];
+  fixedEntries: any[];
+}
+
+export interface BackupEnvelope {
+  app: string;
+  schemaVersion: number;
+  exportedAt: string;
+  data: BackupData;
+}
+
+export interface BackupDownloadResponse {
+  version: string;
+  envelope: BackupEnvelope;
+}
+
+export interface BackupUploadResponse {
+  version: string;
 }
 
 export interface InvitationResponse {

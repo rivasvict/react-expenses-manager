@@ -5,6 +5,9 @@ import { config } from "../../config";
 import { clearSession } from "../session";
 import {
   AuthResponse,
+  BackupDownloadResponse,
+  BackupEnvelope,
+  BackupUploadResponse,
   InvitationResponse,
   MeResponse,
   PartyResponse,
@@ -137,5 +140,27 @@ export const cancelParty = ({
   request<PartyResponse>("/api/party/cancel", {
     method: "POST",
     body: {},
+    token,
+  });
+
+export const getBackup = ({
+  token,
+}: {
+  token: string;
+}): Promise<BackupDownloadResponse> =>
+  request<BackupDownloadResponse>("/api/party/backup", { token });
+
+export const putBackup = ({
+  token,
+  baseVersion,
+  envelope,
+}: {
+  token: string;
+  baseVersion: string | null;
+  envelope: BackupEnvelope;
+}): Promise<BackupUploadResponse> =>
+  request<BackupUploadResponse>("/api/party/backup", {
+    method: "PUT",
+    body: { baseVersion, envelope },
     token,
   });
