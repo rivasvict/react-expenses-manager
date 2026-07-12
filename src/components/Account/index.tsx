@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 import { MainContentContainer } from "../common/MainContentContainer";
 import ButtonLikeLink from "../common/ButtonLikeLink";
+import ContentTileSection from "../common/ContentTitleSection";
 import { logOut } from "../../redux/syncManager/actionCreators";
 import { getInitials } from "../../helpers/general";
 import { SyncSession } from "../../services/session";
@@ -42,6 +43,10 @@ const Account = ({ session, onLogOut }: AccountProps) => {
               <p className="account-card__email">{session.user.email}</p>
             </div>
           </div>
+          {/* DESIGN §2.3: the party hub is reached from the account. */}
+          <ContentTileSection title="Party" to="/party">
+            Party
+          </ContentTileSection>
           <Button
             variant="secondary"
             className="full-width"
