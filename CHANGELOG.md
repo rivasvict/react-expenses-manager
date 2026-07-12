@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-07-12
+
+### Added
+- Party management (multi-user sync, PR 3): the organizer can block a
+  member (confirm dialog; the member keeps their record and their
+  already-contributed entries, but immediately loses sync access) and
+  cancel the party (confirm dialog; nobody's local data is touched)
+- Blocked members and members of a canceled party see dedicated `/party`
+  views explaining what happened, and are free to create or join another
+  party
+- Server: block/cancel endpoints plus a shared party-access enforcement
+  layer — blocked members get 403 BLOCKED and canceled parties 410
+  PARTY_CANCELED on the backup endpoints, so the upcoming sync
+  implementation inherits the enforcement unchanged
+- Organizer-only visibility for Block/Cancel controls; members see a
+  read-only list
+
 ## [1.3.0] - 2026-07-12
 
 ### Added
