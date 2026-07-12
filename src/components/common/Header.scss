@@ -35,6 +35,45 @@
     color: $text-primary;
     white-space: nowrap;
   }
+
+  // Account entry point (DESIGN §1/§5): 44×44px hit area, initials in an
+  // accent-soft chip when logged in.
+  .account-chip {
+    @include icon-chip(44px);
+    flex: 0 0 auto;
+    color: $text-secondary;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: color $transition-quick, background-color $transition-quick;
+
+    &:hover {
+      color: $text-primary;
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    .account-chip__icon {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+  }
+
+  .account-chip--logged-in {
+    color: $accent;
+    background-color: $accent-soft;
+    border-color: transparent;
+
+    &:hover {
+      color: $accent-hover;
+      background-color: $accent-soft;
+    }
+  }
 }
 
 .app-nav {

@@ -25,3 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 
 *.swp
+# sync server local data
+/server/.data

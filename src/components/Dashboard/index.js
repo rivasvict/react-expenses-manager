@@ -20,6 +20,9 @@ import AddBucket from "../common/ExpensesManager/AddBucket";
 import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
 import FixedEntries from "../common/ExpensesManager/FixedEntries";
+import Account from "../Account";
+import SignUpScreen from "../Account/SignUpScreen";
+import SignInScreen from "../Account/SignInScreen";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -84,6 +87,17 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />
+            </Route>
+            {/* Account/auth screens (multi-user sync, DESIGN §2). Additive:
+                no existing route is gated by the session (AC-1.7). */}
+            <Route path={`${match.url}account`}>
+              <Account />
+            </Route>
+            <Route path={`${match.url}sign-up`}>
+              <SignUpScreen />
+            </Route>
+            <Route path={`${match.url}sign-in`}>
+              <SignInScreen />
             </Route>
             {/** TODO: Work with a bucketId instead of a bucketName */}
             <Route path={`${match.url}edit-bucket/:bucketName`}>
