@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-07-12
+
+### Added
+- Accounts (multi-user sync, PR 1): optional sign up / sign in / log out —
+  the app remains fully functional without an account, and no existing
+  route is gated
+- Account entry point in the app header (generic glyph when logged out,
+  initials chip when logged in) and new in-app screens: `/account`,
+  `/sign-up`, `/sign-in`
+- Local sync server (`npm run sync-server`): dependency-free plain Node
+  service with scrypt password hashing, HMAC-signed 30-day tokens and
+  on-disk JSON storage under `server/.data/` (gitignored); contract tests
+  via `npm run test:server` (Node >= 18); see `server/README.md`
+- Sessions persist across reloads/restarts (`sync.session`) until logout
+  or token expiry; login/signup errors use clear, non-revealing copy
+- Attribution: entries, fixed-entry states and bucket states created while
+  logged in are stamped with `addedBy` (account id + first name) for the
+  upcoming sync review wizard; anonymous when logged out
+- `REACT_APP_SYNC_API_HOST` config (defaults to `http://localhost:4000`)
+
 ## [1.1.0] - 2026-07-10
 
 ### Changed
