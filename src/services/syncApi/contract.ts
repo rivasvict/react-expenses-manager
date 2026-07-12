@@ -7,6 +7,13 @@ export const SYNC_ERROR_CODES = {
   EMAIL_TAKEN: "EMAIL_TAKEN",
   INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
   UNAUTHORIZED: "UNAUTHORIZED",
+  ALREADY_IN_PARTY: "ALREADY_IN_PARTY",
+  NOT_ORGANIZER: "NOT_ORGANIZER",
+  NO_PARTY: "NO_PARTY",
+  PARTY_CANCELED: "PARTY_CANCELED",
+  INVITATION_NOT_FOUND: "INVITATION_NOT_FOUND",
+  INVITATION_WRONG_PASSWORD: "INVITATION_WRONG_PASSWORD",
+  INVITATION_USED: "INVITATION_USED",
   // Used by the client for transport-level failures (server unreachable).
   NETWORK_ERROR: "NETWORK_ERROR",
 } as const;
@@ -26,10 +33,36 @@ export interface AuthResponse {
   user: SyncUser;
 }
 
+export interface PartyMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  blocked: boolean;
+}
+
+// Party as the server presents it to the requesting member (RFC §3 /api/me).
+export interface Party {
+  id: string;
+  name: string;
+  organizerId: string;
+  canceled: boolean;
+  youAreBlocked: boolean;
+  members: PartyMember[];
+}
+
 export interface MeResponse {
   user: SyncUser;
-  // Parties land in PR 2; until then the server always returns null.
-  party: null;
+  party: Party | null;
+}
+
+export interface PartyResponse {
+  party: Party;
+}
+
+export interface InvitationResponse {
+  // Returned exactly once; never retrievable again (AC-2.4).
+  code: string;
 }
 
 export interface SyncApiError extends Error {
