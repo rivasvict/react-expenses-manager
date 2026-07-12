@@ -14,6 +14,8 @@ export const SYNC_ERROR_CODES = {
   INVITATION_NOT_FOUND: "INVITATION_NOT_FOUND",
   INVITATION_WRONG_PASSWORD: "INVITATION_WRONG_PASSWORD",
   INVITATION_USED: "INVITATION_USED",
+  BLOCKED: "BLOCKED",
+  NO_BACKUP: "NO_BACKUP",
   // 409 when the server exhausts its CAS retry on a concurrent update.
   CONFLICT: "CONFLICT",
   // Used by the client for transport-level failures (server unreachable).
