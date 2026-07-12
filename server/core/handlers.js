@@ -30,7 +30,11 @@ const ERROR_CODES = {
   INVITATION_NOT_FOUND: "INVITATION_NOT_FOUND",
   INVITATION_WRONG_PASSWORD: "INVITATION_WRONG_PASSWORD",
   INVITATION_USED: "INVITATION_USED",
+  BLOCKED: "BLOCKED",
+  NO_BACKUP: "NO_BACKUP",
   CONFLICT: "CONFLICT",
+  // Temporary scaffolding only (PUT backup body arrives with the sync PR).
+  NOT_IMPLEMENTED: "NOT_IMPLEMENTED",
 };
 
 const error = (status, code, message) => ({
@@ -206,11 +210,52 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
     return { status: 200, body: { user: publicUser(user), party } };
   };
 
+  // DESIGN §3.6: being blocked, or belonging to a canceled party, leaves
+  // the user free to create/join elsewhere. Their member record stays
+  // behind in the old party (AC-2.9 — attribution history is never
+  // retroactively removed); only user.partyId moves on.
+  const hasActivePartyMembership = async (user) => {
+    if (!user.partyId) return false;
+    const record = await storage.readJsonVersioned(partyKey(user.partyId));
+    if (!record) return false;
+    const party = record.value;
+    if (party.canceled) return false;
+    const member = party.members.find((candidate) => candidate.id === user.id);
+    return !(member && member.blocked);
+  };
+
+  // Shared enforcement layer for everything that touches the party's data
+  // (EC-9, AC-2.10/2.11): resolves the caller's party access or fails with
+  // UNAUTHORIZED / NO_PARTY / BLOCKED / PARTY_CANCELED. The backup
+  // endpoints below run through it, so PR 4's real implementations inherit
+  // the enforcement unchanged — a stale client can never download or
+  // upload.
+  const requirePartyAccess = async (request) => {
+    const user = await authenticate(request);
+    if (!user) return unauthorized();
+    if (!user.partyId)
+      return error(404, ERROR_CODES.NO_PARTY, "You don't belong to a party.");
+    const record = await storage.readJsonVersioned(partyKey(user.partyId));
+    if (!record)
+      return error(404, ERROR_CODES.NO_PARTY, "You don't belong to a party.");
+    const party = record.value;
+    const member = party.members.find((candidate) => candidate.id === user.id);
+    if (member && member.blocked)
+      return error(
+        403,
+        ERROR_CODES.BLOCKED,
+        "You've been removed from this party by its organizer."
+      );
+    if (party.canceled)
+      return error(410, ERROR_CODES.PARTY_CANCELED, "This party was canceled.");
+    return { user, party, version: record.version };
+  };
+
   // RFC §3.4 — create a party; the creator becomes its organizer (AC-2.1).
   const createParty = async (request) => {
     const user = await authenticate(request);
     if (!user) return unauthorized();
-    if (user.partyId)
+    if (await hasActivePartyMembership(user))
       return error(
         409,
         ERROR_CODES.ALREADY_IN_PARTY,
@@ -298,8 +343,10 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
         ERROR_CODES.VALIDATION_ERROR,
         "An invitation code and password are required."
       );
-    // EC-6 first: an existing membership never consumes the invitation.
-    if (user.partyId)
+    // EC-6 first: an existing (active) membership never consumes the
+    // invitation. Blocked members and members of canceled parties are
+    // free to join elsewhere (DESIGN §3.6).
+    if (await hasActivePartyMembership(user))
       return error(
         409,
         ERROR_CODES.ALREADY_IN_PARTY,
@@ -359,10 +406,22 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
     const outcome = await mutateParty(pointer.partyId, (party) => {
       const revalidated = validate(party);
       if (!revalidated.invitation) return revalidated;
+      // Re-invited past member (e.g. previously blocked): refresh the
+      // existing record instead of appending a duplicate row.
+      const isReturning = party.members.some(
+        (member) => member.id === user.id
+      );
+      const members = isReturning
+        ? party.members.map((member) =>
+            member.id === user.id
+              ? { ...publicUser(user), blocked: false }
+              : member
+          )
+        : [...party.members, { ...publicUser(user), blocked: false }];
       return {
         party: {
           ...party,
-          members: [...party.members, { ...publicUser(user), blocked: false }],
+          members,
           invitations: {
             ...party.invitations,
             [lookupHash]: encryptRecord(
@@ -378,7 +437,106 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
     return { status: 200, body: { party: publicParty(outcome.party, user.id) } };
   };
 
-  return { signup, login, me, createParty, createInvitation, joinParty };
+  // RFC §3.7 — organizer blocks a member (AC-2.9). The member keeps their
+  // membership record — already-contributed entries are never
+  // retroactively removed — but the flag immediately revokes party-data
+  // access (EC-9) via requirePartyAccess. Nothing outside the party
+  // record is touched.
+  const blockMember = async (request) => {
+    const user = await authenticate(request);
+    if (!user) return unauthorized();
+    if (!user.partyId)
+      return error(404, ERROR_CODES.NO_PARTY, "You don't belong to a party.");
+    const targetId = (request.params || {}).userId;
+    const outcome = await mutateParty(user.partyId, (party) => {
+      if (party.organizerId !== user.id)
+        return error(
+          403,
+          ERROR_CODES.NOT_ORGANIZER,
+          "Only the organizer can block members."
+        );
+      if (targetId === party.organizerId)
+        return error(
+          400,
+          ERROR_CODES.VALIDATION_ERROR,
+          "The organizer cannot be blocked."
+        );
+      if (!party.members.some((member) => member.id === targetId))
+        return error(
+          404,
+          ERROR_CODES.NOT_FOUND,
+          "That member isn't in your party."
+        );
+      return {
+        party: {
+          ...party,
+          members: party.members.map((member) =>
+            member.id === targetId ? { ...member, blocked: true } : member
+          ),
+        },
+      };
+    });
+    if (!outcome.party) return outcome;
+    return { status: 200, body: { party: publicParty(outcome.party, user.id) } };
+  };
+
+  // RFC §3.8 — organizer cancels the party (AC-2.10). Members keep their
+  // records and their local data; the flag makes every future party-data
+  // call fail with PARTY_CANCELED via requirePartyAccess.
+  const cancelParty = async (request) => {
+    const user = await authenticate(request);
+    if (!user) return unauthorized();
+    if (!user.partyId)
+      return error(404, ERROR_CODES.NO_PARTY, "You don't belong to a party.");
+    const outcome = await mutateParty(user.partyId, (party) => {
+      if (party.organizerId !== user.id)
+        return error(
+          403,
+          ERROR_CODES.NOT_ORGANIZER,
+          "Only the organizer can cancel the party."
+        );
+      return { party: { ...party, canceled: true } };
+    });
+    if (!outcome.party) return outcome;
+    return { status: 200, body: { party: publicParty(outcome.party, user.id) } };
+  };
+
+  // RFC §3.9–3.10 land with the sync PR; the routes exist now so the
+  // blocked/canceled enforcement (requirePartyAccess) is already in force
+  // for them and PR 4 inherits it unchanged.
+  const getBackup = async (request) => {
+    const access = await requirePartyAccess(request);
+    if (!access.user) return access;
+    // No backups can exist yet — EC-1's contract answer is the truth.
+    return error(
+      404,
+      ERROR_CODES.NO_BACKUP,
+      "No backup has been uploaded yet."
+    );
+  };
+
+  const putBackup = async (request) => {
+    const access = await requirePartyAccess(request);
+    if (!access.user) return access;
+    return error(
+      501,
+      ERROR_CODES.NOT_IMPLEMENTED,
+      "Backup upload arrives with sync."
+    );
+  };
+
+  return {
+    signup,
+    login,
+    me,
+    createParty,
+    createInvitation,
+    joinParty,
+    blockMember,
+    cancelParty,
+    getBackup,
+    putBackup,
+  };
 };
 
 module.exports = { createHandlers, ERROR_CODES };
