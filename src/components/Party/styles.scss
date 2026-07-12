@@ -51,6 +51,14 @@
     }
   }
 
+  // Status line above the blocked/canceled CTA layout (DESIGN §3.6).
+  .party-card__status {
+    color: $text-primary;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin: $vertical-standard-margin 0 0;
+  }
+
   .member-row {
     display: flex;
     align-items: center;
@@ -96,6 +104,18 @@
       color: $text-muted;
       font-size: 0.8rem;
       flex: 0 0 auto;
+    }
+
+    // Compact next to the row, overriding the global 3.1em .btn height.
+    .member-row__block {
+      height: 2.2em;
+      padding: 0 0.9rem;
+      font-size: 0.8rem;
+      flex: 0 0 auto;
+
+      &:focus-visible {
+        @include focus-ring();
+      }
     }
   }
 
