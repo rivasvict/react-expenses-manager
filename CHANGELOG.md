@@ -5,6 +5,28 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-07-12
+
+### Added
+- Parties (multi-user sync, PR 2): a logged-in user can create one party
+  and becomes its organizer; the party is auto-named "{first name}'s
+  Party"
+- Invitations: the organizer generates a one-time code plus an
+  organizer-chosen password from `/party/invite` (code shown exactly
+  once, copy buttons with a transient "Copied" confirmation); invitations
+  are stored only as a sha256 lookup key plus an AES-256-GCM-encrypted
+  record — never in plaintext
+- Joining: `/party/join` redeems a code + password; a wrong password
+  never consumes the invitation, a redeemed invitation is permanently
+  invalid, and a user already in a party is rejected without consuming it
+- Party hub `/party` (reached from Account): no-party, organizer and
+  member views; organizer-only controls stay hidden from members, and
+  create/join affordances disappear once in a party
+- Server: party/invitation endpoints with compare-and-swap updates on the
+  party record; `/api/me` now returns the party
+- Central 401 handling in the sync API client: a rejected token clears
+  the stored session and degrades the UI to logged-out
+
 ## [1.2.0] - 2026-07-12
 
 ### Added
