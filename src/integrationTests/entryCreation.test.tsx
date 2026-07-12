@@ -47,8 +47,13 @@ describe("entry creation", () => {
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    // Back on dashboard: incomes row shows the new amount
-    expect(await screen.findByText("$1,000.00")).toBeInTheDocument();
+    // Back on dashboard: the Incomes row itself shows the new amount. (The
+    // savings hero also reads $1,000.00 in this expense-less scenario, so a
+    // bare findByText would be ambiguous; targeting the row keeps the
+    // regression coverage on the incomes figure.)
+    expect(
+      await screen.findByRole("link", { name: /^Incomes \$1,000\.00$/ })
+    ).toBeInTheDocument();
   });
 
   it("user can edit an entry immediately after creating it", async () => {

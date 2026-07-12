@@ -60,8 +60,16 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
               <Row className="top-container container-fluid">
                 <Col xs={12} className="top-content">
                   <Form.Group>
+                    <Form.Label htmlFor="bucket-amount">
+                      Monthly allowance
+                    </Form.Label>
+                    <p className="field-hint">
+                      Changes apply from the month you are viewing onward;
+                      earlier months keep their previous limit.
+                    </p>
                     <InputNumber
                       type="number"
+                      id="bucket-amount"
                       name="amount"
                       placeholder={`Insert bucket amount`}
                       value={bucket?.value}

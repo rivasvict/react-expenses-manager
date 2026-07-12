@@ -1,6 +1,39 @@
 @import '../../../../variables.scss';
+
 .categories-container {
   .cancel {
     width: 100%;
+  }
+
+  .categories-list {
+    margin-top: 0.25rem;
+
+    // Two columns on wide screens halve the scroll depth of long lists.
+    @media (min-width: $nav-breakpoint) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 0.6rem;
+    }
+
+    .list-group-item {
+      background-color: $bg-raised;
+      color: $text-primary;
+      border: 1px solid $border-subtle;
+      border-radius: $radius-card;
+      margin-bottom: $vertical-standard-margin;
+      padding: 0.85rem 1rem;
+      font-weight: 500;
+
+      // Categories that already have a spending limit get the accent marker,
+      // so they stand out from the "(no bucket)" majority at a glance.
+      &.has-bucket {
+        border-left: 3px solid $accent;
+      }
+    }
+
+    .category-no-bucket {
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
   }
 }

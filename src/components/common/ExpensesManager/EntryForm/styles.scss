@@ -1,15 +1,54 @@
+@import '../../../../variables.scss';
+
+// Doubled class beats the base tile's `border` shorthand regardless of which
+// stylesheet the bundler emits first (both selectors are otherwise equal
+// specificity and the import order is not guaranteed).
+.content-title-selection.entry-form-heading {
+  border-left: 3px solid $accent;
+
+  &.entry-form-heading--income {
+    border-left-color: $income;
+  }
+
+  &.entry-form-heading--expense {
+    border-left-color: $expense;
+  }
+}
+
+.optional-hint {
+  color: $text-muted;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 .recurring-toggle-row {
   min-height: 38px;
-  padding: 0.375rem 0;
+  padding: 0.55rem 0.75rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+
+  .form-label {
+    color: $text-primary;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+  }
 }
 
 .recurring-switch {
+  .form-check-input {
+    cursor: pointer;
+  }
+
   .form-check-input:checked {
-    background-color: #f8b62f;
-    border-color: #f8b62f;
+    background-color: $accent;
+    border-color: $accent;
   }
 
   .form-check-input:focus {
-    box-shadow: 0 0 0 0.25rem rgba(248, 182, 47, 0.25);
+    box-shadow: 0 0 0 0.25rem $accent-soft;
   }
 }

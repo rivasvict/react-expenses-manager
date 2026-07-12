@@ -55,8 +55,10 @@ class EntryForm extends Component {
     const title = `${operationTitle}${entryNameForDisplay}`;
 
     return (
-      <MainContentContainer pageTitle={`Operation: ${title}`}>
-        <ContentTileSection>{title}</ContentTileSection>
+      <MainContentContainer pageTitle={`${entryNameForDisplay} entry`}>
+        <ContentTileSection className={`entry-form-heading entry-form-heading--${this.state.type}`}>
+          {title}
+        </ContentTileSection>
         <FormContent
           formProps={{
             onSubmit: (event) =>
@@ -70,31 +72,38 @@ class EntryForm extends Component {
           <Row className="top-container container-fluid">
             <Col xs={12} className="top-content">
               <Form.Group>
+                <Form.Label htmlFor="entry-amount">Amount</Form.Label>
                 <InputNumber
                   type="number"
+                  id="entry-amount"
                   name="amount"
                   placeholder={`Insert ${capitalize(this.state.type)} amount`}
                   value={this.state.amount}
                   onChange={this.handleInputChange}
                 ></InputNumber>
               </Form.Group>
-              <Form.Group>
+              <Form.Group className="vertical-standard-space">
+                <Form.Label htmlFor="entry-description">
+                  Description <span className="optional-hint">(optional)</span>
+                </Form.Label>
                 <InputText
                   type="text"
+                  id="entry-description"
                   name="description"
                   placeholder="Description"
                   value={this.state.description}
                   onChange={this.handleInputChange}
-                  className="vertical-standard-space"
                 ></InputText>
               </Form.Group>
-              <Form.Group>
+              <Form.Group className="vertical-standard-space">
+                <Form.Label htmlFor="entry-category">Category</Form.Label>
                 <CategorySelector
+                  id="entry-category"
                   name="categories"
                   value={this.state.categories_path}
                   handleChange={this.setCategory}
                   categoryOptions={categoryOptions}
-                  className="vertical-standard-space"
+                  emptyOptionLabel="Select a category"
                 />
               </Form.Group>
               {this.props.allowRecurring && (
@@ -117,16 +126,6 @@ class EntryForm extends Component {
           </Row>
           <Row className="bottom-container container-fluid vertical-standard-space">
             <Col xs={12} className="bottom-content">
-              {this.props.handleEntryRemoval && (
-                <Button
-                  variant="danger"
-                  onClick={() =>
-                    this.props.handleEntryRemoval({ entryId: this.state.id })
-                  }
-                >
-                  REMOVE ENTRY
-                </Button>
-              )}
               <FormButton
                 variant="primary"
                 name="submit"
@@ -142,6 +141,17 @@ class EntryForm extends Component {
               >
                 Cancel
               </Button>
+              {this.props.handleEntryRemoval && (
+                <Button
+                  variant="danger"
+                  className="vertical-standard-space"
+                  onClick={() =>
+                    this.props.handleEntryRemoval({ entryId: this.state.id })
+                  }
+                >
+                  Remove entry
+                </Button>
+              )}
             </Col>
           </Row>
         </FormContent>

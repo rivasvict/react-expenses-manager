@@ -1,23 +1,111 @@
 @import '../../variables.scss';
 
-@mixin header-color {
-}
-
-header {
-  @include header-color();
-
-  .navbar {
+.app-header {
+  .app-header__bar {
+    max-width: $shell-max-width;
+    margin: 0 auto;
+    padding: 1rem 1rem 0.75rem;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 2rem 1.1rem 1rem 1rem;
-    
-    .navbar-toggler {
-      border: none;
+    gap: 1rem;
+  }
+
+  .app-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    border-radius: $radius-control;
+
+    &:focus-visible {
+      @include focus-ring();
     }
 
-    .navbar-brand {
-      .logo {
-        height: 69px;
-      }
+    .logo {
+      height: 44px;
+      display: block;
+    }
+  }
+
+  .app-header__name {
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+    color: $text-primary;
+    white-space: nowrap;
+  }
+}
+
+.app-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+
+  .app-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    color: $text-secondary;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: $radius-control;
+    padding: 0.35rem 0.5rem;
+    min-width: 3.6rem;
+    transition: color $transition-quick, background-color $transition-quick;
+
+    &:hover {
+      color: $text-primary;
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  .app-nav__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .app-nav__label {
+    white-space: nowrap;
+  }
+
+  .app-nav__item--active {
+    color: $accent;
+    background-color: $accent-soft;
+
+    &:hover {
+      color: $accent-hover;
+      background-color: $accent-soft;
+    }
+  }
+}
+
+// Narrow screens: the nav becomes a fixed bottom tab bar.
+@media (max-width: $nav-breakpoint - 1) {
+  .app-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    height: $bottom-nav-height;
+    padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
+    justify-content: space-around;
+    background-color: rgba($bg-page, 0.92);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid $border-subtle;
+
+    .app-nav__item {
+      flex: 1 1 0;
+      min-width: 0;
     }
   }
 }

@@ -1,26 +1,134 @@
 /*
-Color palette referemce from:
-https://dribbble.com/shots/14865224-Fintech-Banking-Investing-App-UI-UX
+Design tokens for the app's dark "calm fintech" theme.
+The gold accent keeps the original brand direction
+(https://dribbble.com/shots/14865224-Fintech-Banking-Investing-App-UI-UX)
+over a deeper, lower-contrast neutral scale.
 */
 
-$color_dark_1: #1e2329;
-$color_dark_2: #292c32;
-$color_dark_3: #707a8a;
-$color_clear_1: #f0b90b;
-$color_clear_2: #fcd535;
-$color_clear_3: #fafafa;
-$color_clear_4: #F4FCF8;
+// ---------------------------------------------------------------------------
+// Palette
+// ---------------------------------------------------------------------------
+$bg-page: #0e1116; // page / behind everything
+$bg-surface: #161b22; // main work-area card
+$bg-raised: #1e252f; // cards, rows, inputs on top of the surface
+$bg-raised-hover: #252d39; // hover state for interactive rows
+$border-subtle: rgba(255, 255, 255, 0.07);
+$border-strong: rgba(255, 255, 255, 0.14);
 
-$standard-radius: 0.526rem;
-$standard-container-radius: 1.526rem 1.526rem 0.93rem 0.93rem;
-$vertical-standard-margin: .5rem;
-$section_header_vertical-margin: 1.3em;
-$h1-size-title: 1.125rem;
+$accent: #f0b90b; // brand gold
+$accent-hover: #fcd535;
+$accent-soft: rgba(240, 185, 11, 0.12);
+
+$income: #34d399; // green for money coming in
+$income-soft: rgba(52, 211, 153, 0.12);
+$expense: #fb7185; // rose for money going out
+$expense-soft: rgba(251, 113, 133, 0.12);
+$danger: #f87171;
+$danger-soft: rgba(248, 113, 113, 0.14);
+$warning: #fbbf24;
+
+$text-primary: #f2f5f9;
+$text-secondary: #9aa4b2;
+$text-muted: #8b94a3; // ≥4.5:1 on $bg-raised — used for small print
+$text-on-accent: #1a1503; // dark text on gold buttons
+
+// Chart-grade semantic hues (validated for the dark surface with the dataviz
+// six-checks validator). The JS twin of these values lives in
+// src/components/common/DoughnutChart/index.js — keep both in sync.
+$chart-income: #199e70;
+$chart-expense: #e66767;
+$chart-warning: #c98500;
+
+// Legacy aliases (older stylesheets still import these names).
+$color_dark_1: $bg-page;
+$color_dark_2: $bg-surface;
+$color_dark_3: $text-secondary;
+$color_clear_1: $accent;
+$color_clear_2: $accent-hover;
+$color_clear_3: $text-primary;
+$color_clear_4: #f4fcf8;
+
+// ---------------------------------------------------------------------------
+// Shape, spacing & type
+// ---------------------------------------------------------------------------
+$radius-control: 0.65rem; // buttons, inputs
+$radius-card: 1rem; // cards, rows
+$radius-shell: 1.4rem; // the big work-area container
+$standard-radius: $radius-control; // legacy alias
+$standard-container-radius: $radius-shell $radius-shell 0.93rem 0.93rem; // legacy alias
+
+$vertical-standard-margin: 0.625rem;
+$section_header_vertical-margin: 1.1em;
+$h1-size-title: 1.15rem;
+
+$shell-max-width: 40rem; // app column width on large screens
+$bottom-nav-height: 4.25rem; // reserved space for the mobile tab bar
+$nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
+
+$shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+$shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+$transition-quick: 140ms ease;
+
+// ---------------------------------------------------------------------------
+// Mixins
+// ---------------------------------------------------------------------------
+@mixin focus-ring {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+@mixin card {
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+}
+
+// Hover/active/focus states alone, for elements that already have card().
+@mixin card-interactions {
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick,
+    transform $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+    border-color: $border-strong;
+    color: $text-primary;
+    text-decoration: none;
+  }
+
+  &:active {
+    transform: scale(0.995);
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+}
+
+@mixin interactive-card {
+  @include card();
+  @include card-interactions();
+}
+
+// Circular icon chip used beside money rows (income/expense variants are
+// applied by the caller with $income/$expense + soft backgrounds).
+@mixin icon-chip($size) {
+  width: $size;
+  height: $size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
 
 @mixin button-like-style {
-  font-size: 0.88em;
-  border-radius: $standard-radius;
-  border-color: $color_dark_1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: $radius-control;
+  border: 1px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,16 +142,59 @@ $h1-size-title: 1.125rem;
 @mixin buttons {
   .btn {
     @include button-like-style();
-    height: 3.3em;
+    height: 3.1em;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick,
+      color $transition-quick,
+      transform $transition-quick;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+      box-shadow: none;
+    }
   }
 
   .btn.btn-primary {
-    background-color: $color_clear_1;
-    color: $color_dark_1;
+    background-color: $accent;
+    border-color: $accent;
+    color: $text-on-accent;
+
+    &:hover,
+    &:focus {
+      background-color: $accent-hover;
+      border-color: $accent-hover;
+      color: $text-on-accent;
+    }
   }
 
   .btn.btn-secondary {
-    background-color: $color_dark_3;
-    color: $color_clear_3;
+    background-color: transparent;
+    border-color: $border-strong;
+    color: $text-primary;
+
+    &:hover,
+    &:focus {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+      color: $text-primary;
+    }
+  }
+
+  .btn.btn-danger {
+    background-color: transparent;
+    border-color: rgba(248, 113, 113, 0.5);
+    color: $danger;
+
+    &:hover,
+    &:focus {
+      background-color: $danger-soft;
+      border-color: $danger;
+      color: $danger;
+    }
   }
 }

@@ -1,6 +1,8 @@
 import { capitalize } from "lodash";
 import React from "react";
-import DoughnutChart from "../../../../../DoughnutChart";
+import DoughnutChart, {
+  INCOME_EXPENSE_COLORS,
+} from "../../../../../DoughnutChart";
 import { quantitiesToPercentages } from "../../../../../../../helpers/entriesHelper/entriesHelper";
 
 const SummaryChart = ({ data }) => {
@@ -16,6 +18,7 @@ const SummaryChart = ({ data }) => {
           labels: labels.map((label) => capitalize(label)),
           chartData,
         }}
+        colors={INCOME_EXPENSE_COLORS}
       />
     )
   );

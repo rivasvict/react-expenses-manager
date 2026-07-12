@@ -5,7 +5,7 @@ import {
 } from "../helpers/entriesHelper/entriesHelper";
 import { Col } from "react-bootstrap";
 import "./Results.scss";
-import { IconSignIn, IconSignOut } from "./common/Icons";
+import { IconMoneyIn, IconMoneyOut } from "./common/Icons";
 import RowLink from "./common/RowLink";
 
 function TotalItem({
@@ -13,13 +13,20 @@ function TotalItem({
   amount,
   Icon,
   url,
+  variant,
   forcePositiveNumberDisplay = false,
 }) {
   return (
-    <RowLink to={url} title={name} className="total-row">
-      <Col xs={2}>{Icon ? <Icon /> : null}</Col>
-      <Col xs={5}>{name}</Col>
-      <Col xs={5}>
+    <RowLink to={url} title={name} className={`total-row total-row--${variant}`}>
+      <Col xs={2} className="total-row__icon">
+        <span className="total-row__icon-chip" aria-hidden="true">
+          {Icon ? <Icon /> : null}
+        </span>
+      </Col>
+      <Col xs={5} className="total-row__name">
+        {name}
+      </Col>
+      <Col xs={5} className="total-row__amount">
         {forcePositiveNumberDisplay && amount < 0
           ? formatNumberForDisplay(-1 * amount)
           : formatNumberForDisplay(amount)}
@@ -42,13 +49,15 @@ function Results({ entries, baseUrl = "" }) {
         name="Incomes"
         amount={incomesSum}
         url={incomesUrl}
-        Icon={IconSignIn}
+        Icon={IconMoneyIn}
+        variant="income"
       />
       <TotalItem
         name="Expenses"
         amount={expensesSum}
         url={expensesUrl}
-        Icon={IconSignOut}
+        Icon={IconMoneyOut}
+        variant="expense"
         forcePositiveNumberDisplay={true}
       />
     </React.Fragment>

@@ -1,6 +1,8 @@
 import React from "react";
-import { Row, Col, Container, Button } from "react-bootstrap";
 import "./styles.scss";
+import { Icon } from "@iconify/react";
+import chevronLeft from "@iconify-icons/codicon/chevron-left";
+import chevronRight from "@iconify-icons/codicon/chevron-right";
 import ScreenTitle from "../ScreenTitle";
 import { getMonthNameDisplay } from "../../../helpers/date";
 import { setSelectedDate } from "../../../redux/expensesManager/actionCreators";
@@ -15,56 +17,47 @@ const NavigableMonthHeader = ({
   selectedDate,
   onSelectedDateChange,
 }) => {
+  const canGo = (dateAdjacencyType) =>
+    doesAdjacentDateExist({ dateAdjacencyType, selectedDate, entries });
+
+  const go = (dateAdjacencyType) =>
+    handleDateSelectionPointers({
+      entries,
+      selectedDate,
+      onSelectedDateChange,
+      dateAdjacencyType,
+    });
+
   return (
-    <Container fluid>
-      <Row className="month-header">
-        <Col xs={3}>
-          {doesAdjacentDateExist({
-            dateAdjacencyType: "prev",
-            selectedDate,
-            entries,
-          }) ? (
-            <Button
-              onClick={() =>
-                handleDateSelectionPointers({
-                  entries,
-                  selectedDate,
-                  onSelectedDateChange,
-                  dateAdjacencyType: "prev",
-                })
-              }
-            >
-              Prev
-            </Button>
-          ) : null}
-        </Col>
-        <Col xs={6}>
-          <ScreenTitle
-            screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`}
-          />
-        </Col>
-        <Col xs={3}>
-          {doesAdjacentDateExist({
-            dateAdjacencyType: "next",
-            selectedDate,
-            entries,
-          }) ? (
-            <Button
-              onClick={() =>
-                handleDateSelectionPointers({
-                  entries,
-                  selectedDate,
-                  onSelectedDateChange,
-                  dateAdjacencyType: "next",
-                })
-              }
-            >
-              Next
-            </Button>
-          ) : null}
-        </Col>
-      </Row>
-    </Container>
+    <div className="month-header">
+      {canGo("prev") ? (
+        <button
+          type="button"
+          className="month-header__step"
+          aria-label="Previous month"
+          onClick={() => go("prev")}
+        >
+          <Icon icon={chevronLeft} aria-hidden="true" />
+        </button>
+      ) : (
+        <span className="month-header__step month-header__step--placeholder" />
+      )}
+      <ScreenTitle
+        screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`}
+      />
+      {canGo("next") ? (
+        <button
+          type="button"
+          className="month-header__step"
+          aria-label="Next month"
+          onClick={() => go("next")}
+        >
+          <Icon icon={chevronRight} aria-hidden="true" />
+        </button>
+      ) : (
+        <span className="month-header__step month-header__step--placeholder" />
+      )}
+    </div>
   );
 };
 

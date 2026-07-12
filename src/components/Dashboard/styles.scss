@@ -11,9 +11,19 @@
   display: flex;
   flex-direction: column;
   min-height: fit-content;
-  background-color: #292c32;
+  background-color: $bg-page;
 
   .dashboard-container {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: $shell-max-width;
+    margin: 0 auto;
+  }
+
+  // Keep the work area clear of the fixed bottom tab bar on narrow screens.
+  @media (max-width: $nav-breakpoint - 1) {
+    padding-bottom: calc(#{$bottom-nav-height} + env(safe-area-inset-bottom, 0px) + 0.75rem);
   }
 }

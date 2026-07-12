@@ -1,29 +1,102 @@
 @import '../../../../variables.scss';
 
 .entries-summary {
+  margin-bottom: 0.75rem;
 
-  .item-total {
-    @include adjust-text-in-vertical-axis();
-    justify-content: flex-end;
+  .entries-summary-header {
+    margin-top: 0.5rem;
+    margin-bottom: 0.35rem;
+
+    .item-type {
+      color: $text-secondary;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+    }
+
+    .item-total {
+      @include adjust-text-in-vertical-axis();
+      justify-content: flex-end;
+      font-weight: 600;
+    }
+  }
+
+  .entries-summary-empty {
+    color: $text-muted;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.75rem;
   }
 
   .entries-item {
-    margin-top: $vertical-standard-margin;
-    margin-bottom: $vertical-standard-margin;
+    @include interactive-card();
+    margin: 0 0 $vertical-standard-margin;
+    padding: 0.7rem 0.75rem;
+    align-items: center;
+    text-decoration: none;
+    flex-wrap: nowrap;
 
     .item-icon {
       @include adjust-text-in-vertical-axis();
       padding: 0;
-      justify-content: flex-end
+      justify-content: flex-start;
+    }
+
+    .item-icon-chip {
+      @include icon-chip(1.9rem);
+      font-size: 0.95rem;
     }
 
     .item-description {
       @include adjust-text-in-vertical-axis();
+      color: $text-primary;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      line-height: 1.9rem;
+      // Let the description take whatever room the amount leaves, instead of
+      // truncating at a fixed column width while free space remains. A zero
+      // flex-basis lets long text shrink (and ellipsize) rather than push the
+      // amount onto a second line.
+      flex: 1 1 0%;
+      width: auto;
+      min-width: 0;
     }
 
     .item-amount {
       @include adjust-text-in-vertical-axis();
       justify-content: flex-end;
+      font-weight: 600;
+      flex: 0 0 auto;
+      width: auto;
+      white-space: nowrap;
+    }
+  }
+
+  &.entries-summary--income {
+    .item-total,
+    .entries-item .item-amount {
+      color: $income;
+    }
+
+    .entries-item .item-icon-chip {
+      color: $income;
+      background-color: $income-soft;
+    }
+  }
+
+  &.entries-summary--expense {
+    .item-total,
+    .entries-item .item-amount {
+      color: $expense;
+    }
+
+    .entries-item .item-icon-chip {
+      color: $expense;
+      background-color: $expense-soft;
     }
   }
 }

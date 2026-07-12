@@ -21,11 +21,12 @@ const DataDisclaimerModal = ({ show, onHide }) => {
 
   return (
     <Modal show={show} onHide={onHideHandler} centered>
-      <Modal.Header>Data Disclaimer</Modal.Header>
+      <Modal.Header>Your data stays on this device</Modal.Header>
       <Modal.Body>
-        This app is intended for product validation purposes. No data you put
-        here is being stored in any other location than this very device. The
-        data will live as long as the browser's data does not get cleared.
+        This app is intended for product validation purposes. Nothing you put
+        here is stored anywhere other than this very device, and your data
+        lives for as long as the browser's data does not get cleared. You can
+        download a backup at any time from Data Management.
         <Form.Check type="checkbox" id="data-disclaimer-checkbox">
           <Form.Check.Input
             type="checkbox"
@@ -42,7 +43,7 @@ const DataDisclaimerModal = ({ show, onHide }) => {
               variant="primary"
               className="full-width"
             >
-              I Aknowledge
+              Got it
             </Button>
           </Col>
         </Container>

@@ -3,10 +3,44 @@
 .month-header {
   margin-top: $section_header_vertical-margin;
   margin-bottom: $section_header_vertical-margin;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 
-  div:nth-child(3) {
+  .screen-title {
+    flex: 1 1 auto;
+    // ScreenTitle is a bootstrap Row; neutralise its negative margins here.
+    margin: 0;
+  }
+
+  .month-header__step {
+    flex: 0 0 auto;
+    width: 2.5rem;
+    height: 2.5rem;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: $text-primary;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color $transition-quick, border-color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  .month-header__step--placeholder {
+    visibility: hidden;
+    pointer-events: none;
   }
 }

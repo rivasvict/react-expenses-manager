@@ -1,5 +1,7 @@
 import { capitalize } from "lodash";
-import DoughnutChart from "../../../../../common/DoughnutChart";
+import DoughnutChart, {
+  INCOME_EXPENSE_COLORS,
+} from "../../../../../common/DoughnutChart";
 import { ENTRY_TYPES_PLURAL } from "../../../../../../constants";
 import { quantitiesToPercentages } from "../../../../../../helpers/entriesHelper/entriesHelper";
 
@@ -19,6 +21,7 @@ const BalanceChart = ({ incomesSum, expensesSum }) => {
         ],
         chartData: [incomePercentage, expensePercentage],
       }}
+      colors={INCOME_EXPENSE_COLORS}
       shouldShow={!!totalSum}
     />
   );

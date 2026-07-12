@@ -7,6 +7,8 @@ function CategorySelector({
   value,
   categoryOptions,
   className = "",
+  id,
+  emptyOptionLabel,
 }) {
   return (
     <FormSelect
@@ -14,8 +16,9 @@ function CategorySelector({
       name={name}
       value={value}
       onChange={handleChange}
+      id={id}
     >
-      <option value="">All {name}</option>
+      <option value="">{emptyOptionLabel || `All ${name}`}</option>
       {/** TODO: Revise the set up of the categoryOption.value at this point
        * Probably a good idea not to make the frontend take care of the logic of the ,, */}
       {categoryOptions.map((categoryOption, key) => (

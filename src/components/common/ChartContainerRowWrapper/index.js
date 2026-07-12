@@ -4,9 +4,7 @@ import "./styles.scss";
 const ChartContainerRowWrapper = ({ children: chart }) => {
   return (
     <Row className="chart-container">
-      <Col xs={10} md={4}>
-        {chart}
-      </Col>
+      <Col className="chart-container__col">{chart}</Col>
     </Row>
   );
 };

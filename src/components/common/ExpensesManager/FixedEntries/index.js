@@ -41,10 +41,10 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
       className="fixed-entries-container"
       pageTitle="Fixed entries"
     >
+      <NavigableMonthHeader />
       <ContentTileSection title="Fixed entries">
         {`Recurring incomes and expenses applying to ${monthLabel}`}
       </ContentTileSection>
-      <NavigableMonthHeader />
 
       {hasAny ? (
         <>
