@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import homeIcon from "@iconify-icons/codicon/home";
@@ -6,7 +7,9 @@ import tagIcon from "@iconify-icons/codicon/tag";
 import pieChartIcon from "@iconify-icons/codicon/pie-chart";
 import syncIcon from "@iconify-icons/codicon/sync";
 import databaseIcon from "@iconify-icons/codicon/database";
+import accountIcon from "@iconify-icons/codicon/account";
 import logoImage from "../../images/expenses_tracker_logo.png";
+import { getInitials } from "../../helpers/general";
 /**
  * TODO:
  * Reinstate the log-out action
@@ -32,12 +35,35 @@ const NAV_ITEMS = [
   },
 ];
 
+// Account entry point (DESIGN §1): a circular icon-button in the app bar —
+// a generic glyph when logged out, the user's initials when logged in.
+// Present at every viewport, independent of the tab bar's collapse.
+const AccountChip = ({ session }) => {
+  const user = session?.user;
+  const accountLabel = user
+    ? `Account: ${user.firstName} ${user.lastName}`
+    : "Account";
+  return (
+    <Link
+      to="/account"
+      className={`account-chip ${user ? "account-chip--logged-in" : ""}`}
+      aria-label={accountLabel}
+    >
+      {user ? (
+        <span aria-hidden="true">{getInitials(user)}</span>
+      ) : (
+        <Icon icon={accountIcon} className="account-chip__icon" aria-hidden="true" />
+      )}
+    </Link>
+  );
+};
+
 /**
  * App bar with a single nav that adapts by viewport: an inline icon+label nav
  * on wide screens, a fixed bottom tab bar on narrow ones. The same links stay
  * in the DOM in both layouts.
  */
-const Header = () => (
+const Header = ({ session }) => (
   <header className="app-header">
     <div className="app-header__bar">
       <Link to="/" className="app-header__brand">
@@ -66,8 +92,13 @@ const Header = () => (
          */}
         {/* <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button> */}
       </nav>
+      <AccountChip session={session} />
     </div>
   </header>
 );
 
-export default Header;
+const mapStateToProps = (state) => ({
+  session: state.syncManager.session,
+});
+
+export default connect(mapStateToProps)(Header);

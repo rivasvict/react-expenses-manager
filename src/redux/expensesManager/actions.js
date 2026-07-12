@@ -9,6 +9,7 @@ import {
   buildBackupEnvelope,
   parseBackupEnvelope,
 } from "../../helpers/backupHelper/backupHelper";
+import { getAddedBy } from "../../services/session";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
@@ -92,11 +93,19 @@ const GetBalance =
     };
   };
 
+// Attribution (AC-1.6, RFC §2.3): newly created items are stamped with the
+// logged-in account at the action-creator layer; storage stays a dumb store.
+// Logged out → no field at all.
+const withAddedBy = (item) => {
+  const addedBy = getAddedBy();
+  return addedBy ? { ...item, addedBy } : item;
+};
+
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      const savedEntry = await storage.setNewRecord(entry);
+      const savedEntry = await storage.setNewRecord(withAddedBy(entry));
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry: savedEntry, selectedDate } });
       dispatch(setAppLoading(false));
@@ -263,6 +272,7 @@ const EditBucket =
           bucketName,
           limit,
           fromYearMonth,
+          addedBy: getAddedBy(),
         });
         dispatch({
           type: EDIT_BUCKET,
@@ -286,7 +296,10 @@ const AddBucket =
     return async (dispatch) => {
       dispatch(setAppLoading(true));
       try {
-        const response = await storage.addBucket({ bucket });
+        const response = await storage.addBucket({
+          bucket,
+          addedBy: getAddedBy(),
+        });
         const [categoryName] = Object.keys(bucket);
         dispatch({
           type: ADD_BUCKET,
@@ -393,17 +406,26 @@ const AddFixedEntry =
   ({ entry, from }) =>
     persistFixedEntriesAndRefresh({
       storage,
-      persist: (s) => s.addFixedEntry({ entry, from }),
+      persist: (s) => s.addFixedEntry({ entry: withAddedBy(entry), from }),
     });
 
-// Edits a recurring entry (by id) from the given month forward.
+// Edits a recurring entry (by id) from the given month forward. Each new
+// history state is an independently syncable item, so it gets its own
+// attribution stamp (RFC §2.3).
 const EditFixedEntry =
   ({ storage }) =>
   ({ id, from, amount, description, categories_path }) =>
     persistFixedEntriesAndRefresh({
       storage,
       persist: (s) =>
-        s.editFixedEntry({ id, from, amount, description, categories_path }),
+        s.editFixedEntry({
+          id,
+          from,
+          amount,
+          description,
+          categories_path,
+          addedBy: getAddedBy(),
+        }),
     });
 
 // Removes a recurring entry (by id) from the given month forward.
@@ -412,7 +434,7 @@ const RemoveFixedEntry =
   ({ id, from }) =>
     persistFixedEntriesAndRefresh({
       storage,
-      persist: (s) => s.removeFixedEntry({ id, from }),
+      persist: (s) => s.removeFixedEntry({ id, from, addedBy: getAddedBy() }),
     });
 
 export const ActionCreators = ({ storage }) => {
