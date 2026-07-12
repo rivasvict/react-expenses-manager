@@ -1,9 +1,13 @@
-// In-memory fetch stub implementing the auth + party portion of the sync
-// API contract (RFC §3, endpoints 1–6) so integration tests never touch
-// the network (NFR-5). Backup endpoints join in a later PR.
+// In-memory fetch stub implementing the sync API contract (RFC §3,
+// endpoints 1–10: auth, party, invitations, backup) so integration tests
+// never touch the network (NFR-5).
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
-import { Party, SyncUser } from "../../services/syncApi/contract";
+import {
+  BackupEnvelope,
+  Party,
+  SyncUser,
+} from "../../services/syncApi/contract";
 
 interface FakeUserSeed {
   email: string;
@@ -31,6 +35,7 @@ interface FakePartyRecord {
   // Keyed by normalized code. Plaintext is fine here — this is an
   // in-memory test double, not at-rest storage.
   invitations: { [code: string]: FakeInvitation };
+  backup: { version: string; envelope: BackupEnvelope } | null;
 }
 
 export interface FakeSyncServer {
@@ -49,10 +54,20 @@ export interface FakeSyncServer {
   ) => string;
   /** Adds a redeemable invitation to the seeded party; returns the code. */
   seedInvitation: (options: { password: string; used?: boolean }) => string;
+  /** Flags an already-seeded member as blocked (state transition). */
+  seedBlockMember: (email: string) => void;
+  /** Cancels the seeded party (state transition). */
+  seedCancelParty: () => void;
+  /** Stores a remote backup for the seeded party ("uploaded by Tom"). */
+  seedRemoteBackup: (envelope: BackupEnvelope) => void;
+  /** Everything PUT to /api/party/backup, in order. */
+  getUploadedBackups: () => { baseVersion: string | null; envelope: BackupEnvelope }[];
+  /** Every request the app made, as "METHOD /path" strings (AC-3.1). */
+  getRequests: () => string[];
   /**
    * Makes the next request matching "METHOD /path" fail once: with the
-   * given contract error (e.g. 409 CONFLICT on CAS-retry exhaustion), or
-   * with a network failure when no error is given.
+   * given contract error (e.g. 409 VERSION_CONFLICT), or with a network
+   * failure when no error is given. Repeated calls queue up.
    */
   failNext: (
     request: string,
@@ -167,6 +182,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       canceled: false,
       memberIds: [{ id: organizer.id, blocked: false }],
       invitations: {},
+      backup: null,
     };
     parties.push(party);
     organizer.partyId = party.id;
@@ -361,6 +377,54 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
+    // RFC §3.9–3.10 — backup download/upload. Mirrors the real server's
+    // requirePartyAccess precedence exactly: NO_PARTY, then BLOCKED (403),
+    // then PARTY_CANCELED (410).
+    if (path === "/api/party/backup" && (method === "GET" || method === "PUT")) {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
+      const member = party.memberIds.find(
+        (candidate) => candidate.id === user.id
+      );
+      if (member && member.blocked)
+        return errorResponse(
+          403,
+          "BLOCKED",
+          "You've been removed from this party by its organizer."
+        );
+      if (party.canceled)
+        return errorResponse(410, "PARTY_CANCELED", "This party was canceled.");
+
+      if (method === "GET") {
+        if (!party.backup)
+          return errorResponse(404, "NO_BACKUP", "No backup has been uploaded yet.");
+        return jsonResponse(200, party.backup);
+      }
+
+      // PUT — baseVersion CAS, like the real server (RFC §3.10).
+      const { baseVersion, envelope } = body || {};
+      if (!envelope || envelope.app !== "react-expenses-manager")
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "A valid backup envelope is required."
+        );
+      const currentVersion = party.backup ? party.backup.version : null;
+      if ((baseVersion ?? null) !== currentVersion)
+        return errorResponse(
+          409,
+          "VERSION_CONFLICT",
+          "The party backup changed since your download."
+        );
+      const version = String(Number(currentVersion || "0") + 1);
+      party.backup = { version, envelope };
+      uploadedBackups.push({ baseVersion: baseVersion ?? null, envelope });
+      return jsonResponse(200, { version });
+    }
+
     // RFC §3.7 — organizer blocks a member (AC-2.9).
     const blockMatch = /^\/api\/party\/members\/([^/]+)\/block$/.exec(path);
     if (method === "POST" && blockMatch) {
@@ -411,11 +475,17 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     return errorResponse(404, "NOT_FOUND", "Not found.");
   };
 
-  // One-shot failure injections, keyed by "METHOD /path" (failNext seam).
+  // One-shot failure injections, keyed by "METHOD /path" (failNext seam);
+  // repeated failNext calls for the same key queue up.
   const pendingFailures = new Map<
     string,
-    { status: number; code: string; message: string } | null
+    ({ status: number; code: string; message: string } | null)[]
   >();
+  const uploadedBackups: {
+    baseVersion: string | null;
+    envelope: BackupEnvelope;
+  }[] = [];
+  const requestLog: string[] = [];
 
   const previousFetch = window.fetch;
   window.fetch = (async (input: any, init: any = {}) => {
@@ -429,9 +499,10 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     const method = init.method || "GET";
 
     const failureKey = `${method} ${path}`;
-    if (pendingFailures.has(failureKey)) {
-      const failure = pendingFailures.get(failureKey)!;
-      pendingFailures.delete(failureKey);
+    requestLog.push(failureKey);
+    const queued = pendingFailures.get(failureKey);
+    if (queued && queued.length > 0) {
+      const failure = queued.shift()!;
       // No error given → transport failure, like an unreachable server.
       if (!failure) throw new TypeError("Failed to fetch");
       return errorResponse(failure.status, failure.code, failure.message);
@@ -476,8 +547,34 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       party.invitations[normalizeCode(code)] = { password, used };
       return code;
     },
+    seedBlockMember: (email) => {
+      const user = mustFindByEmail(email);
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        throw new Error("fakeSyncServer.seedBlockMember: user has no party");
+      const member = party.memberIds.find(
+        (candidate) => candidate.id === user.id
+      )!;
+      member.blocked = true;
+    },
+    seedCancelParty: () => {
+      const party = parties[parties.length - 1];
+      if (!party)
+        throw new Error("fakeSyncServer.seedCancelParty: seed a party first");
+      party.canceled = true;
+    },
+    seedRemoteBackup: (envelope) => {
+      const party = parties[parties.length - 1];
+      if (!party)
+        throw new Error("fakeSyncServer.seedRemoteBackup: seed a party first");
+      party.backup = { version: "1", envelope };
+    },
+    getUploadedBackups: () => [...uploadedBackups],
+    getRequests: () => [...requestLog],
     failNext: (request, error) => {
-      pendingFailures.set(request, error || null);
+      const queued = pendingFailures.get(request) || [];
+      queued.push(error || null);
+      pendingFailures.set(request, queued);
     },
     restore: () => {
       window.fetch = previousFetch;
