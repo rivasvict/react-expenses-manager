@@ -5,6 +5,25 @@
 const { createHandlers, ERROR_CODES } = require("./handlers");
 const { deriveEncryptionKey } = require("./invitations");
 
+// Matches "/api/party/members/abc/block" against
+// "/api/party/members/:userId/block" → { userId: "abc" }, or null.
+const matchPath = (pattern, path) => {
+  const patternParts = pattern.split("/");
+  const pathParts = path.split("/");
+  if (patternParts.length !== pathParts.length) return null;
+  const params = {};
+  for (let index = 0; index < patternParts.length; index += 1) {
+    if (patternParts[index].startsWith(":")) {
+      params[patternParts[index].slice(1)] = decodeURIComponent(
+        pathParts[index]
+      );
+    } else if (patternParts[index] !== pathParts[index]) {
+      return null;
+    }
+  }
+  return params;
+};
+
 const createApp = ({ storage, tokenSecret, encryptionSecret, now }) => {
   const handlers = createHandlers({
     storage,
@@ -24,20 +43,27 @@ const createApp = ({ storage, tokenSecret, encryptionSecret, now }) => {
       handler: handlers.createInvitation,
     },
     { method: "POST", path: "/api/party/join", handler: handlers.joinParty },
+    {
+      method: "POST",
+      path: "/api/party/members/:userId/block",
+      handler: handlers.blockMember,
+    },
+    { method: "POST", path: "/api/party/cancel", handler: handlers.cancelParty },
+    { method: "GET", path: "/api/party/backup", handler: handlers.getBackup },
+    { method: "PUT", path: "/api/party/backup", handler: handlers.putBackup },
   ];
 
   // request: { method, path, headers, body } → { status, body }
   const handle = async (request) => {
-    const route = routes.find(
-      (candidate) =>
-        candidate.method === request.method && candidate.path === request.path
-    );
-    if (!route)
-      return {
-        status: 404,
-        body: { error: { code: ERROR_CODES.NOT_FOUND, message: "Not found." } },
-      };
-    return route.handler(request);
+    for (const route of routes) {
+      if (route.method !== request.method) continue;
+      const params = matchPath(route.path, request.path);
+      if (params !== null) return route.handler({ ...request, params });
+    }
+    return {
+      status: 404,
+      body: { error: { code: ERROR_CODES.NOT_FOUND, message: "Not found." } },
+    };
   };
 
   return { handle };
