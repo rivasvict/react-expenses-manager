@@ -131,4 +131,26 @@ describe("joining a party", () => {
       "You already belong to a party. Refresh to see it."
     );
   });
+
+  it("surfaces a server CAS conflict (409 CONFLICT) as a retryable error", async () => {
+    const code = seedInvitedTom("fam-pass");
+    server.failNext("POST /api/party/join", {
+      status: 409,
+      code: "CONFLICT",
+      message: "The party changed concurrently. Please try again.",
+    });
+    const session = server.loginAs(tom.email);
+    const { user } = await renderApp("/party/join", { session });
+
+    await submitJoin(user, code, "fam-pass");
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(
+      "The party changed concurrently. Please try again."
+    );
+
+    // The injected failure is one-shot: the same submission then succeeds.
+    await user.click(screen.getByRole("button", { name: "Join" }));
+    expect(await screen.findByText("Jane's Party")).toBeInTheDocument();
+  });
 });

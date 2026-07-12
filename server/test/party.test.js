@@ -2,9 +2,16 @@
 // join) plus the invitation-at-rest security guarantees (AC-2.4).
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs/promises");
+const os = require("node:os");
+const path = require("node:path");
 const { createApp } = require("../core/router");
 const { createMemoryStorage } = require("../core/storage");
-const { codeLookupHash } = require("../core/invitations");
+const { createFsStorage } = require("../storage-fs");
+const {
+  codeLookupHash,
+  deriveEncryptionKey,
+} = require("../core/invitations");
 
 const TOKEN_SECRET = "test-secret";
 
@@ -214,6 +221,45 @@ test("unknown invitation code returns 404 INVITATION_NOT_FOUND", async () => {
   assert.equal(result.body.error.code, "INVITATION_NOT_FOUND");
 });
 
+test("two concurrent redeems of one code: exactly one succeeds (EC-8 under race)", async () => {
+  // Runs against the fs adapter deliberately — its CAS write awaits between
+  // the version check and the file write, which is exactly where a lost
+  // update would let the same invitation be redeemed twice.
+  const dataDir = await fs.mkdtemp(path.join(os.tmpdir(), "sync-server-test-"));
+  try {
+    const app = createApp({
+      storage: createFsStorage({ dir: dataDir }),
+      tokenSecret: TOKEN_SECRET,
+      encryptionSecret: "test-encryption-secret",
+    });
+    const { jane } = await setupOrganizer(app);
+    const invited = await createInvitation(app, jane.token, "invite-pass");
+    const { code } = invited.body;
+    const tom = await signup(app, {
+      email: "tom@example.com",
+      firstName: "Tom",
+      lastName: "Doe",
+    });
+    const sam = await signup(app, {
+      email: "sam@example.com",
+      firstName: "Sam",
+      lastName: "Doe",
+    });
+
+    const [first, second] = await Promise.all([
+      joinParty(app, tom.token, { code, password: "invite-pass" }),
+      joinParty(app, sam.token, { code, password: "invite-pass" }),
+    ]);
+
+    const statuses = [first.status, second.status].sort();
+    assert.deepEqual(statuses, [200, 410]);
+    const loser = first.status === 410 ? first : second;
+    assert.equal(loser.body.error.code, "INVITATION_USED");
+  } finally {
+    await fs.rm(dataDir, { recursive: true, force: true });
+  }
+});
+
 test("no plaintext invitation code or password at rest (AC-2.4/NFR-2)", async () => {
   const { app, storage } = makeApp();
   const { jane } = await setupOrganizer(app);
@@ -224,7 +270,7 @@ test("no plaintext invitation code or password at rest (AC-2.4/NFR-2)", async ()
 
   // Read the stored party record back and assert neither the code (in any
   // form) nor the invite password appears anywhere in the serialized
-  // document — only the sha256 lookup key and the AES-256-GCM blob.
+  // document — only the keyed lookup hash and the AES-256-GCM blob.
   const partyId = (await me(app, jane.token)).body.party.id;
   const partyRecord = await storage.readJsonVersioned(`parties/${partyId}`);
   const serializedParty = JSON.stringify(partyRecord.value);
@@ -232,9 +278,10 @@ test("no plaintext invitation code or password at rest (AC-2.4/NFR-2)", async ()
   assert.ok(!serializedParty.includes(bareCode));
   assert.ok(!serializedParty.includes(invitePassword));
 
-  // The lookup pointer holds only a hash-keyed party id.
+  // The lookup pointer holds only a hash-keyed party id; the hash is
+  // keyed (HMAC) with the same secret the app was configured with.
   const pointer = await storage.readJson(
-    `invitations/${codeLookupHash(code)}`
+    `invitations/${codeLookupHash(code, deriveEncryptionKey("test-encryption-secret"))}`
   );
   assert.deepEqual(pointer, { partyId });
 });
