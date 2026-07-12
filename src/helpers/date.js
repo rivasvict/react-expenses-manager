@@ -20,6 +20,20 @@ const getTimestampFromMonthAndYear = ({ month, year }) =>
 const getYearMonthKey = ({ year, month }) =>
   `${year}-${String(month + 1).padStart(2, "0")}`;
 
+// Short human-relative rendering for "Last synced: …" captions. Coarse on
+// purpose — a muted caption, not a clock.
+const formatRelativeTime = (timestampMs, nowMs = Date.now()) => {
+  const elapsedMs = Math.max(0, nowMs - timestampMs);
+  const minutes = Math.floor(elapsedMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return days === 1 ? "1 day ago" : `${days} days ago`;
+  return dayjs(timestampMs).format("MMM D, YYYY");
+};
+
 export {
   getCurrentYear,
   getCurrentMonth,
@@ -27,4 +41,5 @@ export {
   getCurrentTimestamp,
   getTimestampFromMonthAndYear,
   getYearMonthKey,
+  formatRelativeTime,
 };
