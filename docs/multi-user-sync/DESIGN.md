@@ -290,6 +290,22 @@ hint — so it reaches screen readers regardless of the button's focus state
 - **Download failed:** `role="alert"` banner: *"Couldn't reach your party.
   Check your connection and try again."* Button re-enabled, label back to
   "Sync with party" (AC-3.11 — nothing local touched, so simple retry).
+- **Rejected by the server — stale local state** (EC-9, AC-2.10/2.11): the
+  user may have been blocked, or the party canceled, *after* this screen
+  rendered. The backend rejects the attempt; never surface it as the generic
+  connection error above — that would tell a blocked user to "try again"
+  forever. Same defensive stale-state treatment as EC-6 (3.5), with distinct
+  `role="alert"` banners:
+  - Blocked: *"This sync was declined: you've been removed from your party
+    by its organizer. Nothing on this device was changed."*
+  - Canceled: *"This sync was declined: your party was canceled. Nothing on
+    this device was changed."*
+
+  After either alert, the sync card re-renders into the matching disabled
+  state from the 4.1 table (disabled button + its explanatory caption), so
+  the screen ends up exactly as if it had loaded with fresh state. The same
+  two banners and re-render apply when the rejection happens at the
+  *upload* step instead (see 4.3.4).
 
 ### 4.3 The review wizard (`/sync-review`)
 
@@ -398,6 +414,27 @@ backup in one step (AC-3.8):
   becomes `Retry` — it re-attempts the same staged decision set without
   re-running review. Local data is untouched (nothing was committed pre-
   upload, per the staging model above).
+- **Version conflict — the party backup changed mid-review (EC-2):** the
+  server's version check rejects the upload because another member synced
+  between this user's download and upload. Stays on the summary screen,
+  `role="alert"`: *"Your party synced new changes while you were reviewing.
+  Sync again to pick them up — you'll review everything fresh, including
+  what you just saw."* The primary button becomes `Sync again`: it discards
+  the staged decisions and re-runs the sync from the top (fresh download →
+  wizard). Secondary button remains `Cancel review` (returns to
+  `/data-management`, also discarding). **Staged decisions are discarded,
+  not carried forward:** the conflicting backup may contain newer versions
+  of the very items just reviewed (EC-5 — a member may have modified one),
+  so replaying stale decisions could silently accept outdated values, the
+  exact silent loss EC-2 forbids. Discarding keeps one invariant — decisions
+  apply only to the exact download they were made against — and at family
+  scale (small diffs, infrequent syncs) a re-review costs seconds. Local
+  data is untouched, as with every pre-commit failure.
+- **Rejected — blocked / party canceled (EC-9, AC-2.10):** if the user was
+  blocked or the party canceled mid-review, the upload is rejected the same
+  way a fresh sync would be. Discard staged decisions, return to
+  `/data-management`, and show the corresponding `role="alert"` banner and
+  disabled-card re-render defined in 4.2.
 
 **Cancel review** (available on the summary, and as a smaller text link on
 every item card): confirm dialog — *"Stop reviewing? None of your choices in
