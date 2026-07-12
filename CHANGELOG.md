@@ -5,6 +5,34 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-07-12
+
+### Added
+- Sync engine + Data Management sync card (multi-user sync, PR 4): a
+  manual "Sync with party" button — never automatic — that downloads the
+  party backup, diffs it against local data and handles every no-review
+  path end to end
+- First sync (no remote backup yet) uploads local data as the party's
+  starting point with a distinct confirmation; identical states show
+  "You're up to date."; local-only additions upload silently
+- Explanatory captions under the button for every disabled state (logged
+  out, no party, blocked, canceled) plus a "Last synced" caption;
+  download failures, stale blocked/canceled rejections and repeated
+  version conflicts each get their own alert, leaving local data
+  untouched
+- Incoming changes route to a minimal "Review changes" screen offering
+  only Cancel review (nothing is ever applied unreviewed); the full
+  review wizard arrives next
+- Pure merge engine (`syncMergeHelper`): canonical hashing, item
+  identity, additive-only diff with permanent per-item rejection memory,
+  and merge application incl. fixed-entry tombstones and
+  case-insensitive bucket keys
+- Server: real backup upload with baseVersion compare-and-swap (409
+  VERSION_CONFLICT on mismatch, create-only for the first sync);
+  oversized bodies now return 413 PAYLOAD_TOO_LARGE; malformed
+  percent-encoding in paths returns 404 instead of 500
+- Existing Download/Restore/Clear cards are byte-identical and untouched
+
 ## [1.4.0] - 2026-07-12
 
 ### Added
