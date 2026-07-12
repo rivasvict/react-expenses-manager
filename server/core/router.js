@@ -14,9 +14,14 @@ const matchPath = (pattern, path) => {
   const params = {};
   for (let index = 0; index < patternParts.length; index += 1) {
     if (patternParts[index].startsWith(":")) {
-      params[patternParts[index].slice(1)] = decodeURIComponent(
-        pathParts[index]
-      );
+      try {
+        params[patternParts[index].slice(1)] = decodeURIComponent(
+          pathParts[index]
+        );
+      } catch (decodeError) {
+        // Malformed percent-encoding is a no-match (→ 404), never a 500.
+        return null;
+      }
     } else if (patternParts[index] !== pathParts[index]) {
       return null;
     }
