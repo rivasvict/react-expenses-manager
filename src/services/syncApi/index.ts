@@ -116,3 +116,26 @@ export const joinParty = ({
     body: { code, password },
     token,
   });
+
+export const blockMember = ({
+  token,
+  userId,
+}: {
+  token: string;
+  userId: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>(
+    `/api/party/members/${encodeURIComponent(userId)}/block`,
+    { method: "POST", body: {}, token }
+  );
+
+export const cancelParty = ({
+  token,
+}: {
+  token: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>("/api/party/cancel", {
+    method: "POST",
+    body: {},
+    token,
+  });
