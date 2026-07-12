@@ -10,13 +10,15 @@ const { createFsStorage } = require("./storage-fs");
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
-// Dev-only default secret; override in any real deployment (RFC §6).
+// Dev-only default secrets; override in any real deployment (RFC §6).
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-token-secret";
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || "dev-encryption-key";
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
 const app = createApp({
   storage: createFsStorage({ dir: path.join(__dirname, ".data") }),
   tokenSecret: TOKEN_SECRET,
+  encryptionSecret: ENCRYPTION_KEY,
 });
 
 const readBody = (request) =>

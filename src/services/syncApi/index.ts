@@ -2,12 +2,25 @@
 // failures are surfaced as SyncApiError with the server's error code, or
 // NETWORK_ERROR when the server is unreachable.
 import { config } from "../../config";
+import { clearSession } from "../session";
 import {
   AuthResponse,
+  InvitationResponse,
   MeResponse,
+  PartyResponse,
   SYNC_ERROR_CODES,
   createSyncApiError,
 } from "./contract";
+
+// Central 401 handling: an UNAUTHORIZED response (expired/invalid token —
+// distinct from INVALID_CREDENTIALS on login) means the session is dead.
+// The client clears it and notifies the store (registered at setupStore)
+// so the UI degrades to logged-out instead of looping on failed requests.
+let onUnauthorized: (() => void) | null = null;
+
+export const setOnUnauthorized = (handler: (() => void) | null): void => {
+  onUnauthorized = handler;
+};
 
 interface RequestOptions {
   method?: string;
@@ -38,8 +51,13 @@ const request = async <T>(
 
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
+    const code = payload?.error?.code || SYNC_ERROR_CODES.NETWORK_ERROR;
+    if (response.status === 401 && code === SYNC_ERROR_CODES.UNAUTHORIZED) {
+      clearSession();
+      if (onUnauthorized) onUnauthorized();
+    }
     throw createSyncApiError({
-      code: payload?.error?.code || SYNC_ERROR_CODES.NETWORK_ERROR,
+      code,
       message: payload?.error?.message || "Something went wrong.",
       status: response.status,
     });
@@ -63,3 +81,38 @@ export const login = (data: {
 
 export const getMe = ({ token }: { token: string }): Promise<MeResponse> =>
   request<MeResponse>("/api/me", { token });
+
+export const createParty = ({
+  token,
+}: {
+  token: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>("/api/party", { method: "POST", body: {}, token });
+
+export const createInvitation = ({
+  token,
+  password,
+}: {
+  token: string;
+  password: string;
+}): Promise<InvitationResponse> =>
+  request<InvitationResponse>("/api/party/invitations", {
+    method: "POST",
+    body: { password },
+    token,
+  });
+
+export const joinParty = ({
+  token,
+  code,
+  password,
+}: {
+  token: string;
+  code: string;
+  password: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>("/api/party/join", {
+    method: "POST",
+    body: { code, password },
+    token,
+  });

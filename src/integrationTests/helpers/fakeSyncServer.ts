@@ -1,9 +1,9 @@
-// In-memory fetch stub implementing the auth portion of the sync API
-// contract (RFC §3, endpoints 1–3) so integration tests never touch the
-// network (NFR-5). Party/backup endpoints join in later PRs.
+// In-memory fetch stub implementing the auth + party portion of the sync
+// API contract (RFC §3, endpoints 1–6) so integration tests never touch
+// the network (NFR-5). Backup endpoints join in a later PR.
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
-import { SyncUser } from "../../services/syncApi/contract";
+import { Party, SyncUser } from "../../services/syncApi/contract";
 
 interface FakeUserSeed {
   email: string;
@@ -14,6 +14,23 @@ interface FakeUserSeed {
 
 interface FakeUserRecord extends FakeUserSeed {
   id: string;
+  partyId: string | null;
+}
+
+interface FakeInvitation {
+  password: string;
+  used: boolean;
+}
+
+interface FakePartyRecord {
+  id: string;
+  name: string;
+  organizerId: string;
+  canceled: boolean;
+  memberIds: { id: string; blocked: boolean }[];
+  // Keyed by normalized code. Plaintext is fine here — this is an
+  // in-memory test double, not at-rest storage.
+  invitations: { [code: string]: FakeInvitation };
 }
 
 export interface FakeSyncServer {
@@ -21,6 +38,22 @@ export interface FakeSyncServer {
   seedUser: (seed: FakeUserSeed) => SyncUser;
   /** Pre-writes sync.session for a seeded user — a logged-in app start. */
   loginAs: (email: string) => SyncSession;
+  /**
+   * Creates a party with already-seeded users: the first email becomes the
+   * organizer, the rest join as members. Returns the party id.
+   */
+  seedPartyWithMembers: (emails: string[]) => string;
+  /** Adds a redeemable invitation to the seeded party; returns the code. */
+  seedInvitation: (options: { password: string; used?: boolean }) => string;
+  /**
+   * Makes the next request matching "METHOD /path" fail once: with the
+   * given contract error (e.g. 409 CONFLICT on CAS-retry exhaustion), or
+   * with a network failure when no error is given.
+   */
+  failNext: (
+    request: string,
+    error?: { status: number; code: string; message: string }
+  ) => void;
   /** Restores whatever window.fetch was before install. */
   restore: () => void;
 }
@@ -55,8 +88,15 @@ const decodeTokenPayload = (
   }
 };
 
+// Same normalization as the real server: "K7X9-QP2M" ≡ "k7x9qp2m".
+const normalizeCode = (code: string): string =>
+  String(code || "").replace(/-/g, "").trim().toUpperCase();
+
+const CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
 export const installFakeSyncServer = (): FakeSyncServer => {
   const users: FakeUserRecord[] = [];
+  const parties: FakePartyRecord[] = [];
   let nextId = 1;
   const baseUrl = config.REACT_APP_SYNC_API_HOST;
 
@@ -72,6 +112,33 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       (user) => user.email.toLowerCase() === (email || "").toLowerCase()
     );
 
+  const mustFindByEmail = (email: string): FakeUserRecord => {
+    const user = findByEmail(email);
+    if (!user) throw new Error(`fakeSyncServer: no seeded user for ${email}`);
+    return user;
+  };
+
+  // Party as the requester sees it (RFC §3 /api/me shape).
+  const publicParty = (party: FakePartyRecord, requesterId: string): Party => ({
+    id: party.id,
+    name: party.name,
+    organizerId: party.organizerId,
+    canceled: party.canceled,
+    youAreBlocked: party.memberIds.some(
+      (member) => member.id === requesterId && member.blocked
+    ),
+    members: party.memberIds.map(({ id, blocked }) => {
+      const user = users.find((candidate) => candidate.id === id)!;
+      return {
+        id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        blocked,
+      };
+    }),
+  });
+
   const jsonResponse = (status: number, body: unknown): Response =>
     ({
       ok: status < 400,
@@ -83,10 +150,56 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     jsonResponse(status, { error: { code, message } });
 
   const createUser = (seed: FakeUserSeed): FakeUserRecord => {
-    const user: FakeUserRecord = { ...seed, id: `user-${nextId++}` };
+    const user: FakeUserRecord = { ...seed, id: `user-${nextId++}`, partyId: null };
     users.push(user);
     return user;
   };
+
+  const createPartyRecord = (organizer: FakeUserRecord): FakePartyRecord => {
+    const party: FakePartyRecord = {
+      id: `party-${nextId++}`,
+      name: `${organizer.firstName}'s Party`,
+      organizerId: organizer.id,
+      canceled: false,
+      memberIds: [{ id: organizer.id, blocked: false }],
+      invitations: {},
+    };
+    parties.push(party);
+    organizer.partyId = party.id;
+    return party;
+  };
+
+  const generateCode = (): string => {
+    const chars = Array.from(
+      { length: 8 },
+      () => CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)]
+    ).join("");
+    return `${chars.slice(0, 4)}-${chars.slice(4)}`;
+  };
+
+  // Resolves the Authorization header to the stored user, mirroring the
+  // real server: case-insensitive header lookup and exp enforcement.
+  const authenticate = (
+    headers: Record<string, string>
+  ): FakeUserRecord | null => {
+    const authorizationKey = Object.keys(headers).find(
+      (key) => key.toLowerCase() === "authorization"
+    );
+    const match = /^Bearer (.+)$/.exec(
+      (authorizationKey && headers[authorizationKey]) || ""
+    );
+    const payload = match ? decodeTokenPayload(match[1]) : null;
+    if (
+      !payload ||
+      typeof payload.exp !== "number" ||
+      payload.exp * 1000 <= Date.now()
+    )
+      return null;
+    return users.find((candidate) => candidate.id === payload.sub) || null;
+  };
+
+  const unauthorized = () =>
+    errorResponse(401, "UNAUTHORIZED", "You need to sign in again.");
 
   const handle = (
     method: string,
@@ -128,30 +241,112 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     }
 
     if (method === "GET" && path === "/api/me") {
-      // Like the real server: headers are matched case-insensitively (node
-      // lowercases them) and an expired token is rejected, not just a
-      // malformed one.
-      const authorizationKey = Object.keys(headers).find(
-        (key) => key.toLowerCase() === "authorization"
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      return jsonResponse(200, {
+        user: publicUser(user),
+        party: party ? publicParty(party, user.id) : null,
+      });
+    }
+
+    if (method === "POST" && path === "/api/party") {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      if (user.partyId)
+        return errorResponse(
+          409,
+          "ALREADY_IN_PARTY",
+          "You already belong to a party."
+        );
+      const party = createPartyRecord(user);
+      return jsonResponse(201, { party: publicParty(party, user.id) });
+    }
+
+    if (method === "POST" && path === "/api/party/invitations") {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      if (!user.partyId)
+        return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
+      const party = parties.find((candidate) => candidate.id === user.partyId)!;
+      if (party.organizerId !== user.id)
+        return errorResponse(
+          403,
+          "NOT_ORGANIZER",
+          "Only the organizer can invite members."
+        );
+      if (party.canceled)
+        return errorResponse(410, "PARTY_CANCELED", "This party was canceled.");
+      const { password } = body || {};
+      if (!password)
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "An invitation password is required."
+        );
+      const code = generateCode();
+      party.invitations[normalizeCode(code)] = { password, used: false };
+      return jsonResponse(201, { code });
+    }
+
+    if (method === "POST" && path === "/api/party/join") {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const { code, password } = body || {};
+      if (!code || !password)
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "An invitation code and password are required."
+        );
+      // EC-6 first: an existing membership never consumes the invitation.
+      if (user.partyId)
+        return errorResponse(
+          409,
+          "ALREADY_IN_PARTY",
+          "You already belong to a party."
+        );
+      const normalized = normalizeCode(code);
+      const party = parties.find(
+        (candidate) => candidate.invitations[normalized] !== undefined
       );
-      const match = /^Bearer (.+)$/.exec(
-        (authorizationKey && headers[authorizationKey]) || ""
-      );
-      const payload = match ? decodeTokenPayload(match[1]) : null;
-      const isExpired =
-        !payload ||
-        typeof payload.exp !== "number" ||
-        payload.exp * 1000 <= Date.now();
-      const user = isExpired
-        ? undefined
-        : users.find((candidate) => candidate.id === payload.sub);
-      if (!user)
-        return errorResponse(401, "UNAUTHORIZED", "You need to sign in again.");
-      return jsonResponse(200, { user: publicUser(user), party: null });
+      if (!party)
+        return errorResponse(
+          404,
+          "INVITATION_NOT_FOUND",
+          "That invitation code doesn't exist."
+        );
+      if (party.canceled)
+        return errorResponse(410, "PARTY_CANCELED", "This party was canceled.");
+      const invitation = party.invitations[normalized];
+      // AC-2.6: once used, permanently rejected — right or wrong password.
+      if (invitation.used)
+        return errorResponse(
+          410,
+          "INVITATION_USED",
+          "This invitation has already been used."
+        );
+      // EC-7: wrong password rejected, invitation NOT consumed.
+      if (invitation.password !== password)
+        return errorResponse(
+          401,
+          "INVITATION_WRONG_PASSWORD",
+          "That password doesn't match this invitation."
+        );
+      invitation.used = true;
+      party.memberIds.push({ id: user.id, blocked: false });
+      user.partyId = party.id;
+      return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
     return errorResponse(404, "NOT_FOUND", "Not found.");
   };
+
+  // One-shot failure injections, keyed by "METHOD /path" (failNext seam).
+  const pendingFailures = new Map<
+    string,
+    { status: number; code: string; message: string } | null
+  >();
 
   const previousFetch = window.fetch;
   window.fetch = (async (input: any, init: any = {}) => {
@@ -162,22 +357,54 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       );
     }
     const path = url.slice(baseUrl.length);
+    const method = init.method || "GET";
+
+    const failureKey = `${method} ${path}`;
+    if (pendingFailures.has(failureKey)) {
+      const failure = pendingFailures.get(failureKey)!;
+      pendingFailures.delete(failureKey);
+      // No error given → transport failure, like an unreachable server.
+      if (!failure) throw new TypeError("Failed to fetch");
+      return errorResponse(failure.status, failure.code, failure.message);
+    }
+
     const body = init.body ? JSON.parse(init.body) : null;
-    return handle(init.method || "GET", path, body, init.headers || {});
+    return handle(method, path, body, init.headers || {});
   }) as typeof fetch;
 
   return {
     seedUser: (seed) => publicUser(createUser(seed)),
     loginAs: (email) => {
-      const user = findByEmail(email);
-      if (!user)
-        throw new Error(`fakeSyncServer.loginAs: no seeded user for ${email}`);
+      const user = mustFindByEmail(email);
       const session: SyncSession = {
         token: makeToken(user.id),
         user: publicUser(user),
       };
       setSession(session);
       return session;
+    },
+    seedPartyWithMembers: (emails) => {
+      const [organizerEmail, ...memberEmails] = emails;
+      const party = createPartyRecord(mustFindByEmail(organizerEmail));
+      memberEmails.forEach((email) => {
+        const member = mustFindByEmail(email);
+        party.memberIds.push({ id: member.id, blocked: false });
+        member.partyId = party.id;
+      });
+      return party.id;
+    },
+    seedInvitation: ({ password, used = false }) => {
+      const party = parties[parties.length - 1];
+      if (!party)
+        throw new Error(
+          "fakeSyncServer.seedInvitation: seed a party first (seedPartyWithMembers)"
+        );
+      const code = generateCode();
+      party.invitations[normalizeCode(code)] = { password, used };
+      return code;
+    },
+    failNext: (request, error) => {
+      pendingFailures.set(request, error || null);
     },
     restore: () => {
       window.fetch = previousFetch;
