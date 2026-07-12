@@ -1,12 +1,13 @@
 // Invitation codes and encrypted invitation records (RFC §5, AC-2.4/NFR-2).
 //
 // The code is 8 random base32 chars shown once as XXXX-XXXX. It is stored
-// only as a sha256 lookup key; the record itself ({ password: scrypt
-// fields, used, createdBy, createdAt }) is AES-256-GCM-encrypted with the
-// server ENCRYPTION_KEY — neither the code nor the invite password ever
-// exists in plaintext at rest.
+// only as a keyed lookup hash (HMAC-SHA256 under the server encryption
+// key — a bare hash of a 40-bit code could be brute-forced offline from a
+// leaked record); the record itself ({ password: scrypt fields, used,
+// createdBy, createdAt }) is AES-256-GCM-encrypted with the same key —
+// neither the code nor the invite password ever exists in plaintext at
+// rest.
 const crypto = require("node:crypto");
-const { sha256Hex } = require("./crypto");
 
 // RFC 4648 base32 alphabet — unambiguous uppercase letters and digits.
 const BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
@@ -18,7 +19,8 @@ const IV_LENGTH = 12;
 const normalizeCode = (code) =>
   String(code || "").replace(/-/g, "").trim().toUpperCase();
 
-const codeLookupHash = (code) => sha256Hex(normalizeCode(code));
+const codeLookupHash = (code, key) =>
+  crypto.createHmac("sha256", key).update(normalizeCode(code)).digest("hex");
 
 const generateCode = () => {
   const bytes = crypto.randomBytes(CODE_LENGTH);
