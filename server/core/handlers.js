@@ -152,6 +152,13 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
     return storage.readJson(pointer.userKey);
   };
 
+  // Honest scope note on race safety: the CAS machinery below guarantees
+  // single-use invitation consumption (two concurrent redeems of one code
+  // → exactly one success). The user.partyId check-then-write in
+  // createParty/joinParty is NOT under the same guard, so one user racing
+  // their own requests from two tabs could theoretically end up referenced
+  // by two parties. Accepted at family scale (RFC §2.1) — deliberately not
+  // fixed.
   const setUserPartyId = async (user, partyId) => {
     await storage.writeJson(userKey(user.email), { ...user, partyId });
   };
@@ -237,7 +244,7 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
       );
 
     const code = generateCode();
-    const lookupHash = codeLookupHash(code);
+    const lookupHash = codeLookupHash(code, encryptionKey);
     const encryptedRecord = encryptRecord(
       {
         password: hashPassword(password),
@@ -290,7 +297,7 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
         "You already belong to a party."
       );
 
-    const lookupHash = codeLookupHash(code);
+    const lookupHash = codeLookupHash(code, encryptionKey);
     const pointer = await storage.readJson(invitationPointerKey(lookupHash));
     if (!pointer)
       return error(

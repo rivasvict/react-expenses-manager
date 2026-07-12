@@ -45,6 +45,15 @@ export interface FakeSyncServer {
   seedPartyWithMembers: (emails: string[]) => string;
   /** Adds a redeemable invitation to the seeded party; returns the code. */
   seedInvitation: (options: { password: string; used?: boolean }) => string;
+  /**
+   * Makes the next request matching "METHOD /path" fail once: with the
+   * given contract error (e.g. 409 CONFLICT on CAS-retry exhaustion), or
+   * with a network failure when no error is given.
+   */
+  failNext: (
+    request: string,
+    error?: { status: number; code: string; message: string }
+  ) => void;
   /** Restores whatever window.fetch was before install. */
   restore: () => void;
 }
@@ -333,6 +342,12 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     return errorResponse(404, "NOT_FOUND", "Not found.");
   };
 
+  // One-shot failure injections, keyed by "METHOD /path" (failNext seam).
+  const pendingFailures = new Map<
+    string,
+    { status: number; code: string; message: string } | null
+  >();
+
   const previousFetch = window.fetch;
   window.fetch = (async (input: any, init: any = {}) => {
     const url = typeof input === "string" ? input : input?.url;
@@ -342,8 +357,19 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       );
     }
     const path = url.slice(baseUrl.length);
+    const method = init.method || "GET";
+
+    const failureKey = `${method} ${path}`;
+    if (pendingFailures.has(failureKey)) {
+      const failure = pendingFailures.get(failureKey)!;
+      pendingFailures.delete(failureKey);
+      // No error given → transport failure, like an unreachable server.
+      if (!failure) throw new TypeError("Failed to fetch");
+      return errorResponse(failure.status, failure.code, failure.message);
+    }
+
     const body = init.body ? JSON.parse(init.body) : null;
-    return handle(init.method || "GET", path, body, init.headers || {});
+    return handle(method, path, body, init.headers || {});
   }) as typeof fetch;
 
   return {
@@ -376,6 +402,9 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       const code = generateCode();
       party.invitations[normalizeCode(code)] = { password, used };
       return code;
+    },
+    failNext: (request, error) => {
+      pendingFailures.set(request, error || null);
     },
     restore: () => {
       window.fetch = previousFetch;
