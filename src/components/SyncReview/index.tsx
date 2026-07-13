@@ -14,8 +14,8 @@ import {
   SyncOutcome,
 } from "../../redux/syncManager/syncThunk";
 import { refreshMe } from "../../redux/syncManager/actionCreators";
-import { SYNC_DECLINED_SET } from "../../redux/syncManager/actions";
-import { PendingReview, DeclinedReason } from "../../redux/syncManager/reducer";
+import { SYNC_CARD_NOTICE_SET } from "../../redux/syncManager/actions";
+import { PendingReview, SyncCardNotice } from "../../redux/syncManager/reducer";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
   SYNC_ERROR_CODES,
@@ -43,7 +43,7 @@ interface SyncReviewProps {
   onSyncAgain: () => Promise<SyncOutcome>;
   onClearPendingReview: () => void;
   onRefreshMe: () => void;
-  onSetDeclined: (declined: DeclinedReason) => void;
+  onSetCardNotice: (cardNotice: SyncCardNotice) => void;
 }
 
 /**
@@ -62,7 +62,7 @@ const SyncReview = ({
   onSyncAgain,
   onClearPendingReview,
   onRefreshMe,
-  onSetDeclined,
+  onSetCardNotice,
 }: SyncReviewProps) => {
   const history = useHistory();
   const [decisions, setDecisions] = useState<{ [key: string]: Decision }>({});
@@ -76,9 +76,25 @@ const SyncReview = ({
   const reviewedCount = items.length - remaining.length;
   const onSummary = items.length > 0 && remaining.length === 0;
 
-  // Focus management (DESIGN §5): mount and every advance move focus to
-  // the card container so the new content reads in natural order.
+  // Focus management (DESIGN §5): the first mount focuses the screen
+  // heading (announcing "Review changes"); every advance afterwards moves
+  // focus to the new card/summary container so its content reads in
+  // natural order.
+  const hasFocusedHeadingRef = useRef(false);
   useEffect(() => {
+    if (!hasFocusedHeadingRef.current) {
+      hasFocusedHeadingRef.current = true;
+      // MainContentContainer owns the heading element, so it is reached
+      // by query rather than by ref.
+      const heading = document.querySelector<HTMLElement>(
+        ".sync-review .sub-title h3"
+      );
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus();
+        return;
+      }
+    }
     cardRef.current?.focus();
   }, [currentItem?.key, onSummary, isDone]);
 
@@ -164,7 +180,7 @@ const SyncReview = ({
       ) {
         // Blocked/canceled mid-review: discard, return, and let the Data
         // Management card show the §4.2 banner + disabled re-render.
-        onSetDeclined(
+        onSetCardNotice(
           uploadError.code === SYNC_ERROR_CODES.BLOCKED ? "blocked" : "canceled"
         );
         onClearPendingReview();
@@ -188,6 +204,23 @@ const SyncReview = ({
         history.push("/data-management");
       }
     } catch (syncError) {
+      // The re-sync itself failed — never land silently on an idle card.
+      // Carry a one-shot notice for the Data Management card's banner.
+      if (
+        isSyncApiError(syncError) &&
+        syncError.code === SYNC_ERROR_CODES.BLOCKED
+      ) {
+        onSetCardNotice("blocked");
+        onRefreshMe();
+      } else if (
+        isSyncApiError(syncError) &&
+        syncError.code === SYNC_ERROR_CODES.PARTY_CANCELED
+      ) {
+        onSetCardNotice("canceled");
+        onRefreshMe();
+      } else {
+        onSetCardNotice("connection");
+      }
       onClearPendingReview();
       history.push("/data-management");
     }
@@ -266,7 +299,7 @@ const SyncReview = ({
             onAcceptAll={handleAcceptAll}
             onRejectAll={handleRejectAll}
           />
-          <div ref={cardRef} tabIndex={-1}>
+          <div ref={cardRef} tabIndex={-1} data-testid="review-card-container">
             <ReviewItemCard
               key={currentItem.key}
               item={currentItem}
@@ -296,8 +329,8 @@ const mapActionsToProps = (dispatch: any) => ({
   onSyncAgain: () => dispatch(syncWithParty()),
   onClearPendingReview: () => dispatch(clearPendingReview()),
   onRefreshMe: () => dispatch(refreshMe()),
-  onSetDeclined: (declined: DeclinedReason) =>
-    dispatch({ type: SYNC_DECLINED_SET, payload: { declined } }),
+  onSetCardNotice: (cardNotice: SyncCardNotice) =>
+    dispatch({ type: SYNC_CARD_NOTICE_SET, payload: { cardNotice } }),
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(SyncReview);
