@@ -5,6 +5,33 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.1] - 2026-07-13
+
+### Added
+- Cloud deployment (multi-user sync, PR 6): `server/lambda.js` (Lambda
+  Function URL adapter) and `server/storage-s3.js` (dependency-free S3
+  adapter with SigV4 signing and conditional-write compare-and-swap),
+  unit-tested with injected doubles — CI never talks to AWS; full
+  step-by-step guide in `docs/multi-user-sync/DEPLOYMENT.md` (bucket,
+  Lambda, IAM, env vars, CORS, secrets generation, cost notes)
+- Automated NFR-2 sweep: a server test runs the full account/party/
+  invitation/backup lifecycle on the real fs storage and asserts no
+  plaintext password, invitation code or invitation password appears at
+  rest or in logs
+- DoD audit (`docs/multi-user-sync/DOD-AUDIT.md`) mapping every PRD
+  Definition-of-Done item and QA-flagged gap to its covering test, plus
+  gap-closing tests: dead-token fallback to logged-out, blocking is not
+  retroactive to already-synced entries, and zero sync requests without
+  explicit user action
+
+### Fixed
+- Review wizard: a failed "Sync again" after a version conflict now
+  returns to Data Management with the connection banner instead of
+  landing silently on an idle card
+- Review wizard: opening the wizard now focuses the "Review changes"
+  heading (screen readers announce the screen); advancing between items
+  keeps moving focus to the new card
+
 ## [1.6.0] - 2026-07-13
 
 ### Added
