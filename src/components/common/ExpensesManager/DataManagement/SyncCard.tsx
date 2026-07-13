@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Button, Col } from "react-bootstrap";
 import { refreshMe } from "../../../../redux/syncManager/actionCreators";
+import { SYNC_DECLINED_SET } from "../../../../redux/syncManager/actions";
+import { DeclinedReason } from "../../../../redux/syncManager/reducer";
 import {
   syncWithParty,
   SyncOutcome,
@@ -20,8 +22,10 @@ interface SyncCardProps {
   session: SyncSession | null;
   party: Party | null;
   partyLoaded: boolean;
-  onRefreshMe: () => void;
+  declined: DeclinedReason | null;
+  onRefreshMe: () => Promise<boolean>;
   onSync: () => Promise<SyncOutcome>;
+  onClearDeclined: () => void;
 }
 
 // DESIGN §4.2 banner copy, keyed by outcome/error.
@@ -44,7 +48,8 @@ const COPY = {
 const getCaption = (
   session: SyncSession | null,
   party: Party | null,
-  partyLoaded: boolean
+  partyLoaded: boolean,
+  meCheckFailed: boolean
 ): { enabled: boolean; caption: string } => {
   if (!session)
     return {
@@ -52,7 +57,12 @@ const getCaption = (
       caption: "Sign in and join a party to sync your entries across devices.",
     };
   if (!partyLoaded && !party)
-    return { enabled: false, caption: "Checking your party…" };
+    return {
+      enabled: false,
+      caption: meCheckFailed
+        ? "Couldn't check your party. It will retry when you reopen this screen."
+        : "Checking your party…",
+    };
   if (!party)
     return {
       enabled: false,
@@ -88,21 +98,43 @@ const SyncCard = ({
   session,
   party,
   partyLoaded,
+  declined,
   onRefreshMe,
   onSync,
+  onClearDeclined,
 }: SyncCardProps) => {
   const history = useHistory();
   const [isSyncing, setIsSyncing] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [alert, setAlert] = useState<string | null>(null);
+  const [meCheckFailed, setMeCheckFailed] = useState(false);
 
   // Party state drives the gating captions; /me is refreshed on mount
-  // (RFC §2.2) — this is metadata only, never a backup call.
+  // (RFC §2.2) — this is metadata only, never a backup call. A failed
+  // check flips to an honest caption instead of "Checking…" forever.
   useEffect(() => {
-    if (session) onRefreshMe();
+    if (!session) return;
+    onRefreshMe().then((succeeded) => {
+      if (!succeeded) setMeCheckFailed(true);
+    });
   }, [session, onRefreshMe]);
 
-  const { enabled, caption } = getCaption(session, party, partyLoaded);
+  // A blocked/canceled rejection discovered mid-review (DESIGN 4.3.4)
+  // lands here as the same §4.2 banner a direct sync would have shown.
+  useEffect(() => {
+    if (!declined) return;
+    setAlert(
+      declined === "blocked" ? COPY.declinedBlocked : COPY.declinedCanceled
+    );
+    onClearDeclined();
+  }, [declined, onClearDeclined]);
+
+  const { enabled, caption } = getCaption(
+    session,
+    party,
+    partyLoaded,
+    meCheckFailed
+  );
 
   const handleSync = async () => {
     setIsSyncing(true);
@@ -183,11 +215,14 @@ const mapStateToProps = (state: any) => ({
   session: state.syncManager.session,
   party: state.syncManager.party,
   partyLoaded: state.syncManager.partyLoaded,
+  declined: state.syncManager.declined,
 });
 
 const mapActionsToProps = (dispatch: any) => ({
   onRefreshMe: () => dispatch(refreshMe()),
   onSync: () => dispatch(syncWithParty()),
+  onClearDeclined: () =>
+    dispatch({ type: SYNC_DECLINED_SET, payload: { declined: null } }),
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(SyncCard);
