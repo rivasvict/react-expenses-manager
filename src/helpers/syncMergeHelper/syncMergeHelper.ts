@@ -328,3 +328,41 @@ export const applyItems = (
 
   return data;
 };
+
+// The union of `base` and `remoteData`, keyed by itemKey — the snapshot a
+// sync UPLOADS (RFC §4.3 step 6). `base` is the local snapshot with the
+// review's accepted/modified items already applied (applyItems), so its
+// items win: any remote item whose itemKey is ALSO in `base` keeps the
+// base value (so a modified-accepted item uploads with the modified value,
+// EC-5, and a local item wins over a stale remote one). Only remote items
+// ABSENT from `base` are added, at their remote value.
+//
+// This is the entry/fixed/bucket analogue of mergeCategories' additive
+// union (AC-3.10). It fixes D5: uploads used to be built from LOCAL data
+// alone, so a remote item not present locally — one this member rejected,
+// now or in a prior sync — was wholesale-dropped from the party backup,
+// violating AC-3.9 and looping uploads forever. Retaining it here keeps
+// the backup stable and lets both members converge.
+//
+// Consistent with the additive-only design (RFC §4.2): just as a download
+// never deletes a local item, an upload never deletes a remote one — sync
+// carries no deletions in either direction. A locally-removed item that is
+// still remote is therefore RETAINED in the upload (not resurrected
+// locally — the local commit uses `base`, never this union), matching how
+// the download side already re-offers such an item rather than dropping it.
+export const mergeSnapshotForUpload = ({
+  base,
+  remoteData,
+}: {
+  base: BackupData;
+  remoteData: BackupData;
+}): BackupData => {
+  const present = new Set<string>();
+  extractItems(base).forEach((item) => present.add(item.key));
+  const remoteOnly = extractItems(remoteData).filter(
+    (item) => !present.has(item.key)
+  );
+  // Categories are unioned separately (mergeCategories) by the callers;
+  // applyItems preserves base.categories untouched.
+  return applyItems(base, remoteOnly);
+};

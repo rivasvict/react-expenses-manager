@@ -5,6 +5,7 @@ import {
   diffSnapshots,
   extractItems,
   mergeCategories,
+  mergeSnapshotForUpload,
   snapshotsContentEqual,
 } from "./syncMergeHelper";
 import { BackupData } from "../../services/syncApi/contract";
@@ -392,5 +393,115 @@ describe("category merging (AC-3.10 — QA D1)", () => {
     expect(
       snapshotsContentEqual(a, { ...emptyData(), categories: [] })
     ).toBe(false);
+  });
+});
+
+describe("mergeSnapshotForUpload (D5 — union preserves remote items)", () => {
+  it("retains a remote-only item (rejected / rejected-in-a-prior-sync) at its remote value", () => {
+    // `base` is the local snapshot with accepted items applied — it lacks
+    // the remote item X (this member rejected it, so it never merged
+    // locally). The upload must still carry X so the party backup keeps it.
+    const base = { ...emptyData(), balance: [entry("local-only")] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("local-only"), entry("X", { amount: "99" })],
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    const ids = merged.balance.map((item: any) => item.id).sort();
+    expect(ids).toEqual(["X", "local-only"]);
+    // Remote value preserved verbatim.
+    expect(merged.balance.find((item: any) => item.id === "X").amount).toEqual(
+      "99"
+    );
+  });
+
+  it("retains a local-only item (additive, remote lacks it)", () => {
+    const base = {
+      ...emptyData(),
+      balance: [entry("shared"), entry("mine")],
+    };
+    const remoteData = { ...emptyData(), balance: [entry("shared")] };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    expect(merged.balance.map((item: any) => item.id).sort()).toEqual([
+      "mine",
+      "shared",
+    ]);
+  });
+
+  it("a modified-accepted item wins over the remote value (EC-5)", () => {
+    // Same itemKey (entry:e1) in base and remote, different content: base
+    // holds the member's MODIFIED value, which must win in the upload.
+    const base = { ...emptyData(), balance: [entry("e1", { amount: "5" })] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("e1", { amount: "99" })],
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    expect(merged.balance).toHaveLength(1);
+    expect(merged.balance[0].amount).toEqual("5");
+  });
+
+  it("unions remote-only fixed-entry states and bucket states by itemKey", () => {
+    const base = {
+      ...emptyData(),
+      fixedEntries: [
+        {
+          id: "f1",
+          type: "expense",
+          history: [{ from: "2026-01", amount: "9", categories_path: ",fun," }],
+        },
+      ],
+      buckets: { Groceries: [{ from: "2026-01", limit: 100 }] },
+    };
+    const remoteData = {
+      ...emptyData(),
+      fixedEntries: [
+        {
+          id: "f1",
+          type: "expense",
+          history: [
+            { from: "2026-01", amount: "9", categories_path: ",fun," },
+            { from: "2026-03", amount: "12", categories_path: ",fun," },
+          ],
+        },
+      ],
+      buckets: {
+        Groceries: [
+          { from: "2026-01", limit: 100 },
+          { from: "2026-03", limit: 150 },
+        ],
+      },
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    // The remote-only later states are retained; existing states unchanged.
+    expect(merged.fixedEntries[0].history.map((s: any) => s.from)).toEqual([
+      "2026-01",
+      "2026-03",
+    ]);
+    expect(merged.buckets.Groceries.map((s: any) => s.from)).toEqual([
+      "2026-01",
+      "2026-03",
+    ]);
+  });
+
+  it("does not mutate its inputs", () => {
+    const base = { ...emptyData(), balance: [entry("a")] };
+    const remoteData = { ...emptyData(), balance: [entry("a"), entry("b")] };
+    mergeSnapshotForUpload({ base, remoteData });
+    expect(base.balance).toHaveLength(1);
+    expect(remoteData.balance).toHaveLength(2);
+  });
+
+  it("converges: after uploading the union, the backup content-equals the upload (no further upload)", () => {
+    // Member A rejected X: local (base) lacks X, remote has X. The upload
+    // union == remote content, so snapshotsContentEqual(upload, remote) is
+    // true — the next sync makes NO upload, and A never re-prompts for X.
+    const base = { ...emptyData(), balance: [entry("shared")] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("shared"), entry("X")],
+    };
+    const uploadSnapshot = mergeSnapshotForUpload({ base, remoteData });
+    expect(snapshotsContentEqual(uploadSnapshot, remoteData)).toBe(true);
   });
 });
