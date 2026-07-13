@@ -1,28 +1,126 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import { MainContentContainer } from "../common/MainContentContainer";
-import { clearPendingReview } from "../../redux/syncManager/syncThunk";
+import ButtonLikeLink from "../common/ButtonLikeLink";
+import { FormButton } from "../common/Forms";
+import ReviewItemCard from "./ReviewItemCard";
+import WizardProgress from "./WizardProgress";
+import WizardSummary, { UploadState } from "./WizardSummary";
+import {
+  clearPendingReview,
+  completeReview,
+  syncWithParty,
+  SyncOutcome,
+} from "../../redux/syncManager/syncThunk";
+import { refreshMe } from "../../redux/syncManager/actionCreators";
+import { SYNC_DECLINED_SET } from "../../redux/syncManager/actions";
+import { PendingReview, DeclinedReason } from "../../redux/syncManager/reducer";
+import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
+import {
+  SYNC_ERROR_CODES,
+  isSyncApiError,
+} from "../../services/syncApi/contract";
 import "./styles.scss";
 
+interface Decision {
+  action: "accept" | "reject";
+  // For accepted items this may carry modified values (EC-5); for
+  // rejections it stays the original, whose hash feeds the memory.
+  item: IncomingItem;
+  modified: boolean;
+}
+
 interface SyncReviewProps {
-  pendingReviewCount: number | null;
+  pendingReview: PendingReview | null;
+  buckets: any;
+  unbudgetedCategories: string[];
+  onCompleteReview: (payload: {
+    acceptedItems: IncomingItem[];
+    rejectedItems: { key: string; hash: string }[];
+    baseVersion: string;
+  }) => Promise<void>;
+  onSyncAgain: () => Promise<SyncOutcome>;
   onClearPendingReview: () => void;
+  onRefreshMe: () => void;
+  onSetDeclined: (declined: DeclinedReason) => void;
 }
 
 /**
- * Minimal /sync-review placeholder (multi-user sync PR 4): the full
- * DESIGN §4.3 wizard lands in the next PR. Until then the only offered
- * action is Cancel review — DESIGN's safe-abandonment rule: nothing has
- * been applied (decisions would be staged in component state only), so
- * canceling changes nothing on this device.
+ * The review wizard (DESIGN §4.3): one incoming item at a time, decisions
+ * staged in this component's state ONLY — nothing touches localStorage
+ * until the final upload succeeds, which makes mid-wizard cancel,
+ * navigation away and failed uploads all the same safe no-op (AC-3.11).
+ * It consumes the diffed items + baseVersion of the exact download the
+ * sync performed; it never re-downloads.
  */
 const SyncReview = ({
-  pendingReviewCount,
+  pendingReview,
+  buckets,
+  unbudgetedCategories,
+  onCompleteReview,
+  onSyncAgain,
   onClearPendingReview,
+  onRefreshMe,
+  onSetDeclined,
 }: SyncReviewProps) => {
   const history = useHistory();
+  const [decisions, setDecisions] = useState<{ [key: string]: Decision }>({});
+  const [uploadState, setUploadState] = useState<UploadState>("idle");
+  const [isDone, setIsDone] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const items = pendingReview ? pendingReview.items : [];
+  const remaining = items.filter((item) => !decisions[item.key]);
+  const currentItem = remaining[0];
+  const reviewedCount = items.length - remaining.length;
+  const onSummary = items.length > 0 && remaining.length === 0;
+
+  // Focus management (DESIGN §5): mount and every advance move focus to
+  // the card container so the new content reads in natural order.
+  useEffect(() => {
+    cardRef.current?.focus();
+  }, [currentItem?.key, onSummary, isDone]);
+
+  const decide = (
+    item: IncomingItem,
+    action: "accept" | "reject",
+    stagedItem?: IncomingItem,
+    modified = false
+  ) => {
+    setDecisions((previous) => ({
+      ...previous,
+      [item.key]: { action, item: stagedItem || item, modified },
+    }));
+  };
+
+  const handleAcceptAll = () => {
+    const confirmed = window.confirm(
+      `Accept the remaining ${remaining.length} items without reviewing them individually?`
+    );
+    if (!confirmed) return;
+    setDecisions((previous) => {
+      const next = { ...previous };
+      remaining.forEach((item) => {
+        next[item.key] = { action: "accept", item, modified: false };
+      });
+      return next;
+    });
+  };
+
+  const handleRejectAll = () => {
+    const confirmed = window.confirm(
+      `Reject the remaining ${remaining.length} items without reviewing them individually?`
+    );
+    if (!confirmed) return;
+    setDecisions((previous) => {
+      const next = { ...previous };
+      remaining.forEach((item) => {
+        next[item.key] = { action: "reject", item, modified: false };
+      });
+      return next;
+    });
+  };
 
   const handleCancelReview = () => {
     const confirmed = window.confirm(
@@ -33,36 +131,173 @@ const SyncReview = ({
     history.push("/data-management");
   };
 
+  const handleUpload = async () => {
+    if (!pendingReview) return;
+    const decided = items.map((item) => decisions[item.key]);
+    const acceptedItems = decided
+      .filter((decision) => decision.action === "accept")
+      .map((decision) => decision.item);
+    const rejectedItems = decided
+      .filter((decision) => decision.action === "reject")
+      .map((decision) => ({ key: decision.item.key, hash: decision.item.hash }));
+
+    setUploadState("uploading");
+    try {
+      await onCompleteReview({
+        acceptedItems,
+        rejectedItems,
+        baseVersion: pendingReview.baseVersion,
+      });
+      setIsDone(true);
+    } catch (uploadError) {
+      if (
+        isSyncApiError(uploadError) &&
+        uploadError.code === SYNC_ERROR_CODES.VERSION_CONFLICT
+      ) {
+        // EC-2: staged decisions are now bound to a stale download —
+        // they are discarded, never replayed (DESIGN 4.3.4).
+        setUploadState("conflict");
+      } else if (
+        isSyncApiError(uploadError) &&
+        (uploadError.code === SYNC_ERROR_CODES.BLOCKED ||
+          uploadError.code === SYNC_ERROR_CODES.PARTY_CANCELED)
+      ) {
+        // Blocked/canceled mid-review: discard, return, and let the Data
+        // Management card show the §4.2 banner + disabled re-render.
+        onSetDeclined(
+          uploadError.code === SYNC_ERROR_CODES.BLOCKED ? "blocked" : "canceled"
+        );
+        onClearPendingReview();
+        onRefreshMe();
+        history.push("/data-management");
+      } else {
+        // Network failure: same staged set, Retry (AC-3.11/EC-3).
+        setUploadState("network-failed");
+      }
+    }
+  };
+
+  const handleSyncAgain = async () => {
+    // Fresh download → fresh review; the stale staged set is gone.
+    setDecisions({});
+    setUploadState("idle");
+    try {
+      const outcome = await onSyncAgain();
+      if (outcome.type !== "review") {
+        onClearPendingReview();
+        history.push("/data-management");
+      }
+    } catch (syncError) {
+      onClearPendingReview();
+      history.push("/data-management");
+    }
+  };
+
+  // Success screen (DESIGN 4.3.4): explicit Done, no auto-redirect.
+  if (isDone) {
+    return (
+      <MainContentContainer className="sync-review" pageTitle="Review changes">
+        <div className="sync-review__card" ref={cardRef} tabIndex={-1}>
+          <p role="status" className="sync-review__success">
+            Synced! Your party is up to date.
+          </p>
+          <FormButton
+            variant="primary"
+            onClick={() => history.push("/data-management")}
+          >
+            Done
+          </FormButton>
+        </div>
+      </MainContentContainer>
+    );
+  }
+
+  // Direct navigation with nothing staged (or after an abandonment).
+  if (!pendingReview || items.length === 0) {
+    return (
+      <MainContentContainer className="sync-review" pageTitle="Review changes">
+        <div className="sync-review__card">
+          <p className="sync-review__description">
+            There's nothing to review right now. Sync with your party from
+            Data Management to check for changes.
+          </p>
+          <ButtonLikeLink
+            className="btn-secondary"
+            to="/data-management"
+            buttonTitle="Go to Data Management"
+          />
+        </div>
+      </MainContentContainer>
+    );
+  }
+
+  const decidedList = items
+    .map((item) => decisions[item.key])
+    .filter(Boolean);
+  const acceptedCount = decidedList.filter(
+    (decision) => decision.action === "accept" && !decision.modified
+  ).length;
+  const modifiedCount = decidedList.filter(
+    (decision) => decision.action === "accept" && decision.modified
+  ).length;
+  const rejectedCount = decidedList.filter(
+    (decision) => decision.action === "reject"
+  ).length;
+
   return (
     <MainContentContainer className="sync-review" pageTitle="Review changes">
-      <div className="sync-review__card">
-        <p className="sync-review__description">
-          {pendingReviewCount === null
-            ? "Your party has changes to review."
-            : `Your party has ${pendingReviewCount} incoming ${
-                pendingReviewCount === 1 ? "change" : "changes"
-              } to review.`}{" "}
-          Reviewing changes item by item arrives in the next update — nothing
-          is applied to this device until you review it.
-        </p>
-        <Button
-          variant="secondary"
-          className="full-width"
-          onClick={handleCancelReview}
-        >
-          Cancel review
-        </Button>
-      </div>
+      {onSummary ? (
+        <div ref={cardRef} tabIndex={-1}>
+          <WizardSummary
+            acceptedCount={acceptedCount}
+            modifiedCount={modifiedCount}
+            rejectedCount={rejectedCount}
+            uploadState={uploadState}
+            onUpload={handleUpload}
+            onSyncAgain={handleSyncAgain}
+            onCancelReview={handleCancelReview}
+          />
+        </div>
+      ) : (
+        <React.Fragment>
+          <WizardProgress
+            reviewedCount={reviewedCount}
+            total={items.length}
+            onAcceptAll={handleAcceptAll}
+            onRejectAll={handleRejectAll}
+          />
+          <div ref={cardRef} tabIndex={-1}>
+            <ReviewItemCard
+              key={currentItem.key}
+              item={currentItem}
+              buckets={buckets}
+              unbudgetedCategories={unbudgetedCategories}
+              onAccept={(stagedItem, modified) =>
+                decide(currentItem, "accept", stagedItem, modified)
+              }
+              onReject={() => decide(currentItem, "reject")}
+              onCancelReview={handleCancelReview}
+            />
+          </div>
+        </React.Fragment>
+      )}
     </MainContentContainer>
   );
 };
 
 const mapStateToProps = (state: any) => ({
-  pendingReviewCount: state.syncManager.pendingReviewCount,
+  pendingReview: state.syncManager.pendingReview,
+  buckets: state.expensesManager.buckets,
+  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch: any) => ({
+  onCompleteReview: (payload: any) => dispatch(completeReview(payload)),
+  onSyncAgain: () => dispatch(syncWithParty()),
   onClearPendingReview: () => dispatch(clearPendingReview()),
+  onRefreshMe: () => dispatch(refreshMe()),
+  onSetDeclined: (declined: DeclinedReason) =>
+    dispatch({ type: SYNC_DECLINED_SET, payload: { declined } }),
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(SyncReview);
