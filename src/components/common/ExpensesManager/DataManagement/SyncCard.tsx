@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Button, Col } from "react-bootstrap";
 import { refreshMe } from "../../../../redux/syncManager/actionCreators";
-import { SYNC_DECLINED_SET } from "../../../../redux/syncManager/actions";
-import { DeclinedReason } from "../../../../redux/syncManager/reducer";
+import { SYNC_CARD_NOTICE_SET } from "../../../../redux/syncManager/actions";
+import { SyncCardNotice } from "../../../../redux/syncManager/reducer";
 import {
   syncWithParty,
   SyncOutcome,
@@ -22,10 +22,10 @@ interface SyncCardProps {
   session: SyncSession | null;
   party: Party | null;
   partyLoaded: boolean;
-  declined: DeclinedReason | null;
+  cardNotice: SyncCardNotice | null;
   onRefreshMe: () => Promise<boolean>;
   onSync: () => Promise<SyncOutcome>;
-  onClearDeclined: () => void;
+  onClearCardNotice: () => void;
 }
 
 // DESIGN §4.2 banner copy, keyed by outcome/error.
@@ -98,10 +98,10 @@ const SyncCard = ({
   session,
   party,
   partyLoaded,
-  declined,
+  cardNotice,
   onRefreshMe,
   onSync,
-  onClearDeclined,
+  onClearCardNotice,
 }: SyncCardProps) => {
   const history = useHistory();
   const [isSyncing, setIsSyncing] = useState(false);
@@ -119,15 +119,21 @@ const SyncCard = ({
     });
   }, [session, onRefreshMe]);
 
-  // A blocked/canceled rejection discovered mid-review (DESIGN 4.3.4)
-  // lands here as the same §4.2 banner a direct sync would have shown.
+  // A one-shot notice carried back from the review wizard (DESIGN 4.3.4)
+  // lands here as the same §4.2 banner a direct sync would have shown:
+  // blocked/canceled rejections, or a connection failure during
+  // "Sync again".
   useEffect(() => {
-    if (!declined) return;
+    if (!cardNotice) return;
     setAlert(
-      declined === "blocked" ? COPY.declinedBlocked : COPY.declinedCanceled
+      cardNotice === "blocked"
+        ? COPY.declinedBlocked
+        : cardNotice === "canceled"
+          ? COPY.declinedCanceled
+          : COPY.connectionFailed
     );
-    onClearDeclined();
-  }, [declined, onClearDeclined]);
+    onClearCardNotice();
+  }, [cardNotice, onClearCardNotice]);
 
   const { enabled, caption } = getCaption(
     session,
@@ -215,14 +221,14 @@ const mapStateToProps = (state: any) => ({
   session: state.syncManager.session,
   party: state.syncManager.party,
   partyLoaded: state.syncManager.partyLoaded,
-  declined: state.syncManager.declined,
+  cardNotice: state.syncManager.cardNotice,
 });
 
 const mapActionsToProps = (dispatch: any) => ({
   onRefreshMe: () => dispatch(refreshMe()),
   onSync: () => dispatch(syncWithParty()),
-  onClearDeclined: () =>
-    dispatch({ type: SYNC_DECLINED_SET, payload: { declined: null } }),
+  onClearCardNotice: () =>
+    dispatch({ type: SYNC_CARD_NOTICE_SET, payload: { cardNotice: null } }),
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(SyncCard);
