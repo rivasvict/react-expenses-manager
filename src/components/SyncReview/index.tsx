@@ -70,6 +70,15 @@ const SyncReview = ({
   const [isDone, setIsDone] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // DESIGN §4.3: navigating away mid-review IS a cancel. Unmounting
+  // drops the staged download so a later direct visit to /sync-review
+  // finds nothing to review. Internal phase changes (item → summary →
+  // success) never unmount, and the flows that already cleared
+  // (cancel/success/declined) make this a no-op.
+  const clearOnUnmountRef = useRef(onClearPendingReview);
+  clearOnUnmountRef.current = onClearPendingReview;
+  useEffect(() => () => clearOnUnmountRef.current(), []);
+
   const items = pendingReview ? pendingReview.items : [];
   const remaining = items.filter((item) => !decisions[item.key]);
   const currentItem = remaining[0];
@@ -150,12 +159,35 @@ const SyncReview = ({
   const handleUpload = async () => {
     if (!pendingReview) return;
     const decided = items.map((item) => decisions[item.key]);
-    const acceptedItems = decided
+    // A grouped card (brand-new fixed entry/bucket, RFC §4.1) expands to
+    // its member states: one decision applies — and one rejection
+    // records — all of them. A modified representative replaces its own
+    // member state; the other states go up as reviewed.
+    const acceptedItems: IncomingItem[] = [];
+    decided
       .filter((decision) => decision.action === "accept")
-      .map((decision) => decision.item);
-    const rejectedItems = decided
+      .forEach((decision) => {
+        const item = decision.item;
+        if (!item.grouped) {
+          acceptedItems.push(item);
+          return;
+        }
+        item.grouped.forEach((member) => {
+          acceptedItems.push(
+            member.key === item.key
+              ? ({ ...item, grouped: undefined } as IncomingItem)
+              : (member as IncomingItem)
+          );
+        });
+      });
+    const rejectedItems: { key: string; hash: string }[] = [];
+    decided
       .filter((decision) => decision.action === "reject")
-      .map((decision) => ({ key: decision.item.key, hash: decision.item.hash }));
+      .forEach((decision) => {
+        (decision.item.grouped || [decision.item]).forEach(({ key, hash }) => {
+          rejectedItems.push({ key, hash });
+        });
+      });
 
     setUploadState("uploading");
     try {
