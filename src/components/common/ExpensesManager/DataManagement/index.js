@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
 import { FileButton } from "./components";
+import SyncCard from "./SyncCard";
 
 import "./styles.scss";
 
@@ -106,6 +107,12 @@ const DataManagement = ({
                 </p>
               )}
             </Col>
+          </Row>
+          {/* Sync with your party (multi-user sync, DESIGN §4): another way
+              of keeping data safe, so it sits between backup and the danger
+              zone. The existing cards above/below are untouched (AC-3.7). */}
+          <Row>
+            <SyncCard />
           </Row>
           <Row>
             <Col className="data-section data-section--danger">

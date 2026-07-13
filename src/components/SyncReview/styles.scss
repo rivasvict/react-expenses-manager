@@ -1,0 +1,16 @@
+@import "../../variables.scss";
+
+.sync-review {
+  .sync-review__card {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+  }
+
+  .sync-review__description {
+    color: $text-secondary;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+  }
+}

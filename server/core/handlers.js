@@ -32,10 +32,13 @@ const ERROR_CODES = {
   INVITATION_USED: "INVITATION_USED",
   BLOCKED: "BLOCKED",
   NO_BACKUP: "NO_BACKUP",
+  VERSION_CONFLICT: "VERSION_CONFLICT",
+  PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   CONFLICT: "CONFLICT",
-  // Temporary scaffolding only (PUT backup body arrives with the sync PR).
-  NOT_IMPLEMENTED: "NOT_IMPLEMENTED",
 };
+
+// RFC §3.10: backup envelopes are capped at 1 MB.
+const MAX_ENVELOPE_BYTES = 1024 * 1024;
 
 const error = (status, code, message) => ({
   status,
@@ -80,6 +83,8 @@ const userKey = (email) => `users/${sha256Hex(email.trim().toLowerCase())}`;
 // to the email-keyed user record without scanning.
 const userIdKey = (id) => `user-ids/${id}`;
 const partyKey = (partyId) => `parties/${partyId}`;
+// RFC §2.1: parties/{id}.backup.json — versioned for the CAS on upload.
+const backupKey = (partyId) => `parties/${partyId}.backup`;
 // Pointer from sha256(code) to the owning party, so join can find the party
 // from the code alone. Holds no secret — just a hash and a party id.
 const invitationPointerKey = (lookupHash) => `invitations/${lookupHash}`;
@@ -501,28 +506,73 @@ const createHandlers = ({ storage, tokenSecret, encryptionKey, now = Date.now })
     return { status: 200, body: { party: publicParty(outcome.party, user.id) } };
   };
 
-  // RFC §3.9–3.10 land with the sync PR; the routes exist now so the
-  // blocked/canceled enforcement (requirePartyAccess) is already in force
-  // for them and PR 4 inherits it unchanged.
+  // RFC §3.9 — download the party's latest backup. Every backup call runs
+  // through requirePartyAccess, so blocked members (403) and canceled
+  // parties (410) can never download (EC-9).
   const getBackup = async (request) => {
     const access = await requirePartyAccess(request);
     if (!access.user) return access;
-    // No backups can exist yet — EC-1's contract answer is the truth.
-    return error(
-      404,
-      ERROR_CODES.NO_BACKUP,
-      "No backup has been uploaded yet."
+    const record = await storage.readJsonVersioned(
+      backupKey(access.user.partyId)
     );
+    if (!record)
+      return error(
+        404,
+        ERROR_CODES.NO_BACKUP,
+        "No backup has been uploaded yet."
+      );
+    return {
+      status: 200,
+      body: { version: record.version, envelope: record.value.envelope },
+    };
   };
 
+  // RFC §3.10 — upload the party's new backup under compare-and-swap:
+  // baseVersion null means "create only" (EC-1); otherwise it must match
+  // the stored version or the request fails with VERSION_CONFLICT (EC-2).
+  // The envelope stays an opaque blob apart from size/JSON/app-id checks —
+  // all merge intelligence lives in the client.
   const putBackup = async (request) => {
     const access = await requirePartyAccess(request);
     if (!access.user) return access;
-    return error(
-      501,
-      ERROR_CODES.NOT_IMPLEMENTED,
-      "Backup upload arrives with sync."
+    const { baseVersion, envelope } = (request && request.body) || {};
+    if (baseVersion !== null && typeof baseVersion !== "string")
+      return error(
+        400,
+        ERROR_CODES.VALIDATION_ERROR,
+        "baseVersion must be a version string or null."
+      );
+    if (
+      !envelope ||
+      typeof envelope !== "object" ||
+      envelope.app !== "react-expenses-manager" ||
+      !envelope.data ||
+      typeof envelope.data !== "object"
+    )
+      return error(
+        400,
+        ERROR_CODES.VALIDATION_ERROR,
+        "A valid backup envelope is required."
+      );
+    if (JSON.stringify(envelope).length > MAX_ENVELOPE_BYTES)
+      return error(
+        400,
+        ERROR_CODES.VALIDATION_ERROR,
+        "The backup envelope exceeds the 1 MB limit."
+      );
+
+    const version = await storage.writeJsonVersioned(
+      backupKey(access.user.partyId),
+      { uploadedBy: access.user.id, uploadedAt: now(), envelope },
+      { expectedVersion: baseVersion }
     );
+    if (version === null)
+      return error(
+        409,
+        ERROR_CODES.VERSION_CONFLICT,
+        "The party backup changed since your download."
+      );
+    return { status: 200, body: { version } };
   };
 
   return {
