@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.2] - 2026-07-13
+
+### Fixed
+- Multi-user sync QA round 1: user-created categories now travel through
+  sync (AC-3.10). Both upload paths — the silent local-only upload and
+  the reviewed merge — write an additive, case-insensitive union of the
+  local and remote category lists (excluding names already promoted to
+  buckets), so a member's custom category is never dropped from the party
+  backup and reaches every member. `snapshotsContentEqual` compares
+  categories case-insensitively so two members with different casings
+  converge to "You're up to date." instead of re-uploading forever
+- Review wizard: a brand-new fixed entry or bucket arriving with several
+  pending history states now shows ONE card per definition (RFC §4.1),
+  fronted by the resolved current state; one decision applies to every
+  pending state and a rejection records a per-state `(key, hash)` entry
+  for the whole group
+- Review wizard: navigating away mid-review now clears the staged review,
+  so a later direct visit to `/sync-review` finds nothing to review
+  (DESIGN §4.3) — internal phase changes and the already-cleared
+  cancel/success/declined flows stay unaffected
+- Review wizard: action button aria-labels keep the contributor's name
+  casing ("…added by Tom", not "…added by tom")
+- Data Management sync card no longer updates its state after navigating
+  to the review wizard, removing an act()/unmounted-update warning
+
 ## [1.6.1] - 2026-07-13
 
 ### Added

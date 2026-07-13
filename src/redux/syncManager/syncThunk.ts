@@ -15,6 +15,7 @@ import { getSyncState, setSyncState } from "../../services/syncState";
 import {
   applyItems,
   diffSnapshots,
+  mergeCategories,
   snapshotsContentEqual,
   IncomingItem,
   Rejections,
@@ -60,6 +61,25 @@ const commitSyncState = (
 
 const isVersionConflict = (error: unknown) =>
   isSyncApiError(error) && error.code === SYNC_ERROR_CODES.VERSION_CONFLICT;
+
+// Writes a merged snapshot to localStorage and refreshes the live Redux
+// tree from it, exactly like a completed restore does.
+const commitMergedLocally = async (dispatch: Dispatch, merged: BackupData) => {
+  await storage.importData(merged);
+  const entries = getGroupedFilledEntriesByDate()(
+    merged.balance,
+    merged.fixedEntries
+  );
+  dispatch({
+    type: RESTORE_BACKUP,
+    payload: {
+      entries,
+      buckets: merged.buckets,
+      unbudgetedCategories: merged.categories,
+      fixedEntries: merged.fixedEntries,
+    },
+  });
+};
 
 export const syncWithParty =
   () =>
@@ -126,12 +146,34 @@ export const syncWithParty =
           return { type: "up-to-date" }; // AC-3.3 — no upload
         }
         // Local-only additions: silent upload of the local snapshot.
+        // Categories are carried as an additive union (AC-3.10) so a
+        // member's custom category is never dropped from the backup —
+        // note: this deviates from RFC §4.3's literal "PUT merged local
+        // snapshot" wording by unioning the category lists.
+        const merged: BackupData = {
+          ...localData,
+          categories: mergeCategories({
+            localCategories: localData.categories,
+            remoteCategories: remoteData.categories,
+            buckets: localData.buckets,
+          }),
+        };
         try {
           const { version } = await syncApi.putBackup({
             token,
             baseVersion: downloaded.version,
-            envelope: buildBackupEnvelope(localData) as BackupEnvelope,
+            envelope: buildBackupEnvelope(merged) as BackupEnvelope,
           });
+          // Adopt any newly received categories locally (commit happens
+          // only here, after the upload's 200).
+          if (
+            merged.categories.length !== localData.categories.length ||
+            merged.categories.some(
+              (name, index) => name !== localData.categories[index]
+            )
+          ) {
+            await commitMergedLocally(dispatch, merged);
+          }
           commitSyncState(party.id, version, syncState.rejections);
           return { type: "up-to-date" };
         } catch (uploadError) {
@@ -149,6 +191,7 @@ export const syncWithParty =
           pendingReview: {
             items: incoming as IncomingItem[],
             baseVersion: downloaded.version,
+            remoteCategories: remoteData.categories,
           },
         },
       });
@@ -184,6 +227,16 @@ export const completeReview =
     // survive; the accepted items still apply cleanly by itemKey.
     const localData: BackupData = await storage.exportData();
     const merged = applyItems(localData, acceptedItems);
+    // Categories travel alongside (AC-3.10): additive union with the
+    // remote list from the same download, excluding names the merged
+    // snapshot now holds as buckets.
+    const remoteCategories: string[] =
+      getState().syncManager.pendingReview?.remoteCategories || [];
+    merged.categories = mergeCategories({
+      localCategories: merged.categories,
+      remoteCategories,
+      buckets: merged.buckets,
+    });
 
     const { version } = await syncApi.putBackup({
       token: session.token,
@@ -192,7 +245,7 @@ export const completeReview =
     });
 
     // Commit — the only write to app localStorage in the whole flow.
-    await storage.importData(merged);
+    await commitMergedLocally(dispatch, merged);
     const syncState = getSyncState(party.id);
     const rejections: Rejections = { ...syncState.rejections };
     rejectedItems.forEach(({ key, hash }) => {
@@ -200,22 +253,6 @@ export const completeReview =
       if (existing.indexOf(hash) === -1) rejections[key] = [...existing, hash];
     });
     commitSyncState(party.id, version, rejections);
-
-    // Refresh the live Redux tree from the merged snapshot, exactly like
-    // a completed restore does.
-    const entries = getGroupedFilledEntriesByDate()(
-      merged.balance,
-      merged.fixedEntries
-    );
-    dispatch({
-      type: RESTORE_BACKUP,
-      payload: {
-        entries,
-        buckets: merged.buckets,
-        unbudgetedCategories: merged.categories,
-        fixedEntries: merged.fixedEntries,
-      },
-    });
     dispatch({
       type: SYNC_PENDING_REVIEW_SET,
       payload: { pendingReview: null },

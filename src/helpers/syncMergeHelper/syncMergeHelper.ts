@@ -27,6 +27,11 @@ export interface IncomingItem extends SyncItem {
   // True when the local snapshot has the same itemKey with different
   // content — an edit by another member, not a brand-new item.
   isChange: boolean;
+  // A brand-new fixed entry / bucket arriving with several pending
+  // history states presents as ONE card whose facts are the resolved
+  // current state (RFC §4.1); `grouped` carries every per-state item so
+  // one decision applies (and one rejection records) all of them.
+  grouped?: SyncItem[];
 }
 
 // Rejection memory (AC-3.9/EC-4): content hashes rejected per itemKey.
@@ -116,6 +121,70 @@ const itemHashByKey = (data: BackupData): Map<string, string> => {
   return map;
 };
 
+// Collapses the per-state items of BRAND-NEW fixed entries/buckets (no
+// local counterpart) into one reviewable item each (RFC §4.1): the
+// representative carries the resolved current state (the latest by
+// `from`) and `grouped` lists every member state. States of an already-
+// known definition stay individual items ("Tom raised the Groceries
+// bucket for August").
+const groupNewDefinitions = (
+  incoming: IncomingItem[],
+  localData: BackupData
+): IncomingItem[] => {
+  const localFixedIds = new Set(
+    (localData.fixedEntries || []).map((definition: any) => definition.id)
+  );
+  const localBucketNames = new Set(
+    Object.keys(localData.buckets || {}).map((name) => name.toLowerCase())
+  );
+
+  const groupKeyOf = (item: IncomingItem): string | null => {
+    if (item.kind === "fixed" && item.fixed && !localFixedIds.has(item.fixed.id))
+      return `fixed:${item.fixed.id}`;
+    if (
+      item.kind === "bucket" &&
+      item.bucket &&
+      !localBucketNames.has(item.bucket.name.toLowerCase())
+    )
+      return `bucket:${item.bucket.name.toLowerCase()}`;
+    return null; // not groupable — stays an individual item
+  };
+
+  const groups = new Map<string, IncomingItem[]>();
+  incoming.forEach((item) => {
+    const groupKey = groupKeyOf(item);
+    if (!groupKey) return;
+    groups.set(groupKey, [...(groups.get(groupKey) || []), item]);
+  });
+
+  const result: IncomingItem[] = [];
+  const emitted = new Set<string>();
+  incoming.forEach((item) => {
+    const groupKey = groupKeyOf(item);
+    if (!groupKey) {
+      result.push(item);
+      return;
+    }
+    if (emitted.has(groupKey)) return;
+    emitted.add(groupKey);
+    const members = groups.get(groupKey)!;
+    if (members.length === 1) {
+      result.push(members[0]);
+      return;
+    }
+    const byFrom = [...members].sort((first, second) => {
+      const fromOf = (candidate: IncomingItem) =>
+        candidate.kind === "fixed"
+          ? candidate.fixed!.state.from
+          : candidate.bucket!.state.from;
+      return fromOf(first) < fromOf(second) ? -1 : 1;
+    });
+    // The resolved current state (latest `from`) fronts the card.
+    result.push({ ...byFrom[byFrom.length - 1], grouped: byFrom });
+  });
+  return result;
+};
+
 // The diff, on download (RFC §4.2). Additive-only: a remote backup lacking
 // a local item never deletes anything locally.
 export const diffSnapshots = ({
@@ -134,7 +203,34 @@ export const diffSnapshots = ({
     if ((rejections[item.key] || []).indexOf(item.hash) !== -1) return; // EC-4
     incoming.push({ ...item, isChange: local.has(item.key) });
   });
-  return incoming;
+  return groupNewDefinitions(incoming, localData);
+};
+
+// Categories are not reviewable items — they travel alongside entries and
+// buckets (AC-3.10) as an additive, case-insensitive union (local casing
+// and order win). Names promoted to buckets are excluded, matching how
+// creating a bucket removes the standalone category locally.
+export const mergeCategories = ({
+  localCategories,
+  remoteCategories,
+  buckets,
+}: {
+  localCategories: string[];
+  remoteCategories: string[];
+  buckets: { [name: string]: any };
+}): string[] => {
+  const bucketNames = new Set(
+    Object.keys(buckets || {}).map((name) => name.toLowerCase())
+  );
+  const seen = new Set<string>();
+  const merged: string[] = [];
+  [...(localCategories || []), ...(remoteCategories || [])].forEach((name) => {
+    const lower = String(name).toLowerCase();
+    if (bucketNames.has(lower) || seen.has(lower)) return;
+    seen.add(lower);
+    merged.push(name);
+  });
+  return merged;
 };
 
 // Two snapshots hold the same content when their syncable units match
@@ -151,9 +247,14 @@ export const snapshotsContentEqual = (
     if (mapB.get(key) !== hash) equal = false;
   });
   if (!equal) return false;
-  const categoriesA = [...(a.categories || [])].sort();
-  const categoriesB = [...(b.categories || [])].sort();
-  return canonicalStringify(categoriesA) === canonicalStringify(categoriesB);
+  // Case-insensitive, like every other category comparison in the app —
+  // otherwise two members with different casings would re-upload forever.
+  const normalize = (categories?: string[]) =>
+    (categories || []).map((name) => name.toLowerCase()).sort();
+  return (
+    canonicalStringify(normalize(a.categories)) ===
+    canonicalStringify(normalize(b.categories))
+  );
 };
 
 const byFromAscending = (first: any, second: any) =>

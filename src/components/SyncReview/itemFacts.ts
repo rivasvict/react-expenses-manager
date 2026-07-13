@@ -36,6 +36,12 @@ const attributionText = (addedBy?: AddedBy): string =>
   // AC-1.6/AC-3.4 — legacy/unattributed items show the anonymous fallback.
   addedBy && addedBy.name ? `Added by ${addedBy.name}` : "Added anonymously";
 
+// Same attribution for the accessible action labels ("Accept $42.10
+// expense added by Tom"): lowercase phrasing, but the contributor's name
+// keeps its casing.
+const labelAttribution = (addedBy?: AddedBy): string =>
+  addedBy && addedBy.name ? `added by ${addedBy.name}` : "added anonymously";
+
 export const getItemFacts = (item: SyncItem): ItemFacts => {
   if (item.kind === "entry") {
     const entry = item.entry;
@@ -49,7 +55,7 @@ export const getItemFacts = (item: SyncItem): ItemFacts => {
       categories: prettyCategories(entry.categories_path),
       dateText: dayjs(entry.date).format("MMM D, YYYY"),
       attribution,
-      shortLabel: `${money(entry.amount)} ${kindLabel.toLowerCase()} ${attribution.toLowerCase()}`,
+      shortLabel: `${money(entry.amount)} ${kindLabel.toLowerCase()} ${labelAttribution(entry.addedBy)}`,
     };
   }
 
@@ -64,7 +70,7 @@ export const getItemFacts = (item: SyncItem): ItemFacts => {
         removed: true,
         dateText: `Removed from ${state.from}`,
         attribution,
-        shortLabel: `${kindLabel.toLowerCase()} removal ${attribution.toLowerCase()}`,
+        shortLabel: `${kindLabel.toLowerCase()} removal ${labelAttribution(state.addedBy)}`,
       };
     }
     return {
@@ -75,7 +81,7 @@ export const getItemFacts = (item: SyncItem): ItemFacts => {
       categories: prettyCategories(state.categories_path),
       dateText: `From ${state.from}`,
       attribution,
-      shortLabel: `${money(state.amount)} ${kindLabel.toLowerCase()} ${attribution.toLowerCase()}`,
+      shortLabel: `${money(state.amount)} ${kindLabel.toLowerCase()} ${labelAttribution(state.addedBy)}`,
     };
   }
 
@@ -89,6 +95,6 @@ export const getItemFacts = (item: SyncItem): ItemFacts => {
     dateText:
       state.from === "0000-00" ? "From the beginning" : `From ${state.from}`,
     attribution,
-    shortLabel: `${item.bucket!.name} bucket ${attribution.toLowerCase()}`,
+    shortLabel: `${item.bucket!.name} bucket ${labelAttribution(state.addedBy)}`,
   };
 };
