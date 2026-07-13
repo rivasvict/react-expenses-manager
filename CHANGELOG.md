@@ -5,6 +5,29 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.0] - 2026-07-13
+
+### Added
+- Review wizard (multi-user sync, PR 5): incoming changes are reviewed
+  one item per screen — kind badge, amount/description/category/date (or
+  the fixed-entry/bucket equivalents), and attribution ("Added by {name}"
+  or "Added anonymously" for legacy items) — with Accept, Modify (inline
+  edit before accepting; the edited value is what gets merged and
+  uploaded) and Reject
+- Accept all / Reject all shortcuts acting on the remaining unreviewed
+  items behind a confirmation
+- Decisions are staged in memory only: nothing touches this device until
+  the final upload succeeds, so canceling or navigating away mid-review
+  is always safe and the next sync re-presents everything
+- On upload success the merged data is applied locally, rejected items
+  are permanently remembered (a re-edited version still re-prompts), and
+  "Last synced" updates; a version conflict mid-review discards the
+  staged decisions with a "Sync again" restart; a network failure keeps
+  them with a Retry; being blocked (or the party canceled) mid-review
+  returns to Data Management with the matching declined banner
+- Sync card: a failed party check now says so instead of showing
+  "Checking your party…" forever
+
 ## [1.5.0] - 2026-07-12
 
 ### Added

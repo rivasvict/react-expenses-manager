@@ -567,7 +567,12 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       const party = parties[parties.length - 1];
       if (!party)
         throw new Error("fakeSyncServer.seedRemoteBackup: seed a party first");
-      party.backup = { version: "1", envelope };
+      // Re-seeding bumps the version, like another member's upload would —
+      // lets tests trigger EC-2 conflicts mid-review.
+      const version = party.backup
+        ? String(Number(party.backup.version) + 1)
+        : "1";
+      party.backup = { version, envelope };
     },
     getUploadedBackups: () => [...uploadedBackups],
     getRequests: () => [...requestLog],
