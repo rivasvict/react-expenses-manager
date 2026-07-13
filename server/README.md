@@ -1,13 +1,9 @@
-# Sync server (local)
+# Sync server
 
 Dependency-free plain Node implementation of the multi-user sync backend
-(RFC: `docs/multi-user-sync/RFC.md`). PR 1 ships the auth endpoints:
-
-| Endpoint | Purpose |
-|---|---|
-| `POST /api/auth/signup` | Create an account → `201 {token, user}` |
-| `POST /api/auth/login` | Log in → `200 {token, user}` |
-| `GET /api/me` | Current user (Bearer token) → `200 {user, party: null}` |
+(RFC: `docs/multi-user-sync/RFC.md`): accounts, parties, invitations,
+block/cancel, and backup upload/download with compare-and-swap — see
+RFC §3 for the full endpoint table.
 
 Passwords are scrypt-hashed (never stored or logged in plaintext); tokens
 are compact HMAC-SHA256-signed (`base64url(payload).base64url(sig)`,
@@ -27,6 +23,7 @@ Terminal 2:  npm start               # CRA dev server, http://localhost:3000
   - `PORT` — defaults to `4000`
   - `TOKEN_SECRET` — token signing secret; defaults to a dev-only value.
     Override for anything beyond local development.
+  - `ENCRYPTION_KEY` — invitation-record encryption secret; dev default.
   - `CORS_ORIGIN` — allowed browser origin
 - The frontend reads the server URL from `REACT_APP_SYNC_API_HOST`
   (defaults to `http://localhost:4000`, see `.env.template`).
@@ -55,5 +52,7 @@ CRA's jest deliberately does not scan `server/` (it only looks under
   reference implementation used by tests)
 - `storage-fs.js` — on-disk JSON adapter (local dev)
 - `index.js` — `node:http` adapter with CORS (local dev entry point)
-- Cloud deployment (Lambda Function URL + S3 adapter) lands in a later PR
-  (RFC §7).
+- `lambda.js` / `storage-s3.js` — the AWS adapters (Lambda Function URL +
+  S3 with conditional writes). Unit-tested with injected doubles; not
+  exercised against real AWS by CI. Full deployment steps:
+  `docs/multi-user-sync/DEPLOYMENT.md`.
