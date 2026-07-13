@@ -3,6 +3,7 @@
 import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
+import { BackupData } from "../../services/syncApi/contract";
 import {
   SYNC_CARD_NOTICE_SET,
   SYNC_PARTY_SET,
@@ -17,9 +18,13 @@ import {
 export interface PendingReview {
   items: IncomingItem[];
   baseVersion: string;
-  // Categories travel alongside (AC-3.10): the remote list from the same
-  // download, merged as an additive union at commit time.
-  remoteCategories: string[];
+  // The FULL remote snapshot from the same download (AC-3.10 + D5). Its
+  // categories merge as an additive union at commit time; its entries /
+  // fixed states / buckets are unioned into the uploaded snapshot so a
+  // rejected item — absent locally — stays in the party backup instead of
+  // being dropped (AC-3.9). The wizard binds to THIS download, never a
+  // re-fetch.
+  remoteData: BackupData;
 }
 
 // One-shot notice carried back to the Data Management card after a
