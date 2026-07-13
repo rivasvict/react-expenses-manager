@@ -4,7 +4,7 @@ import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
-  SYNC_DECLINED_SET,
+  SYNC_CARD_NOTICE_SET,
   SYNC_PARTY_SET,
   SYNC_PENDING_REVIEW_SET,
   SYNC_SESSION_CLEARED,
@@ -19,7 +19,10 @@ export interface PendingReview {
   baseVersion: string;
 }
 
-export type DeclinedReason = "blocked" | "canceled";
+// One-shot notice carried back to the Data Management card after a
+// navigation: a blocked/canceled rejection discovered mid-review
+// (DESIGN 4.3.4 → 4.2) or a connection failure during "Sync again".
+export type SyncCardNotice = "blocked" | "canceled" | "connection";
 
 export interface SyncManagerState {
   session: SyncSession | null;
@@ -31,9 +34,7 @@ export interface SyncManagerState {
   partyLoaded: boolean;
   // Incoming changes staged for /sync-review; null when nothing pending.
   pendingReview: PendingReview | null;
-  // A blocked/canceled rejection discovered mid-review, carried back for
-  // the Data Management card's banner (DESIGN 4.3.4 → 4.2).
-  declined: DeclinedReason | null;
+  cardNotice: SyncCardNotice | null;
 }
 
 interface SyncAction {
@@ -42,7 +43,7 @@ interface SyncAction {
     session?: SyncSession;
     party?: Party | null;
     pendingReview?: PendingReview | null;
-    declined?: DeclinedReason | null;
+    cardNotice?: SyncCardNotice | null;
   };
 }
 
@@ -54,7 +55,7 @@ const getDefaultState = (): SyncManagerState => ({
   party: null,
   partyLoaded: false,
   pendingReview: null,
-  declined: null,
+  cardNotice: null,
 });
 
 export const reducer = (
@@ -73,7 +74,7 @@ export const reducer = (
         party: null,
         partyLoaded: false,
         pendingReview: null,
-        declined: null,
+        cardNotice: null,
       };
     case SYNC_PARTY_SET:
       return {
@@ -86,8 +87,11 @@ export const reducer = (
         ...currentState,
         pendingReview: action.payload?.pendingReview ?? null,
       };
-    case SYNC_DECLINED_SET:
-      return { ...currentState, declined: action.payload?.declined ?? null };
+    case SYNC_CARD_NOTICE_SET:
+      return {
+        ...currentState,
+        cardNotice: action.payload?.cardNotice ?? null,
+      };
     default:
       return currentState;
   }
