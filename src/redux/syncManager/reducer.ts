@@ -17,6 +17,9 @@ import {
 export interface PendingReview {
   items: IncomingItem[];
   baseVersion: string;
+  // Categories travel alongside (AC-3.10): the remote list from the same
+  // download, merged as an additive union at commit time.
+  remoteCategories: string[];
 }
 
 // One-shot notice carried back to the Data Management card after a
