@@ -159,6 +159,15 @@ curl -s -X POST $H/api/auth/signup -H 'Content-Type: application/json' \
 - **"Clear all data" also signs the user out and forgets sync state**
   (rejection memory included) — it clears all of `localStorage`,
   consistent with its danger-zone contract (RFC §2.2).
+- **Sync is additive — deletions do not propagate** (RFC §4.2, PRD §6
+  out-of-scope). Sync merges what members *add or change*; it never
+  carries a deletion in either direction. If a member deletes an entry
+  locally, it remains in the party's backup and other members keep it;
+  on that member's next sync the entry is re-offered once, and they must
+  **Reject** it to suppress it permanently on their own device. There is
+  no way to delete an item for the whole party. This keeps one member
+  from silently erasing another's data (EC-2), at the cost of manual
+  clean-up after a local delete.
 
 ## 5. Cost expectations (RFC §1)
 
