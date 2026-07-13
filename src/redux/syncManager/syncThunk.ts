@@ -16,6 +16,7 @@ import {
   applyItems,
   diffSnapshots,
   mergeCategories,
+  mergeSnapshotForUpload,
   snapshotsContentEqual,
   IncomingItem,
   Rejections,
@@ -142,15 +143,14 @@ export const syncWithParty =
 
       // Step 3 — nothing incoming.
       if (incoming.length === 0) {
-        if (snapshotsContentEqual(localData, remoteData)) {
-          return { type: "up-to-date" }; // AC-3.3 — no upload
-        }
-        // Local-only additions: silent upload of the local snapshot.
-        // Categories are carried as an additive union (AC-3.10) so a
-        // member's custom category is never dropped from the backup —
-        // note: this deviates from RFC §4.3's literal "PUT merged local
-        // snapshot" wording by unioning the category lists.
-        const merged: BackupData = {
+        // The snapshot this member would upload: local data + category
+        // union (AC-3.10) + every remote-only item retained (AC-3.9, D5).
+        // We adopt `withCategories` locally; the UPLOAD additionally unions
+        // in remote-only items (e.g. items this member rejected) so they
+        // stay in the party backup instead of being wholesale-dropped.
+        // Deviates from RFC §4.3's literal "PUT merged local snapshot"
+        // wording by unioning categories and remote items.
+        const withCategories: BackupData = {
           ...localData,
           categories: mergeCategories({
             localCategories: localData.categories,
@@ -158,21 +158,37 @@ export const syncWithParty =
             buckets: localData.buckets,
           }),
         };
+        const uploadSnapshot = mergeSnapshotForUpload({
+          base: withCategories,
+          remoteData,
+        });
+        // Upload only when it would actually change the backup. If the
+        // upload snapshot already content-equals the remote, this member's
+        // local data adds nothing new — the only differences are remote
+        // items this member rejected — so we're up to date with NO upload.
+        // This is what lets a rejecting member converge (AC-3.3/D5): their
+        // local permanently lacks the rejected item, yet they must stop
+        // re-uploading. (Subsumes the old local≡remote no-upload case.)
+        if (snapshotsContentEqual(uploadSnapshot, remoteData)) {
+          return { type: "up-to-date" };
+        }
         try {
           const { version } = await syncApi.putBackup({
             token,
             baseVersion: downloaded.version,
-            envelope: buildBackupEnvelope(merged) as BackupEnvelope,
+            envelope: buildBackupEnvelope(uploadSnapshot) as BackupEnvelope,
           });
           // Adopt any newly received categories locally (commit happens
-          // only here, after the upload's 200).
+          // only here, after the upload's 200). We commit `withCategories`,
+          // NOT the upload union — rejected remote items must never merge
+          // into this device's data (AC-3.9).
           if (
-            merged.categories.length !== localData.categories.length ||
-            merged.categories.some(
+            withCategories.categories.length !== localData.categories.length ||
+            withCategories.categories.some(
               (name, index) => name !== localData.categories[index]
             )
           ) {
-            await commitMergedLocally(dispatch, merged);
+            await commitMergedLocally(dispatch, withCategories);
           }
           commitSyncState(party.id, version, syncState.rejections);
           return { type: "up-to-date" };
@@ -191,7 +207,7 @@ export const syncWithParty =
           pendingReview: {
             items: incoming as IncomingItem[],
             baseVersion: downloaded.version,
-            remoteCategories: remoteData.categories,
+            remoteData,
           },
         },
       });
@@ -224,24 +240,41 @@ export const completeReview =
     if (!session || !party) throw new Error("Sync requires a party");
 
     // Local data is re-read at commit time so entries added mid-review
-    // survive; the accepted items still apply cleanly by itemKey.
+    // survive; the accepted items still apply cleanly by itemKey. `merged`
+    // is what we COMMIT locally: local data + accepted/modified items only,
+    // never rejected ones (AC-3.9).
     const localData: BackupData = await storage.exportData();
     const merged = applyItems(localData, acceptedItems);
-    // Categories travel alongside (AC-3.10): additive union with the
-    // remote list from the same download, excluding names the merged
-    // snapshot now holds as buckets.
-    const remoteCategories: string[] =
-      getState().syncManager.pendingReview?.remoteCategories || [];
+    // Categories + entries/fixed/buckets travel alongside from the SAME
+    // download (AC-3.10, D5). Categories: additive union excluding names
+    // the merged snapshot now holds as buckets.
+    const remoteData: BackupData =
+      getState().syncManager.pendingReview?.remoteData || {
+        balance: [],
+        buckets: {},
+        categories: [],
+        fixedEntries: [],
+      };
     merged.categories = mergeCategories({
       localCategories: merged.categories,
-      remoteCategories,
+      remoteCategories: remoteData.categories,
       buckets: merged.buckets,
+    });
+
+    // The UPLOAD additionally unions in every remote item absent from
+    // `merged` — a rejected item (or one rejected in a prior sync) — so it
+    // stays in the party backup rather than being wholesale-dropped
+    // (AC-3.9, D5). Accepted/modified items win because their itemKey is
+    // already in `merged` (EC-5). This union is NOT committed locally.
+    const uploadSnapshot = mergeSnapshotForUpload({
+      base: merged,
+      remoteData,
     });
 
     const { version } = await syncApi.putBackup({
       token: session.token,
       baseVersion,
-      envelope: buildBackupEnvelope(merged) as BackupEnvelope,
+      envelope: buildBackupEnvelope(uploadSnapshot) as BackupEnvelope,
     });
 
     // Commit — the only write to app localStorage in the whole flow.

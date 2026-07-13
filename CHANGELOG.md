@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.3] - 2026-07-13
+
+### Fixed
+- Multi-user sync QA round 2 (D5): rejecting another member's item no
+  longer deletes it from the shared party backup or triggers an endless
+  upload ping-pong (AC-3.9, EC-2, AC-3.3/3.8). Both upload paths — the
+  silent local-only upload and the reviewed merge — now build the uploaded
+  snapshot as the union of the downloaded remote snapshot and the local
+  data (plus accepted/modified items), via a new `mergeSnapshotForUpload`
+  helper keyed by the merge engine's itemKeys. A remote item absent
+  locally (one this member rejected, now or in a prior sync) is retained
+  in the backup at its remote value, mirroring what `mergeCategories`
+  already did for categories; accepted-and-modified items still win over
+  the remote value (EC-5). The rejected item is never merged into the
+  rejecting member's own data, and the silent path now uploads only when
+  the union would actually change the backup, so a rejecting member
+  converges to "You're up to date." instead of re-uploading forever.
+  Consistent with the additive-only design, sync still carries no
+  deletions in either direction.
+
 ## [1.6.2] - 2026-07-13
 
 ### Fixed
