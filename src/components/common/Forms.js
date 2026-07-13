@@ -20,6 +20,10 @@ const InputPassword = (props) => (
   <GenericInput {...{ ...props, type: "password" }} />
 );
 
+// Native date input (multi-user sync review wizard, DESIGN 4.3.2) — the
+// smallest date control that fits the existing Forms.js look.
+const InputDate = (props) => <GenericInput {...{ ...props, type: "date" }} />;
+
 // react-bootstrap v2 dropped the `block` prop; full width comes from CSS.
 const FormButton = (props) => (
   <Button {...props} className={`full-width ${props.className || ""}`}></Button>
@@ -50,6 +54,7 @@ export {
   InputText,
   InputPassword,
   InputNumber,
+  InputDate,
   FormButton,
   FormSelect,
   FormContent,
