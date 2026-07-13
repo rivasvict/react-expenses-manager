@@ -162,14 +162,34 @@ export const syncWithParty =
           base: withCategories,
           remoteData,
         });
-        // Upload only when it would actually change the backup. If the
-        // upload snapshot already content-equals the remote, this member's
-        // local data adds nothing new — the only differences are remote
-        // items this member rejected — so we're up to date with NO upload.
-        // This is what lets a rejecting member converge (AC-3.3/D5): their
+        // Adopting a remote-only category and deciding whether to upload are
+        // INDEPENDENT (AC-3.10 vs AC-3.9/D5). A member who is otherwise in
+        // sync but receives a new standalone category must adopt it locally
+        // even when no upload is needed — otherwise that category diverges
+        // permanently. So: adopt `withCategories` locally whenever the
+        // unioned category list differs from local (never the item union —
+        // rejected remote items must not merge into this device, AC-3.9)…
+        const categoriesChangedLocally =
+          withCategories.categories.length !== localData.categories.length ||
+          withCategories.categories.some(
+            (name, index) => name !== localData.categories[index]
+          );
+        // …and upload only when the union would actually CHANGE the backup.
+        // If the upload snapshot already content-equals the remote, local
+        // adds nothing new — the only differences are remote items this
+        // member rejected — so this member is up to date with NO upload.
+        // That is what lets a rejecting member converge (AC-3.3/D5): their
         // local permanently lacks the rejected item, yet they must stop
         // re-uploading. (Subsumes the old local≡remote no-upload case.)
         if (snapshotsContentEqual(uploadSnapshot, remoteData)) {
+          if (categoriesChangedLocally) {
+            // Committing without an upload is safe here: the remote already
+            // holds these categories (that is why the snapshots compare
+            // equal), so there is nothing to push — we only mirror them
+            // locally. No sync.state version write, matching the download-
+            // adopt-only paths.
+            await commitMergedLocally(dispatch, withCategories);
+          }
           return { type: "up-to-date" };
         }
         try {
@@ -182,12 +202,7 @@ export const syncWithParty =
           // only here, after the upload's 200). We commit `withCategories`,
           // NOT the upload union — rejected remote items must never merge
           // into this device's data (AC-3.9).
-          if (
-            withCategories.categories.length !== localData.categories.length ||
-            withCategories.categories.some(
-              (name, index) => name !== localData.categories[index]
-            )
-          ) {
+          if (categoriesChangedLocally) {
             await commitMergedLocally(dispatch, withCategories);
           }
           commitSyncState(party.id, version, syncState.rejections);

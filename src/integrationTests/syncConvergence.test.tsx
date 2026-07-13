@@ -184,3 +184,57 @@ describe("D5 — rejecting a member's item keeps it in the backup and converges"
     expect(server.getUploadedBackups()).toHaveLength(2);
   });
 });
+
+// The upload-skip gate (D5) must NOT swallow standalone-category adoption:
+// a member otherwise fully in sync who receives a new remote-only category
+// (added by another member via AddCategory, no entry) must ADOPT it locally
+// even though no upload is needed (AC-3.10) — and then stay converged.
+describe("AC-3.10 — adopting a standalone remote-only category needs no upload", () => {
+  // The exact same entry lives on B's device and in the backup, so nothing
+  // is incoming and no item needs uploading — only the category differs.
+  const sharedEntry = {
+    id: "shared-1",
+    date: ts(2026, MAY, 5),
+    amount: "40",
+    description: "Dinner",
+    type: "expense",
+    categories_path: ",eating out,",
+  };
+
+  it("B adopts 'Travel' locally, reaches up-to-date with NO upload, and does not re-upload on re-sync", async () => {
+    server.seedUser(jane);
+    server.seedPartyWithMembers([jane.email]);
+    // The backup carries B's entry plus a standalone category another member
+    // created (no entry uses it).
+    server.seedRemoteBackup(
+      envelope({ balance: [sharedEntry], categories: ["Travel"] }) as any
+    );
+    // B's device has the entry but not the category.
+    localStorage.setItem("everShowDataDisclaimer", "0");
+    localStorage.setItem("balance", JSON.stringify([sharedEntry]));
+    const session = server.loginAs(jane.email);
+    const { user } = await renderApp("/data-management", { session });
+
+    // Sync: nothing to review, no upload needed — but "Travel" is adopted.
+    await clickSync(user);
+    expect(await screen.findByText("You're up to date.")).toBeInTheDocument();
+    expect(server.getUploadedBackups()).toEqual([]);
+
+    // The category is now on B's Categories screen…
+    await user.click(screen.getByRole("link", { name: "Categories" }));
+    expect(await screen.findByText("Travel")).toBeInTheDocument();
+
+    // …and in the entry form's category selector.
+    await user.click(screen.getByRole("link", { name: "Home" }));
+    await user.click(
+      await screen.findByRole("link", { name: /add expenses/i })
+    );
+    expect(await screen.findByRole("combobox")).toContainHTML("Travel");
+
+    // A re-sync stays converged with NO upload — B is not stuck re-uploading.
+    await user.click(screen.getByRole("link", { name: "Data Management" }));
+    await clickSync(user);
+    expect(await screen.findByText("You're up to date.")).toBeInTheDocument();
+    expect(server.getUploadedBackups()).toEqual([]);
+  });
+});

@@ -23,7 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the union would actually change the backup, so a rejecting member
   converges to "You're up to date." instead of re-uploading forever.
   Consistent with the additive-only design, sync still carries no
-  deletions in either direction.
+  deletions in either direction. Local category adoption (AC-3.10) is
+  decoupled from the upload-skip gate: a member otherwise fully in sync who
+  receives a new standalone remote-only category adopts it locally even
+  when no upload is needed, then stays converged with no re-upload loop.
 
 ## [1.6.2] - 2026-07-13
 
