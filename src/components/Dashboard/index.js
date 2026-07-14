@@ -20,6 +20,13 @@ import AddBucket from "../common/ExpensesManager/AddBucket";
 import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
 import FixedEntries from "../common/ExpensesManager/FixedEntries";
+import Account from "../Account";
+import SignUpScreen from "../Account/SignUpScreen";
+import SignInScreen from "../Account/SignInScreen";
+import Party from "../Party";
+import InviteScreen from "../Party/InviteScreen";
+import JoinScreen from "../Party/JoinScreen";
+import SyncReview from "../SyncReview";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -84,6 +91,31 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />
+            </Route>
+            {/* Account/auth screens (multi-user sync, DESIGN §2). Additive:
+                no existing route is gated by the session (AC-1.7). */}
+            <Route path={`${match.url}account`}>
+              <Account />
+            </Route>
+            <Route path={`${match.url}sign-up`}>
+              <SignUpScreen />
+            </Route>
+            <Route path={`${match.url}sign-in`}>
+              <SignInScreen />
+            </Route>
+            {/* Party screens (multi-user sync, DESIGN §3). The specific
+                sub-routes must precede the bare /party path. */}
+            <Route path={`${match.url}party/invite`}>
+              <InviteScreen />
+            </Route>
+            <Route path={`${match.url}party/join`}>
+              <JoinScreen />
+            </Route>
+            <Route path={`${match.url}party`}>
+              <Party />
+            </Route>
+            <Route path={`${match.url}sync-review`}>
+              <SyncReview />
             </Route>
             {/** TODO: Work with a bucketId instead of a bucketName */}
             <Route path={`${match.url}edit-bucket/:bucketName`}>

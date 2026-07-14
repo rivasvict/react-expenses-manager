@@ -5,6 +5,191 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.3] - 2026-07-13
+
+### Fixed
+- Multi-user sync QA round 2 (D5): rejecting another member's item no
+  longer deletes it from the shared party backup or triggers an endless
+  upload ping-pong (AC-3.9, EC-2, AC-3.3/3.8). Both upload paths — the
+  silent local-only upload and the reviewed merge — now build the uploaded
+  snapshot as the union of the downloaded remote snapshot and the local
+  data (plus accepted/modified items), via a new `mergeSnapshotForUpload`
+  helper keyed by the merge engine's itemKeys. A remote item absent
+  locally (one this member rejected, now or in a prior sync) is retained
+  in the backup at its remote value, mirroring what `mergeCategories`
+  already did for categories; accepted-and-modified items still win over
+  the remote value (EC-5). The rejected item is never merged into the
+  rejecting member's own data, and the silent path now uploads only when
+  the union would actually change the backup, so a rejecting member
+  converges to "You're up to date." instead of re-uploading forever.
+  Consistent with the additive-only design, sync still carries no
+  deletions in either direction. Local category adoption (AC-3.10) is
+  decoupled from the upload-skip gate: a member otherwise fully in sync who
+  receives a new standalone remote-only category adopts it locally even
+  when no upload is needed, then stays converged with no re-upload loop.
+
+## [1.6.2] - 2026-07-13
+
+### Fixed
+- Multi-user sync QA round 1: user-created categories now travel through
+  sync (AC-3.10). Both upload paths — the silent local-only upload and
+  the reviewed merge — write an additive, case-insensitive union of the
+  local and remote category lists (excluding names already promoted to
+  buckets), so a member's custom category is never dropped from the party
+  backup and reaches every member. `snapshotsContentEqual` compares
+  categories case-insensitively so two members with different casings
+  converge to "You're up to date." instead of re-uploading forever
+- Review wizard: a brand-new fixed entry or bucket arriving with several
+  pending history states now shows ONE card per definition (RFC §4.1),
+  fronted by the resolved current state; one decision applies to every
+  pending state and a rejection records a per-state `(key, hash)` entry
+  for the whole group
+- Review wizard: navigating away mid-review now clears the staged review,
+  so a later direct visit to `/sync-review` finds nothing to review
+  (DESIGN §4.3) — internal phase changes and the already-cleared
+  cancel/success/declined flows stay unaffected
+- Review wizard: action button aria-labels keep the contributor's name
+  casing ("…added by Tom", not "…added by tom")
+- Data Management sync card no longer updates its state after navigating
+  to the review wizard, removing an act()/unmounted-update warning
+
+## [1.6.1] - 2026-07-13
+
+### Added
+- Cloud deployment (multi-user sync, PR 6): `server/lambda.js` (Lambda
+  Function URL adapter) and `server/storage-s3.js` (dependency-free S3
+  adapter with SigV4 signing and conditional-write compare-and-swap),
+  unit-tested with injected doubles — CI never talks to AWS; full
+  step-by-step guide in `docs/multi-user-sync/DEPLOYMENT.md` (bucket,
+  Lambda, IAM, env vars, CORS, secrets generation, cost notes)
+- Automated NFR-2 sweep: a server test runs the full account/party/
+  invitation/backup lifecycle on the real fs storage and asserts no
+  plaintext password, invitation code or invitation password appears at
+  rest or in logs
+- DoD audit (`docs/multi-user-sync/DOD-AUDIT.md`) mapping every PRD
+  Definition-of-Done item and QA-flagged gap to its covering test, plus
+  gap-closing tests: dead-token fallback to logged-out, blocking is not
+  retroactive to already-synced entries, and zero sync requests without
+  explicit user action
+
+### Fixed
+- Review wizard: a failed "Sync again" after a version conflict now
+  returns to Data Management with the connection banner instead of
+  landing silently on an idle card
+- Review wizard: opening the wizard now focuses the "Review changes"
+  heading (screen readers announce the screen); advancing between items
+  keeps moving focus to the new card
+
+## [1.6.0] - 2026-07-13
+
+### Added
+- Review wizard (multi-user sync, PR 5): incoming changes are reviewed
+  one item per screen — kind badge, amount/description/category/date (or
+  the fixed-entry/bucket equivalents), and attribution ("Added by {name}"
+  or "Added anonymously" for legacy items) — with Accept, Modify (inline
+  edit before accepting; the edited value is what gets merged and
+  uploaded) and Reject
+- Accept all / Reject all shortcuts acting on the remaining unreviewed
+  items behind a confirmation
+- Decisions are staged in memory only: nothing touches this device until
+  the final upload succeeds, so canceling or navigating away mid-review
+  is always safe and the next sync re-presents everything
+- On upload success the merged data is applied locally, rejected items
+  are permanently remembered (a re-edited version still re-prompts), and
+  "Last synced" updates; a version conflict mid-review discards the
+  staged decisions with a "Sync again" restart; a network failure keeps
+  them with a Retry; being blocked (or the party canceled) mid-review
+  returns to Data Management with the matching declined banner
+- Sync card: a failed party check now says so instead of showing
+  "Checking your party…" forever
+
+## [1.5.0] - 2026-07-12
+
+### Added
+- Sync engine + Data Management sync card (multi-user sync, PR 4): a
+  manual "Sync with party" button — never automatic — that downloads the
+  party backup, diffs it against local data and handles every no-review
+  path end to end
+- First sync (no remote backup yet) uploads local data as the party's
+  starting point with a distinct confirmation; identical states show
+  "You're up to date."; local-only additions upload silently
+- Explanatory captions under the button for every disabled state (logged
+  out, no party, blocked, canceled) plus a "Last synced" caption;
+  download failures, stale blocked/canceled rejections and repeated
+  version conflicts each get their own alert, leaving local data
+  untouched
+- Incoming changes route to a minimal "Review changes" screen offering
+  only Cancel review (nothing is ever applied unreviewed); the full
+  review wizard arrives next
+- Pure merge engine (`syncMergeHelper`): canonical hashing, item
+  identity, additive-only diff with permanent per-item rejection memory,
+  and merge application incl. fixed-entry tombstones and
+  case-insensitive bucket keys
+- Server: real backup upload with baseVersion compare-and-swap (409
+  VERSION_CONFLICT on mismatch, create-only for the first sync);
+  oversized bodies now return 413 PAYLOAD_TOO_LARGE; malformed
+  percent-encoding in paths returns 404 instead of 500
+- Existing Download/Restore/Clear cards are byte-identical and untouched
+
+## [1.4.0] - 2026-07-12
+
+### Added
+- Party management (multi-user sync, PR 3): the organizer can block a
+  member (confirm dialog; the member keeps their record and their
+  already-contributed entries, but immediately loses sync access) and
+  cancel the party (confirm dialog; nobody's local data is touched)
+- Blocked members and members of a canceled party see dedicated `/party`
+  views explaining what happened, and are free to create or join another
+  party
+- Server: block/cancel endpoints plus a shared party-access enforcement
+  layer — blocked members get 403 BLOCKED and canceled parties 410
+  PARTY_CANCELED on the backup endpoints, so the upcoming sync
+  implementation inherits the enforcement unchanged
+- Organizer-only visibility for Block/Cancel controls; members see a
+  read-only list
+
+## [1.3.0] - 2026-07-12
+
+### Added
+- Parties (multi-user sync, PR 2): a logged-in user can create one party
+  and becomes its organizer; the party is auto-named "{first name}'s
+  Party"
+- Invitations: the organizer generates a one-time code plus an
+  organizer-chosen password from `/party/invite` (code shown exactly
+  once, copy buttons with a transient "Copied" confirmation); invitations
+  are stored only as a sha256 lookup key plus an AES-256-GCM-encrypted
+  record — never in plaintext
+- Joining: `/party/join` redeems a code + password; a wrong password
+  never consumes the invitation, a redeemed invitation is permanently
+  invalid, and a user already in a party is rejected without consuming it
+- Party hub `/party` (reached from Account): no-party, organizer and
+  member views; organizer-only controls stay hidden from members, and
+  create/join affordances disappear once in a party
+- Server: party/invitation endpoints with compare-and-swap updates on the
+  party record; `/api/me` now returns the party
+- Central 401 handling in the sync API client: a rejected token clears
+  the stored session and degrades the UI to logged-out
+
+## [1.2.0] - 2026-07-12
+
+### Added
+- Accounts (multi-user sync, PR 1): optional sign up / sign in / log out —
+  the app remains fully functional without an account, and no existing
+  route is gated
+- Account entry point in the app header (generic glyph when logged out,
+  initials chip when logged in) and new in-app screens: `/account`,
+  `/sign-up`, `/sign-in`
+- Local sync server (`npm run sync-server`): dependency-free plain Node
+  service with scrypt password hashing, HMAC-signed 30-day tokens and
+  on-disk JSON storage under `server/.data/` (gitignored); contract tests
+  via `npm run test:server` (Node >= 18); see `server/README.md`
+- Sessions persist across reloads/restarts (`sync.session`) until logout
+  or token expiry; login/signup errors use clear, non-revealing copy
+- Attribution: entries, fixed-entry states and bucket states created while
+  logged in are stamped with `addedBy` (account id + first name) for the
+  upcoming sync review wizard; anonymous when logged out
+- `REACT_APP_SYNC_API_HOST` config (defaults to `http://localhost:4000`)
+
 ## [1.1.0] - 2026-07-10
 
 ### Changed

@@ -72,6 +72,8 @@ const addFixedEntryData = async ({ entry, from }) => {
     amount: entry.amount,
     description: entry.description,
     categories_path: entry.categories_path,
+    // Optional attribution (AC-1.6) — persisted as-is when present.
+    ...(entry.addedBy ? { addedBy: entry.addedBy } : {}),
   });
   await storeFixedEntriesInLocalStorage({ data: newFixedEntries });
   return newFixedEntries;
@@ -105,18 +107,27 @@ const normalizeBucketValue = (value) => {
 // is replaced; otherwise a new entry is appended and the history is kept
 // sorted chronologically. Old-format number values are transparently migrated
 // to the array form on the first edit.
-const editBucketForMonth = async ({ bucketName, limit, fromYearMonth }) => {
+const editBucketForMonth = async ({
+  bucketName,
+  limit,
+  fromYearMonth,
+  addedBy,
+}) => {
   if (!bucketName) throw new Error("No bucket name was set");
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
 
+  // Optional attribution for the new history state (AC-1.6).
+  const newState = {
+    from: fromYearMonth,
+    limit,
+    ...(addedBy ? { addedBy } : {}),
+  };
   const existingIndex = historyBuckets.findIndex((e) => e.from === fromYearMonth);
   const updatedHistory =
     existingIndex >= 0
-      ? historyBuckets.map((e, i) =>
-          i === existingIndex ? { from: fromYearMonth, limit } : e
-        )
-      : [...historyBuckets, { from: fromYearMonth, limit }];
+      ? historyBuckets.map((e, i) => (i === existingIndex ? newState : e))
+      : [...historyBuckets, newState];
 
   updatedHistory.sort((a, b) => (a.from <= b.from ? -1 : 1));
 
@@ -152,7 +163,7 @@ const addCategoryData = async ({ category }) => {
 // so we never create orphan or duplicated buckets. Existing buckets are edited
 // via editBucket. Once a category gets a bucket, it is removed from the
 // standalone categories list so it does not show up twice.
-const addBucketData = async ({ bucket }) => {
+const addBucketData = async ({ bucket, addedBy }) => {
   if (!bucket) throw new Error("No bucket data was set");
 
   const [name, value] = Object.entries(bucket)[0] || [];
@@ -169,7 +180,14 @@ const addBucketData = async ({ bucket }) => {
 
   const newBuckets = {
     ...storedBuckets,
-    [trimmedName]: [{ from: "0000-00", limit: Number(value) || 0 }],
+    [trimmedName]: [
+      {
+        from: "0000-00",
+        limit: Number(value) || 0,
+        // Optional attribution for the initial history state (AC-1.6).
+        ...(addedBy ? { addedBy } : {}),
+      },
+    ],
   };
   await storeBucketsInLocalStorage({ data: newBuckets });
 
@@ -268,11 +286,11 @@ const LocalStorage = () => ({
     await storeBucketsInLocalStorage({ data: buckets });
     return getBucketsFromLocalStorage();
   },
-  editBucket: async ({ bucketName, limit, fromYearMonth }) => {
-    return editBucketForMonth({ bucketName, limit, fromYearMonth });
+  editBucket: async ({ bucketName, limit, fromYearMonth, addedBy }) => {
+    return editBucketForMonth({ bucketName, limit, fromYearMonth, addedBy });
   },
-  addBucket: async ({ bucket }) => {
-    return addBucketData({ bucket });
+  addBucket: async ({ bucket, addedBy }) => {
+    return addBucketData({ bucket, addedBy });
   },
   getCategories: async () => getCategoriesFromLocalStorage(),
   addCategory: async ({ category }) => {
@@ -285,13 +303,32 @@ const LocalStorage = () => ({
     return addFixedEntryData({ entry, from });
   },
   // Edit a recurring entry from a month forward; earlier months are untouched.
-  editFixedEntry: async ({ id, from, amount, description, categories_path }) => {
-    return setFixedEntryData({ id, from, amount, description, categories_path });
+  editFixedEntry: async ({
+    id,
+    from,
+    amount,
+    description,
+    categories_path,
+    addedBy,
+  }) => {
+    return setFixedEntryData({
+      id,
+      from,
+      amount,
+      description,
+      categories_path,
+      ...(addedBy ? { addedBy } : {}),
+    });
   },
   // Remove a recurring entry from a month forward by writing a tombstone.
   // Earlier months keep it, mirroring the edition behaviour.
-  removeFixedEntry: async ({ id, from }) => {
-    return setFixedEntryData({ id, from, removed: true });
+  removeFixedEntry: async ({ id, from, addedBy }) => {
+    return setFixedEntryData({
+      id,
+      from,
+      removed: true,
+      ...(addedBy ? { addedBy } : {}),
+    });
   },
   getBucket: async ({ bucketName }) => {
     const buckets = await getBucketsFromLocalStorage();

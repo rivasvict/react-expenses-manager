@@ -1,0 +1,177 @@
+@import "../../variables.scss";
+
+.sync-review {
+  .sync-review__card {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+  }
+
+  .sync-review__description {
+    color: $text-secondary;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+  }
+
+  .sync-review__success {
+    color: $text-primary;
+    font-weight: 600;
+    margin-bottom: 0.9rem;
+  }
+
+  .wizard-progress {
+    margin-top: $vertical-standard-margin;
+
+    &__bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+
+      progress {
+        flex: 1 1 auto;
+        accent-color: $accent;
+      }
+    }
+
+    &__count {
+      color: $text-secondary;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    &__bulk {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.6rem;
+
+      .btn {
+        flex: 1 1 0;
+        height: 2.4em;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .review-card {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    &__kind {
+      font-size: 0.8rem;
+      font-weight: 700;
+
+      &--income {
+        color: $income;
+      }
+
+      &--expense {
+        color: $expense;
+      }
+
+      &--neutral {
+        color: $accent;
+      }
+    }
+
+    &__attribution {
+      font-size: 0.82rem;
+    }
+
+    &__amount {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+
+      &--income {
+        color: $income;
+      }
+
+      &--expense {
+        color: $expense;
+      }
+
+      &--neutral {
+        color: $text-primary;
+      }
+    }
+
+    &__description {
+      color: $text-primary;
+      margin-bottom: 0.2rem;
+    }
+
+    &__categories,
+    &__date {
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+
+    &__actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+
+      .btn {
+        flex: 1 1 0;
+      }
+    }
+
+    &__cancel-link {
+      background: none;
+      border: none;
+      color: $text-secondary;
+      font-size: 0.82rem;
+      text-decoration: underline;
+      margin-top: 0.9rem;
+      padding: 0;
+
+      &:hover {
+        color: $text-primary;
+      }
+
+      &:focus-visible {
+        @include focus-ring();
+      }
+    }
+
+    &__modify {
+      .form-group {
+        margin-bottom: 0.7rem;
+      }
+
+      label {
+        color: $text-secondary;
+        font-size: 0.82rem;
+        margin-bottom: 0.2rem;
+      }
+    }
+  }
+
+  .wizard-summary {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+
+    &__title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 0.35rem;
+    }
+
+    &__counts {
+      color: $text-secondary;
+      font-size: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.1.0",
+  "version": "1.6.3",
   "private": true,
   "dependencies": {
     "@iconify/react": "^1.1.4",
@@ -39,7 +39,9 @@
     "eject": "react-scripts eject",
     "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "sync-server": "node server/index.js",
+    "test:server": "node --test server/test/*.test.js"
   },
   "eslintConfig": {
     "extends": "react-app"
