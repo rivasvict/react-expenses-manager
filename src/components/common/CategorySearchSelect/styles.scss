@@ -1,0 +1,88 @@
+@import '../../../variables.scss';
+
+// Chevron affordance, identical to the native select's (global.scss).
+$select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
+
+.category-search-select {
+  position: relative;
+  width: 100%;
+
+  // Trigger: same box model as `select.form-control` so the closed control is
+  // visually indistinguishable from the native select it replaces.
+  &__trigger {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    padding: 0 2.4rem 0 1.1em;
+    cursor: pointer;
+    background-image: $select-chevron;
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+
+    // While the panel is open the trigger reads as "active", matching the
+    // `.form-control:focus` treatment even though DOM focus sits in the
+    // panel's search input.
+    &--open {
+      border-color: $accent;
+      box-shadow: 0 0 0 0.2rem $accent-soft;
+    }
+  }
+
+  &__value {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // Lightweight non-portal popover; visually consistent with .modal-content.
+  &__panel {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background-color: $bg-surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius-card;
+    box-shadow: $shadow-pop;
+    overflow: hidden;
+  }
+
+  &__search-wrap {
+    padding: 0.6rem;
+  }
+
+  &__options {
+    // Defensive vh clamp so the mobile keyboard cannot push the whole list
+    // off-screen. Interpolated so libsass passes the CSS min() through
+    // instead of trying (and failing) to compare rem with vh at build time.
+    max-height: #{"min(16rem, 40vh)"};
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__option {
+    padding: 0.65rem 1rem;
+    color: $text-primary;
+    cursor: pointer;
+    transition: background-color $transition-quick;
+
+    &--highlighted {
+      background-color: $bg-raised-hover;
+    }
+
+    &--selected {
+      background-color: $accent-soft;
+      color: $text-primary;
+    }
+  }
+
+  &__empty-state {
+    padding: 0.65rem 1rem;
+    color: $text-muted;
+    cursor: default;
+    text-align: center;
+  }
+}

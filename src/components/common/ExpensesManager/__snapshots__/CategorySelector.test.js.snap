@@ -1,26 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Renders CategorySelector component properly 1`] = `
-<select
-  className="form-control"
-  name="CategorySelector"
-  onChange={[MockFunction]}
-  value=""
+<div
+  className="category-search-select"
 >
-  <option
-    value=""
+  <div
+    aria-controls="category-selector-listbox"
+    aria-expanded={false}
+    aria-haspopup="listbox"
+    aria-labelledby="category-selector-label"
+    className="form-control category-search-select__trigger"
+    id="category-selector"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="combobox"
+    tabIndex={0}
   >
-    All CategorySelector
-  </option>
-  <option
-    value=",cat1,"
-  >
-    Cat1
-  </option>
-  <option
-    value=",cat2,"
-  >
-    Cat2
-  </option>
-</select>
+    <span
+      className="category-search-select__value"
+    >
+      All CategorySelector
+    </span>
+  </div>
+</div>
 `;

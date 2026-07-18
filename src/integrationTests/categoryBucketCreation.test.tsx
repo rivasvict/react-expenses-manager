@@ -41,9 +41,9 @@ describe("category + bucket creation (issue #100)", () => {
     localStorage.setItem("categories", JSON.stringify(["Gym"]));
     const { user } = await renderApp("/add-bucket");
 
-    const categorySelect = screen.getByRole("combobox");
-    expect(screen.getByRole("option", { name: "Gym" })).toBeInTheDocument();
-    await user.selectOptions(categorySelect, "Gym");
+    await user.click(screen.getByRole("combobox"));
+    expect(await screen.findByRole("option", { name: "Gym" })).toBeInTheDocument();
+    await user.click(screen.getByRole("option", { name: "Gym" }));
     await user.type(
       screen.getByPlaceholderText(/insert bucket allowance/i),
       "120"
@@ -76,10 +76,10 @@ describe("category + bucket creation (issue #100)", () => {
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Monthly pass");
 
-    const categorySelect = screen.getByRole("combobox");
+    await user.click(screen.getByRole("combobox"));
     // The brand new category is available as an option even without a bucket.
-    expect(screen.getByRole("option", { name: "Gym" })).toBeInTheDocument();
-    await user.selectOptions(categorySelect, "Gym");
+    expect(await screen.findByRole("option", { name: "Gym" })).toBeInTheDocument();
+    await user.click(screen.getByRole("option", { name: "Gym" }));
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // The expense shows on the dashboard.

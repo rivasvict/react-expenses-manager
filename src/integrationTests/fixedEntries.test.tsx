@@ -38,10 +38,8 @@ const addRecurringExpense = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Food" })
-  );
+  await user.click(screen.getByRole("combobox"));
+  await user.click(await screen.findByRole("option", { name: "Food" }));
   await user.click(screen.getByLabelText(/recurring/i));
   await user.click(screen.getByRole("button", { name: /submit/i }));
   // Back on the dashboard after submitting.
@@ -60,10 +58,8 @@ const addRecurringIncome = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Salary" })
-  );
+  await user.click(screen.getByRole("combobox"));
+  await user.click(await screen.findByRole("option", { name: "Salary" }));
   await user.click(screen.getByLabelText(/recurring/i));
   await user.click(screen.getByRole("button", { name: /submit/i }));
   // Back on the dashboard after submitting.
@@ -81,10 +77,8 @@ const addRegularExpense = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Food" })
-  );
+  await user.click(screen.getByRole("combobox"));
+  await user.click(await screen.findByRole("option", { name: "Food" }));
   // Recurring toggle is intentionally NOT clicked.
   await user.click(screen.getByRole("button", { name: /submit/i }));
   await screen.findByRole("link", { name: /add expenses/i });

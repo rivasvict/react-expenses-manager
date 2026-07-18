@@ -5,6 +5,35 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-07-18
+
+### Added
+- Searchable category dropdowns: every category select (entry form,
+  incomes/expenses category filter, Add bucket) is now a hand-built
+  type-to-filter combobox (`CategorySearchSelect`) with a search box inside
+  the popup, case-insensitive substring filtering, full keyboard support
+  (open with Enter/Space/arrows, navigate with ArrowUp/ArrowDown, commit
+  with Enter, dismiss with Escape), click-outside close, and a
+  "No matching categories" empty state. The closed trigger keeps the exact
+  look of the previous native select and the ARIA 1.2 combobox + listbox
+  pattern; no new dependencies were added
+
+### Changed
+- `CategorySelector` is now a thin adapter over `CategorySearchSelect`,
+  preserving its props contract (`handleChange` still receives an
+  event-like `{ currentTarget: { value, name } }`, values keep the
+  `,category,` format and `""` for the empty option)
+
+### Tests
+- New unit suite for `CategorySearchSelect` (open/close, filtering,
+  selection, keyboard navigation with clamping, empty state, click-outside,
+  empty-option reset) and new integration tests for type-to-filter entry
+  creation and the no-match empty state
+- Integration tests that drove the old native select via
+  `user.selectOptions` now open the combobox and click the option instead;
+  assertions and intent are unchanged
+- `CategorySelector.test.js.snap` regenerated for the new markup
+
 ## [1.1.0] - 2026-07-10
 
 ### Changed

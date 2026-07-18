@@ -111,10 +111,8 @@ describe("/incomes route", () => {
     await user.click(await screen.findByText("Incomes"));
 
     // Select "Salary" filter
-    await user.selectOptions(
-      await screen.findByRole("combobox"),
-      "Salary"
-    );
+    await user.click(await screen.findByRole("combobox"));
+    await user.click(await screen.findByRole("option", { name: "Salary" }));
 
     // Only the salary entry is shown
     expect(await screen.findByText(/paycheck/i)).toBeInTheDocument();
@@ -151,10 +149,8 @@ describe("/expenses route", () => {
     await user.click(await screen.findByText("Expenses"));
 
     // Select "Food" filter
-    await user.selectOptions(
-      await screen.findByRole("combobox"),
-      "Food"
-    );
+    await user.click(await screen.findByRole("combobox"));
+    await user.click(await screen.findByRole("option", { name: "Food" }));
 
     // Only the food entry is shown
     expect(await screen.findByText(/supermarket/i)).toBeInTheDocument();
