@@ -1,8 +1,5 @@
 @import '../../../variables.scss';
 
-// Chevron affordance, identical to the native select's (global.scss).
-$select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
-
 .category-search-select {
   position: relative;
   width: 100%;
@@ -29,6 +26,10 @@ $select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.
   }
 
   &__value {
+    // min-width: 0 lets the flex item shrink below its content size so long
+    // labels actually ellipsize instead of overflowing past the caret.
+    flex: 1 1 auto;
+    min-width: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -191,6 +191,8 @@ const CategorySearchSelect = ({
       className={`category-search-select ${className}`.trim()}
       ref={rootRef}
     >
+      {/* aria-controls is only emitted while the listbox is mounted so the
+          IDREF never dangles for a11y linters/AT while closed. */}
       <div
         id={id}
         ref={triggerRef}
@@ -199,7 +201,7 @@ const CategorySearchSelect = ({
         tabIndex={0}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-controls={`${id}-listbox`}
+        aria-controls={isOpen ? `${id}-listbox` : undefined}
         aria-labelledby={`${id}-label`}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
@@ -209,12 +211,16 @@ const CategorySearchSelect = ({
       {isOpen && (
         <div className="category-search-select__panel">
           <div className="category-search-select__search-wrap">
+            {/* The input holds aria-activedescendant, so it must also declare
+                the listbox it controls for the highlighted option to be
+                announced (ARIA 1.2 list-autocomplete wiring). */}
             <input
               ref={searchRef}
               type="text"
               className="form-control text category-search-select__search"
               placeholder={placeholder}
               aria-label="Search categories"
+              aria-controls={`${id}-listbox`}
               aria-activedescendant={
                 filteredRows[highlightedIndex]
                   ? `${id}-option-${highlightedIndex}`

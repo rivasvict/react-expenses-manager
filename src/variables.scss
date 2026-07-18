@@ -68,6 +68,11 @@ $nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
 $shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
 $shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 
+// Chevron affordance shared by the native selects (global.scss) and the
+// searchable category dropdown's trigger (CategorySearchSelect) — single
+// source of truth so the two can never drift.
+$select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
+
 $transition-quick: 140ms ease;
 
 // ---------------------------------------------------------------------------

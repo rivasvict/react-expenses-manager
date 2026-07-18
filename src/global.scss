@@ -58,8 +58,8 @@ select.form-control {
   height: 3rem;
   padding: 0 2.4rem 0 1.1em;
   appearance: none;
-  // Chevron affordance for the native select.
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
+  // Chevron affordance for the native select (shared token, variables.scss).
+  background-image: $select-chevron;
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
 }
