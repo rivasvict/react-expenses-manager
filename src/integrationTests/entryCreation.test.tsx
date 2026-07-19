@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, FEBRUARY } from "./helpers/seed";
+import { selectCategory } from "./helpers/categorySelect";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -25,7 +26,7 @@ describe("entry creation", () => {
       "75"
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Test meal");
-    await user.selectOptions(screen.getByRole("combobox"), "Eating out");
+    await selectCategory(user, "Eating out");
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -43,7 +44,7 @@ describe("entry creation", () => {
       "1000"
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Monthly pay");
-    await user.selectOptions(screen.getByRole("combobox"), "Salary");
+    await selectCategory(user, "Salary");
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -62,7 +63,7 @@ describe("entry creation", () => {
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "50");
     await user.type(screen.getByPlaceholderText(/description/i), "Groceries");
-    await user.selectOptions(screen.getByRole("combobox"), "Food");
+    await selectCategory(user, "Food");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // Navigate to /expenses and click the newly created entry to edit it
@@ -76,6 +77,50 @@ describe("entry creation", () => {
 
     expect(await screen.findByText("$75.00")).toBeInTheDocument();
     expect(screen.queryByText("$50.00")).not.toBeInTheDocument();
+  });
+
+  it("user can type to filter the category dropdown and pick the narrowed option", async () => {
+    const { user } = await renderApp("/");
+
+    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.type(
+      await screen.findByPlaceholderText(/insert expense amount/i),
+      "42"
+    );
+
+    // Open the searchable dropdown; focus lands in its search box.
+    await user.click(screen.getByRole("combobox"));
+    expect(await screen.findByLabelText(/search categories/i)).toHaveFocus();
+
+    // Typing narrows the visible options down to the single match.
+    await user.keyboard("eating");
+    const options = screen.getAllByRole("option");
+    expect(options).toHaveLength(1);
+    expect(options[0]).toHaveTextContent("Eating out");
+
+    // Selecting the filtered option closes the panel and shows the choice.
+    await user.click(options[0]);
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toHaveTextContent("Eating out");
+
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+    expect(await screen.findByText("$42.00")).toBeInTheDocument();
+  });
+
+  it("shows an empty state when the category search matches nothing", async () => {
+    const { user } = await renderApp("/");
+
+    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("combobox"));
+    await user.keyboard("definitely-not-a-category");
+
+    expect(await screen.findByText(/no matching categories/i)).toBeInTheDocument();
+    expect(screen.queryByRole("option")).not.toBeInTheDocument();
+
+    // Escape closes the panel without committing anything.
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toHaveTextContent("Select a category");
   });
 
   it("entry added while viewing a previous month is stored in that month and survives a page refresh", async () => {
@@ -99,7 +144,7 @@ describe("entry creation", () => {
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "99");
     await user.type(screen.getByPlaceholderText(/description/i), "Feb Rent");
-    await user.selectOptions(screen.getByRole("combobox"), "Food");
+    await selectCategory(user, "Food");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // Before refresh: dashboard should be in February showing the new expense

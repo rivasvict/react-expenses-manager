@@ -3,6 +3,7 @@ import { UserEvent } from "@testing-library/user-event";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH } from "./helpers/seed";
 import { goToPrevMonth, goToNextMonth } from "./helpers/navigation";
+import { selectCategory } from "./helpers/categorySelect";
 
 // Pinned so "today" is May 2026 and the navigable header reads stable months.
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -38,10 +39,7 @@ const addRecurringExpense = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Food" })
-  );
+  await selectCategory(user, "Food");
   await user.click(screen.getByLabelText(/recurring/i));
   await user.click(screen.getByRole("button", { name: /submit/i }));
   // Back on the dashboard after submitting.
@@ -60,10 +58,7 @@ const addRecurringIncome = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Salary" })
-  );
+  await selectCategory(user, "Salary");
   await user.click(screen.getByLabelText(/recurring/i));
   await user.click(screen.getByRole("button", { name: /submit/i }));
   // Back on the dashboard after submitting.
@@ -81,10 +76,7 @@ const addRegularExpense = async (
     amount
   );
   await user.type(screen.getByPlaceholderText(/description/i), description);
-  await user.selectOptions(
-    screen.getByRole("combobox"),
-    screen.getByRole("option", { name: "Food" })
-  );
+  await selectCategory(user, "Food");
   // Recurring toggle is intentionally NOT clicked.
   await user.click(screen.getByRole("button", { name: /submit/i }));
   await screen.findByRole("link", { name: /add expenses/i });
