@@ -2,6 +2,12 @@ import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH, APRIL, MAY } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
+import { getEntryCategoryOption } from "../helpers/entriesHelper/entriesHelper";
+
+// The full seed list of selectable expense categories, derived straight from
+// the app so the coverage below can never drift from what the UI offers.
+const EXPENSE_CATEGORIES: Array<{ name: string; value: string }> =
+  getEntryCategoryOption("expense");
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -155,6 +161,34 @@ describe("/expenses route", () => {
     expect(await screen.findByText(/supermarket/i)).toBeInTheDocument();
     expect(screen.queryByText(/lunch/i)).not.toBeInTheDocument();
   });
+
+  // Regression coverage for the regex-in-filter bug: the category value used
+  // to be passed to `String.prototype.match`, so any name with regex-special
+  // characters (e.g. "House (Rent)") never matched. Exercising every seeded
+  // category guarantees the filter matches literally for all of them.
+  it.each(EXPENSE_CATEGORIES.map(({ name, value }) => [name, value]))(
+    'filters expenses by the "%s" category',
+    async (categoryName, categoryValue) => {
+      // A decoy in a different category that must be filtered out.
+      const decoy = EXPENSE_CATEGORIES.find(
+        ({ value }) => value !== categoryValue
+      )!;
+
+      seedEntries([
+        { date: ts(2026, MAY), amount: "800", type: "expense", categories_path: `,${categoryValue},`, description: "Target Entry" },
+        { date: ts(2026, MAY), amount: "30",  type: "expense", categories_path: `,${decoy.value},`,  description: "Decoy Entry" },
+      ]);
+
+      const { user } = await renderApp("/");
+
+      await user.click(await screen.findByText("Expenses"));
+
+      await selectCategory(user, categoryName);
+
+      expect(await screen.findByText(/target entry/i)).toBeInTheDocument();
+      expect(screen.queryByText(/decoy entry/i)).not.toBeInTheDocument();
+    }
+  );
 });
 
 describe("/incomes route - past months", () => {
