@@ -584,6 +584,7 @@
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Amounts</b> format via <code>Intl.NumberFormat</code> as <code>$1,234.56</code>, right-aligned at 600 weight — currently in proportional figures.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Navigation</b> is one <code>NavLink</code> set in <code>Header.js</code> (icons <code>home · tag · pie-chart · sync · database</code>), rendered inline top-nav above 768px and a fixed bottom tab bar below it. The active item gets gold text on an <code>$accent-soft</code> background spanning the whole item.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>The month total</b> renders through <code>ContentTileSection</code> as a single joined string (<code>"Expenses total: $2,418.90"</code>) at 1.05rem/600, the whole line in the tone color. <code>Summary</code> already picks the tone by sign (expense / income / neutral-at-zero) — so the label/value split has real tone logic to build on.</span></li>
+      <li class="flag"><span class="tick ic"><svg width="14" height="14"><use href="#i-alert"/></svg></span><span><b>Since the last board, master moved:</b> the category <code>&lt;select&gt;</code> is now a <b>searchable combobox</b> (<code>CategorySearchSelect</code>, with a <code>CategorySelector</code> adapter). Trigger still reads as <code>select.form-control</code>; the panel uses <code>$bg-surface</code> + <code>$shadow-pop</code>, marks the <b>selected row with <code>$accent-soft</code></b>, and the caret is a new shared token <code>$select-chevron</code>. This board is re-based on that code, and two candidates now lean on it (below).</span></li>
     </ul>
   </section>
 
@@ -663,7 +664,7 @@
         <div class="map-item"><span class="m-chip inc"><span class="ic"><svg width="13" height="13"><use href="#i-vault"/></svg></span></span><span class="names">Saving<small>income</small></span></div>
         <div class="map-item fallback"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-arr-up"/></svg></span></span><span class="names">Any custom category<small>fallback = today's arrow</small></span></div>
       </div>
-      <p class="map-note">The map lives in one module next to the seed lists in <code>entriesHelper.js</code>, keyed by lowercased category name (the same normalization buckets already use). Unknown keys fall back to the current arrows — so user-created categories degrade to exactly today's behavior, never a broken chip.</p>
+      <p class="map-note">The map lives in one module next to the seed lists in <code>entriesHelper.js</code>, keyed by lowercased category name (the same normalization buckets already use). Unknown keys fall back to the current arrows — so user-created categories degrade to exactly today's behavior, never a broken chip. <b>Bonus reach, post-merge:</b> the same map now has a second home — a leading glyph on each row of the new searchable category combobox (<code>CategorySearchSelect</code>), so the picker and the ledger speak one visual language. Optional, and additive to that already-shipped component.</p>
     </div>
 
     <div class="trio">
@@ -950,7 +951,7 @@
 
     <ul class="hl-anatomy">
       <li><span class="k">shape</span><span><b>Indicator behind the icon, not the item.</b> A 2.4×1.55rem lozenge at <code>$radius-control</code> — the same radius as buttons and inputs. Circles stay reserved for entry chips; a fully-round 999px pill (as in the reference example) would introduce a radius the token set doesn't have.</span></li>
-      <li><span class="k">color</span><span><b>Reuses existing state tokens.</b> <code>$accent-soft</code> fill + <code>rgba(240,185,11,.28)</code> hairline + gold icon/label — identical to how the app already signals "active", just concentrated into the indicator instead of spread across the whole tab.</span></li>
+      <li><span class="k">color</span><span><b>Reuses existing state tokens.</b> <code>$accent-soft</code> fill + <code>rgba(240,185,11,.28)</code> hairline + gold icon/label — identical to how the app already signals "active". The searchable category combobox that just landed on master marks its <em>selected row</em> with the same <code>$accent-soft</code> — so "selected = <code>$accent-soft</code>" is now an established convention this candidate follows, not one it invents.</span></li>
       <li><span class="k">motion</span><span><b>The indicator settles on selection</b> — a 140ms fade/scale on <code>$transition-quick</code>, matching every other state change in the app. Optional later enhancement: slide it between tabs. Both gate on <code>prefers-reduced-motion</code>.</span></li>
       <li><span class="k">icons</span><span><b>Glyph = destination.</b> Converges with the reference on <code>grid</code> for Categories; diverges on Buckets — a <b>bucket</b> with a fill line reads as a spending-limit container (the feature's own metaphor) where the reference's shopping bag implies generic spending. Fixed Entries keeps the recurring <code>repeat</code> loop over an ambiguous branch glyph. Drawn in the same 2px-stroke family as candidate 1.</span></li>
     </ul>
@@ -1036,7 +1037,7 @@
       <span class="pn">A</span>
       <div>
         <h4>Tokens &amp; primitives <small>no visible change</small></h4>
-        <p>Extend the system before touching screens: add <b>$glow-page</b> and a <b>money-figures</b> mixin to <code>variables.scss</code>; create the <b>category→icon map module</b> beside the seed lists (with a unit test that every seed category resolves and unknowns hit the fallback); commit the <b>brand SVG source</b>. Approval of this board gates the phase.</p>
+        <p>Extend the system before touching screens: add <b>$glow-page</b> and a <b>money-figures</b> mixin to <code>variables.scss</code>; create the <b>category→icon map module</b> beside the seed lists (with a unit test that every seed category resolves and unknowns hit the fallback); commit the <b>brand SVG source</b>. There's fresh precedent for exactly this: master just promoted the dropdown caret into a shared <code>$select-chevron</code> token so the native selects and the new combobox can't drift — the same single-source-of-truth move these tokens make. Approval of this board gates the phase.</p>
         <div class="ships"><span>tokens</span><span>icon map + test</span><span>SVG source</span></div>
       </div>
     </div>
