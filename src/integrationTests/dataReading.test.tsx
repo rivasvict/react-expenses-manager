@@ -155,6 +155,24 @@ describe("/expenses route", () => {
     expect(await screen.findByText(/supermarket/i)).toBeInTheDocument();
     expect(screen.queryByText(/lunch/i)).not.toBeInTheDocument();
   });
+
+  it("filters expenses by a category whose name contains parentheses", async () => {
+    seedEntries([
+      { date: ts(2026, MAY), amount: "800", type: "expense", categories_path: ",house (rent),", description: "Monthly Rent" },
+      { date: ts(2026, MAY), amount: "30",  type: "expense", categories_path: ",eating out,",   description: "Lunch" },
+    ]);
+
+    const { user } = await renderApp("/");
+
+    await user.click(await screen.findByText("Expenses"));
+
+    // Select the "House (Rent)" filter — its parentheses used to be treated as
+    // regex metacharacters, so the rent entry never showed up.
+    await selectCategory(user, "House (Rent)");
+
+    expect(await screen.findByText(/monthly rent/i)).toBeInTheDocument();
+    expect(screen.queryByText(/lunch/i)).not.toBeInTheDocument();
+  });
 });
 
 describe("/incomes route - past months", () => {

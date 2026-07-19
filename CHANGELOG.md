@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-07-19
+
+### Fixed
+- Category filter on the incomes/expenses report no longer breaks for
+  categories whose name contains regex-special characters (e.g.
+  "House (Rent)"). `getFilteredEntriesByCategory` used
+  `categories_path.match(category)`, which treated the selected category
+  value as a regular expression, so the parentheses in "House (Rent)" were
+  parsed as a capture group and never matched the stored
+  `,house (rent),` path. It now matches the category value literally with
+  `String.prototype.includes`
+
 ## [1.2.0] - 2026-07-18
 
 ### Added
