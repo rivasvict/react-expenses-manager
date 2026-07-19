@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
+import { selectCategory } from "./helpers/categorySelect";
 
 // Pinned so the navigable month header reads a stable "May 2026".
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -41,9 +42,7 @@ describe("category + bucket creation (issue #100)", () => {
     localStorage.setItem("categories", JSON.stringify(["Gym"]));
     const { user } = await renderApp("/add-bucket");
 
-    await user.click(screen.getByRole("combobox"));
-    expect(await screen.findByRole("option", { name: "Gym" })).toBeInTheDocument();
-    await user.click(screen.getByRole("option", { name: "Gym" }));
+    await selectCategory(user, "Gym");
     await user.type(
       screen.getByPlaceholderText(/insert bucket allowance/i),
       "120"
@@ -76,10 +75,9 @@ describe("category + bucket creation (issue #100)", () => {
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Monthly pass");
 
-    await user.click(screen.getByRole("combobox"));
-    // The brand new category is available as an option even without a bucket.
-    expect(await screen.findByRole("option", { name: "Gym" })).toBeInTheDocument();
-    await user.click(screen.getByRole("option", { name: "Gym" }));
+    // The brand new category is available as an option even without a bucket;
+    // selectCategory's internal option lookup fails the test if it is missing.
+    await selectCategory(user, "Gym");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // The expense shows on the dashboard.

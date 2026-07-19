@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, FEBRUARY } from "./helpers/seed";
+import { selectCategory } from "./helpers/categorySelect";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -25,8 +26,7 @@ describe("entry creation", () => {
       "75"
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Test meal");
-    await user.click(screen.getByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Eating out" }));
+    await selectCategory(user, "Eating out");
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -44,8 +44,7 @@ describe("entry creation", () => {
       "1000"
     );
     await user.type(screen.getByPlaceholderText(/description/i), "Monthly pay");
-    await user.click(screen.getByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Salary" }));
+    await selectCategory(user, "Salary");
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -64,8 +63,7 @@ describe("entry creation", () => {
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "50");
     await user.type(screen.getByPlaceholderText(/description/i), "Groceries");
-    await user.click(screen.getByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Food" }));
+    await selectCategory(user, "Food");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // Navigate to /expenses and click the newly created entry to edit it
@@ -146,8 +144,7 @@ describe("entry creation", () => {
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "99");
     await user.type(screen.getByPlaceholderText(/description/i), "Feb Rent");
-    await user.click(screen.getByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Food" }));
+    await selectCategory(user, "Food");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // Before refresh: dashboard should be in February showing the new expense

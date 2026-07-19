@@ -1,6 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH, APRIL, MAY } from "./helpers/seed";
+import { selectCategory } from "./helpers/categorySelect";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -111,8 +112,7 @@ describe("/incomes route", () => {
     await user.click(await screen.findByText("Incomes"));
 
     // Select "Salary" filter
-    await user.click(await screen.findByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Salary" }));
+    await selectCategory(user, "Salary");
 
     // Only the salary entry is shown
     expect(await screen.findByText(/paycheck/i)).toBeInTheDocument();
@@ -149,8 +149,7 @@ describe("/expenses route", () => {
     await user.click(await screen.findByText("Expenses"));
 
     // Select "Food" filter
-    await user.click(await screen.findByRole("combobox"));
-    await user.click(await screen.findByRole("option", { name: "Food" }));
+    await selectCategory(user, "Food");
 
     // Only the food entry is shown
     expect(await screen.findByText(/supermarket/i)).toBeInTheDocument();
