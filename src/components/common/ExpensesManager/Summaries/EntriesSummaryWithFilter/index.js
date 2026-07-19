@@ -63,7 +63,11 @@ class EntrySummaryWithFilter extends Component {
             {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
           </ContentTileSection>
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
-          <label className="form-label" htmlFor="category-filter">
+          <label
+            className="form-label"
+            htmlFor="category-filter"
+            id="category-filter-label"
+          >
             Filter by category
           </label>
           <CategorySelector

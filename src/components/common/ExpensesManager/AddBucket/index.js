@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { Col, Form, Row, Button } from "react-bootstrap";
 import { MainContentContainer } from "../../MainContentContainer";
-import { FormButton, FormContent, FormSelect, InputNumber } from "../../Forms";
+import { FormButton, FormContent, InputNumber } from "../../Forms";
+import CategorySearchSelect from "../../CategorySearchSelect";
 import ContentTileSection from "../../ContentTitleSection";
 import { addBucket } from "../../../../redux/expensesManager/actionCreators";
 import {
@@ -71,27 +72,27 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
-                  <Form.Label htmlFor="categoryName">Category</Form.Label>
+                  <Form.Label htmlFor="categoryName" id="categoryName-label">
+                    Category
+                  </Form.Label>
                   <p className="field-hint">
                     Pick one of your existing categories to give it a monthly
                     spending limit.
                   </p>
-                  <FormSelect
+                  <CategorySearchSelect
                     id="categoryName"
                     name="categoryName"
                     value={categoryName}
-                    onChange={(event) => {
-                      setCategoryName(event.currentTarget.value);
+                    emptyOptionLabel="Select a category"
+                    options={categoriesWithoutBucket.map((category) => ({
+                      value: category,
+                      label: category,
+                    }))}
+                    onChange={(newCategoryName) => {
+                      setCategoryName(newCategoryName);
                       setError(null);
                     }}
-                  >
-                    <option value="">Select a category</option>
-                    {categoriesWithoutBucket.map((category) => (
-                      <option value={category} key={category}>
-                        {category}
-                      </option>
-                    ))}
-                  </FormSelect>
+                  />
                 </Form.Group>
                 <Form.Group className="vertical-standard-space">
                   <Form.Label htmlFor="bucket-allowance">

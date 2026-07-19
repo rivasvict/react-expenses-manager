@@ -66,6 +66,7 @@ Node version is pinned in `.nvmrc`.
 - **`renderApp.tsx`** — renders the full app in a `MemoryRouter` with a fresh Redux store; returns `{ user, store, ...RenderResult }`.
 - **`seed.ts`** — `seedEntries(entries)` writes entries to `localStorage`; `ts(year, month, day?)` builds a Unix-ms timestamp; month constants `JANUARY`–`DECEMBER` (0-indexed).
 - **`navigation.ts`** — `goToPrevMonth(user, expectedTitle)` and `goToNextMonth(user, expectedTitle)`: click the Prev/Next button and wait for the new month heading. Use these instead of inline `findByRole("button", …)` calls so the assertion pattern stays consistent across test files.
+- **`categorySelect.ts`** — `selectCategory(user, categoryName)`: opens the searchable category dropdown (`CategorySearchSelect`) and clicks the matching option. Use this instead of inline `click(combobox)` → `click(option)` pairs whenever a test just needs to pick a category. Its internal `findByRole("option", …)` throws when the category is missing, so option presence is still asserted. Tests that exercise the dropdown *mechanics* (type-to-filter, empty state, keyboard nav) should still drive the control directly.
 
 ## General guidelines for development
 
