@@ -379,6 +379,26 @@
     border-right:1px dashed rgba(240,185,11,0.55);pointer-events:none;
   }
 
+  /* total tile */
+  .tt{
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    border-radius:var(--r-card);padding:0.9rem 1rem;box-shadow:var(--shadow-card);
+  }
+  .tt+.tt{margin-top:0.6rem}
+  .tt-old{background:var(--raised);border:1px solid var(--border-subtle)}
+  .tt-old .oneline{font-size:1.05rem;font-weight:600}
+  .tt-old.exp .oneline{color:var(--expense)}
+  .tt-old.inc .oneline{color:var(--income)}
+  .tt-new .lbl{font-size:0.85rem;font-weight:600;color:var(--text-2)}
+  .tt-new .val{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tt-new.exp{background:var(--expense-soft);border:1px solid rgba(251,113,133,0.28)}
+  .tt-new.exp .val{color:var(--expense)}
+  .tt-new.inc{background:var(--income-soft);border:1px solid rgba(52,211,153,0.28)}
+  .tt-new.inc .val{color:var(--income)}
+  .tt-new.net{background:var(--raised);border:1px solid var(--border-subtle)}
+  .tt-new.net .val{color:var(--text)}
+  .tt-new.net .tone{font-size:0.72rem;color:var(--muted);font-weight:600;margin-left:0.4rem}
+
   /* dropped ledger */
   .dropped{display:grid;gap:0.7rem}
   .drop-item{
@@ -515,7 +535,7 @@
       Design proposal · Optional
     </span>
     <h1>Expenses Tracker — Visual Refresh</h1>
-    <p class="lede">Seven before→after candidates for the dark theme, developed and pressure-tested against the real code. <b>No app code ships from this board</b> — it exists to be approved, trimmed, or rejected, one candidate at a time.</p>
+    <p class="lede">Eight before→after candidates for the dark theme, developed and pressure-tested against the real code. <b>No app code ships from this board</b> — it exists to be approved, trimmed, or rejected, one candidate at a time.</p>
     <div class="meta">
       <span><b>Basis</b> · audited against <code>src/</code> on the current branch</span>
       <span><b>Lineage</b> · develops the earlier exploratory one-pager</span>
@@ -533,6 +553,7 @@
       <a href="#c5"><b>5</b> Page glow</a>
       <a href="#c6"><b>6</b> Tabular amounts</a>
       <a href="#c7"><b>7</b> Navigation</a>
+      <a href="#c8"><b>8</b> Total tile</a>
       <a href="#dropped">Dropped</a>
       <a href="#rollout">Rollout</a>
     </nav>
@@ -562,14 +583,15 @@
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Brand</b> is a 287×275 PNG (gold-ringed dark disc, gold bar over a slate bar) served at 44px in the header, and the same art in <code>public/favicon.ico</code>, <code>logo192.png</code>, <code>logo512.png</code>.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Amounts</b> format via <code>Intl.NumberFormat</code> as <code>$1,234.56</code>, right-aligned at 600 weight — currently in proportional figures.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Navigation</b> is one <code>NavLink</code> set in <code>Header.js</code> (icons <code>home · tag · pie-chart · sync · database</code>), rendered inline top-nav above 768px and a fixed bottom tab bar below it. The active item gets gold text on an <code>$accent-soft</code> background spanning the whole item.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>The month total</b> renders through <code>ContentTileSection</code> as a single joined string (<code>"Expenses total: $2,418.90"</code>) at 1.05rem/600, the whole line in the tone color. <code>Summary</code> already picks the tone by sign (expense / income / neutral-at-zero) — so the label/value split has real tone logic to build on.</span></li>
     </ul>
   </section>
 
   <!-- ================================================== CANDIDATES -->
   <section class="shead">
     <div class="eyebrow">Candidates</div>
-    <h2>Seven before→afters, each with a verdict</h2>
-    <p>The shortlist's five items survive in some form — one rescoped — the audit surfaced a sixth (tabular figures), and a seventh — the navigation bar — was added at the stakeholder's request. Every AFTER stays inside the existing vocabulary: same tokens, same radii, gold spent sparingly.</p>
+    <h2>Eight before→afters, each with a verdict</h2>
+    <p>The shortlist's five items survive in some form — one rescoped — the audit surfaced a sixth (tabular figures), and two more were added at the stakeholder's request: the navigation bar (7) and the summary total tile (8). Every AFTER stays inside the existing vocabulary: same tokens, same radii, gold spent sparingly.</p>
   </section>
 
   <!-- ==================== 1 · Category icons -->
@@ -940,6 +962,48 @@
     </div>
   </article>
 
+  <!-- ==================== 8 · Summary total tile -->
+  <article class="cand" id="c8">
+    <div class="cand-head">
+      <div class="cand-num">8</div>
+      <div class="titling">
+        <h3>Summary total tile — label/value hierarchy</h3>
+        <p class="sub">On <code>/expenses</code>, <code>/incomes</code> and <code>/summary</code> the month total renders today as one flat string — <code>Expenses total: $2,418.90</code> — label and amount the same size, weight, and color. This gives the single most important number on the screen a proper two-tier layout: a muted label, a large tone-colored value, on a softly tinted card. It reuses the tone treatment the <code>ContentTileSection</code> already carries, and lines up with the total tile in the Filters &amp; Sorting proposal.</p>
+      </div>
+      <span class="verdict new"><span class="ic"><svg width="11" height="11"><use href="#i-sparkle"/></svg></span>Requested — pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — one string, label = amount</div>
+        <div class="tt tt-old exp"><span class="oneline">Expenses total: $2,418.90</span></div>
+        <div class="tt tt-old exp"><span class="oneline">July total: -$312.40</span></div>
+        <p class="pin">card: <b>@include card()</b> (raised bg) · content: <b>1.05rem/600</b>, whole line in the tone color · label and value indistinguishable</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — muted label + prominent value, tinted</div>
+        <div class="tt tt-new exp"><span class="lbl">Expenses total</span><span class="val">$2,418.90</span></div>
+        <div class="tt tt-new inc"><span class="lbl">Income total</span><span class="val">$3,540.00</span></div>
+        <div class="tt tt-new net"><span class="lbl">July total <span class="tone">· net, zero</span></span><span class="val">$0.00</span></div>
+        <p class="pin">label <b>0.85rem $text-secondary</b> · value <b>1.4rem/700</b> in the tone color, <b>tabular-nums</b> (candidate 6) · bg <b>$expense-soft / $income-soft</b>, border tone at 0.28 · zero/net stays neutral</p>
+      </div>
+    </div>
+
+    <ul class="hl-anatomy">
+      <li><span class="k">hierarchy</span><span><b>Label and value stop competing.</b> The label drops to <code>$text-secondary</code>/0.85rem; the amount rises to 1.4rem/700 in the tone color — so the number is read first and the caption second, instead of one undifferentiated colored line.</span></li>
+      <li><span class="k">tone</span><span><b>Sign drives color, per the code that's already there.</b> <code>Summary</code> already computes <code>tile-tone--expense</code> for a negative total, <code>--income</code> for positive, and neutral for exactly zero — so green never misreads as "money in". The refresh keeps that logic and adds a matching soft-tinted background + border.</span></li>
+      <li><span class="k">figures</span><span><b>Tabular by default here.</b> This is the largest number on the screen and the one people compare month to month — it's the strongest place for candidate 6's <code>tabular-nums</code>, so digits don't reflow as the total changes.</span></li>
+      <li><span class="k">scope</span><span><b>This is the always-present tile, not the filtered banner.</b> The <code>ContentTileSection</code> money tile pre-dates Filters &amp; Sorting; the gold "filtered total" banner in that proposal is a separate, filters-owned element and stays out of scope here.</span></li>
+    </ul>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>The month total is the headline figure of these screens, yet today it's typeset exactly like its own caption. A two-tier tile gives the number the weight it already deserves — and the soft tint turns the tone from a subtle text color into something legible at a glance.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>Adds a tinted block to the top of three screens — more color up front, justified only because it's the single most important number. Splitting label from value means the two screens pass structured content instead of a joined string, and a few tests that locate the tile by its combined text need updating.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Contrast-check label (<code>$text-secondary</code>) and value on the soft-tinted grounds; confirm the zero-total neutral case shows no green/rose; verify the <code>/summary</code> tile still flips tone with the sign. Tests keep asserting on visible text — label and value remain separately findable by <code>screen.findByText</code>.</p></div>
+    </div>
+  </article>
+
   <!-- ================================================== DROPPED -->
   <section class="shead" id="dropped">
     <div class="eyebrow">Pressure-tested out</div>
@@ -987,9 +1051,9 @@
     <div class="phase">
       <span class="pn">C</span>
       <div>
-        <h4>Row anatomy <small>one PR, after filters merges</small></h4>
-        <p><b>Category icons</b> (1) and <b>two-line rows</b> (4) land together — both rewrite the same row markup in <code>EntriesSummary</code>, and shipping them as one change means one review, one integration-test update, one revert point. Waiting for the filters merge avoids churning a file that branch also touches; that is scheduling courtesy, not a dependency.</p>
-        <div class="ships"><span>candidate 1</span><span>candidate 4</span></div>
+        <h4>List-screen surfaces <small>after filters merges</small></h4>
+        <p><b>Category icons</b> (1) and <b>two-line rows</b> (4) land together — both rewrite the same row markup in <code>EntriesSummary</code>, so one review, one integration-test update, one revert point. The <b>total tile</b> (8) rides along in this phase too: it edits <code>EntriesSummaryWithFilter</code> and <code>Summary</code> — the very screens the filters branch reshapes — so sequencing it after that merge avoids a guaranteed conflict. Scheduling courtesy, not a dependency.</p>
+        <div class="ships"><span>candidate 1</span><span>candidate 4</span><span>candidate 8</span></div>
       </div>
     </div>
     <div class="phase">
@@ -1008,7 +1072,7 @@
 
   <footer class="footer">
     <span>Expenses Tracker · Visual Refresh — Design Board</span>
-    <span>Dark theme · 7 candidates · No app code until approved</span>
+    <span>Dark theme · 8 candidates · No app code until approved</span>
   </footer>
 
 </div>
