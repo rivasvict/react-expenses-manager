@@ -261,6 +261,51 @@
   .m-navnote{margin:0.4rem 0 0;font-size:0.72rem;color:var(--muted);text-align:center}
   .m-stack{display:flex;flex-direction:column;gap:1.1rem}
 
+  /* bottom nav bar mock */
+  .navbar{
+    display:flex;align-items:stretch;gap:0.2rem;
+    background:rgba(14,17,22,0.92);
+    border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);
+    padding:0.45rem 0.4rem;
+  }
+  .navbar+.navbar{margin-top:0.7rem}
+  .nav-item{
+    flex:1 1 0;min-width:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0.22rem;
+    padding:0.3rem 0.15rem;
+    color:var(--text-2);font-size:0.66rem;font-weight:600;letter-spacing:0.01em;
+    border-radius:var(--r-control);
+  }
+  .nav-item .lbl{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-item .glyph{
+    width:2.4rem;height:1.55rem;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid transparent;border-radius:var(--r-control);
+  }
+  /* before: whole-item soft-gold rectangle */
+  .nav-item.on-old{color:var(--gold);background:var(--gold-soft)}
+  /* after: active indicator behind the icon only */
+  .nav-item.on-new{color:var(--gold)}
+  .nav-item.on-new .glyph{
+    background:var(--gold-soft);
+    border-color:rgba(240,185,11,0.28);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .navcap{margin:0.7rem 0 0;font-size:0.72rem;color:var(--muted);text-align:center}
+  .hl-anatomy{display:grid;gap:0.55rem;margin-top:0.9rem}
+  .hl-anatomy li{
+    display:flex;gap:0.6rem;align-items:flex-start;list-style:none;
+    font-size:0.82rem;color:var(--text-2);
+  }
+  .hl-anatomy{padding:0;margin-left:0;margin-right:0}
+  .hl-anatomy .k{
+    flex:none;font-family:var(--mono);font-size:0.68rem;color:var(--gold);
+    background:var(--gold-soft);border:1px solid rgba(240,185,11,0.24);
+    border-radius:0.4rem;padding:0.05rem 0.4rem;margin-top:0.1rem;white-space:nowrap;
+  }
+  .hl-anatomy b{color:var(--text);font-weight:600}
+
   /* icon map */
   .map{
     background:var(--bg);border:1px solid var(--border-subtle);
@@ -435,6 +480,13 @@
     <symbol id="i-vault" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="18" height="15.5" rx="2"/><circle cx="12" cy="11.2" r="3.4"/><path d="M12 7.8V6.5M12 16v-1.4M8.6 11.2H7.3M16.7 11.2h-1.3"/><path d="M6 19v2M18 19v2"/></g></symbol>
     <symbol id="i-tools" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.6 5.2L3.4 17.2a2 2 0 1 0 2.8 2.8l5.7-5.7a4.2 4.2 0 0 0 5.2-5.6L14.4 11.4l-2.4-2.4z"/></g></symbol>
 
+    <!-- navigation glyphs -->
+    <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></g></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3.5h9.5l8.1 8.1a2 2 0 0 1 0 1.8z"/></g><circle cx="7.4" cy="7.4" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-pie" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 14.8A9 9 0 1 1 9.2 3.1"/><path d="M12.5 3a8.5 8.5 0 0 1 8.5 8.5h-8.5z"/></g></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"/><path d="M4.5 11.5v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6"/></g></symbol>
+    <symbol id="i-bucket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 7.5h15.6l-1.4 11.8a2 2 0 0 1-2 1.7H7.6a2 2 0 0 1-2-1.7z"/><path d="M3.2 7.5a8.8 3 0 0 1 17.6 0"/><path d="M5.7 13.4h12.6"/></g></symbol>
+
     <!-- brand mark, evolved: same two-bar motif as the current PNG, redrawn as vector -->
     <symbol id="brand-mark" viewBox="0 0 48 48">
       <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="#161b22" stroke="#f0b90b" stroke-width="1.6"/>
@@ -463,7 +515,7 @@
       Design proposal · Optional
     </span>
     <h1>Expenses Tracker — Visual Refresh</h1>
-    <p class="lede">Six before→after candidates for the dark theme, developed and pressure-tested against the real code. <b>No app code ships from this board</b> — it exists to be approved, trimmed, or rejected, one candidate at a time.</p>
+    <p class="lede">Seven before→after candidates for the dark theme, developed and pressure-tested against the real code. <b>No app code ships from this board</b> — it exists to be approved, trimmed, or rejected, one candidate at a time.</p>
     <div class="meta">
       <span><b>Basis</b> · audited against <code>src/</code> on the current branch</span>
       <span><b>Lineage</b> · develops the earlier exploratory one-pager</span>
@@ -480,6 +532,7 @@
       <a href="#c4"><b>4</b> Two-line rows</a>
       <a href="#c5"><b>5</b> Page glow</a>
       <a href="#c6"><b>6</b> Tabular amounts</a>
+      <a href="#c7"><b>7</b> Navigation</a>
       <a href="#dropped">Dropped</a>
       <a href="#rollout">Rollout</a>
     </nav>
@@ -508,14 +561,15 @@
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Month stepper</b> buttons are 2.5rem circles; at the first/last month with data the button is swapped for an <em>invisible placeholder</em> (<code>visibility: hidden</code>) — the layout holds but the control vanishes.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Brand</b> is a 287×275 PNG (gold-ringed dark disc, gold bar over a slate bar) served at 44px in the header, and the same art in <code>public/favicon.ico</code>, <code>logo192.png</code>, <code>logo512.png</code>.</span></li>
       <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Amounts</b> format via <code>Intl.NumberFormat</code> as <code>$1,234.56</code>, right-aligned at 600 weight — currently in proportional figures.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Navigation</b> is one <code>NavLink</code> set in <code>Header.js</code> (icons <code>home · tag · pie-chart · sync · database</code>), rendered inline top-nav above 768px and a fixed bottom tab bar below it. The active item gets gold text on an <code>$accent-soft</code> background spanning the whole item.</span></li>
     </ul>
   </section>
 
   <!-- ================================================== CANDIDATES -->
   <section class="shead">
     <div class="eyebrow">Candidates</div>
-    <h2>Six before→afters, each with a verdict</h2>
-    <p>The shortlist's five items survive in some form — one rescoped — and the audit surfaced a sixth. Every AFTER stays inside the existing vocabulary: same tokens, same radii, gold spent sparingly.</p>
+    <h2>Seven before→afters, each with a verdict</h2>
+    <p>The shortlist's five items survive in some form — one rescoped — the audit surfaced a sixth (tabular figures), and a seventh — the navigation bar — was added at the stakeholder's request. Every AFTER stays inside the existing vocabulary: same tokens, same radii, gold spent sparingly.</p>
   </section>
 
   <!-- ==================== 1 · Category icons -->
@@ -826,6 +880,66 @@
     </div>
   </article>
 
+  <!-- ==================== 7 · Navigation bar -->
+  <article class="cand" id="c7">
+    <div class="cand-head">
+      <div class="cand-num">7</div>
+      <div class="titling">
+        <h3>Navigation bar — destination icons &amp; active indicator</h3>
+        <p class="sub">Added at the stakeholder's request, referencing an example from another agent. Two moves: give each destination a glyph chosen for <em>what it is</em>, and replace today's full-width gold wash on the active tab with a compact indicator behind the icon — so "you are here" reads at a glance, on the same bottom bar (below 768px) and the inline top nav above it.</p>
+      </div>
+      <span class="verdict new"><span class="ic"><svg width="11" height="11"><use href="#i-sparkle"/></svg></span>Requested — pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — tag/pie/sync icons; whole tab tinted</div>
+        <nav class="navbar" aria-label="Before navigation">
+          <span class="nav-item on-old"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-home"/></svg></span></span><span class="lbl">Home</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-tag"/></svg></span></span><span class="lbl">Categories</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-pie"/></svg></span></span><span class="lbl">Buckets</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-repeat"/></svg></span></span><span class="lbl">Fixed Entries</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-database"/></svg></span></span><span class="lbl">Data</span></span>
+        </nav>
+        <p class="navcap">active = <code>$accent-soft</code> behind the whole item (icon + label)</p>
+        <p class="pin">icons: codicon <b>home · tag · pie-chart · sync · database</b> · active state: <b>color:$accent; background:$accent-soft</b> on the full <code>.app-nav__item</code></p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — destination glyphs; indicator behind the icon</div>
+        <nav class="navbar" aria-label="After navigation, Home selected">
+          <span class="nav-item on-new"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-home"/></svg></span></span><span class="lbl">Home</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-grid"/></svg></span></span><span class="lbl">Categories</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-bucket"/></svg></span></span><span class="lbl">Buckets</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-repeat"/></svg></span></span><span class="lbl">Fixed Entries</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-database"/></svg></span></span><span class="lbl">Data</span></span>
+        </nav>
+        <nav class="navbar" aria-label="After navigation, Buckets selected">
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-home"/></svg></span></span><span class="lbl">Home</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-grid"/></svg></span></span><span class="lbl">Categories</span></span>
+          <span class="nav-item on-new"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-bucket"/></svg></span></span><span class="lbl">Buckets</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-repeat"/></svg></span></span><span class="lbl">Fixed Entries</span></span>
+          <span class="nav-item"><span class="glyph"><span class="ic"><svg width="20" height="20"><use href="#i-database"/></svg></span></span><span class="lbl">Data</span></span>
+        </nav>
+        <p class="navcap">the indicator travels to the selected tab — shown on Home, then Buckets</p>
+        <p class="pin">icons: <b>home · grid · bucket · repeat · database</b> · indicator: <b>$accent-soft</b> lozenge at <b>$radius-control</b> behind the icon — <em>not</em> a 999px pill, so it stays in the app's shape language</p>
+      </div>
+    </div>
+
+    <ul class="hl-anatomy">
+      <li><span class="k">shape</span><span><b>Indicator behind the icon, not the item.</b> A 2.4×1.55rem lozenge at <code>$radius-control</code> — the same radius as buttons and inputs. Circles stay reserved for entry chips; a fully-round 999px pill (as in the reference example) would introduce a radius the token set doesn't have.</span></li>
+      <li><span class="k">color</span><span><b>Reuses existing state tokens.</b> <code>$accent-soft</code> fill + <code>rgba(240,185,11,.28)</code> hairline + gold icon/label — identical to how the app already signals "active", just concentrated into the indicator instead of spread across the whole tab.</span></li>
+      <li><span class="k">motion</span><span><b>The indicator settles on selection</b> — a 140ms fade/scale on <code>$transition-quick</code>, matching every other state change in the app. Optional later enhancement: slide it between tabs. Both gate on <code>prefers-reduced-motion</code>.</span></li>
+      <li><span class="k">icons</span><span><b>Glyph = destination.</b> Converges with the reference on <code>grid</code> for Categories; diverges on Buckets — a <b>bucket</b> with a fill line reads as a spending-limit container (the feature's own metaphor) where the reference's shopping bag implies generic spending. Fixed Entries keeps the recurring <code>repeat</code> loop over an ambiguous branch glyph. Drawn in the same 2px-stroke family as candidate 1.</span></li>
+    </ul>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>A concentrated indicator reads as "selected" faster than a full-width tint, especially in peripheral vision at the bottom of the screen; and destination-specific shapes make tabs recognizable by glyph, not just label — the same pre-attentive logic as candidate 1, one level up in the IA.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>The nav is muscle memory — swapping <code>tag→grid</code> and <code>pie→bucket</code> costs current users a brief relearn. The indicator is a new sub-component (though built entirely from existing tokens). And a bottom bar carries more visual weight once the active tab has a distinct chip.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Tap target stays the full item (≥44px); confirm the indicator fits inside the 4.25rem bar + <code>safe-area-inset-bottom</code> with no clipping. Verify <code>isActive</code> still lights Home on both <code>/</code> and <code>/dashboard</code>. Integration tests key off accessible names (labels unchanged), so they hold; run the glyphs past candidate 1's glance + colorblind checks.</p></div>
+    </div>
+  </article>
+
   <!-- ================================================== DROPPED -->
   <section class="shead" id="dropped">
     <div class="eyebrow">Pressure-tested out</div>
@@ -866,8 +980,8 @@
       <span class="pn">B</span>
       <div>
         <h4>Quiet wins <small>ship any time, any order</small></h4>
-        <p>Three small, screen-isolated PRs: <b>tabular amounts</b> (6), <b>page glow</b> (5, only if the OLED check passes), <b>month-nav geometry + disabled edge state</b> (2). None overlaps files with the filters branch; each is trivially revertable on its own.</p>
-        <div class="ships"><span>candidate 6</span><span>candidate 5</span><span>candidate 2</span></div>
+        <p>Four small, screen-isolated PRs: <b>tabular amounts</b> (6), <b>page glow</b> (5, only if the OLED check passes), <b>month-nav geometry + disabled edge state</b> (2), and the <b>nav refresh</b> (7, isolated to <code>Header</code>). None overlaps files with the filters branch; each is trivially revertable on its own.</p>
+        <div class="ships"><span>candidate 6</span><span>candidate 5</span><span>candidate 2</span><span>candidate 7</span></div>
       </div>
     </div>
     <div class="phase">
@@ -894,7 +1008,7 @@
 
   <footer class="footer">
     <span>Expenses Tracker · Visual Refresh — Design Board</span>
-    <span>Dark theme · 6 candidates · No app code until approved</span>
+    <span>Dark theme · 7 candidates · No app code until approved</span>
   </footer>
 
 </div>
