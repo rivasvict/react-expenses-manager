@@ -73,6 +73,8 @@ describe("CategorySearchSelect", () => {
       screen.getByRole("option", { name: "Select a category" })
     ).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Food" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Eating out" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Gym" })).toBeInTheDocument();
   });
 
   it("filters options with a case-insensitive substring match as the user types", async () => {
@@ -193,7 +195,11 @@ describe("CategorySearchSelect", () => {
     render(
       <div>
         <button type="button">Outside</button>
-        <CategorySearchSelect {...defaultProps} onChange={handleChange} />
+        <CategorySearchSelect
+          {...defaultProps}
+          value=",food,"
+          onChange={handleChange}
+        />
       </div>
     );
 
@@ -204,6 +210,8 @@ describe("CategorySearchSelect", () => {
 
     expect(handleChange).not.toHaveBeenCalled();
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    // The pre-existing value survives the dismissal: the trigger still shows it.
+    expect(screen.getByRole("combobox")).toHaveTextContent("Food");
   });
 
   it("re-selecting the empty option resets the value back to empty", async () => {
