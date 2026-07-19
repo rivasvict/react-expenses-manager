@@ -1,0 +1,900 @@
+<title>Expenses Tracker — Visual Refresh Design Board</title>
+<style>
+  :root{
+    color-scheme: dark;
+    /* Exact tokens from src/variables.scss — the board is set in the app's own materials. */
+    --bg:#0e1116;
+    --surface:#161b22;
+    --raised:#1e252f;
+    --raised-hover:#252d39;
+    --border-subtle:rgba(255,255,255,0.07);
+    --border-strong:rgba(255,255,255,0.14);
+    --gold:#f0b90b;
+    --gold-hover:#fcd535;
+    --gold-soft:rgba(240,185,11,0.12);
+    --on-accent:#1a1503;
+    --income:#34d399;
+    --income-soft:rgba(52,211,153,0.12);
+    --expense:#fb7185;
+    --expense-soft:rgba(251,113,133,0.12);
+    --text:#f2f5f9;
+    --text-2:#9aa4b2;
+    --muted:#8b94a3;
+    --r-control:0.65rem;
+    --r-card:1rem;
+    --r-shell:1.4rem;
+    --shadow-card:0 1px 2px rgba(0,0,0,0.3);
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .board{max-width:67.5rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+  a{color:var(--gold)}
+  code{
+    font-family:var(--mono);font-size:0.82em;
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:0.35rem;padding:0.08em 0.35em;color:var(--text);
+    white-space:nowrap;
+  }
+  .ic{display:inline-flex;flex:none}
+  .ic svg{display:block}
+
+  /* ------------------------------------------------ cover */
+  .cover{
+    background:var(--surface);
+    border:1px solid var(--border-subtle);
+    border-radius:var(--r-shell);
+    padding:2.5rem 2.5rem 2.2rem;
+    box-shadow:var(--shadow-card);
+    position:relative;overflow:hidden;
+  }
+  .cover::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(38rem 16rem at 78% -8%,rgba(240,185,11,0.07),transparent 65%);
+  }
+  .cover>*{position:relative}
+  .kicker{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    font-size:0.7rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;
+    color:var(--gold);background:var(--gold-soft);
+    border:1px solid rgba(240,185,11,0.25);
+    padding:0.35rem 0.75rem;border-radius:999px;
+  }
+  .cover h1{
+    margin:1.1rem 0 0.55rem;font-size:2.15rem;line-height:1.12;
+    letter-spacing:-0.02em;text-wrap:balance;
+  }
+  .cover .lede{margin:0;color:var(--text-2);font-size:1.02rem;max-width:62ch}
+  .cover .lede b{color:var(--text);font-weight:600}
+  .meta{
+    display:flex;flex-wrap:wrap;gap:0.45rem 1.5rem;margin-top:1.5rem;
+    font-size:0.8rem;color:var(--muted);
+  }
+  .meta b{color:var(--text);font-weight:600}
+  .scope{
+    margin-top:1.6rem;display:flex;gap:0.85rem;align-items:flex-start;
+    background:rgba(240,185,11,0.05);
+    border:1px solid rgba(240,185,11,0.26);
+    border-radius:var(--r-card);padding:0.95rem 1.1rem;
+  }
+  .scope .badge{
+    width:1.9rem;height:1.9rem;border-radius:var(--r-control);flex:none;
+    background:var(--gold-soft);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .scope p{margin:0;font-size:0.88rem;color:var(--text-2)}
+  .scope b{color:var(--text)}
+  .toc{display:flex;flex-wrap:wrap;gap:0.45rem;margin-top:1.5rem}
+  .toc a{
+    display:inline-flex;align-items:center;gap:0.45rem;text-decoration:none;
+    font-size:0.78rem;font-weight:600;color:var(--text-2);
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:var(--r-control);padding:0.4rem 0.7rem;
+    transition:background-color 140ms ease,border-color 140ms ease,color 140ms ease;
+  }
+  .toc a:hover{background:var(--raised-hover);border-color:var(--border-strong);color:var(--text)}
+  .toc a b{color:var(--gold);font-weight:700}
+
+  /* ------------------------------------------------ section heads */
+  .shead{margin:3.4rem 0 1.3rem}
+  .eyebrow{
+    font-size:0.72rem;font-weight:700;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .shead h2{margin:0.35rem 0 0.35rem;font-size:1.5rem;letter-spacing:-0.015em;text-wrap:balance}
+  .shead p{margin:0;color:var(--text-2);max-width:72ch;font-size:0.94rem}
+
+  /* ------------------------------------------------ audit */
+  .audit{
+    background:var(--surface);border:1px solid var(--border-subtle);
+    border-radius:var(--r-shell);padding:1.5rem 1.6rem;
+  }
+  .swatches{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem}
+  .sw{
+    display:flex;align-items:center;gap:0.5rem;
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:var(--r-control);padding:0.35rem 0.6rem 0.35rem 0.4rem;
+    font-family:var(--mono);font-size:0.7rem;color:var(--text-2);
+  }
+  .sw i{width:1.1rem;height:1.1rem;border-radius:0.35rem;border:1px solid var(--border-strong);flex:none}
+  .audit ul{margin:0;padding:0;list-style:none;display:grid;gap:0.65rem}
+  .audit li{
+    display:flex;gap:0.65rem;align-items:flex-start;
+    font-size:0.88rem;color:var(--text-2);
+  }
+  .audit li .tick{color:var(--income);flex:none;margin-top:0.15rem}
+  .audit li.flag .tick{color:var(--gold)}
+  .audit li b{color:var(--text);font-weight:600}
+
+  /* ------------------------------------------------ candidate card */
+  .cand{
+    background:var(--surface);border:1px solid var(--border-subtle);
+    border-radius:var(--r-shell);padding:1.6rem;margin-bottom:1.4rem;
+    scroll-margin-top:1rem;
+  }
+  .cand-head{display:flex;align-items:flex-start;gap:0.9rem;margin-bottom:1.25rem;flex-wrap:wrap}
+  .cand-num{
+    width:2.15rem;height:2.15rem;border-radius:var(--r-control);flex:none;
+    background:var(--gold-soft);color:var(--gold);
+    font-weight:700;font-size:0.95rem;font-variant-numeric:tabular-nums;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cand-head .titling{flex:1 1 18rem;min-width:0}
+  .cand-head h3{margin:0 0 0.25rem;font-size:1.18rem;letter-spacing:-0.01em}
+  .cand-head .sub{margin:0;font-size:0.87rem;color:var(--text-2);max-width:68ch}
+  .verdict{
+    flex:none;align-self:flex-start;
+    display:inline-flex;align-items:center;gap:0.4rem;
+    font-size:0.68rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;
+    border-radius:999px;padding:0.32rem 0.7rem;margin-top:0.15rem;
+  }
+  .verdict.go{color:var(--income);background:var(--income-soft);border:1px solid rgba(52,211,153,0.3)}
+  .verdict.rescoped{color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,0.3)}
+  .verdict.new{color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,0.3)}
+
+  .ba{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:0.9rem;
+    align-items:stretch;margin-bottom:1rem;
+  }
+  .ba .goes{align-self:center;color:var(--gold)}
+  @media(max-width:46rem){
+    .ba{grid-template-columns:1fr}
+    .ba .goes{transform:rotate(90deg);justify-self:center}
+  }
+  .cell{
+    background:var(--bg);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);padding:1rem;min-width:0;
+  }
+  .cell .cap{
+    display:flex;align-items:center;gap:0.45rem;margin-bottom:0.8rem;
+    font-size:0.65rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--muted);
+  }
+  .cell .cap i{width:0.42rem;height:0.42rem;border-radius:50%;background:var(--muted);flex:none}
+  .cell.after .cap{color:var(--gold)}
+  .cell.after .cap i{background:var(--gold)}
+  .pin{
+    margin-top:0.8rem;font-family:var(--mono);font-size:0.68rem;color:var(--muted);
+    border-top:1px dashed var(--border-strong);padding-top:0.55rem;line-height:1.7;
+  }
+  .pin b{color:var(--gold);font-weight:600}
+
+  /* triptych: why / trade-off / validate */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem}
+  @media(max-width:46rem){.trio{grid-template-columns:1fr}}
+  .trio>div{border-radius:var(--r-control);padding:0.75rem 0.9rem;font-size:0.83rem}
+  .trio .h{
+    display:flex;align-items:center;gap:0.4rem;margin-bottom:0.35rem;
+    font-size:0.66rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;
+  }
+  .trio p{margin:0;color:var(--text-2)}
+  .why{background:var(--income-soft);border:1px solid rgba(52,211,153,0.25)}
+  .why .h{color:var(--income)}
+  .cost{background:rgba(251,113,133,0.08);border:1px solid rgba(251,113,133,0.24)}
+  .cost .h{color:var(--expense)}
+  .check{background:var(--gold-soft);border:1px solid rgba(240,185,11,0.28)}
+  .check .h{color:var(--gold)}
+
+  /* ------------------------------------------------ app-faithful mock primitives */
+  .m-label{
+    display:flex;align-items:center;justify-content:space-between;
+    color:var(--text-2);font-size:0.78rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:0.08em;
+    margin:0 0 0.35rem;
+  }
+  .m-label .tot{font-weight:600;text-transform:none;letter-spacing:0;font-size:0.95rem}
+  .m-label .tot.exp{color:var(--expense)}
+  .m-label .tot.inc{color:var(--income)}
+  .m-rows{display:flex;flex-direction:column;gap:0.625rem}
+  .m-row{
+    display:flex;align-items:center;gap:0.75rem;
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);box-shadow:var(--shadow-card);
+    padding:0.7rem 0.75rem;min-width:0;
+  }
+  .m-chip{
+    width:1.9rem;height:1.9rem;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .m-chip.inc{background:var(--income-soft);color:var(--income)}
+  .m-chip.exp{background:var(--expense-soft);color:var(--expense)}
+  .m-desc{
+    flex:1 1 0;min-width:0;color:var(--text);font-size:0.95rem;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .m-desc .t2{
+    display:block;font-size:0.78rem;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45;
+  }
+  .m-desc.stacked{white-space:normal;line-height:1.35}
+  .m-desc.stacked .t1{
+    display:block;font-size:0.92rem;font-weight:600;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .m-amt{flex:none;font-weight:600;font-size:0.95rem;white-space:nowrap}
+  .m-amt.inc{color:var(--income)}
+  .m-amt.exp{color:var(--expense)}
+
+  /* month header mock */
+  .m-nav{display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
+  .m-step{
+    width:2.5rem;height:2.5rem;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);background:var(--raised);
+    border:1px solid var(--border-subtle);border-radius:50%;
+  }
+  .m-step.sq{border-radius:var(--r-control)}
+  .m-step.ghost{visibility:hidden}
+  .m-step.disabled{opacity:0.35}
+  .m-title{
+    flex:1 1 auto;text-align:center;
+    font-size:1.15rem;font-weight:700;letter-spacing:-0.01em;
+  }
+  .m-navnote{margin:0.4rem 0 0;font-size:0.72rem;color:var(--muted);text-align:center}
+  .m-stack{display:flex;flex-direction:column;gap:1.1rem}
+
+  /* icon map */
+  .map{
+    background:var(--bg);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);padding:1rem;margin-bottom:1rem;
+  }
+  .map .cap{
+    display:flex;align-items:center;gap:0.45rem;margin-bottom:0.85rem;
+    font-size:0.65rem;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--gold);
+  }
+  .map .cap i{width:0.42rem;height:0.42rem;border-radius:50%;background:var(--gold);flex:none}
+  .map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(13.5rem,1fr));gap:0.6rem}
+  .map-item{
+    display:flex;align-items:center;gap:0.65rem;
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:var(--r-control);padding:0.5rem 0.65rem;min-width:0;
+  }
+  .map-item .m-chip{width:1.7rem;height:1.7rem}
+  .map-item .names{min-width:0;font-size:0.78rem;color:var(--text);line-height:1.35}
+  .map-item .names small{display:block;color:var(--muted);font-size:0.7rem}
+  .map-item.fallback{border-style:dashed;border-color:var(--border-strong)}
+  .map-note{margin:0.85rem 0 0;font-size:0.78rem;color:var(--muted)}
+
+  /* brand */
+  .brandline{display:flex;align-items:center;gap:0.6rem;padding:0.25rem 0}
+  .brandline .word{font-weight:700;font-size:1.02rem;letter-spacing:-0.01em;white-space:nowrap}
+  .brand-strip{display:flex;align-items:flex-end;gap:1.4rem;flex-wrap:wrap;margin-top:1.1rem}
+  .brand-stop{display:flex;flex-direction:column;align-items:center;gap:0.45rem}
+  .brand-stop small{font-family:var(--mono);font-size:0.65rem;color:var(--muted)}
+  .px-old{image-rendering:auto;border-radius:50%}
+
+  /* glow tiles */
+  .glow-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem}
+  @media(max-width:46rem){.glow-tiles{grid-template-columns:1fr}}
+  .gt{
+    border:1px solid var(--border-subtle);border-radius:var(--r-card);
+    min-height:10.5rem;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .gt .shellchip{
+    background:var(--surface);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);padding:0.8rem 1.3rem;
+    font-size:0.85rem;font-weight:700;letter-spacing:-0.01em;
+  }
+  .gt.flat{background:var(--bg)}
+  .gt.soft{background:radial-gradient(26rem 12rem at 50% -18%,rgba(240,185,11,0.05),transparent 62%),var(--bg)}
+  .gt.loud{background:radial-gradient(26rem 12rem at 50% -18%,rgba(240,185,11,0.16),transparent 68%),var(--bg)}
+  .gt .tag{
+    position:absolute;left:0.7rem;bottom:0.6rem;
+    font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+    padding:0.22rem 0.55rem;border-radius:999px;
+  }
+  .gt.flat .tag{color:var(--muted);background:var(--raised);border:1px solid var(--border-subtle)}
+  .gt.soft .tag{color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,0.3)}
+  .gt.loud .tag{color:var(--expense);background:var(--expense-soft);border:1px solid rgba(251,113,133,0.3)}
+
+  /* amounts alignment demo */
+  .amt-demo{display:flex;flex-direction:column;gap:0.4rem;position:relative;padding-right:0.25rem}
+  .amt-demo .line{
+    display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:var(--r-control);padding:0.5rem 0.75rem;
+    font-size:0.9rem;
+  }
+  .amt-demo .line span{color:var(--text-2);font-size:0.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .amt-demo .line b{font-weight:600;white-space:nowrap}
+  .amt-demo .line b.exp{color:var(--expense)}
+  .amt-demo .line b.inc{color:var(--income)}
+  .amt-demo.tab .line b{font-variant-numeric:tabular-nums}
+  .guide{
+    position:absolute;top:0;bottom:0;right:3.35rem;width:0;
+    border-right:1px dashed rgba(240,185,11,0.55);pointer-events:none;
+  }
+
+  /* dropped ledger */
+  .dropped{display:grid;gap:0.7rem}
+  .drop-item{
+    display:flex;gap:0.8rem;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);padding:0.9rem 1rem;
+  }
+  .drop-item .x{
+    width:1.8rem;height:1.8rem;border-radius:var(--r-control);flex:none;
+    background:var(--expense-soft);color:var(--expense);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .drop-item p{margin:0;font-size:0.86rem;color:var(--text-2)}
+  .drop-item b{color:var(--text)}
+
+  /* rollout */
+  .phases{display:grid;gap:0.9rem}
+  .phase{
+    display:grid;grid-template-columns:auto 1fr;gap:1rem;
+    background:var(--surface);border:1px solid var(--border-subtle);
+    border-radius:var(--r-card);padding:1.1rem 1.2rem;
+  }
+  .phase .pn{
+    width:2.15rem;height:2.15rem;border-radius:var(--r-control);
+    background:var(--raised);border:1px solid var(--border-strong);
+    color:var(--gold);font-weight:700;font-size:0.9rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .phase h4{margin:0 0 0.25rem;font-size:0.98rem}
+  .phase h4 small{color:var(--muted);font-weight:600;font-size:0.75rem;margin-left:0.4rem}
+  .phase p{margin:0;font-size:0.85rem;color:var(--text-2)}
+  .phase p b{color:var(--text);font-weight:600}
+  .phase .ships{
+    margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.35rem;
+  }
+  .phase .ships span{
+    font-size:0.68rem;font-weight:700;color:var(--text-2);
+    background:var(--raised);border:1px solid var(--border-subtle);
+    border-radius:999px;padding:0.2rem 0.6rem;
+  }
+  .rollout-note{
+    margin-top:1rem;display:flex;gap:0.85rem;align-items:flex-start;
+    background:var(--bg);border:1px dashed var(--border-strong);
+    border-radius:var(--r-card);padding:0.95rem 1.1rem;
+  }
+  .rollout-note p{margin:0;font-size:0.85rem;color:var(--text-2)}
+  .rollout-note b{color:var(--text)}
+
+  .footer{
+    margin-top:3.6rem;padding-top:1.4rem;border-top:1px solid var(--border-subtle);
+    display:flex;flex-wrap:wrap;gap:0.4rem 1.5rem;justify-content:space-between;
+    font-size:0.76rem;color:var(--muted);
+  }
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  @media(max-width:34rem){
+    .board{padding:1.6rem 0.9rem 3.5rem}
+    .cover{padding:1.5rem 1.3rem}
+    .cover h1{font-size:1.7rem}
+    .cand{padding:1.15rem}
+  }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-chev-l" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arr-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5.5 11.5 12 5 18.5 11.5"/></g></symbol>
+    <symbol id="i-arr-dn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="18.5 12.5 12 19 5.5 12.5"/></g></symbol>
+    <symbol id="i-arr-r" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="17" y1="7" x2="7" y2="17"/><line x1="7" y1="7" x2="17" y2="17"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></g></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.3L4.6 18a2 2 0 0 0 1.8 3h11.2a2 2 0 0 0 1.8-3L14 8.3V3"/><path d="M7.6 14h8.8"/></g></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></g></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.7V21h5v-6h4v6h5V9.7"/></g></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 11l1.1-3.8A2 2 0 0 1 8.5 5.8h7a2 2 0 0 1 1.9 1.4L18.5 11"/><rect x="3" y="11" width="18" height="6" rx="1.6"/><circle cx="7.3" cy="17.6" r="1.4"/><circle cx="16.7" cy="17.6" r="1.4"/></g></symbol>
+    <symbol id="i-bus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="14" rx="2"/><path d="M4.5 10h15"/><path d="M8.5 14h.01M15.5 14h.01"/><path d="M7.5 17.5v2.5M16.5 17.5v2.5"/></g></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></g></symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/><line x1="6" y1="1.5" x2="6" y2="4"/><line x1="10" y1="1.5" x2="10" y2="4"/><line x1="14" y1="1.5" x2="14" y2="4"/></g></symbol>
+    <symbol id="i-wine" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8l-.6 6.2a3.4 3.4 0 0 1-6.8 0z"/><path d="M12 12.8V19"/><path d="M8.5 21h7"/></g></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 9.8a14.5 14.5 0 0 1 18.4 0"/><path d="M5.8 13.2a10 10 0 0 1 12.4 0"/><path d="M8.8 16.5a5.5 5.5 0 0 1 6.4 0"/><circle cx="12" cy="19.6" r="0.4" fill="currentColor"/></g></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.3h2"/></g></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1.5 21 5.5 17 9.5"/><path d="M3 11.5v-2a4 4 0 0 1 4-4h14"/><polyline points="7 22.5 3 18.5 7 14.5"/><path d="M21 12.5v2a4 4 0 0 1-4 4H3"/></g></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9.5 12 4l8.5 5.5"/><line x1="4.5" y1="9.5" x2="19.5" y2="9.5"/><line x1="6.5" y1="13" x2="6.5" y2="17.5"/><line x1="10.3" y1="13" x2="10.3" y2="17.5"/><line x1="13.7" y1="13" x2="13.7" y2="17.5"/><line x1="17.5" y1="13" x2="17.5" y2="17.5"/><line x1="3.5" y1="21" x2="20.5" y2="21"/></g></symbol>
+    <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M9.2 3.5 12 5.2l2.8-1.7 5 3.2-1.8 3-2-1.1V20.5H8V8.6l-2 1.1-1.8-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></g></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a2.8 2.8 0 0 0 0 5V19h20v-4.5a2.8 2.8 0 0 1 0-5V5H2z"/><path d="M14 5v2.4M14 10.8v2.4M14 16.6V19"/></g></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2.5 11 13"/><path d="M21.5 2.5 14.8 21.5l-3.8-8.5-8.5-3.8z"/></g></symbol>
+    <symbol id="i-dumbbell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.7 6.7v10.6M17.3 6.7v10.6"/><path d="M3.5 9.5v5M20.5 9.5v5"/><path d="M6.7 12h10.6"/></g></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M11 4l1.6 4.6L17.2 10l-4.6 1.6L11 16l-1.6-4.4L4.8 10l4.6-1.4z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></g></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></g></symbol>
+    <symbol id="i-health" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/><polyline points="7.5 12 10 12 11.5 9.8 13 13.6 14.5 12 16.5 12"/></g></symbol>
+    <symbol id="i-bottle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 8.5h6V19a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M10 8.5V7a2 2 0 0 1 4 0v1.5"/><path d="M12 2.8V5"/><path d="M9 12.3h6M9 15.3h6"/></g></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="13.5" rx="2"/><path d="M16 20.5V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v15.5"/></g></symbol>
+    <symbol id="i-deposit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9"/><polyline points="8.5 8.5 12 12 15.5 8.5"/><path d="M3 13.5v4a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-4"/></g></symbol>
+    <symbol id="i-vault" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="18" height="15.5" rx="2"/><circle cx="12" cy="11.2" r="3.4"/><path d="M12 7.8V6.5M12 16v-1.4M8.6 11.2H7.3M16.7 11.2h-1.3"/><path d="M6 19v2M18 19v2"/></g></symbol>
+    <symbol id="i-tools" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.2 4.2 0 0 0-5.6 5.2L3.4 17.2a2 2 0 1 0 2.8 2.8l5.7-5.7a4.2 4.2 0 0 0 5.2-5.6L14.4 11.4l-2.4-2.4z"/></g></symbol>
+
+    <!-- brand mark, evolved: same two-bar motif as the current PNG, redrawn as vector -->
+    <symbol id="brand-mark" viewBox="0 0 48 48">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="#161b22" stroke="#f0b90b" stroke-width="1.6"/>
+      <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" fill="#f0b90b"/>
+      <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" fill="#6b7686"/>
+    </symbol>
+    <symbol id="brand-mark-16" viewBox="0 0 48 48">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="12.5" fill="#161b22" stroke="#f0b90b" stroke-width="2.4"/>
+      <path d="M8 26.4 17.8 21l22.2 8-9.8 5.4z" fill="#f0b90b"/>
+    </symbol>
+    <!-- current PNG, approximated for the BEFORE cell: circle + ring + two bars -->
+    <symbol id="brand-old" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="22.5" fill="#20242c" stroke="#f0b90b" stroke-width="1.4"/>
+      <path d="M9.5 20.8 17.5 17l20 7.2-8 3.8z" fill="#f0b90b"/>
+      <path d="M8.5 28.3 16.5 24.5l20 7.2-8 3.8z" fill="#6b7686"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="board">
+
+  <!-- ================================================== COVER -->
+  <header class="cover">
+    <span class="kicker">
+      <span class="ic"><svg width="13" height="13"><use href="#i-sparkle"/></svg></span>
+      Design proposal · Optional
+    </span>
+    <h1>Expenses Tracker — Visual Refresh</h1>
+    <p class="lede">Six before→after candidates for the dark theme, developed and pressure-tested against the real code. <b>No app code ships from this board</b> — it exists to be approved, trimmed, or rejected, one candidate at a time.</p>
+    <div class="meta">
+      <span><b>Basis</b> · audited against <code>src/</code> on the current branch</span>
+      <span><b>Lineage</b> · develops the earlier exploratory one-pager</span>
+      <span><b>Relation to Filters &amp; Sorting</b> · none — fully independent</span>
+    </div>
+    <div class="scope">
+      <span class="badge"><span class="ic"><svg width="15" height="15"><use href="#i-info"/></svg></span></span>
+      <p><b>Nothing here blocks the in-flight Filters &amp; Sorting feature.</b> That feature ships with zero items from this board. The only coupling is scheduling courtesy: one phase below waits for the filters branch to merge because both touch the same component file — a sequencing choice, not a dependency.</p>
+    </div>
+    <nav class="toc" aria-label="Candidates">
+      <a href="#c1"><b>1</b> Category icons</a>
+      <a href="#c2"><b>2</b> Month navigator</a>
+      <a href="#c3"><b>3</b> Brand mark</a>
+      <a href="#c4"><b>4</b> Two-line rows</a>
+      <a href="#c5"><b>5</b> Page glow</a>
+      <a href="#c6"><b>6</b> Tabular amounts</a>
+      <a href="#dropped">Dropped</a>
+      <a href="#rollout">Rollout</a>
+    </nav>
+  </header>
+
+  <!-- ================================================== AUDIT -->
+  <section class="shead">
+    <div class="eyebrow">Grounding</div>
+    <h2>What the current UI actually does</h2>
+    <p>Every BEFORE on this board was verified in source, not remembered. The audit also corrected one item on the original shortlist.</p>
+  </section>
+  <section class="audit">
+    <div class="swatches" aria-label="App palette, exact tokens">
+      <span class="sw"><i style="background:#0e1116"></i>page #0e1116</span>
+      <span class="sw"><i style="background:#161b22"></i>surface #161b22</span>
+      <span class="sw"><i style="background:#1e252f"></i>raised #1e252f</span>
+      <span class="sw"><i style="background:#f0b90b"></i>gold #f0b90b</span>
+      <span class="sw"><i style="background:#34d399"></i>income #34d399</span>
+      <span class="sw"><i style="background:#fb7185"></i>expense #fb7185</span>
+      <span class="sw"><i style="background:#f2f5f9"></i>text #f2f5f9</span>
+    </div>
+    <ul>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Entry rows</b> render <code>Category - description</code> as one ellipsized line, with a 1.9rem circular chip holding a single up/down arrow — the only two glyphs in <code>src/components/common/Icons.js</code>. Chip and amount are tinted income-green / expense-rose.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Categories</b> are a seed list of 3 income + 29 expense names in <code>entriesHelper.js</code>, plus any the user creates — so an icon map needs a fallback, not just a lookup.</span></li>
+      <li class="flag"><span class="tick ic"><svg width="14" height="14"><use href="#i-alert"/></svg></span><span><b>Shortlist correction:</b> the month title is <em>already centered</em> — <code>global.scss</code> sets <code>h1.title &#123; text-align: center &#125;</code>. The shortlist's "centered title vs left-aligned" framing is outdated; what remains of candidate 2 is button geometry and edge behavior. Rescoped below.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Month stepper</b> buttons are 2.5rem circles; at the first/last month with data the button is swapped for an <em>invisible placeholder</em> (<code>visibility: hidden</code>) — the layout holds but the control vanishes.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Brand</b> is a 287×275 PNG (gold-ringed dark disc, gold bar over a slate bar) served at 44px in the header, and the same art in <code>public/favicon.ico</code>, <code>logo192.png</code>, <code>logo512.png</code>.</span></li>
+      <li><span class="tick ic"><svg width="14" height="14"><use href="#i-check"/></svg></span><span><b>Amounts</b> format via <code>Intl.NumberFormat</code> as <code>$1,234.56</code>, right-aligned at 600 weight — currently in proportional figures.</span></li>
+    </ul>
+  </section>
+
+  <!-- ================================================== CANDIDATES -->
+  <section class="shead">
+    <div class="eyebrow">Candidates</div>
+    <h2>Six before→afters, each with a verdict</h2>
+    <p>The shortlist's five items survive in some form — one rescoped — and the audit surfaced a sixth. Every AFTER stays inside the existing vocabulary: same tokens, same radii, gold spent sparingly.</p>
+  </section>
+
+  <!-- ==================== 1 · Category icons -->
+  <article class="cand" id="c1">
+    <div class="cand-head">
+      <div class="cand-num">1</div>
+      <div class="titling">
+        <h3>Category-aware entry icons</h3>
+        <p class="sub">Swap the money-direction arrow inside each row's chip for a glyph keyed to the entry's category. The chip itself — size, circle, income/expense tint — does not change: color keeps carrying direction, the glyph starts carrying category.</p>
+      </div>
+      <span class="verdict go"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — every row, same arrow</div>
+        <div class="m-label">Expenses <span class="tot exp">$322.46</span></div>
+        <div class="m-rows">
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Eating out - Ramen with the team</span><span class="m-amt exp">$46.90</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Food - Weekly groceries</span><span class="m-amt exp">$112.44</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Transportation - Transit pass</span><span class="m-amt exp">$52.00</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Hydro</span><span class="m-amt exp">$88.13</span></div>
+          <div class="m-row"><span class="m-chip inc"><span class="ic"><svg width="15" height="15"><use href="#i-arr-dn"/></svg></span></span><span class="m-desc">Salary - July pay</span><span class="m-amt inc">$3,200.00</span></div>
+        </div>
+        <p class="pin">chip: <b>icon-chip(1.9rem)</b> circle · glyphs: codicon arrow-small-up/down only</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — glyph = category, tint = direction</div>
+        <div class="m-label">Expenses <span class="tot exp">$322.46</span></div>
+        <div class="m-rows">
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-coffee"/></svg></span></span><span class="m-desc">Eating out - Ramen with the team</span><span class="m-amt exp">$46.90</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-cart"/></svg></span></span><span class="m-desc">Food - Weekly groceries</span><span class="m-amt exp">$112.44</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-bus"/></svg></span></span><span class="m-desc">Transportation - Transit pass</span><span class="m-amt exp">$52.00</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-zap"/></svg></span></span><span class="m-desc">Hydro</span><span class="m-amt exp">$88.13</span></div>
+          <div class="m-row"><span class="m-chip inc"><span class="ic"><svg width="15" height="15"><use href="#i-briefcase"/></svg></span></span><span class="m-desc">Salary - July pay</span><span class="m-amt inc">$3,200.00</span></div>
+        </div>
+        <p class="pin">chip unchanged · glyphs from one 2px-stroke set, matching the codicon chevrons already in the header</p>
+      </div>
+    </div>
+
+    <div class="map">
+      <div class="cap"><i></i>The icon map — all 32 seed categories + fallback</div>
+      <div class="map-grid">
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-home"/></svg></span></span><span class="names">House (Rent) · House stuff · Insurance House</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-car"/></svg></span></span><span class="names">Car · Car parking · Car insurance · Gas · Car expenses</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-bus"/></svg></span></span><span class="names">Transportation</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-cart"/></svg></span></span><span class="names">Food</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-coffee"/></svg></span></span><span class="names">Eating out</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-wine"/></svg></span></span><span class="names">Alcohol</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-zap"/></svg></span></span><span class="names">Hydro</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-wifi"/></svg></span></span><span class="names">Internet</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-phone"/></svg></span></span><span class="names">Mobile phone plan</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-repeat"/></svg></span></span><span class="names">Subscriptions</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-bank"/></svg></span></span><span class="names">Bank fees</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-shirt"/></svg></span></span><span class="names">Laundry</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-gift"/></svg></span></span><span class="names">Donation</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-ticket"/></svg></span></span><span class="names">Fun activities</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-plane"/></svg></span></span><span class="names">Travel</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-dumbbell"/></svg></span></span><span class="names">Sports</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-sparkle"/></svg></span></span><span class="names">Beauty</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-alert"/></svg></span></span><span class="names">Unexpected</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-user"/></svg></span></span><span class="names">Person 1 bucket · Person 2 bucket</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-book"/></svg></span></span><span class="names">Education</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-health"/></svg></span></span><span class="names">Health</span></div>
+        <div class="map-item"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-bottle"/></svg></span></span><span class="names">Baby Stuff</span></div>
+        <div class="map-item"><span class="m-chip inc"><span class="ic"><svg width="13" height="13"><use href="#i-briefcase"/></svg></span></span><span class="names">Salary<small>income</small></span></div>
+        <div class="map-item"><span class="m-chip inc"><span class="ic"><svg width="13" height="13"><use href="#i-deposit"/></svg></span></span><span class="names">Deposit<small>income</small></span></div>
+        <div class="map-item"><span class="m-chip inc"><span class="ic"><svg width="13" height="13"><use href="#i-vault"/></svg></span></span><span class="names">Saving<small>income</small></span></div>
+        <div class="map-item fallback"><span class="m-chip exp"><span class="ic"><svg width="13" height="13"><use href="#i-arr-up"/></svg></span></span><span class="names">Any custom category<small>fallback = today's arrow</small></span></div>
+      </div>
+      <p class="map-note">The map lives in one module next to the seed lists in <code>entriesHelper.js</code>, keyed by lowercased category name (the same normalization buckets already use). Unknown keys fall back to the current arrows — so user-created categories degrade to exactly today's behavior, never a broken chip.</p>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>Shape is scanned pre-attentively; a month of entries becomes findable by glance instead of by reading each row's leading words. It also frees the leading text from double duty once candidate 4 lands.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>The arrow's instant in/out read moves entirely onto chip color — colorblind users lose a redundant cue. Screens are already split into Incomes/Expenses sections with signed totals, which limits the real risk, but it must be checked, not assumed.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Glance test at 1.9rem/15px on a phone: can each glyph be told apart in a mixed month? Run a deuteranopia sim over the Summary screen to confirm section placement still disambiguates direction.</p></div>
+    </div>
+  </article>
+
+  <!-- ==================== 2 · Month navigator -->
+  <article class="cand" id="c2">
+    <div class="cand-head">
+      <div class="cand-num">2</div>
+      <div class="titling">
+        <h3>Month navigator: geometry &amp; edge behavior</h3>
+        <p class="sub">The shortlist billed this as "centered title + squared buttons vs left-aligned title + circles." The audit found the title is already centered — so the candidate shrinks to two honest deltas: rounded-square steppers, and keeping the stepper visible-but-disabled at the data edge instead of vanishing it.</p>
+      </div>
+      <span class="verdict rescoped"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Rescoped</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — circles; edge button vanishes</div>
+        <div class="m-stack">
+          <div>
+            <div class="m-nav">
+              <span class="m-step"><span class="ic"><svg width="20" height="20"><use href="#i-chev-l"/></svg></span></span>
+              <span class="m-title">July 2026</span>
+              <span class="m-step"><span class="ic"><svg width="20" height="20"><use href="#i-chev-r"/></svg></span></span>
+            </div>
+            <p class="m-navnote">mid-history: both steppers shown</p>
+          </div>
+          <div>
+            <div class="m-nav">
+              <span class="m-step"><span class="ic"><svg width="20" height="20"><use href="#i-chev-l"/></svg></span></span>
+              <span class="m-title">December 2026</span>
+              <span class="m-step ghost"><span class="ic"><svg width="20" height="20"><use href="#i-chev-r"/></svg></span></span>
+            </div>
+            <p class="m-navnote">newest month: Next is <code>visibility: hidden</code> — control disappears</p>
+          </div>
+        </div>
+        <p class="pin">2.5rem · <b>border-radius: 50%</b> · circles used by no other control in the app</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — control radius; edge button stays, disabled</div>
+        <div class="m-stack">
+          <div>
+            <div class="m-nav">
+              <span class="m-step sq"><span class="ic"><svg width="20" height="20"><use href="#i-chev-l"/></svg></span></span>
+              <span class="m-title">July 2026</span>
+              <span class="m-step sq"><span class="ic"><svg width="20" height="20"><use href="#i-chev-r"/></svg></span></span>
+            </div>
+            <p class="m-navnote">same 2.5rem hit area, same raised surface</p>
+          </div>
+          <div>
+            <div class="m-nav">
+              <span class="m-step sq"><span class="ic"><svg width="20" height="20"><use href="#i-chev-l"/></svg></span></span>
+              <span class="m-title">December 2026</span>
+              <span class="m-step sq disabled"><span class="ic"><svg width="20" height="20"><use href="#i-chev-r"/></svg></span></span>
+            </div>
+            <p class="m-navnote">newest month: Next stays at 35% opacity, <code>disabled</code> + <code>aria-disabled</code></p>
+          </div>
+        </div>
+        <p class="pin"><b>border-radius: $radius-control (0.65rem)</b> — joins buttons, inputs, and nav pills; circles stay reserved for entry chips</p>
+      </div>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>Circles appear nowhere else among controls — reserving them for the money chips makes both shapes mean something. A persistent disabled stepper also stops the control from teleporting under your thumb at the data edge.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>This is the most-touched control in the app, changed for consistency rather than a user complaint. The disabled-vs-hidden switch is a real behavior change: a disabled button is announced by screen readers where the hidden one was silent.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Confirm the existing <code>goToPrevMonth/goToNextMonth</code> integration helpers still pass (they query by accessible name, which doesn't change). VoiceOver/NVDA pass on the disabled state; check no accidental taps registered at the edge.</p></div>
+    </div>
+  </article>
+
+  <!-- ==================== 3 · Brand mark -->
+  <article class="cand" id="c3">
+    <div class="cand-head">
+      <div class="cand-num">3</div>
+      <div class="titling">
+        <h3>Brand mark: evolve the PNG into a vector system</h3>
+        <p class="sub">The current mark has real equity — the gold-over-slate double bar reads as ledger lines / an upward glance. Keep the motif, redraw it as one SVG source, and move the container from a circle to the app's rounded-square language. Every size ships from that one file.</p>
+      </div>
+      <span class="verdict go"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — one 287×275 PNG everywhere</div>
+        <div class="brandline">
+          <span class="ic"><svg width="44" height="44" class="px-old"><use href="#brand-old"/></svg></span>
+          <span class="word">Expenses Tracker</span>
+        </div>
+        <div class="brand-strip">
+          <div class="brand-stop"><span class="ic"><svg width="32" height="32"><use href="#brand-old"/></svg></span><small>favicon 32</small></div>
+          <div class="brand-stop"><span class="ic"><svg width="16" height="16"><use href="#brand-old"/></svg></span><small>favicon 16</small></div>
+        </div>
+        <p class="pin">raster at 44px header + <b>favicon.ico</b>/<b>logo192</b>/<b>logo512</b> · slate bar and ring smear below ~24px · soft on 2× displays</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — one SVG source, per-size variants</div>
+        <div class="brandline">
+          <span class="ic"><svg width="40" height="40"><use href="#brand-mark"/></svg></span>
+          <span class="word">Expenses Tracker</span>
+        </div>
+        <div class="brand-strip">
+          <div class="brand-stop"><span class="ic"><svg width="64" height="64"><use href="#brand-mark"/></svg></span><small>app icon 192/512</small></div>
+          <div class="brand-stop"><span class="ic"><svg width="32" height="32"><use href="#brand-mark"/></svg></span><small>favicon 32</small></div>
+          <div class="brand-stop"><span class="ic"><svg width="16" height="16"><use href="#brand-mark-16"/></svg></span><small>favicon 16 — gold bar only</small></div>
+        </div>
+        <p class="pin">same motif, crisper angles · rounded square echoes <b>$radius-shell</b> · 16px variant drops the slate bar (it dies below 20px) and thickens the ring</p>
+      </div>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>Vector stays sharp at every density; the rounded square finally matches the app's own shape system; and a single SVG source generates favicon, PWA icons, and header lockup, ending the four-copies-of-one-PNG situation.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>Circle → square changes the app's silhouette on home screens and pinned tabs — the one place users recognize it from a distance. This drawing is a direction to react to, not a finished logo; brand sign-off gates the phase.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Render the favicon variants in real browser tabs on dark and light chrome at 16/32px; install the PWA icon on one Android and one iOS home screen. If the mark isn't identifiable in a row of tabs, iterate before shipping.</p></div>
+    </div>
+  </article>
+
+  <!-- ==================== 4 · Two-line rows -->
+  <article class="cand" id="c4">
+    <div class="cand-head">
+      <div class="cand-num">4</div>
+      <div class="titling">
+        <h3>Two-line entry rows — only when a description exists</h3>
+        <p class="sub">Today the row concatenates <code>Category - description</code> into one ellipsized line. Proposed rule: an entry <em>with</em> a description gets category as a semibold title and the description as muted subtext; an entry <em>without</em> one keeps today's single line. The rule is content-driven, so rows never change shape on resize.</p>
+      </div>
+      <span class="verdict go"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — one line, description pays the truncation cost</div>
+        <div class="m-rows">
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Eating out - Ramen with the team after the release, split three ways</span><span class="m-amt exp">$46.90</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Unexpected - Replacement phone screen after the bike incident</span><span class="m-amt exp">$189.00</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-arr-up"/></svg></span></span><span class="m-desc">Hydro</span><span class="m-amt exp">$88.13</span></div>
+        </div>
+        <p class="pin"><b>white-space: nowrap</b> + ellipsis · category and note share one line's budget</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — described rows stack; bare rows unchanged</div>
+        <div class="m-rows">
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-coffee"/></svg></span></span><span class="m-desc stacked"><span class="t1">Eating out</span><span class="t2">Ramen with the team after the release, split three ways</span></span><span class="m-amt exp">$46.90</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-alert"/></svg></span></span><span class="m-desc stacked"><span class="t1">Unexpected</span><span class="t2">Replacement phone screen after the bike incident</span></span><span class="m-amt exp">$189.00</span></div>
+          <div class="m-row"><span class="m-chip exp"><span class="ic"><svg width="15" height="15"><use href="#i-zap"/></svg></span></span><span class="m-desc">Hydro</span><span class="m-amt exp">$88.13</span></div>
+        </div>
+        <p class="pin">title 0.92rem/600 · subtext 0.78rem <b>$text-muted</b>, one line, own ellipsis · row grows ~0.6rem only when subtext exists</p>
+      </div>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>Category becomes the scannable anchor (it pairs directly with candidate 1's glyphs) and long notes get a full line instead of the tail end of one. The hierarchy matches what users actually scan for first: what kind of spend, then which one.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>Described rows are ~18% taller, so note-heavy months show fewer entries per screen. Mixed one- and two-line rows also give lists a ragged rhythm — deliberate here, but it must be seen with real data, not this curated sample.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Load a real backup CSV and count entries-above-the-fold on a 360×780 viewport before/after. Integration tests keep asserting on visible text per the house rule — the category and description remain separately findable by <code>screen.findByText</code>.</p></div>
+    </div>
+  </article>
+
+  <!-- ==================== 5 · Page glow -->
+  <article class="cand" id="c5">
+    <div class="cand-head">
+      <div class="cand-num">5</div>
+      <div class="titling">
+        <h3>Whisper-faint gold page glow</h3>
+        <p class="sub">One fixed radial wash behind the top of the shell column, at most 5% gold, gone by two-thirds down the viewport. It warms the near-black page without touching the contrast of anything painted on a surface.</p>
+      </div>
+      <span class="verdict go"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Pursue, guarded</span>
+    </div>
+
+    <div class="ba" style="grid-template-columns:1fr">
+      <div class="cell after" style="background:var(--surface)">
+        <div class="cap"><i></i>Before · proposed · and the failure mode to guard against</div>
+        <div class="glow-tiles">
+          <div class="gt flat"><span class="shellchip">July 2026</span><span class="tag">Before — flat #0e1116</span></div>
+          <div class="gt soft"><span class="shellchip">July 2026</span><span class="tag">After — 5% gold, top only</span></div>
+          <div class="gt loud"><span class="shellchip">July 2026</span><span class="tag">Rejected — 16%: backlight bleed</span></div>
+        </div>
+        <p class="pin">token: <b>$glow-page: radial-gradient(90rem 40rem at 50% -6rem, rgba(240,185,11,0.05), transparent 62%)</b> · painted once on <b>body</b>, fixed size — never stretches with page height, never repaints on scroll</p>
+      </div>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>The page ground is currently the one surface with no brand presence. A top-anchored wash adds depth and quietly locates the accent, at zero cost to content: everything readable sits on surface/raised layers above it.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>On OLED at low brightness, faint gradients band or read as screen smudge. And the effect is invisible on some panels — meaning the payoff may be nothing, which is an acceptable outcome only because the cost is one token.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Check on one OLED phone at minimum brightness and one desktop IPS at full: no visible banding, no "dirty screen" impression. If it fails, drop the candidate — do not fix it by raising the alpha.</p></div>
+    </div>
+  </article>
+
+  <!-- ==================== 6 · Tabular amounts -->
+  <article class="cand" id="c6">
+    <div class="cand-head">
+      <div class="cand-num">6</div>
+      <div class="titling">
+        <h3>Tabular figures for money columns</h3>
+        <p class="sub">Found during the audit, not on the shortlist. Amounts render in proportional figures, so right-aligned digits wobble from row to row. One declaration — <code>font-variant-numeric: tabular-nums</code> — puts every digit on a fixed width, and the column snaps into a grid.</p>
+      </div>
+      <span class="verdict new"><span class="ic"><svg width="11" height="11"><use href="#i-sparkle"/></svg></span>New — pursue</span>
+    </div>
+
+    <div class="ba">
+      <div class="cell before">
+        <div class="cap"><i></i>Before — proportional digits drift</div>
+        <div class="amt-demo">
+          <div class="guide" aria-hidden="true"></div>
+          <div class="line"><span>Food</span><b class="exp">$112.44</b></div>
+          <div class="line"><span>Unexpected</span><b class="exp">$189.00</b></div>
+          <div class="line"><span>Eating out</span><b class="exp">$46.90</b></div>
+          <div class="line"><span>Salary</span><b class="inc">$3,200.00</b></div>
+          <div class="line"><span>Balance</span><b class="inc">$1,111.11</b></div>
+        </div>
+        <p class="pin">dashed guide: cent digits land at slightly different x per row (most visible on 1 vs 9)</p>
+      </div>
+      <span class="goes ic" aria-hidden="true"><svg width="24" height="24"><use href="#i-arr-r"/></svg></span>
+      <div class="cell after">
+        <div class="cap"><i></i>After — every digit one width</div>
+        <div class="amt-demo tab">
+          <div class="guide" aria-hidden="true"></div>
+          <div class="line"><span>Food</span><b class="exp">$112.44</b></div>
+          <div class="line"><span>Unexpected</span><b class="exp">$189.00</b></div>
+          <div class="line"><span>Eating out</span><b class="exp">$46.90</b></div>
+          <div class="line"><span>Salary</span><b class="inc">$3,200.00</b></div>
+          <div class="line"><span>Balance</span><b class="inc">$1,111.11</b></div>
+        </div>
+        <p class="pin">new mixin <b>@mixin money-figures</b> → applied to <b>.item-amount</b>, <b>.item-total</b>, balance and bucket numbers</p>
+      </div>
+    </div>
+
+    <div class="trio">
+      <div class="why"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-check"/></svg></span>Why</div><p>Aligned digits are the cheapest credibility signal a finance UI can buy — comparison down a column becomes effortless, and totals visually "add up." It's a one-line change with no layout consequences.</p></div>
+      <div class="cost"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-alert"/></svg></span>Trade-off</div><p>Effect size varies by platform: some system fonts already ship near-tabular defaults, so on those devices the change is invisible. Slightly wider 1s can nudge amount-column width by a pixel or two.</p></div>
+      <div class="check"><div class="h"><span class="ic"><svg width="11" height="11"><use href="#i-flask"/></svg></span>Validate</div><p>Screenshot the Summary screen on macOS, Windows, and Android; confirm the cent column is optically vertical on each and nothing wraps. That's the whole test — this is the lowest-risk item on the board.</p></div>
+    </div>
+  </article>
+
+  <!-- ================================================== DROPPED -->
+  <section class="shead" id="dropped">
+    <div class="eyebrow">Pressure-tested out</div>
+    <h2>Considered and dropped</h2>
+    <p>Rejections are part of the proposal — these came up during exploration and don't survive contact with the system.</p>
+  </section>
+  <div class="dropped">
+    <div class="drop-item">
+      <span class="x ic"><svg width="14" height="14"><use href="#i-x"/></svg></span>
+      <p><b>Per-category chip hues.</b> The chip's tint is load-bearing: once arrows become category glyphs (candidate 1), green/rose is the <em>only</em> always-on direction signal. Thirty decorative hues would bury a two-hue semantic system for zero scanning gain.</p>
+    </div>
+    <div class="drop-item">
+      <span class="x ic"><svg width="14" height="14"><use href="#i-x"/></svg></span>
+      <p><b>"Center the month title."</b> On the original shortlist, already true in production — <code>global.scss</code> centers <code>h1.title</code>. Dropped as a claim; the surviving remainder is candidate 2's rescope.</p>
+    </div>
+    <div class="drop-item">
+      <span class="x ic"><svg width="14" height="14"><use href="#i-x"/></svg></span>
+      <p><b>Gradient surfaces / glass blur on cards.</b> Off-vocabulary. The identity is flat graphite layers separated by hairline borders, with gold spent only on action and state. Adding sheen would trade the "calm" out of calm fintech.</p>
+    </div>
+  </div>
+
+  <!-- ================================================== ROLLOUT -->
+  <section class="shead" id="rollout">
+    <div class="eyebrow">Rollout</div>
+    <h2>Systematize what survives — sequenced apart from filters</h2>
+    <p>Four phases, each independently shippable and reviewable, each its own PR with the house version-bump and changelog entry. Order is by risk and by which files they touch — not by the filters timeline.</p>
+  </section>
+  <div class="phases">
+    <div class="phase">
+      <span class="pn">A</span>
+      <div>
+        <h4>Tokens &amp; primitives <small>no visible change</small></h4>
+        <p>Extend the system before touching screens: add <b>$glow-page</b> and a <b>money-figures</b> mixin to <code>variables.scss</code>; create the <b>category→icon map module</b> beside the seed lists (with a unit test that every seed category resolves and unknowns hit the fallback); commit the <b>brand SVG source</b>. Approval of this board gates the phase.</p>
+        <div class="ships"><span>tokens</span><span>icon map + test</span><span>SVG source</span></div>
+      </div>
+    </div>
+    <div class="phase">
+      <span class="pn">B</span>
+      <div>
+        <h4>Quiet wins <small>ship any time, any order</small></h4>
+        <p>Three small, screen-isolated PRs: <b>tabular amounts</b> (6), <b>page glow</b> (5, only if the OLED check passes), <b>month-nav geometry + disabled edge state</b> (2). None overlaps files with the filters branch; each is trivially revertable on its own.</p>
+        <div class="ships"><span>candidate 6</span><span>candidate 5</span><span>candidate 2</span></div>
+      </div>
+    </div>
+    <div class="phase">
+      <span class="pn">C</span>
+      <div>
+        <h4>Row anatomy <small>one PR, after filters merges</small></h4>
+        <p><b>Category icons</b> (1) and <b>two-line rows</b> (4) land together — both rewrite the same row markup in <code>EntriesSummary</code>, and shipping them as one change means one review, one integration-test update, one revert point. Waiting for the filters merge avoids churning a file that branch also touches; that is scheduling courtesy, not a dependency.</p>
+        <div class="ships"><span>candidate 1</span><span>candidate 4</span></div>
+      </div>
+    </div>
+    <div class="phase">
+      <span class="pn">D</span>
+      <div>
+        <h4>Brand <small>gated on identity sign-off</small></h4>
+        <p>From the approved SVG source, generate and swap the header lockup, <code>favicon.ico</code>, and the PWA icons in <code>public/</code> + <code>manifest.json</code>. Fully independent of every other phase — can ship first or last.</p>
+        <div class="ships"><span>candidate 3</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="rollout-note">
+    <span class="ic" style="color:var(--gold);margin-top:0.1rem"><svg width="15" height="15"><use href="#i-info"/></svg></span>
+    <p><b>Per house rules, every phase PR</b> runs the integration suite and typecheck, bumps <code>package.json</code>, and adds a <code>CHANGELOG.md</code> entry. Nothing in any phase blocks — or waits on, except phase C's courtesy — the Filters &amp; Sorting release.</p>
+  </div>
+
+  <footer class="footer">
+    <span>Expenses Tracker · Visual Refresh — Design Board</span>
+    <span>Dark theme · 6 candidates · No app code until approved</span>
+  </footer>
+
+</div>
