@@ -5,6 +5,45 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-07-20
+
+### Added
+- Filters & sorting on the monthly summary (/summary): the shared toolbar
+  (live search, sort, Filters button) and the Filters sheet/panel now render
+  on the summary screen, and the ONE shared filter/sort state drives BOTH
+  the incomes and the expenses lists simultaneously — a filter set on
+  /expenses or /incomes is already active when navigating to /summary and
+  vice versa
+- Gold banner variant for /summary: "Filtered view · both lists" with the
+  combined "N of M entries" across both lists and a signed net filtered
+  total ("Filtered total · net", e.g. "+$3,125.02") — income-green when
+  positive, expense-rose when negative, neutral at zero
+- "Matching incomes" / "Matching expenses" section headers with per-list
+  money totals while filtered (`ListSectionHeader` gained an optional
+  `totalText` shown instead of the entry count)
+- The sheet's category picker on /summary offers income AND expense
+  categories, since one filter drives both lists
+- Combined empty state on /summary when zero entries match across both
+  lists; charts (type doughnut and per-type category charts) recompute
+  against the filtered subsets
+
+### Changed
+- The Summary screen is now Redux-connected (`entryFilters` +
+  setEntryFilters/clearEntryFilters); the "Show" entry-type select is
+  untouched — filters apply within whatever it displays, and the banner
+  keeps reporting both lists
+- Both /summary lists now honor the shared sort key (date-newest-first by
+  default), matching the /expenses and /incomes behavior
+
+### Tests
+- New integration suite `summaryFilters.test.tsx` (11 tests): both-list
+  narrowing from one search, shared sort ordering across lists, income
+  categories in the picker, signed net total with polarity (positive green
+  / negative rose), per-list Matching headers with totals, chip removal
+  and Clear restoring tile + default sort, cross-screen filter carryover
+  from /expenses, "Show" select regression and interplay, and the combined
+  empty state
+
 ## [1.4.0] - 2026-07-20
 
 ### Added

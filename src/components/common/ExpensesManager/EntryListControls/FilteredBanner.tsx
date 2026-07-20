@@ -11,7 +11,9 @@ import "./styles.scss";
 type FilteredBannerProps = {
   descriptors: FilterDescriptor[];
   counts: { shown: number; total: number };
-  /** "Filtered total" on /expenses & /incomes; "Filtered total · net" later. */
+  /** "Filtered view" on the single lists; "Filtered view · both lists" on /summary. */
+  title?: string;
+  /** "Filtered total" on /expenses & /incomes; "Filtered total · net" on /summary. */
   totalLabel: string;
   /** Pre-formatted currency text. */
   totalValue: string;
@@ -29,6 +31,7 @@ type FilteredBannerProps = {
 const FilteredBanner = ({
   descriptors,
   counts,
+  title = "Filtered view",
   totalLabel,
   totalValue,
   tone,
@@ -41,7 +44,7 @@ const FilteredBanner = ({
         <Icon icon={filterIcon} />
       </span>
       <div className="filtered-banner__headline">
-        <span className="filtered-banner__title">Filtered view</span>
+        <span className="filtered-banner__title">{title}</span>
         <span className="filtered-banner__count" aria-live="polite">
           {`${counts.shown} of ${counts.total} entries`}
         </span>
