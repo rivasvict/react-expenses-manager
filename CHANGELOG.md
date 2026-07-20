@@ -5,6 +5,56 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-07-20
+
+### Added
+- "Filters & sort" sheet on the incomes/expenses report: a Filters button
+  (funnel icon) on the toolbar opens a bottom sheet over a scrim on narrow
+  screens and an inline bordered panel on wide ones (same markup, pure CSS
+  switch at the nav breakpoint). It holds the shared search field, a
+  "Search in" segmented toggle ("All text" matches category + description;
+  "Description only" scopes to the entry's description, with hint copy),
+  the searchable category picker, the shared "Sort by" options ("same as
+  toolbar"), a "Clear all" button and a primary "Show N results" button
+  with a live count that simply dismisses (filtering is live — no Apply)
+- Gold "Filtered view" banner that replaces the total tile whenever any
+  filter is active: funnel indicator, "N of M entries", one removable chip
+  per active filter (quoted search term, "Category: X", "Description
+  only"), a dashed gold divider, the "Filtered total" in expense-rose /
+  income-green, and an outlined Clear button that removes every filter AND
+  resets the sort to Date. Count and total sit in `aria-live="polite"`
+  regions
+- Gold count badge on the Filters button for active filters beyond search
+- List section header above the rows: uppercase tinted "Expenses"/"Incomes"
+  ("Matching expenses/incomes" while filtered) with a right-aligned entry
+  count
+- Dashed-border empty state for zero matches ("No entries match your
+  filters", "Try a different search term or a broader category.", and a
+  "Clear all filters" button) while the banner keeps showing "$0.00" and
+  "0 of M entries"
+- Accessibility: focus moves to the sheet heading on open and back to the
+  Filters button on close; Escape and the scrim close the sheet; chip
+  removers are real labelled buttons; scope and sort options in the sheet
+  are native radios
+
+### Changed
+- The standalone "Filter by category" control moved from the report screen
+  into the Filters sheet/panel (same searchable dropdown, same semantics)
+- `EntriesSummary` accepts a `hideHeader` prop and `SummaryWithChart` a
+  `listHeader` node so the new section header can replace the built-in list
+  heading without affecting `/summary`
+
+### Tests
+- New integration suite `filterSheet.test.tsx` (14 tests): sheet
+  open/close with focus management, shared search/sort state between
+  toolbar and sheet, live "Show N results" count, scope-toggle semantics,
+  banner replacing the tile with chips/count/total, per-chip removal,
+  Clear resetting the sort, badge counting, section headers, empty state,
+  and symmetric /incomes coverage
+- New helper `integrationTests/helpers/filters.ts` (`openFilterSheet`,
+  `searchEntries`), registered in the CLAUDE.md helper list; category
+  filter tests now open the sheet before picking a category
+
 ## [1.3.0] - 2026-07-20
 
 ### Added

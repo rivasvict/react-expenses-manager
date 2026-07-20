@@ -36,20 +36,24 @@ function GetEntriesList({ entries, entryType }) {
   });
 }
 
-function EntriesSummary({ entries, name, entryType, total }) {
+// `hideHeader` lets a screen that renders its own list section header (the
+// filters/sort UX on /expenses & /incomes) suppress the built-in one.
+function EntriesSummary({ entries, name, entryType, total, hideHeader }) {
   const entriesList = GetEntriesList({ entries, entryType });
   return (
     <Container className={`entries-summary entries-summary--${entryType}`}>
-      <Row className="entries-summary-header">
-        <Col xs={total === undefined ? 12 : 8} className="item-type">
-          {capitalize(name)}
-        </Col>
-        {total !== undefined && (
-          <Col xs={4} className="item-total">
-            {formatNumberForDisplay(total)}
+      {!hideHeader && (
+        <Row className="entries-summary-header">
+          <Col xs={total === undefined ? 12 : 8} className="item-type">
+            {capitalize(name)}
           </Col>
-        )}
-      </Row>
+          {total !== undefined && (
+            <Col xs={4} className="item-total">
+              {formatNumberForDisplay(total)}
+            </Col>
+          )}
+        </Row>
+      )}
       {entriesList.length ? (
         entriesList
       ) : (

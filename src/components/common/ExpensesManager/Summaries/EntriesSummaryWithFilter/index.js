@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import CategorySelector from "../../CategorySelector";
 import { connect } from "react-redux";
-import { setEntryFilters } from "../../../../../redux/expensesManager/actionCreators";
+import {
+  clearEntryFilters,
+  setEntryFilters,
+} from "../../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getEntryCategoryOption,
@@ -10,6 +12,8 @@ import {
 } from "../../../../../helpers/entriesHelper/entriesHelper";
 import {
   filterEntries,
+  getActiveFilterDescriptors,
+  getDefaultEntryFilters,
   sortEntries,
 } from "../../../../../helpers/entriesHelper/filterSortHelper";
 import { MainContentContainer } from "../../../MainContentContainer";
@@ -18,13 +22,31 @@ import { capitalize } from "lodash";
 import "./styles.scss";
 import SummaryWithChart from "../../../SummaryWithChart";
 import EntryListToolbar from "../../EntryListControls/EntryListToolbar";
+import FilterSheet from "../../EntryListControls/FilterSheet";
+import FilteredBanner from "../../EntryListControls/FilteredBanner";
+import ListSectionHeader from "../../EntryListControls/ListSectionHeader";
+import FilterEmptyState from "../../EntryListControls/FilterEmptyState";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 
 class EntrySummaryWithFilter extends Component {
-  handleCategoryChange = (event) => {
-    const { value } = event.currentTarget;
-    this.props.onFiltersChange({ category: value });
+  state = { isFilterSheetOpen: false };
+
+  // Owned here so focus can return to the toolbar's Filters button when the
+  // sheet closes (a11y requirement from the design brief).
+  filtersButtonRef = React.createRef();
+
+  openFilterSheet = () => this.setState({ isFilterSheetOpen: true });
+
+  closeFilterSheet = () => {
+    this.setState({ isFilterSheetOpen: false });
+    this.filtersButtonRef.current?.focus();
+  };
+
+  // Dropping a chip resets just that filter back to its default value.
+  handleRemoveFilter = (filterKey) => {
+    const defaults = getDefaultEntryFilters();
+    this.props.onFiltersChange({ [filterKey]: defaults[filterKey] });
   };
 
   goBack = () => {
@@ -60,43 +82,74 @@ class EntrySummaryWithFilter extends Component {
       entryFilters.sortKey
     );
     const totalSum = getSumFromEntries({ entries: visibleEntries });
+    const descriptors = getActiveFilterDescriptors({ entryFilters });
+    const isFiltered = descriptors.length > 0;
+    const activeFilterCount = descriptors.filter(
+      (descriptor) => descriptor.key !== "search"
+    ).length;
     return (
       <MainContentContainer
         className="entry-summary-with-filter"
         pageTitle="Monthly report"
       >
         <Container className="top-content" fluid>
-          <ContentTileSection
-            title="Summary"
-            className={`tile-tone--${this.props.entryType}`}
-          >
-            {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
-          </ContentTileSection>
+          {isFiltered ? (
+            <FilteredBanner
+              descriptors={descriptors}
+              counts={{ shown: visibleEntries.length, total: monthEntries.length }}
+              totalLabel="Filtered total"
+              totalValue={formatNumberForDisplay(totalSum)}
+              tone={this.props.entryType}
+              onRemoveFilter={this.handleRemoveFilter}
+              onClearAll={this.props.onClearFilters}
+            />
+          ) : (
+            <ContentTileSection
+              title="Summary"
+              className={`tile-tone--${this.props.entryType}`}
+            >
+              {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
+            </ContentTileSection>
+          )}
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
           <EntryListToolbar
             entryFilters={entryFilters}
+            activeFilterCount={activeFilterCount}
+            isFilterSheetOpen={this.state.isFilterSheetOpen}
             onFiltersChange={this.props.onFiltersChange}
+            onOpenFilters={this.openFilterSheet}
+            filtersButtonRef={this.filtersButtonRef}
           />
-          <label
-            className="form-label"
-            htmlFor="category-filter"
-            id="category-filter-label"
-          >
-            Filter by category
-          </label>
-          <CategorySelector
-            id="category-filter"
-            name={entryTypePlural}
-            value={entryFilters.category}
-            handleChange={this.handleCategoryChange}
+          <FilterSheet
+            isOpen={this.state.isFilterSheetOpen}
+            resultCount={visibleEntries.length}
+            entryFilters={entryFilters}
             categoryOptions={categoryOptions}
-            className="category-select"
+            name={entryTypePlural}
+            onFiltersChange={this.props.onFiltersChange}
+            onClearAll={this.props.onClearFilters}
+            onClose={this.closeFilterSheet}
           />
-          <SummaryWithChart
-            entries={visibleEntries}
-            name={name}
-            entryType={this.props.entryType}
-          />
+          {isFiltered && visibleEntries.length === 0 ? (
+            <FilterEmptyState onClearAll={this.props.onClearFilters} />
+          ) : (
+            <SummaryWithChart
+              entries={visibleEntries}
+              name={name}
+              entryType={this.props.entryType}
+              listHeader={
+                <ListSectionHeader
+                  label={
+                    isFiltered
+                      ? `Matching ${entryTypePlural}`
+                      : capitalize(entryTypePlural)
+                  }
+                  count={visibleEntries.length}
+                  tone={this.props.entryType}
+                />
+              }
+            />
+          )}
         </Container>
         <Container className="bottom-content" fluid>
           <Row>
@@ -125,6 +178,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = (dispatch) => ({
   onFiltersChange: (partialFilters) => dispatch(setEntryFilters(partialFilters)),
+  onClearFilters: () => dispatch(clearEntryFilters()),
 });
 
 export default connect(

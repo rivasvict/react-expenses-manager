@@ -2,12 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import searchIcon from "@iconify-icons/codicon/search";
 import checkIcon from "@iconify-icons/codicon/check";
+import filterIcon from "@iconify-icons/codicon/filter";
 import { EntryFilters, SortKey } from "../../../../helpers/entriesHelper/filterSortHelper";
 import "./styles.scss";
 
 type EntryListToolbarProps = {
   entryFilters: EntryFilters;
+  /** Active filters beyond search — shown as the gold badge on Filters. */
+  activeFilterCount: number;
+  /** Whether the filter sheet/panel is open (engaged Filters styling). */
+  isFilterSheetOpen: boolean;
   onFiltersChange: (partialFilters: Partial<EntryFilters>) => void;
+  onOpenFilters: () => void;
+  /** Owned by the screen so focus can return here when the sheet closes. */
+  filtersButtonRef: React.RefObject<HTMLButtonElement>;
 };
 
 type SortOption = {
@@ -45,7 +53,11 @@ const SORT_OPTIONS: SortOption[] = [
  */
 const EntryListToolbar = ({
   entryFilters,
+  activeFilterCount,
+  isFilterSheetOpen,
   onFiltersChange,
+  onOpenFilters,
+  filtersButtonRef,
 }: EntryListToolbarProps) => {
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
@@ -210,6 +222,30 @@ const EntryListToolbar = ({
           </div>
         )}
       </div>
+      <button
+        type="button"
+        ref={filtersButtonRef}
+        className={`entry-list-toolbar__filters-button${
+          isFilterSheetOpen ? " entry-list-toolbar__filters-button--engaged" : ""
+        }`}
+        aria-label={
+          activeFilterCount
+            ? `Open filters (${activeFilterCount} active)`
+            : "Open filters"
+        }
+        aria-expanded={isFilterSheetOpen}
+        onClick={onOpenFilters}
+      >
+        <span className="entry-list-toolbar__filters-icon" aria-hidden="true">
+          <Icon icon={filterIcon} />
+        </span>
+        Filters
+        {activeFilterCount > 0 && (
+          <span className="entry-list-toolbar__filters-badge" aria-hidden="true">
+            {activeFilterCount}
+          </span>
+        )}
+      </button>
     </div>
   );
 };
