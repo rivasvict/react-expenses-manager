@@ -2,6 +2,7 @@ import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, APRIL, MAY } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
+import { openFilterSheet } from "./helpers/filters";
 import { goToPrevMonth } from "./helpers/navigation";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -198,6 +199,7 @@ describe("/expenses - category filter regression", () => {
     const { user } = await renderApp("/");
     await goToExpenses(user);
 
+    await openFilterSheet(user);
     await selectCategory(user, "House (Rent)");
 
     expect(await screen.findByText(/rent paid/i)).toBeInTheDocument();
@@ -211,7 +213,9 @@ describe("/expenses - category filter regression", () => {
     const { user } = await renderApp("/");
     await goToExpenses(user);
 
+    await openFilterSheet(user);
     await selectCategory(user, "House (Rent)");
+    await user.click(screen.getByRole("button", { name: /show 1 result/i }));
     await user.type(await getSearchInput(), "coffee");
 
     // "coffee" matches nothing within the House (Rent) category.

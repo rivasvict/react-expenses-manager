@@ -2,6 +2,7 @@ import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH, APRIL, MAY } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
+import { openFilterSheet } from "./helpers/filters";
 import { getEntryCategoryOption } from "../helpers/entriesHelper/entriesHelper";
 
 // The full seed list of selectable expense categories, derived straight from
@@ -117,7 +118,8 @@ describe("/incomes route", () => {
 
     await user.click(await screen.findByText("Incomes"));
 
-    // Select "Salary" filter
+    // Select "Salary" filter (the category picker lives in the Filters sheet)
+    await openFilterSheet(user);
     await selectCategory(user, "Salary");
 
     // Only the salary entry is shown
@@ -154,7 +156,8 @@ describe("/expenses route", () => {
 
     await user.click(await screen.findByText("Expenses"));
 
-    // Select "Food" filter
+    // Select "Food" filter (the category picker lives in the Filters sheet)
+    await openFilterSheet(user);
     await selectCategory(user, "Food");
 
     // Only the food entry is shown
@@ -183,6 +186,7 @@ describe("/expenses route", () => {
 
       await user.click(await screen.findByText("Expenses"));
 
+      await openFilterSheet(user);
       await selectCategory(user, categoryName);
 
       expect(await screen.findByText(/target entry/i)).toBeInTheDocument();

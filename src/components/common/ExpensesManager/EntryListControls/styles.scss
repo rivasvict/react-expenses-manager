@@ -186,4 +186,540 @@
     align-items: center;
     color: $accent;
   }
+
+  &__filters-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 2.7rem;
+    padding: 0 0.9rem;
+    flex: 0 0 auto;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &:hover,
+    &--engaged {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__filters-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  // Gold count badge: active filters beyond search.
+  &__filters-badge {
+    position: absolute;
+    top: -0.45rem;
+    right: -0.45rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $accent;
+    color: $text-on-accent;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Filter sheet (mobile, below $nav-breakpoint) / inline panel (desktop).
+// Same markup for both; only the presentation switches.
+// ---------------------------------------------------------------------------
+.filter-sheet {
+  // The one literal the design specifies for the scrim.
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 31;
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: $bg-surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius-shell $radius-shell 0 0;
+    box-shadow: $shadow-pop;
+    padding: 0.5rem 1rem 1rem;
+  }
+
+  &__grabber {
+    width: 2.6rem;
+    height: 0.28rem;
+    margin: 0.25rem auto 0.6rem;
+    border-radius: $radius-control;
+    background-color: $border-strong;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  &__heading {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $text-primary;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-secondary;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+
+    legend {
+      float: none;
+      width: auto;
+      margin-bottom: 0.35rem;
+    }
+  }
+
+  &__legend-note {
+    margin-left: 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: none;
+    color: $text-muted;
+  }
+
+  &__search-input {
+    height: 2.7rem;
+    padding: 0 0.8rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-primary;
+
+    &::placeholder {
+      color: $text-secondary;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $border-strong;
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  // Segmented "Search in" toggle built on native radios (keyboard for free);
+  // the input stays visually hidden but focusable so the ring can show.
+  &__segments {
+    display: flex;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    padding: 0.2rem;
+    gap: 0.2rem;
+  }
+
+  &__segment {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.6rem;
+    border-radius: $radius-control;
+    color: $text-secondary;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      color $transition-quick;
+
+    &--selected {
+      background-color: $bg-raised-hover;
+      color: $text-primary;
+      font-weight: 600;
+    }
+
+    &:focus-within {
+      @include focus-ring();
+    }
+  }
+
+  &__segment-input,
+  &__sort-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  &__sort-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__sort-option {
+    display: flex;
+    align-items: center;
+    padding: 0.55rem 0.75rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-primary;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &--selected {
+      background-color: $accent-soft;
+      border-color: $border-strong;
+      font-weight: 600;
+    }
+
+    &:focus-within {
+      @include focus-ring();
+    }
+  }
+
+  &__hint {
+    margin: 0.45rem 0 0;
+    font-size: 0.78rem;
+    color: $text-muted;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+
+    .btn {
+      flex: 1 1 0;
+      height: 2.9em;
+    }
+  }
+
+  // Desktop: same controls as an inline bordered panel in the flow, inside
+  // the centered column — no scrim, no fixed positioning.
+  @media (min-width: $nav-breakpoint) {
+    &__scrim {
+      display: none;
+    }
+
+    &__panel {
+      position: static;
+      max-height: none;
+      border-radius: $radius-card;
+      margin-bottom: $vertical-standard-margin;
+    }
+
+    &__grabber {
+      display: none;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Filtered banner: replaces the total tile while any filter is active.
+// ---------------------------------------------------------------------------
+.filtered-banner {
+  position: relative;
+  margin: 0 0 $vertical-standard-margin;
+  padding: 0.9rem 1rem 0.9rem 1.2rem;
+  background: linear-gradient(135deg, $accent-soft, $bg-raised);
+  border: 1px solid $accent;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+
+  // 3px gold bar on the left edge.
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background-color: $accent;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__indicator {
+    @include icon-chip(2.1rem);
+    flex: 0 0 auto;
+    border-radius: $radius-control;
+    background-color: $accent-soft;
+    color: $accent;
+  }
+
+  &__headline {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__count {
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+
+  &__clear {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: 1px solid $accent;
+    border-radius: $radius-control;
+    color: $accent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color $transition-quick;
+
+    &:hover {
+      background-color: $accent-soft;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.3rem 0.25rem 0.65rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-strong;
+    border-radius: $radius-shell;
+    color: $text-primary;
+    font-size: 0.82rem;
+  }
+
+  &__chip-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: $text-secondary;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed $accent;
+  }
+
+  &__total-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  &__total-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+
+    &--expense {
+      color: $expense;
+    }
+
+    &--income {
+      color: $income;
+    }
+
+    &--net {
+      color: $text-primary;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// List section header: uppercase tinted label + right-aligned count.
+// ---------------------------------------------------------------------------
+.list-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: $section_header_vertical-margin 0 0.4rem;
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &--expense &__label {
+    color: $expense;
+  }
+
+  &--income &__label {
+    color: $income;
+  }
+
+  &__count {
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Empty state for zero filter matches.
+// ---------------------------------------------------------------------------
+.filter-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: $vertical-standard-margin 0;
+  padding: 1.6rem 1rem;
+  border: 1px dashed $border-strong;
+  border-radius: $radius-card;
+  text-align: center;
+
+  &__icon {
+    @include icon-chip(3rem);
+    background-color: $bg-raised;
+    color: $text-secondary;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: $text-secondary;
+  }
+
+  &__clear {
+    margin-top: 0.7rem;
+    padding: 0 1.2rem;
+  }
 }
