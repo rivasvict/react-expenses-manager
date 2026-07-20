@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.1] - 2026-07-20
+
+### Fixed
+- Mobile: the open filter sheet and its scrim now stack above the fixed
+  bottom tab bar (`.app-nav`, z-index 100) — previously the nav painted
+  over the sheet's "Clear all" / "Show N results" buttons and stole their
+  taps, making them unreachable on phones. The sheet's bottom padding also
+  gains `env(safe-area-inset-bottom)` clearance for devices with a home
+  indicator
+- The gold filtered banner now renders BETWEEN the toolbar/filter panel
+  and the matching rows on all three screens (/expenses, /incomes,
+  /summary), matching the approved mock — the toolbar stays on top while
+  filtering; the unfiltered layout (tile above toolbar) is unchanged
+- Banner surface softened to match the mock: border is now
+  gold at 30% alpha (`rgba($accent, 0.3)`) instead of full-strength gold
+  on all sides, and the background is a vertical gold wash
+  (`rgba($accent, 0.10)` → `rgba($accent, 0.04)`) instead of a gradient
+  into a hardcoded surface color; the 3px solid gold left bar is kept
+- The toolbar's Sort button now carries the leading sort-arrows icon from
+  the mock ("⇅ Sort: Date"), mirroring the magnifier and funnel icons on
+  its siblings
+- Narrow phones: slightly trimmed toolbar paddings/gaps and search font
+  size so the "Search entries" placeholder no longer truncates at 390px
+
 ## [1.5.0] - 2026-07-20
 
 ### Added

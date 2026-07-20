@@ -93,17 +93,7 @@ class EntrySummaryWithFilter extends Component {
         pageTitle="Monthly report"
       >
         <Container className="top-content" fluid>
-          {isFiltered ? (
-            <FilteredBanner
-              descriptors={descriptors}
-              counts={{ shown: visibleEntries.length, total: monthEntries.length }}
-              totalLabel="Filtered total"
-              totalValue={formatNumberForDisplay(totalSum)}
-              tone={this.props.entryType}
-              onRemoveFilter={this.handleRemoveFilter}
-              onClearAll={this.props.onClearFilters}
-            />
-          ) : (
+          {!isFiltered && (
             <ContentTileSection
               title="Summary"
               className={`tile-tone--${this.props.entryType}`}
@@ -130,6 +120,20 @@ class EntrySummaryWithFilter extends Component {
             onClearAll={this.props.onClearFilters}
             onClose={this.closeFilterSheet}
           />
+          {/* Per the approved mock the banner sits BETWEEN the toolbar/panel
+              and the matching rows (the tile it replaces is above the
+              toolbar, but the filtered state keeps the toolbar on top). */}
+          {isFiltered && (
+            <FilteredBanner
+              descriptors={descriptors}
+              counts={{ shown: visibleEntries.length, total: monthEntries.length }}
+              totalLabel="Filtered total"
+              totalValue={formatNumberForDisplay(totalSum)}
+              tone={this.props.entryType}
+              onRemoveFilter={this.handleRemoveFilter}
+              onClearAll={this.props.onClearFilters}
+            />
+          )}
           {isFiltered && visibleEntries.length === 0 ? (
             <FilterEmptyState onClearAll={this.props.onClearFilters} />
           ) : (

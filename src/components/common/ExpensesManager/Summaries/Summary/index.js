@@ -305,18 +305,7 @@ class Summary extends Component {
         pageTitle="Monthly Summary"
       >
         <Container fluid className="top-content">
-          {isFiltered ? (
-            <FilteredBanner
-              title="Filtered view · both lists"
-              descriptors={descriptors}
-              counts={{ shown: shownCount, total: totalCount }}
-              totalLabel="Filtered total · net"
-              totalValue={netDisplayValue}
-              tone={netTone}
-              onRemoveFilter={this.handleRemoveFilter}
-              onClearAll={this.props.onClearFilters}
-            />
-          ) : (
+          {!isFiltered && (
             <ContentTileSection title="Summary" className={toneClass}>
               {/** TODO: Make sure the totalization is done here */}
               {`${capitalize(getMonthNameDisplay(this.props.selectedDate.month))} total: ${selectedEntriesSum}`}
@@ -359,6 +348,20 @@ class Summary extends Component {
               {capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
             </option>
           </FormSelect>
+          {/* Per the approved mock the banner sits BETWEEN the toolbar/panel
+              and the matching rows; the toolbar stays on top while filtered. */}
+          {isFiltered && (
+            <FilteredBanner
+              title="Filtered view · both lists"
+              descriptors={descriptors}
+              counts={{ shown: shownCount, total: totalCount }}
+              totalLabel="Filtered total · net"
+              totalValue={netDisplayValue}
+              tone={netTone}
+              onRemoveFilter={this.handleRemoveFilter}
+              onClearAll={this.props.onClearFilters}
+            />
+          )}
           {isFiltered && shownCount === 0 ? (
             <FilterEmptyState onClearAll={this.props.onClearFilters} />
           ) : (
