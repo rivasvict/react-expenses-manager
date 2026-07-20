@@ -1,32 +1,30 @@
 import React, { Component } from "react";
 import CategorySelector from "../../CategorySelector";
 import { connect } from "react-redux";
-import { categoryChange } from "../../../../../redux/expensesManager/actionCreators";
+import { setEntryFilters } from "../../../../../redux/expensesManager/actionCreators";
 import {
   formatNumberForDisplay,
   getEntryCategoryOption,
   getFilteredEntriesByCategory,
   getSumFromEntries,
 } from "../../../../../helpers/entriesHelper/entriesHelper";
+import {
+  filterEntries,
+  sortEntries,
+} from "../../../../../helpers/entriesHelper/filterSortHelper";
 import { MainContentContainer } from "../../../MainContentContainer";
 import ContentTileSection from "../../../ContentTitleSection";
 import { capitalize } from "lodash";
 import "./styles.scss";
 import SummaryWithChart from "../../../SummaryWithChart";
+import EntryListToolbar from "../../EntryListControls/EntryListToolbar";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 
 class EntrySummaryWithFilter extends Component {
-  constructor(props) {
-    super();
-
-    this.onCategoryChange = props.onCategoryChange;
-    this.selectedDate = props.selectedDate;
-  }
-
-  handleChange = (event) => {
+  handleCategoryChange = (event) => {
     const { value } = event.currentTarget;
-    this.onCategoryChange(value);
+    this.props.onFiltersChange({ category: value });
   };
 
   goBack = () => {
@@ -36,6 +34,7 @@ class EntrySummaryWithFilter extends Component {
   handleCancel = () => this.goBack();
 
   render() {
+    const { entryFilters } = this.props;
     const categoryOptions = getEntryCategoryOption(
       this.props.entryType,
       this.props.buckets,
@@ -43,13 +42,24 @@ class EntrySummaryWithFilter extends Component {
     );
     const entryTypePlural = `${this.props.entryType}s`;
     const name = entryTypePlural;
-    const entriesByCategory = getFilteredEntriesByCategory({
+    // Month extraction stays in the existing helper (category "" = no-op);
+    // search/category/sort all come from the shared entryFilters state.
+    const monthEntries = getFilteredEntriesByCategory({
       entries: this?.props?.entries,
-      selectedDate: this.selectedDate,
-      category: this.props.category,
+      selectedDate: this.props.selectedDate,
+      category: "",
       entryTypePlural: entryTypePlural,
     });
-    const totalSum = getSumFromEntries({ entries: entriesByCategory });
+    const visibleEntries = sortEntries(
+      filterEntries({
+        entries: monthEntries,
+        search: entryFilters.search,
+        searchScope: entryFilters.searchScope,
+        category: entryFilters.category,
+      }),
+      entryFilters.sortKey
+    );
+    const totalSum = getSumFromEntries({ entries: visibleEntries });
     return (
       <MainContentContainer
         className="entry-summary-with-filter"
@@ -63,6 +73,10 @@ class EntrySummaryWithFilter extends Component {
             {`${capitalize(entryTypePlural)} total: ${formatNumberForDisplay(totalSum)}`}
           </ContentTileSection>
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
+          <EntryListToolbar
+            entryFilters={entryFilters}
+            onFiltersChange={this.props.onFiltersChange}
+          />
           <label
             className="form-label"
             htmlFor="category-filter"
@@ -73,13 +87,13 @@ class EntrySummaryWithFilter extends Component {
           <CategorySelector
             id="category-filter"
             name={entryTypePlural}
-            value={this.props.category}
-            handleChange={this.handleChange.bind(this)}
+            value={entryFilters.category}
+            handleChange={this.handleCategoryChange}
             categoryOptions={categoryOptions}
             className="category-select"
           />
           <SummaryWithChart
-            entries={entriesByCategory}
+            entries={visibleEntries}
             name={name}
             entryType={this.props.entryType}
           />
@@ -103,14 +117,14 @@ class EntrySummaryWithFilter extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  category: state.expensesManager.category,
+  entryFilters: state.expensesManager.entryFilters,
   entries: state.expensesManager.entries,
   buckets: state.expensesManager.buckets,
   unbudgetedCategories: state.expensesManager.unbudgetedCategories,
 });
 
 const mapActionsToProps = (dispatch) => ({
-  onCategoryChange: (event) => dispatch(categoryChange(event)),
+  onFiltersChange: (partialFilters) => dispatch(setEntryFilters(partialFilters)),
 });
 
 export default connect(

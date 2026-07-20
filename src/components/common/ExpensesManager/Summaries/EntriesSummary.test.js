@@ -1,6 +1,9 @@
 // TODO(#116): This suite asserts against a category-keyed entry shape. The
 // current EntriesSummary takes entries/name/entryType/total props and reads
 // categories_path. Skipped until it's rewritten against the real component.
+/* eslint-disable testing-library/no-unnecessary-act, testing-library/no-render-in-setup --
+   legacy react-dom `render` pattern (not Testing Library's) in a skipped
+   suite; goes away with the TODO(#116) rewrite. */
 import React from "react";
 import EntriesSummary from "./EntriesSummary";
 import renderer from "react-test-renderer";
