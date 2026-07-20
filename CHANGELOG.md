@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-07-20
+
+### Added
+- Live search and sorting on the incomes/expenses monthly report: a slim
+  toolbar under the total tile with a "Search entries" field (matches
+  description and category name, case-insensitive, narrows the list as you
+  type) and a "Sort: <key>" button opening a single-select popover menu
+  ("Date — newest first" (default), "Amount — highest first",
+  "Name — A → Z" tie-broken by description) with full keyboard support
+  (arrows, Enter, Escape) and a gold check on the selected option
+- The visible total and the category doughnut chart now recompute from the
+  searched/sorted/filtered subset
+- Filters and the sort key are shared app state (`entryFilters` in the
+  `expensesManager` slice) persisted to `localStorage`, so they survive
+  month navigation and a page reload; new `filterSortHelper` module holds
+  the pure filter/sort/descriptor logic
+
+### Changed
+- The incomes/expenses "Filter by category" control now drives the shared
+  `entryFilters.category` state instead of the legacy `category` field
+  (the old field and its `CATEGORY_CHANGE` action remain in the reducer,
+  unused, pending a follow-up removal)
+
+### Tests
+- New unit suites for `filterSortHelper` (search scopes, literal category
+  match incl. regex-special names, sort orders, ties, immutability,
+  descriptors) and for the new `entryFilters` reducer cases
+- New integration suite `filterSortEntries.test.tsx`: live search
+  narrowing/restoring, category-name matches, total updates, row-order
+  assertions for every sort key, keyboard operation of the sort menu,
+  category-filter regression (incl. "House (Rent)"), persistence across
+  month navigation and across a fresh app render, and symmetric /incomes
+  coverage
+- Lint gate restored to green: the skipped legacy TODO(#116) suites now
+  carry targeted `eslint-disable` comments for their false-positive
+  Testing Library rules, and a duplicated describe title in the skipped
+  AddEntry suite was corrected
+
 ## [1.2.1] - 2026-07-19
 
 ### Fixed

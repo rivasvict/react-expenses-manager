@@ -1,5 +1,15 @@
 const { reducer } = require("./reducer");
-const { ADD_BUCKET, ADD_CATEGORY, GET_CATEGORIES } = require("./actions");
+const {
+  ADD_BUCKET,
+  ADD_CATEGORY,
+  GET_CATEGORIES,
+  SET_ENTRY_FILTERS,
+  CLEAR_ENTRY_FILTERS,
+  GET_ENTRY_FILTERS,
+} = require("./actions");
+const {
+  getDefaultEntryFilters,
+} = require("../../helpers/entriesHelper/filterSortHelper");
 
 describe("expensesManager reducer - ADD_BUCKET (issue #100)", () => {
   it("merges a newly created bucket into the existing buckets", () => {
@@ -63,5 +73,72 @@ describe("expensesManager reducer - ADD_CATEGORY / GET_CATEGORIES (issue #100)",
     });
 
     expect(nextState.unbudgetedCategories).toEqual(["Gym", "Yoga"]);
+  });
+});
+
+describe("expensesManager reducer - entry filters (filters & sorting)", () => {
+  it("starts with the default entry filters", () => {
+    const state = reducer(undefined, { type: "@@INIT" });
+
+    expect(state.entryFilters).toEqual(getDefaultEntryFilters());
+  });
+
+  it("shallow-merges a partial update on SET_ENTRY_FILTERS", () => {
+    const initialState = { entryFilters: getDefaultEntryFilters() };
+
+    const nextState = reducer(initialState, {
+      type: SET_ENTRY_FILTERS,
+      payload: { search: "coffee", sortKey: "amount" },
+    });
+
+    expect(nextState.entryFilters).toEqual({
+      search: "coffee",
+      searchScope: "all",
+      category: "",
+      sortKey: "amount",
+    });
+  });
+
+  it("does not mutate the previous state on SET_ENTRY_FILTERS", () => {
+    const initialState = { entryFilters: getDefaultEntryFilters() };
+
+    reducer(initialState, {
+      type: SET_ENTRY_FILTERS,
+      payload: { search: "coffee" },
+    });
+
+    expect(initialState.entryFilters).toEqual(getDefaultEntryFilters());
+  });
+
+  it("resets filters AND sort key to the defaults on CLEAR_ENTRY_FILTERS", () => {
+    const initialState = {
+      entryFilters: {
+        search: "coffee",
+        searchScope: "description",
+        category: ",food,",
+        sortKey: "amount",
+      },
+    };
+
+    const nextState = reducer(initialState, { type: CLEAR_ENTRY_FILTERS });
+
+    expect(nextState.entryFilters).toEqual(getDefaultEntryFilters());
+  });
+
+  it("replaces the filters wholesale on GET_ENTRY_FILTERS (hydration)", () => {
+    const initialState = { entryFilters: getDefaultEntryFilters() };
+    const persistedFilters = {
+      search: "rent",
+      searchScope: "all",
+      category: ",house (rent),",
+      sortKey: "name",
+    };
+
+    const nextState = reducer(initialState, {
+      type: GET_ENTRY_FILTERS,
+      payload: { entryFilters: persistedFilters },
+    });
+
+    expect(nextState.entryFilters).toEqual(persistedFilters);
   });
 });

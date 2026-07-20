@@ -1,0 +1,189 @@
+@import "../../../../variables.scss";
+
+// Collapsed filter/sort toolbar for the entry lists (design brief: "calm by
+// default" — one slim search field + a Sort affordance). All colors, radii and
+// shadows come from the shared tokens in variables.scss.
+.entry-list-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: $vertical-standard-margin 0;
+
+  &__search {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    height: 2.7rem;
+    padding: 0 0.4rem 0 0.8rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    // Engaged state: border strengthens, background lifts.
+    &:focus-within,
+    &:hover {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+    }
+  }
+
+  &__search-icon {
+    display: flex;
+    align-items: center;
+    color: $text-secondary;
+    margin-right: 0.5rem;
+  }
+
+  &__search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: $text-primary;
+
+    &::placeholder {
+      color: $text-secondary;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+      outline-offset: -2px;
+      border-radius: $radius-control;
+    }
+  }
+
+  &__sort {
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  &__sort-button {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 2.7rem;
+    padding: 0 0.9rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__sort-current {
+    color: $text-primary;
+    font-weight: 600;
+  }
+
+  // Popover menu; same pop treatment as the searchable select's panel.
+  &__sort-menu {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    z-index: 20;
+    min-width: 15rem;
+    padding: 0.35rem;
+    background-color: $bg-surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius-card;
+    box-shadow: $shadow-pop;
+  }
+
+  &__sort-menu-header {
+    padding: 0.45rem 0.75rem 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__sort-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: $radius-control;
+    color: $text-primary;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+      outline-offset: -2px;
+    }
+
+    &--selected {
+      background-color: $accent-soft;
+    }
+  }
+
+  &__sort-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__sort-option-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  &__sort-option-tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $text-muted;
+    border: 1px solid $border-strong;
+    border-radius: $radius-control;
+    padding: 0.05rem 0.4rem;
+  }
+
+  &__sort-option-subtitle {
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  &__sort-option-check {
+    display: flex;
+    align-items: center;
+    color: $accent;
+  }
+}
