@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import searchIcon from "@iconify-icons/codicon/search";
 import checkIcon from "@iconify-icons/codicon/check";
 import filterIcon from "@iconify-icons/codicon/filter";
+import sortIcon from "@iconify-icons/codicon/arrow-swap";
 import { EntryFilters, SortKey } from "../../../../helpers/entriesHelper/filterSortHelper";
 import "./styles.scss";
 
@@ -162,6 +163,9 @@ const EntryListToolbar = ({
             isSortMenuOpen ? closeSortMenu() : setIsSortMenuOpen(true)
           }
         >
+          <span className="entry-list-toolbar__sort-icon" aria-hidden="true">
+            <Icon icon={sortIcon} />
+          </span>
           Sort:{" "}
           <strong className="entry-list-toolbar__sort-current">
             {selectedOption.buttonLabel}
