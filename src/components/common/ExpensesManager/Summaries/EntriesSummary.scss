@@ -19,6 +19,7 @@
 
     .item-total {
       @include adjust-text-in-vertical-axis();
+      @include money-figures();
       justify-content: flex-end;
       font-weight: 600;
     }
@@ -66,8 +67,36 @@
       min-width: 0;
     }
 
+    // Described rows (candidate 4): category becomes a semibold title and the
+    // note a muted line below it, each with its own ellipsis. Bare rows keep
+    // the single-line `.item-description` above.
+    .item-description--stacked {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      white-space: normal;
+      line-height: 1.35;
+
+      .item-category {
+        font-size: 0.92rem;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .item-note {
+        font-size: 0.78rem;
+        color: $text-muted;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
     .item-amount {
       @include adjust-text-in-vertical-axis();
+      @include money-figures();
       justify-content: flex-end;
       font-weight: 600;
       flex: 0 0 auto;

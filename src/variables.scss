@@ -68,6 +68,16 @@ $nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
 $shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
 $shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 
+// A whisper-faint gold wash anchored to the top of the page column. Painted
+// once on `body` at a fixed size so it never stretches with page height or
+// repaints on scroll — it warms the near-black ground without touching the
+// contrast of anything drawn on a surface above it.
+$glow-page: radial-gradient(
+  90rem 40rem at 50% -6rem,
+  rgba(240, 185, 11, 0.05),
+  transparent 62%
+);
+
 // Chevron affordance shared by the native selects (global.scss) and the
 // searchable category dropdown's trigger (CategorySearchSelect) — single
 // source of truth so the two can never drift.
@@ -116,6 +126,14 @@ $transition-quick: 140ms ease;
 @mixin interactive-card {
   @include card();
   @include card-interactions();
+}
+
+// Fixed-width figures for money columns, so right-aligned digits line up in a
+// grid instead of drifting row to row. Applied to every amount, total, balance
+// and bucket number.
+@mixin money-figures {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 // Circular icon chip used beside money rows (income/expense variants are

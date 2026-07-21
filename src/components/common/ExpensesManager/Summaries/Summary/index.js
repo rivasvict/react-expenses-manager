@@ -306,10 +306,12 @@ class Summary extends Component {
       >
         <Container fluid className="top-content">
           {!isFiltered && (
-            <ContentTileSection title="Summary" className={toneClass}>
-              {/** TODO: Make sure the totalization is done here */}
-              {`${capitalize(getMonthNameDisplay(this.props.selectedDate.month))} total: ${selectedEntriesSum}`}
-            </ContentTileSection>
+            <ContentTileSection
+              title="Summary"
+              className={toneClass}
+              label={`${capitalize(getMonthNameDisplay(this.props.selectedDate.month))} total`}
+              value={selectedEntriesSum}
+            />
           )}
           {/* TODO: Add the selectedDate display here for letting the user know which year and month he is looking or working at */}
           <EntryListToolbar

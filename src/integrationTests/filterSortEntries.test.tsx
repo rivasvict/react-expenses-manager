@@ -29,8 +29,8 @@ const seedMayExpenses = () =>
 
 const ROW_TEXT = /coffee beans|morning latte|bus pass|rent paid/i;
 
-// Rows render as "Category - Description" in document order, so this is the
-// exact vertical order the user sees.
+// Rows render the description on its own line (candidate 4); matching the note
+// span yields the descriptions in the exact vertical order the user sees.
 const getVisibleRowOrder = () =>
   screen.getAllByText(ROW_TEXT).map((row) => row.textContent);
 
@@ -99,10 +99,10 @@ describe("/expenses - sort menu", () => {
 
     expect(getSortButton()).toHaveTextContent("Sort: Date");
     expect(getVisibleRowOrder()).toEqual([
-      "Food - Coffee beans",
-      "Eating out - Morning latte",
-      "Transportation - Bus pass",
-      "House (rent) - Rent paid",
+      "Coffee beans",
+      "Morning latte",
+      "Bus pass",
+      "Rent paid",
     ]);
   });
 
@@ -118,10 +118,10 @@ describe("/expenses - sort menu", () => {
 
     expect(getSortButton()).toHaveTextContent("Sort: Amount");
     expect(getVisibleRowOrder()).toEqual([
-      "House (rent) - Rent paid",
-      "Transportation - Bus pass",
-      "Eating out - Morning latte",
-      "Food - Coffee beans",
+      "Rent paid",
+      "Bus pass",
+      "Morning latte",
+      "Coffee beans",
     ]);
   });
 
@@ -136,11 +136,13 @@ describe("/expenses - sort menu", () => {
     );
 
     expect(getSortButton()).toHaveTextContent("Sort: Name");
+    // Sorted by category name (Eating out, Food, House (rent), Transportation);
+    // the notes below reflect that category order.
     expect(getVisibleRowOrder()).toEqual([
-      "Eating out - Morning latte",
-      "Food - Coffee beans",
-      "House (rent) - Rent paid",
-      "Transportation - Bus pass",
+      "Morning latte",
+      "Coffee beans",
+      "Rent paid",
+      "Bus pass",
     ]);
   });
 
@@ -158,7 +160,7 @@ describe("/expenses - sort menu", () => {
 
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
     expect(getSortButton()).toHaveTextContent("Sort: Amount");
-    expect(getVisibleRowOrder()[0]).toBe("House (rent) - Rent paid");
+    expect(getVisibleRowOrder()[0]).toBe("Rent paid");
   });
 
   it("closes on Escape without changing the sort", async () => {
@@ -316,11 +318,9 @@ describe("/incomes - toolbar behaves symmetrically", () => {
     );
 
     expect(
-      screen.getAllByText(/paycheck|tax refund|piggy bank/i).map((row) => row.textContent)
-    ).toEqual([
-      "Deposit - Tax refund",
-      "Salary - Paycheck",
-      "Saving - Piggy bank",
-    ]);
+      screen
+        .getAllByText(/paycheck|tax refund|piggy bank/i)
+        .map((row) => row.textContent)
+    ).toEqual(["Tax refund", "Paycheck", "Piggy bank"]);
   });
 });

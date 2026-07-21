@@ -123,7 +123,9 @@ input[type="number"].form-control {
 // -----------------------------------------------------------------------------
 #root {
   color: $text-primary;
-  background-color: $bg-page;
+  // Transparent so the fixed page glow painted on `body` (index.scss) shows
+  // through; `body` still carries the solid $bg-page base beneath it.
+  background-color: transparent;
 
   a {
     color: $text-primary;
