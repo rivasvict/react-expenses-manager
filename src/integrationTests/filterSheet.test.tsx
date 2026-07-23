@@ -26,6 +26,8 @@ const seedMayExpenses = () =>
 
 const ROW_TEXT = /coffee beans|morning latte|bus pass|rent paid/i;
 
+// Rows render the description on its own line (candidate 4); matching the note
+// span yields the descriptions in the exact vertical order the user sees.
 const getVisibleRowOrder = () =>
   screen.getAllByText(ROW_TEXT).map((row) => row.textContent);
 
@@ -111,7 +113,7 @@ describe("filter sheet - opening and shared state", () => {
     expect(
       screen.getByRole("button", { name: "Sort entries" })
     ).toHaveTextContent("Sort: Amount");
-    expect(getVisibleRowOrder()[0]).toBe("House (rent) - Rent paid");
+    expect(getVisibleRowOrder()[0]).toBe("Rent paid");
   });
 
   it("clears every filter with Clear all (sheet stays open, count restored)", async () => {
@@ -176,12 +178,12 @@ describe("filtered banner", () => {
     const { user } = await renderApp("/");
     await goToExpenses(user);
 
-    expect(screen.getByText(/expenses total:/i)).toBeInTheDocument();
+    expect(screen.getByText(/expenses total/i)).toBeInTheDocument();
 
     await user.type(await getToolbarSearch(), "coffee");
 
     expect(await screen.findByText("Filtered view")).toBeInTheDocument();
-    expect(screen.queryByText(/expenses total:/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/expenses total/i)).not.toBeInTheDocument();
     expect(screen.getByText("1 of 4 entries")).toBeInTheDocument();
     expect(screen.getByText('"coffee"')).toBeInTheDocument();
     expect(screen.getByText("Filtered total")).toBeInTheDocument();
@@ -229,16 +231,16 @@ describe("filtered banner", () => {
     await user.click(screen.getByRole("button", { name: "Clear" }));
 
     expect(screen.queryByText("Filtered view")).not.toBeInTheDocument();
-    expect(await screen.findByText(/expenses total:/i)).toBeInTheDocument();
+    expect(await screen.findByText(/expenses total/i)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Sort entries" })
     ).toHaveTextContent("Sort: Date");
     // Order is back to date, newest first.
     expect(getVisibleRowOrder()).toEqual([
-      "Food - Coffee beans",
-      "Eating out - Morning latte",
-      "Transportation - Bus pass",
-      "House (rent) - Rent paid",
+      "Coffee beans",
+      "Morning latte",
+      "Bus pass",
+      "Rent paid",
     ]);
   });
 });
@@ -307,7 +309,7 @@ describe("empty state", () => {
       screen.queryByText("No entries match your filters")
     ).not.toBeInTheDocument();
     expect((await screen.findAllByText(ROW_TEXT)).length).toBe(4);
-    expect(screen.getByText(/expenses total:/i)).toBeInTheDocument();
+    expect(screen.getByText(/expenses total/i)).toBeInTheDocument();
   });
 });
 

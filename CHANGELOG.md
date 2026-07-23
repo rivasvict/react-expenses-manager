@@ -5,6 +5,48 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.0] - 2026-07-21
+
+### Added
+- Visual refresh: category-aware entry icons. Each entry row's chip now shows a
+  glyph keyed to the entry's category (home, car, cart, coffee, briefcase, …)
+  instead of a bare up/down arrow; the chip's income-green / expense-rose tint
+  still carries direction. Custom (user-created) categories fall back to the
+  arrow, so nothing ever renders a broken chip. Backed by a single dependency-
+  free 2px-stroke glyph set (`GlyphIcon`) and a `categoryIcons` map covering
+  every seed category, with a unit test asserting each resolves and unknowns
+  fall back
+- Visual refresh: two-line entry rows. An entry *with* a description now shows
+  its category as a semibold title over the description as muted subtext; an
+  entry *without* one keeps the single line. The rule is content-driven, so
+  rows never reshape on resize
+- Visual refresh: a two-tier monthly total tile on /summary, /expenses and
+  /incomes — a muted label with a large, tone-colored value on a softly tinted
+  card (expense-rose / income-green, neutral at zero), replacing the flat
+  `label: amount` string
+- Visual refresh: tabular figures for money columns via a shared
+  `money-figures` mixin, so right-aligned amounts, totals, the balance hero and
+  bucket numbers line up in a grid instead of drifting row to row
+- Visual refresh: navigation destinations now use their own glyphs (grid for
+  Categories, a bucket for Buckets) and the active tab's indicator is a compact
+  soft-gold lozenge behind the icon (at the app's control radius) rather than a
+  full-width tint
+- Visual refresh: a whisper-faint gold page glow — one fixed radial wash
+  anchored to the top of the page, under every surface layer so it never
+  touches content contrast (new `$glow-page` token)
+- Visual refresh: the brand mark is now a single SVG source (`BrandMark` /
+  `public/logo.svg`) rendered as the header lockup and served as a vector
+  favicon, keeping the gold-over-slate double-bar motif on the app's rounded-
+  square shape. The raster `logo192/512.png` and `favicon.ico` stay as
+  fallbacks pending brand sign-off before regenerating them from the source
+
+### Changed
+- Visual refresh: the month navigator's Prev/Next steppers are now rounded
+  squares (matching the app's control shape; circles stay reserved for the
+  money chips) and, at the first/last month with data, the stepper stays in
+  place disabled instead of vanishing — so the control never teleports under
+  the thumb and screen readers announce it rather than dropping it silently
+
 ## [1.5.1] - 2026-07-20
 
 ### Fixed

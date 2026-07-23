@@ -30,6 +30,8 @@ const seedMayMonth = () =>
 const ROW_TEXT =
   /monthly paycheck|gift money|coffee beans|gift wrap|rent paid/i;
 
+// Rows render the description as its own line (candidate 4), so ROW_TEXT
+// matches the note span and its text is the row's description in visible order.
 const getVisibleRowOrder = () =>
   screen.getAllByText(ROW_TEXT).map((row) => row.textContent);
 
@@ -76,11 +78,11 @@ describe("/summary - one shared filter drives both lists", () => {
 
     // Default: each list date-descending, incomes first.
     expect(getVisibleRowOrder()).toEqual([
-      "Salary - Monthly paycheck",
-      "Deposit - Gift money",
-      "Food - Coffee beans",
-      "Fun activities - Gift wrap",
-      "House (rent) - Rent paid",
+      "Monthly paycheck",
+      "Gift money",
+      "Coffee beans",
+      "Gift wrap",
+      "Rent paid",
     ]);
 
     await user.click(screen.getByRole("button", { name: "Sort entries" }));
@@ -89,11 +91,11 @@ describe("/summary - one shared filter drives both lists", () => {
     );
 
     expect(getVisibleRowOrder()).toEqual([
-      "Salary - Monthly paycheck",
-      "Deposit - Gift money",
-      "House (rent) - Rent paid",
-      "Fun activities - Gift wrap",
-      "Food - Coffee beans",
+      "Monthly paycheck",
+      "Gift money",
+      "Rent paid",
+      "Gift wrap",
+      "Coffee beans",
     ]);
   });
 
@@ -121,7 +123,7 @@ describe("/summary - filtered banner with net total", () => {
     await goToSummary(user);
 
     // Unfiltered: the month tile shows the plain total.
-    expect(screen.getByText(/may total:/i)).toBeInTheDocument();
+    expect(screen.getByText(/may total/i)).toBeInTheDocument();
 
     // "gift" matches one income (300) and one expense (15): net +285.
     await user.type(await getToolbarSearch(), "gift");
@@ -129,7 +131,7 @@ describe("/summary - filtered banner with net total", () => {
     expect(
       await screen.findByText("Filtered view · both lists")
     ).toBeInTheDocument();
-    expect(screen.queryByText(/may total:/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/may total/i)).not.toBeInTheDocument();
     expect(screen.getByText("2 of 5 entries")).toBeInTheDocument();
     expect(screen.getByText("Filtered total · net")).toBeInTheDocument();
     expect(screen.getByText("+$285.00")).toBeInTheDocument();
@@ -206,14 +208,14 @@ describe("/summary - filtered banner with net total", () => {
     await user.type(await getToolbarSearch(), "gift");
     await user.click(screen.getByRole("button", { name: "Clear" }));
 
-    expect(await screen.findByText(/may total:/i)).toBeInTheDocument();
+    expect(await screen.findByText(/may total/i)).toBeInTheDocument();
     expect(
       screen.queryByText("Filtered view · both lists")
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Sort entries" })
     ).toHaveTextContent("Sort: Date");
-    expect(getVisibleRowOrder()[0]).toBe("Salary - Monthly paycheck");
+    expect(getVisibleRowOrder()[0]).toBe("Monthly paycheck");
   });
 });
 
@@ -305,6 +307,6 @@ describe("/summary - empty state", () => {
     await user.click(screen.getByRole("button", { name: "Clear all filters" }));
 
     expect((await screen.findAllByText(ROW_TEXT)).length).toBe(5);
-    expect(screen.getByText(/may total:/i)).toBeInTheDocument();
+    expect(screen.getByText(/may total/i)).toBeInTheDocument();
   });
 });

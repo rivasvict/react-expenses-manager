@@ -293,13 +293,13 @@ describe("restore — fixed entries", () => {
     await screen.findByText("May 2026");
 
     // May: Snacks was cancelled (tombstone), Groceries still recurs.
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.queryByText(/Food - Snacks/)).not.toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
+    expect(screen.queryByText(/Snacks/)).not.toBeInTheDocument();
 
     // April (before the tombstone): both same-category recurring entries exist.
     await goToPrevMonth(user, "April 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Snacks/)).toBeInTheDocument();
   });
 
   it("preserves a fixed entry's identity so a restored recurring entry can be edited", async () => {
@@ -330,7 +330,7 @@ describe("restore — fixed entries", () => {
 
     // Clicking a materialised fixed entry routes to its edit form via `fixedId`;
     // that only works if the restored entry kept its identity.
-    await user.click(await screen.findByText(/Food - Gym/));
+    await user.click(await screen.findByText(/Gym/));
 
     const amountInput = (await screen.findByPlaceholderText(
       /insert expense amount/i
@@ -479,7 +479,12 @@ describe("round trip — download produces a single JSON file that restores the 
     // Fixed entries came back and materialise into the month.
     await clickNav(user, /fixed entries/i);
     await screen.findByText("May 2026");
-    expect(await screen.findByText(/Rent - Rent/)).toBeInTheDocument();
+    // The fixed "Rent" entry has category "Rent" and description "Rent", now
+    // rendered as a stacked two-line row — so "Rent" appears twice (title +
+    // note), confirming the described row materialised.
+    expect((await screen.findAllByText(/^Rent$/)).length).toBeGreaterThanOrEqual(
+      2
+    );
   });
 });
 
@@ -497,11 +502,11 @@ describe("restore — committed sample backup file", () => {
     // cancelled as a fixed expense from May forward, so it must NOT appear here.
     await clickNav(user, /fixed entries/i);
     await screen.findByText("May 2026");
-    const netflix = await screen.findByText(/Subscriptions - Netflix/);
+    const netflix = await screen.findByText(/Netflix/);
     expect(netflix).toBeInTheDocument();
     expect(screen.getByText("$18.00")).toBeInTheDocument();
     expect(
-      screen.queryByText(/Subscriptions - Spotify/)
+      screen.queryByText(/Spotify/)
     ).not.toBeInTheDocument();
 
     // The sample also exercises "Pet Care", a user-created category (no seed
@@ -509,7 +514,7 @@ describe("restore — committed sample backup file", () => {
     // rendered through lodash's `capitalize` (only the first letter is
     // capitalized), so this is matched case-insensitively.
     expect(
-      await screen.findByText(/Pet Care - Dog food/i)
+      await screen.findByText(/Dog food/i)
     ).toBeInTheDocument();
     expect(screen.getByText("$25.00")).toBeInTheDocument();
 
@@ -532,7 +537,7 @@ describe("restore — committed sample backup file", () => {
     await clickNav(user, /home/i);
     await clickNav(user, /^Expenses \$/);
     expect(
-      await screen.findByText(/Hobby - Painting supplies/)
+      await screen.findByText(/Painting supplies/)
     ).toBeInTheDocument();
   });
 });

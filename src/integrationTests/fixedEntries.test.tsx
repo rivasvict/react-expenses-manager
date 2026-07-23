@@ -96,13 +96,13 @@ describe("toggle routing — recurring vs regular entries", () => {
 
     // The expense must be visible in the regular expenses view.
     await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
-    expect(await screen.findByText(/Food - One-off/)).toBeInTheDocument();
+    expect(await screen.findByText(/One-off/)).toBeInTheDocument();
 
     // It must NOT appear on the Fixed Entries page.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
     await waitFor(() =>
-      expect(screen.queryByText(/Food - One-off/)).not.toBeInTheDocument()
+      expect(screen.queryByText(/One-off/)).not.toBeInTheDocument()
     );
   });
 
@@ -119,12 +119,12 @@ describe("toggle routing — recurring vs regular entries", () => {
     // Fixed entries are materialised into the entries tree, so the entry must
     // appear in the regular expenses view as well as the Fixed Entries page.
     await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
 
     // It must also appear on the dedicated Fixed Entries page.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
     // $150.00 appears twice: the entry's own amount and the section total
     // (only one fixed expense this month, so the total equals it).
     expect(screen.getAllByText("$150.00")).toHaveLength(2);
@@ -146,7 +146,7 @@ describe("toggle routing — recurring vs regular entries", () => {
     // The Fixed Entries page must also list the new recurring entry.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
   });
 });
 
@@ -157,18 +157,18 @@ describe("fixed entries without any prior regular entries", () => {
   });
 
   it("adds and displays a fixed expense for the current month", async () => {
-    // With no prior entries, only May 2026 (pinned today) is in the tree —
-    // no Prev / Next navigation buttons should be visible.
+    // With no prior entries, only May 2026 (pinned today) is in the tree — the
+    // Prev / Next steppers stay in place but are disabled rather than removed.
     const { user } = await renderApp("/");
     await screen.findByText("May 2026");
-    expect(screen.queryByRole("button", { name: /prev/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /next/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /prev/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /next/i })).toBeDisabled();
 
     await addRecurringExpense(user, { amount: "100", description: "Groceries" });
 
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("May 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
     // $100.00 appears twice: the entry's own amount and the section total.
     expect(screen.getAllByText("$100.00")).toHaveLength(2);
   });
@@ -230,7 +230,7 @@ describe("toggling recurring ON in the edit form converts a one-off entry to a f
     // The entry must be listed under May 2026 (the currently viewed month when
     // the promotion happens) with the correct amount.
     await screen.findByText("May 2026");
-    expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
+    expect(await screen.findByText(/Coffee/)).toBeInTheDocument();
     // $90.00 appears twice: the entry's own amount and the section total.
     expect(screen.getAllByText("$90.00")).toHaveLength(2);
 
@@ -239,7 +239,7 @@ describe("toggling recurring ON in the edit form converts a one-off entry to a f
     // The "Add Expenses" link is only rendered on the dashboard.
     await screen.findByRole("link", { name: /add expenses/i });
     await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
-    expect(await screen.findByText(/Food - Coffee/)).toBeInTheDocument();
+    expect(await screen.findByText(/Coffee/)).toBeInTheDocument();
   });
 });
 
@@ -254,7 +254,7 @@ describe("unsetting recurring in the edit form removes from that month forward",
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
     await goToNextMonth(user, "April 2026");
-    await user.click(await screen.findByText(/Food - Groceries/));
+    await user.click(await screen.findByText(/Groceries/));
     // The recurring toggle is on by default when editing a fixed entry.
     const toggle = await screen.findByLabelText(/recurring/i);
     expect((toggle as HTMLInputElement).checked).toBe(true);
@@ -265,12 +265,12 @@ describe("unsetting recurring in the edit form removes from that month forward",
     // April no longer shows Groceries.
     await screen.findByText("April 2026");
     await waitFor(() =>
-      expect(screen.queryByText(/Food - Groceries/)).not.toBeInTheDocument()
+      expect(screen.queryByText(/Groceries/)).not.toBeInTheDocument()
     );
 
     // March still has Groceries (forward-only removal).
     await goToPrevMonth(user, "March 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
   });
 });
 
@@ -289,13 +289,13 @@ describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", 
     // expenses for March.
     await user.click(screen.getByRole("link", { name: /fixed entries/i }));
     await screen.findByText("March 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Snacks/)).toBeInTheDocument();
 
     // They recur into the following months automatically.
     await goToNextMonth(user, "April 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
-    expect(screen.getByText(/Food - Snacks/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
+    expect(screen.getByText(/Snacks/)).toBeInTheDocument();
   });
 
   it("edits and removes a recurring entry from the viewed month forward", async () => {
@@ -310,7 +310,7 @@ describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", 
 
     // Edit "Snacks" while viewing April → 75 from April forward.
     await goToNextMonth(user, "April 2026");
-    await user.click(await screen.findByText(/Food - Snacks/));
+    await user.click(await screen.findByText(/Snacks/));
     const amountInput = await screen.findByPlaceholderText(
       /insert expense amount/i
     );
@@ -331,19 +331,19 @@ describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", 
     // Remove "Groceries" while viewing May → gone from May, kept in March.
     await goToNextMonth(user, "April 2026");
     await goToNextMonth(user, "May 2026");
-    await user.click(await screen.findByText(/Food - Groceries/));
+    await user.click(await screen.findByText(/Groceries/));
     await user.click(
       await screen.findByRole("button", { name: /remove entry/i })
     );
 
     await screen.findByText("May 2026");
     await waitFor(() =>
-      expect(screen.queryByText(/Food - Groceries/)).not.toBeInTheDocument()
+      expect(screen.queryByText(/Groceries/)).not.toBeInTheDocument()
     );
     // March still has Groceries.
     await goToPrevMonth(user, "April 2026");
     await goToPrevMonth(user, "March 2026");
-    expect(await screen.findByText(/Food - Groceries/)).toBeInTheDocument();
+    expect(await screen.findByText(/Groceries/)).toBeInTheDocument();
   });
 });
 
@@ -441,7 +441,7 @@ describe("Fixed Entries totals (issue #113)", () => {
 
     // Edit "Snacks" while viewing April → 75 from April forward.
     await goToNextMonth(user, "April 2026");
-    await user.click(await screen.findByText(/Food - Snacks/));
+    await user.click(await screen.findByText(/Snacks/));
     const amountInput = await screen.findByPlaceholderText(
       /insert expense amount/i
     );

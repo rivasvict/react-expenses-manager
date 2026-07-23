@@ -23,7 +23,8 @@
     }
 
     .logo {
-      height: 44px;
+      width: 40px;
+      height: 40px;
       display: block;
     }
   }
@@ -56,16 +57,33 @@
     border-radius: $radius-control;
     padding: 0.35rem 0.5rem;
     min-width: 3.6rem;
-    transition: color $transition-quick, background-color $transition-quick;
+    transition: color $transition-quick;
 
     &:hover {
       color: $text-primary;
-      background-color: $bg-raised-hover;
+
+      .app-nav__glyph {
+        background-color: $bg-raised-hover;
+      }
     }
 
     &:focus-visible {
       @include focus-ring();
     }
+  }
+
+  // The active indicator lives here — a soft-gold lozenge behind the icon only,
+  // at $radius-control (the app's control radius), not a 999px pill.
+  .app-nav__glyph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 1.55rem;
+    border: 1px solid transparent;
+    border-radius: $radius-control;
+    transition: background-color $transition-quick, border-color $transition-quick,
+      box-shadow $transition-quick;
   }
 
   .app-nav__icon {
@@ -79,11 +97,19 @@
 
   .app-nav__item--active {
     color: $accent;
-    background-color: $accent-soft;
+
+    .app-nav__glyph {
+      background-color: $accent-soft;
+      border-color: rgba($accent, 0.28);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
 
     &:hover {
       color: $accent-hover;
-      background-color: $accent-soft;
+
+      .app-nav__glyph {
+        background-color: $accent-soft;
+      }
     }
   }
 }

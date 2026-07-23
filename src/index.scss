@@ -13,8 +13,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  // Match the app background so overscroll areas don't flash white.
+  // Match the app background so overscroll areas don't flash white. A whisper-
+  // faint gold wash (candidate 5) is anchored to the top of the column on top
+  // of it; painted at a fixed size so it never stretches or repaints on scroll,
+  // and it sits under every surface layer so it touches no content contrast.
   background-color: $bg-page;
+  background-image: $glow-page;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   // Tabular figures keep amounts vertically aligned in lists.
   font-feature-settings: "tnum";
 }

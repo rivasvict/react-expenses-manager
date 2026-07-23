@@ -19,6 +19,7 @@
     }
 
     .balance-hero__amount {
+      @include money-figures();
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: -0.02em;
