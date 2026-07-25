@@ -43,16 +43,20 @@ Three pieces, deliberately few:
 - Everything the cloud does, the local server does with the same core code
   and an on-disk storage adapter, so dev/test/CI never touch AWS.
 
-### Dormant auth code: build new, leave it alone
+### Dormant auth code: removed post-review
 
-`RemoteStorage`, `AuthenticatedApp`, `PrivateRoute`, `Lobby`, and the
-`userManager` action creators all target the defunct `expenses-manager-api`
-(cookie sessions, `sessionStorage`, app-gating). Our auth is optional and
-additive (AC-1.7), token-based, and must not gate anything. Reusing that
-code means fighting its assumptions; we reuse only what DESIGN.md already
-chose: `SignIn`/`SignUp`'s `FormValidation`/`FormModel` logic and the
-`Forms.js` inputs. The dormant files are **not modified and not deleted**
-(their GitHub issues still track them). New Redux state goes in a new
+`RemoteStorage`, `AuthenticatedApp`, `PrivateRoute`, `Lobby`,
+`NoSessionContainer`, and the old `SignIn`/`SignUp` screens all targeted the
+defunct `expenses-manager-api` (cookie sessions, `sessionStorage`,
+app-gating). Our auth is optional and additive (AC-1.7), token-based, and
+must not gate anything — reusing that code means fighting its assumptions.
+We reused only what DESIGN.md chose: the `FormValidation`/`FormModel`
+validation logic (now living in the new `Account` screens) and the
+`Forms.js` inputs. This RFC originally left the dormant island in place; in
+review of PR #128 the owner asked for it to be **removed** now that the new
+`Account`/`SignInScreen`/`SignUpScreen` fully supersede it, so those files
+have been deleted. The `userManager` slice **stays** — it is still wired
+into `reducers.js` and `App.js`. New sync state lives in the new
 `syncManager` slice, not `userManager`.
 
 ## 2. Data model

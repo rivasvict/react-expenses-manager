@@ -15,8 +15,9 @@ import {
   SyncApiError,
 } from "../../services/syncApi/contract";
 
-// Same fields/validation as the dormant SignIn.js (DESIGN §2.2), wrapped in
-// the in-app MainContentContainer instead of NoSessionContainer.
+// The in-app sign-in form (DESIGN §2.2): email + password with the shared
+// FormValidation/FormModel logic, wrapped in MainContentContainer so it
+// looks like every other in-app screen.
 const buildUserModel = () =>
   FormModel({
     email: "",
