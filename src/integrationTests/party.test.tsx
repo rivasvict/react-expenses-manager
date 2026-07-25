@@ -135,6 +135,76 @@ describe("invitation generation", () => {
   });
 });
 
+// An envelope-shaped remote backup around the given data slices.
+const remoteEnvelope = (data: Partial<any> = {}) => ({
+  app: "react-expenses-manager",
+  schemaVersion: 1,
+  exportedAt: "2026-05-14T12:00:00.000Z",
+  data: {
+    balance: [],
+    buckets: {},
+    categories: [],
+    fixedEntries: [],
+    ...data,
+  },
+});
+
+describe("sync from the party screen (follow-up review of PR #128)", () => {
+  it("a member sees the Sync affordance on /party and it behaves like the data-management one", async () => {
+    server.seedUser(jane);
+    server.seedUser(tom);
+    server.seedPartyWithMembers([jane.email, tom.email]);
+    // Remote matches local (both empty), so a sync reports "up to date"
+    // with nothing to review — the same outcome as on Data Management.
+    server.seedRemoteBackup(remoteEnvelope() as any);
+    const session = server.loginAs(tom.email);
+    const { user } = await renderApp("/party", { session });
+
+    // The party (member) view is present alongside the sync card.
+    expect(await screen.findByText("Jane's Party")).toBeInTheDocument();
+    expect(screen.getByText("Sync with your party")).toBeInTheDocument();
+
+    await user.click(
+      await screen.findByRole("button", { name: "Sync with party" })
+    );
+
+    expect(await screen.findByText("You're up to date.")).toBeInTheDocument();
+    expect(server.getUploadedBackups()).toEqual([]);
+  });
+
+  it("incoming changes from the party screen open the review wizard (Header/nav stay mounted)", async () => {
+    server.seedUser(jane);
+    server.seedUser(tom);
+    server.seedPartyWithMembers([jane.email, tom.email]);
+    // Jane added an entry remotely that Tom doesn't have yet.
+    server.seedRemoteBackup(
+      remoteEnvelope({
+        balance: [
+          {
+            id: "jane-entry",
+            date: Date.UTC(2026, 4, 10),
+            amount: "42.1",
+            description: "Cinema",
+            type: "expense",
+            categories_path: ",eating out,",
+          },
+        ],
+      }) as any
+    );
+    const session = server.loginAs(tom.email);
+    const { user } = await renderApp("/party", { session });
+
+    await user.click(
+      await screen.findByRole("button", { name: "Sync with party" })
+    );
+
+    // Pushed to the global /sync-review wizard; nav stays mounted, exactly
+    // like navigating there from /data-management.
+    expect(await screen.findByText("Review changes")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
+  });
+});
+
 describe("member (non-organizer) view", () => {
   it("hides all organizer controls and explains who manages members (AC-2.12/AC-2.2)", async () => {
     server.seedUser(jane);

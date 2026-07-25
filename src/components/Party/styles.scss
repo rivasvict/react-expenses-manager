@@ -51,6 +51,30 @@
     }
   }
 
+  // The Data-Management SyncCard is reused here (follow-up review of
+  // PR #128). Its `.data-section` card styling is scoped to
+  // `.data-management`, so give it the same card look on the party hub —
+  // same `card()` mixin and tokens, matching `.party-card` spacing.
+  .data-section {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+    margin-top: $vertical-standard-margin;
+
+    &__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: $text-primary;
+    }
+
+    &__description {
+      color: $text-secondary;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+    }
+  }
+
   // Status line above the blocked/canceled CTA layout (DESIGN §3.6).
   .party-card__status {
     color: $text-primary;
