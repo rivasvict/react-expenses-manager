@@ -79,8 +79,11 @@ later sync a shared view of our finances.*
 - AC-2.7: Redemption adds the invitee as a member. If the invitee already
   belongs to any party, redemption is rejected, not switched/double-joined
   (EC-6).
-- AC-2.8: Organizer can also add a user directly (no token needed); same
-  one-party-per-user constraint applies.
+- AC-2.8: The organizer adds members through the invitation flow (§3.4):
+  the organizer generates an invitation (token + password) for the new
+  member, who redeems it. There is no separate tokenless "direct add" —
+  "add a member" routes to the invite flow — and the one-party-per-user
+  constraint still applies.
 - AC-2.9: Organizer can block a member. A blocked member immediately loses
   sync ability (AC-2.11); entries they already contributed to a prior
   synced backup are not retroactively removed.
@@ -234,3 +237,24 @@ mine, entry by entry, so we stay in sync without losing anyone's edits.*
 - Whether invitations are party-scoped or bound to an invited email.
 - Session/token expiry policy for AC-1.3.
 - Local stand-ins for Lambda/S3/DB per NFR-4.
+
+## 9. Follow-ups (raised in review of PR #128)
+
+Tracked for later; intentionally **not** in the initial delivery.
+
+- **#136 — Unblock a blocked member.** Blocking exists; a dedicated
+  unblock action does not (today, re-inviting a blocked member
+  reactivates them). Amends AC-2.9.
+- **#137 — Leave a party.** A member cannot voluntarily leave; only the
+  organizer's block/cancel affect membership. New capability.
+- **#138 — Configurable sync server URL, persisted per account.** The
+  current host is the default; let the user point their account at a
+  different sync backend.
+- **#139 — Automatic sync-server online check.** On screens where the
+  Sync button is shown, check server reachability, enable/disable the
+  button accordingly, and show the online/offline state below it.
+- **#140 — "Last synced on…" message.** Surface the already-persisted
+  `lastSyncedAt` near the Sync control.
+- **#141 — Offer to sync after finishing an incoming-changes review.**
+  A single, explicit, user-confirmed exemption to AC-3.1 ("sync is
+  manual"), triggered only at the end of a review.
