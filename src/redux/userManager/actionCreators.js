@@ -2,8 +2,9 @@ import { ActionCreators } from "./actions";
 import storageSelector from "../../services/storageSelector";
 import { STORAGE_TYPES } from "../../constants";
 /**
- * TODO: Use STORAGE_TYPES.REMOTE
- * when the connection to the backend is reinstated https://github.com/rivasvict/react-expenses-manager/issues/50
+ * App data is stored locally. The old RemoteStorage adapter (which targeted
+ * the defunct expenses-manager-api) has been removed; cross-device sharing is
+ * now handled by the separate, additive sync feature (see docs/multi-user-sync).
  */
 const selectedStorage = storageSelector(STORAGE_TYPES.LOCAL);
 const storage = selectedStorage();

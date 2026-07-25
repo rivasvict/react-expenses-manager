@@ -5,6 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.4] - 2026-07-25
+
+### Added
+- Multi-user sync: the "Sync with your party" card is now also reachable
+  from the Party screen (follow-up review of PR #128). The existing
+  connected `SyncCard` is reused as-is on the party hub for in-party views
+  (organizer and member); the no-party, blocked and canceled views are
+  unchanged. Syncing from `/party` behaves exactly like from
+  `/data-management`, including routing to the global `/sync-review` wizard
+  with the header and nav still mounted.
+
+### Removed
+- Deleted the now-dead legacy auth island that the new
+  `Account`/`SignInScreen`/`SignUpScreen` fully supersede: `Lobby`,
+  `AuthenticatedApp`, `PrivateRoute`, the old `SignIn`/`SignUp` screens,
+  `NoSessionContainer`, and the `RemoteStorage` adapter (all unreachable,
+  targeting the defunct `expenses-manager-api`). `storageSelector` now maps
+  only `STORAGE_TYPES.LOCAL`, and `App.js` drops the stale
+  reinstate-`AuthenticatedApp` TODO blocks. The `userManager` slice is
+  retained (still wired into `reducers.js` and `App.js`).
+
 ## [1.6.3] - 2026-07-13
 
 ### Fixed
