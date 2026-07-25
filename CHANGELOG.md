@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.6.4] - 2026-07-13
+## [1.6.4] - 2026-07-25
 
 ### Added
 - Multi-user sync: the "Sync with your party" card is now also reachable
