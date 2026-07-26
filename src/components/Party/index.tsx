@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { MainContentContainer } from "../common/MainContentContainer";
 import ButtonLikeLink from "../common/ButtonLikeLink";
+import SyncCard from "../common/ExpensesManager/DataManagement/SyncCard";
 import MemberRow from "./MemberRow";
 import {
   blockMember,
@@ -246,13 +247,20 @@ const Party = ({
           statusLine="Your party was canceled. Create or join a new one to sync again."
         />
       ) : party ? (
-        <PartyDetailView
-          party={party}
-          selfId={session.user.id}
-          error={error}
-          onBlockClick={handleBlockClick}
-          onCancelClick={handleCancelClick}
-        />
+        // Active membership (organizer or member): the party detail plus
+        // the same connected SyncCard used on Data Management — syncing
+        // belongs in the party context too (follow-up review of PR #128).
+        // It self-gates and renders its own captions, so no props needed.
+        <React.Fragment>
+          <PartyDetailView
+            party={party}
+            selfId={session.user.id}
+            error={error}
+            onBlockClick={handleBlockClick}
+            onCancelClick={handleCancelClick}
+          />
+          <SyncCard />
+        </React.Fragment>
       ) : partyLoaded ? (
         <NoPartyView onCreateClick={handleCreateParty} error={error} />
       ) : (
