@@ -4,6 +4,8 @@ import {
   contentHash,
   diffSnapshots,
   extractItems,
+  mergeCategories,
+  mergeSnapshotForUpload,
   snapshotsContentEqual,
 } from "./syncMergeHelper";
 import { BackupData } from "../../services/syncApi/contract";
@@ -261,5 +263,245 @@ describe("applyItems (RFC §4.3 step 5)", () => {
       })
     );
     expect(merged.buckets).toEqual({ Pets: [{ from: "0000-00", limit: 50 }] });
+  });
+});
+
+describe("grouping brand-new definitions (RFC §4.1 — QA D2)", () => {
+  const multiStateRemote = (): BackupData => ({
+    ...({
+      balance: [],
+      buckets: {},
+      categories: [],
+      fixedEntries: [],
+    } as BackupData),
+    fixedEntries: [
+      {
+        id: "f-new",
+        type: "expense",
+        history: [
+          { from: "2026-01", amount: "9", description: "Netflix" },
+          { from: "2026-03", amount: "12", description: "Netflix 4K" },
+        ],
+      },
+    ],
+    buckets: {
+      Pets: [
+        { from: "0000-00", limit: 50 },
+        { from: "2026-06", limit: 80 },
+      ],
+    },
+  });
+
+  it("presents a brand-new multi-state fixed entry and bucket as ONE item each, fronted by the resolved current state", () => {
+    const incoming = diffSnapshots({
+      localData: emptyData(),
+      remoteData: multiStateRemote(),
+    });
+
+    expect(incoming).toHaveLength(2);
+    const [fixedCard, bucketCard] = incoming;
+    // Resolved current state = the latest by `from`.
+    expect(fixedCard.fixed!.state).toEqual({
+      from: "2026-03",
+      amount: "12",
+      description: "Netflix 4K",
+    });
+    expect(fixedCard.grouped).toHaveLength(2);
+    expect(bucketCard.bucket!.state).toEqual({ from: "2026-06", limit: 80 });
+    expect(bucketCard.grouped).toHaveLength(2);
+
+    // Accepting the card applies ALL its pending states.
+    const merged = applyItems(
+      emptyData(),
+      incoming.reduce<any[]>(
+        (all, item) => all.concat(item.grouped || [item]),
+        []
+      )
+    );
+    expect(merged.fixedEntries[0].history).toHaveLength(2);
+    expect(merged.buckets.Pets).toHaveLength(2);
+  });
+
+  it("keeps states of an already-known definition as individual items", () => {
+    const local: BackupData = {
+      ...emptyData(),
+      buckets: { Pets: [{ from: "0000-00", limit: 50 }] },
+    };
+    const incoming = diffSnapshots({
+      localData: local,
+      remoteData: multiStateRemote(),
+    });
+    // The known bucket's new state is its own item; the new fixed entry
+    // still groups.
+    const bucketItems = incoming.filter((item) => item.kind === "bucket");
+    expect(bucketItems).toHaveLength(1);
+    expect(bucketItems[0].grouped).toBeUndefined();
+    const fixedItems = incoming.filter((item) => item.kind === "fixed");
+    expect(fixedItems).toHaveLength(1);
+    expect(fixedItems[0].grouped).toHaveLength(2);
+  });
+
+  it("rejecting a group records one rejection per member state, suppressing every state on the next diff", () => {
+    const remote = multiStateRemote();
+    const incoming = diffSnapshots({
+      localData: emptyData(),
+      remoteData: remote,
+    });
+    // The wizard expands a rejected group into a (key, hash) per member —
+    // reproduce that here, then re-diff the same backup.
+    const rejections = incoming.reduce<{ [key: string]: string[] }>(
+      (memory, item) => {
+        (item.grouped || [item]).forEach(({ key, hash }) => {
+          memory[key] = [...(memory[key] || []), hash];
+        });
+        return memory;
+      },
+      {}
+    );
+
+    expect(
+      diffSnapshots({ localData: emptyData(), remoteData: remote, rejections })
+    ).toEqual([]);
+  });
+});
+
+describe("category merging (AC-3.10 — QA D1)", () => {
+  it("unions additively, case-insensitively, local casing and order first", () => {
+    expect(
+      mergeCategories({
+        localCategories: ["Pet Care", "gym"],
+        remoteCategories: ["pet care", "Travel Fund"],
+        buckets: {},
+      })
+    ).toEqual(["Pet Care", "gym", "Travel Fund"]);
+  });
+
+  it("excludes names promoted to buckets, matching bucket creation", () => {
+    expect(
+      mergeCategories({
+        localCategories: ["gym"],
+        remoteCategories: ["Pet Care"],
+        buckets: { "pet care": [{ from: "0000-00", limit: 50 }] },
+      })
+    ).toEqual(["gym"]);
+  });
+
+  it("content equality treats category casing case-insensitively (no ping-pong)", () => {
+    const a = { ...emptyData(), categories: ["Pet Care"] };
+    const b = { ...emptyData(), categories: ["pet care"] };
+    expect(snapshotsContentEqual(a, b)).toBe(true);
+    expect(
+      snapshotsContentEqual(a, { ...emptyData(), categories: [] })
+    ).toBe(false);
+  });
+});
+
+describe("mergeSnapshotForUpload (D5 — union preserves remote items)", () => {
+  it("retains a remote-only item (rejected / rejected-in-a-prior-sync) at its remote value", () => {
+    // `base` is the local snapshot with accepted items applied — it lacks
+    // the remote item X (this member rejected it, so it never merged
+    // locally). The upload must still carry X so the party backup keeps it.
+    const base = { ...emptyData(), balance: [entry("local-only")] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("local-only"), entry("X", { amount: "99" })],
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    const ids = merged.balance.map((item: any) => item.id).sort();
+    expect(ids).toEqual(["X", "local-only"]);
+    // Remote value preserved verbatim.
+    expect(merged.balance.find((item: any) => item.id === "X").amount).toEqual(
+      "99"
+    );
+  });
+
+  it("retains a local-only item (additive, remote lacks it)", () => {
+    const base = {
+      ...emptyData(),
+      balance: [entry("shared"), entry("mine")],
+    };
+    const remoteData = { ...emptyData(), balance: [entry("shared")] };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    expect(merged.balance.map((item: any) => item.id).sort()).toEqual([
+      "mine",
+      "shared",
+    ]);
+  });
+
+  it("a modified-accepted item wins over the remote value (EC-5)", () => {
+    // Same itemKey (entry:e1) in base and remote, different content: base
+    // holds the member's MODIFIED value, which must win in the upload.
+    const base = { ...emptyData(), balance: [entry("e1", { amount: "5" })] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("e1", { amount: "99" })],
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    expect(merged.balance).toHaveLength(1);
+    expect(merged.balance[0].amount).toEqual("5");
+  });
+
+  it("unions remote-only fixed-entry states and bucket states by itemKey", () => {
+    const base = {
+      ...emptyData(),
+      fixedEntries: [
+        {
+          id: "f1",
+          type: "expense",
+          history: [{ from: "2026-01", amount: "9", categories_path: ",fun," }],
+        },
+      ],
+      buckets: { Groceries: [{ from: "2026-01", limit: 100 }] },
+    };
+    const remoteData = {
+      ...emptyData(),
+      fixedEntries: [
+        {
+          id: "f1",
+          type: "expense",
+          history: [
+            { from: "2026-01", amount: "9", categories_path: ",fun," },
+            { from: "2026-03", amount: "12", categories_path: ",fun," },
+          ],
+        },
+      ],
+      buckets: {
+        Groceries: [
+          { from: "2026-01", limit: 100 },
+          { from: "2026-03", limit: 150 },
+        ],
+      },
+    };
+    const merged = mergeSnapshotForUpload({ base, remoteData });
+    // The remote-only later states are retained; existing states unchanged.
+    expect(merged.fixedEntries[0].history.map((s: any) => s.from)).toEqual([
+      "2026-01",
+      "2026-03",
+    ]);
+    expect(merged.buckets.Groceries.map((s: any) => s.from)).toEqual([
+      "2026-01",
+      "2026-03",
+    ]);
+  });
+
+  it("does not mutate its inputs", () => {
+    const base = { ...emptyData(), balance: [entry("a")] };
+    const remoteData = { ...emptyData(), balance: [entry("a"), entry("b")] };
+    mergeSnapshotForUpload({ base, remoteData });
+    expect(base.balance).toHaveLength(1);
+    expect(remoteData.balance).toHaveLength(2);
+  });
+
+  it("converges: after uploading the union, the backup content-equals the upload (no further upload)", () => {
+    // Member A rejected X: local (base) lacks X, remote has X. The upload
+    // union == remote content, so snapshotsContentEqual(upload, remote) is
+    // true — the next sync makes NO upload, and A never re-prompts for X.
+    const base = { ...emptyData(), balance: [entry("shared")] };
+    const remoteData = {
+      ...emptyData(),
+      balance: [entry("shared"), entry("X")],
+    };
+    const uploadSnapshot = mergeSnapshotForUpload({ base, remoteData });
+    expect(snapshotsContentEqual(uploadSnapshot, remoteData)).toBe(true);
   });
 });

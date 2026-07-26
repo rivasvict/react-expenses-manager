@@ -149,12 +149,16 @@ const SyncCard = ({
     try {
       const outcome = await onSync();
       if (outcome.type === "review") {
+        // Navigating away unmounts this card — no state updates after
+        // this point (a `finally` here would fire one on the unmounted
+        // component).
         history.push("/sync-review");
         return;
       }
       setStatus(
         outcome.type === "first-sync" ? COPY.firstSync : COPY.upToDate
       );
+      setIsSyncing(false);
     } catch (syncError) {
       if (isSyncApiError(syncError)) {
         if (syncError.code === SYNC_ERROR_CODES.BLOCKED) {
@@ -175,7 +179,6 @@ const SyncCard = ({
       } else {
         setAlert(COPY.connectionFailed);
       }
-    } finally {
       setIsSyncing(false);
     }
   };
