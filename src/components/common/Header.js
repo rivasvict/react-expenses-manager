@@ -1,12 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import homeIcon from "@iconify-icons/codicon/home";
-import tagIcon from "@iconify-icons/codicon/tag";
-import pieChartIcon from "@iconify-icons/codicon/pie-chart";
-import syncIcon from "@iconify-icons/codicon/sync";
-import databaseIcon from "@iconify-icons/codicon/database";
-import logoImage from "../../images/expenses_tracker_logo.png";
+import GlyphIcon from "./GlyphIcon";
+import BrandMark from "./BrandMark";
 /**
  * TODO:
  * Reinstate the log-out action
@@ -19,16 +14,19 @@ import "./Header.scss";
 const isHomeActive = (match, location) =>
   location.pathname === "/" || location.pathname.startsWith("/dashboard");
 
+// Destination-specific glyphs (candidate 7): the shape says what the tab is.
+// `grid` for Categories and a `bucket` for Buckets (a spending-limit container,
+// the feature's own metaphor) read truer than the old tag/pie-chart icons.
 const NAV_ITEMS = [
-  { to: "/", label: "Home", icon: homeIcon, isActive: isHomeActive },
-  { to: "/categories", label: "Categories", icon: tagIcon },
-  { to: "/buckets", label: "Buckets", icon: pieChartIcon },
-  { to: "/fixed-entries", label: "Fixed Entries", icon: syncIcon },
+  { to: "/", label: "Home", icon: "home", isActive: isHomeActive },
+  { to: "/categories", label: "Categories", icon: "grid" },
+  { to: "/buckets", label: "Buckets", icon: "bucket" },
+  { to: "/fixed-entries", label: "Fixed Entries", icon: "repeat" },
   {
     to: "/data-management",
     label: "Data",
     ariaLabel: "Data Management",
-    icon: databaseIcon,
+    icon: "database",
   },
 ];
 
@@ -41,7 +39,7 @@ const Header = () => (
   <header className="app-header">
     <div className="app-header__bar">
       <Link to="/" className="app-header__brand">
-        <img src={logoImage} alt="Expenses tracker logo" className="logo" />
+        <BrandMark size={40} className="logo" title="Expenses Tracker logo" />
         <span className="app-header__name">Expenses Tracker</span>
       </Link>
       <nav className="app-nav" aria-label="Main navigation">
@@ -55,7 +53,12 @@ const Header = () => (
             activeClassName="app-nav__item--active"
             aria-label={ariaLabel}
           >
-            <Icon icon={icon} className="app-nav__icon" aria-hidden="true" />
+            {/* The active indicator sits behind the icon only (candidate 7),
+                so "you are here" reads at a glance without tinting the whole
+                tab. */}
+            <span className="app-nav__glyph">
+              <GlyphIcon name={icon} size={20} className="app-nav__icon" />
+            </span>
             <span className="app-nav__label">{label}</span>
           </NavLink>
         ))}

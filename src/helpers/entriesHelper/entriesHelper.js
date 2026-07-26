@@ -27,7 +27,7 @@ function getFilteredEntriesByCategory({
   const entriesToFilter =
     entries[selectedYear]?.[selectedMonth]?.[entryTypePlural];
   return category.length
-    ? entriesToFilter.filter((entry) => entry.categories_path.match(category))
+    ? entriesToFilter.filter((entry) => entry.categories_path.includes(category))
     : entriesToFilter || [];
 }
 

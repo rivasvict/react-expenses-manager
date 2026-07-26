@@ -5,6 +5,246 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.7.0] - 2026-07-26
+
+### Added
+- GitHub Actions workflow for server tests using Node 18+, enabling CI validation
+  of the sync server independent of the React app's Node version pin
+
+## [1.6.0] - 2026-07-21
+
+### Added
+- Visual refresh: category-aware entry icons. Each entry row's chip now shows a
+  glyph keyed to the entry's category (home, car, cart, coffee, briefcase, …)
+  instead of a bare up/down arrow; the chip's income-green / expense-rose tint
+  still carries direction. Custom (user-created) categories fall back to the
+  arrow, so nothing ever renders a broken chip. Backed by a single dependency-
+  free 2px-stroke glyph set (`GlyphIcon`) and a `categoryIcons` map covering
+  every seed category, with a unit test asserting each resolves and unknowns
+  fall back
+- Visual refresh: two-line entry rows. An entry *with* a description now shows
+  its category as a semibold title over the description as muted subtext; an
+  entry *without* one keeps the single line. The rule is content-driven, so
+  rows never reshape on resize
+- Visual refresh: a two-tier monthly total tile on /summary, /expenses and
+  /incomes — a muted label with a large, tone-colored value on a softly tinted
+  card (expense-rose / income-green, neutral at zero), replacing the flat
+  `label: amount` string
+- Visual refresh: tabular figures for money columns via a shared
+  `money-figures` mixin, so right-aligned amounts, totals, the balance hero and
+  bucket numbers line up in a grid instead of drifting row to row
+- Visual refresh: navigation destinations now use their own glyphs (grid for
+  Categories, a bucket for Buckets) and the active tab's indicator is a compact
+  soft-gold lozenge behind the icon (at the app's control radius) rather than a
+  full-width tint
+- Visual refresh: a whisper-faint gold page glow — one fixed radial wash
+  anchored to the top of the page, under every surface layer so it never
+  touches content contrast (new `$glow-page` token)
+- Visual refresh: the brand mark is now a single SVG source (`BrandMark` /
+  `public/logo.svg`) rendered as the header lockup and served as a vector
+  favicon, keeping the gold-over-slate double-bar motif on the app's rounded-
+  square shape. The raster `logo192/512.png` and `favicon.ico` stay as
+  fallbacks pending brand sign-off before regenerating them from the source
+
+### Changed
+- Visual refresh: the month navigator's Prev/Next steppers are now rounded
+  squares (matching the app's control shape; circles stay reserved for the
+  money chips) and, at the first/last month with data, the stepper stays in
+  place disabled instead of vanishing — so the control never teleports under
+  the thumb and screen readers announce it rather than dropping it silently
+
+## [1.5.1] - 2026-07-20
+
+### Fixed
+- Mobile: the open filter sheet and its scrim now stack above the fixed
+  bottom tab bar (`.app-nav`, z-index 100) — previously the nav painted
+  over the sheet's "Clear all" / "Show N results" buttons and stole their
+  taps, making them unreachable on phones. The sheet's bottom padding also
+  gains `env(safe-area-inset-bottom)` clearance for devices with a home
+  indicator
+- The gold filtered banner now renders BETWEEN the toolbar/filter panel
+  and the matching rows on all three screens (/expenses, /incomes,
+  /summary), matching the approved mock — the toolbar stays on top while
+  filtering; the unfiltered layout (tile above toolbar) is unchanged
+- Banner surface softened to match the mock: border is now
+  gold at 30% alpha (`rgba($accent, 0.3)`) instead of full-strength gold
+  on all sides, and the background is a vertical gold wash
+  (`rgba($accent, 0.10)` → `rgba($accent, 0.04)`) instead of a gradient
+  into a hardcoded surface color; the 3px solid gold left bar is kept
+- The toolbar's Sort button now carries the leading sort-arrows icon from
+  the mock ("⇅ Sort: Date"), mirroring the magnifier and funnel icons on
+  its siblings
+- Narrow phones: slightly trimmed toolbar paddings/gaps and search font
+  size so the "Search entries" placeholder no longer truncates at 390px
+
+## [1.5.0] - 2026-07-20
+
+### Added
+- Filters & sorting on the monthly summary (/summary): the shared toolbar
+  (live search, sort, Filters button) and the Filters sheet/panel now render
+  on the summary screen, and the ONE shared filter/sort state drives BOTH
+  the incomes and the expenses lists simultaneously — a filter set on
+  /expenses or /incomes is already active when navigating to /summary and
+  vice versa
+- Gold banner variant for /summary: "Filtered view · both lists" with the
+  combined "N of M entries" across both lists and a signed net filtered
+  total ("Filtered total · net", e.g. "+$3,125.02") — income-green when
+  positive, expense-rose when negative, neutral at zero
+- "Matching incomes" / "Matching expenses" section headers with per-list
+  money totals while filtered (`ListSectionHeader` gained an optional
+  `totalText` shown instead of the entry count)
+- The sheet's category picker on /summary offers income AND expense
+  categories, since one filter drives both lists
+- Combined empty state on /summary when zero entries match across both
+  lists; charts (type doughnut and per-type category charts) recompute
+  against the filtered subsets
+
+### Changed
+- The Summary screen is now Redux-connected (`entryFilters` +
+  setEntryFilters/clearEntryFilters); the "Show" entry-type select is
+  untouched — filters apply within whatever it displays, and the banner
+  keeps reporting both lists
+- Both /summary lists now honor the shared sort key (date-newest-first by
+  default), matching the /expenses and /incomes behavior
+
+### Tests
+- New integration suite `summaryFilters.test.tsx` (11 tests): both-list
+  narrowing from one search, shared sort ordering across lists, income
+  categories in the picker, signed net total with polarity (positive green
+  / negative rose), per-list Matching headers with totals, chip removal
+  and Clear restoring tile + default sort, cross-screen filter carryover
+  from /expenses, "Show" select regression and interplay, and the combined
+  empty state
+
+## [1.4.0] - 2026-07-20
+
+### Added
+- "Filters & sort" sheet on the incomes/expenses report: a Filters button
+  (funnel icon) on the toolbar opens a bottom sheet over a scrim on narrow
+  screens and an inline bordered panel on wide ones (same markup, pure CSS
+  switch at the nav breakpoint). It holds the shared search field, a
+  "Search in" segmented toggle ("All text" matches category + description;
+  "Description only" scopes to the entry's description, with hint copy),
+  the searchable category picker, the shared "Sort by" options ("same as
+  toolbar"), a "Clear all" button and a primary "Show N results" button
+  with a live count that simply dismisses (filtering is live — no Apply)
+- Gold "Filtered view" banner that replaces the total tile whenever any
+  filter is active: funnel indicator, "N of M entries", one removable chip
+  per active filter (quoted search term, "Category: X", "Description
+  only"), a dashed gold divider, the "Filtered total" in expense-rose /
+  income-green, and an outlined Clear button that removes every filter AND
+  resets the sort to Date. Count and total sit in `aria-live="polite"`
+  regions
+- Gold count badge on the Filters button for active filters beyond search
+- List section header above the rows: uppercase tinted "Expenses"/"Incomes"
+  ("Matching expenses/incomes" while filtered) with a right-aligned entry
+  count
+- Dashed-border empty state for zero matches ("No entries match your
+  filters", "Try a different search term or a broader category.", and a
+  "Clear all filters" button) while the banner keeps showing "$0.00" and
+  "0 of M entries"
+- Accessibility: focus moves to the sheet heading on open and back to the
+  Filters button on close; Escape and the scrim close the sheet; chip
+  removers are real labelled buttons; scope and sort options in the sheet
+  are native radios
+
+### Changed
+- The standalone "Filter by category" control moved from the report screen
+  into the Filters sheet/panel (same searchable dropdown, same semantics)
+- `EntriesSummary` accepts a `hideHeader` prop and `SummaryWithChart` a
+  `listHeader` node so the new section header can replace the built-in list
+  heading without affecting `/summary`
+
+### Tests
+- New integration suite `filterSheet.test.tsx` (14 tests): sheet
+  open/close with focus management, shared search/sort state between
+  toolbar and sheet, live "Show N results" count, scope-toggle semantics,
+  banner replacing the tile with chips/count/total, per-chip removal,
+  Clear resetting the sort, badge counting, section headers, empty state,
+  and symmetric /incomes coverage
+- New helper `integrationTests/helpers/filters.ts` (`openFilterSheet`,
+  `searchEntries`), registered in the CLAUDE.md helper list; category
+  filter tests now open the sheet before picking a category
+
+## [1.3.0] - 2026-07-20
+
+### Added
+- Live search and sorting on the incomes/expenses monthly report: a slim
+  toolbar under the total tile with a "Search entries" field (matches
+  description and category name, case-insensitive, narrows the list as you
+  type) and a "Sort: <key>" button opening a single-select popover menu
+  ("Date — newest first" (default), "Amount — highest first",
+  "Name — A → Z" tie-broken by description) with full keyboard support
+  (arrows, Enter, Escape) and a gold check on the selected option
+- The visible total and the category doughnut chart now recompute from the
+  searched/sorted/filtered subset
+- Filters and the sort key are shared app state (`entryFilters` in the
+  `expensesManager` slice) persisted to `localStorage`, so they survive
+  month navigation and a page reload; new `filterSortHelper` module holds
+  the pure filter/sort/descriptor logic
+
+### Changed
+- The incomes/expenses "Filter by category" control now drives the shared
+  `entryFilters.category` state instead of the legacy `category` field
+  (the old field and its `CATEGORY_CHANGE` action remain in the reducer,
+  unused, pending a follow-up removal)
+
+### Tests
+- New unit suites for `filterSortHelper` (search scopes, literal category
+  match incl. regex-special names, sort orders, ties, immutability,
+  descriptors) and for the new `entryFilters` reducer cases
+- New integration suite `filterSortEntries.test.tsx`: live search
+  narrowing/restoring, category-name matches, total updates, row-order
+  assertions for every sort key, keyboard operation of the sort menu,
+  category-filter regression (incl. "House (Rent)"), persistence across
+  month navigation and across a fresh app render, and symmetric /incomes
+  coverage
+- Lint gate restored to green: the skipped legacy TODO(#116) suites now
+  carry targeted `eslint-disable` comments for their false-positive
+  Testing Library rules, and a duplicated describe title in the skipped
+  AddEntry suite was corrected
+
+## [1.2.1] - 2026-07-19
+
+### Fixed
+- Category filter on the incomes/expenses report no longer breaks for
+  categories whose name contains regex-special characters (e.g.
+  "House (Rent)"). `getFilteredEntriesByCategory` used
+  `categories_path.match(category)`, which treated the selected category
+  value as a regular expression, so the parentheses in "House (Rent)" were
+  parsed as a capture group and never matched the stored
+  `,house (rent),` path. It now matches the category value literally with
+  `String.prototype.includes`
+
+## [1.2.0] - 2026-07-18
+
+### Added
+- Searchable category dropdowns: every category select (entry form,
+  incomes/expenses category filter, Add bucket) is now a hand-built
+  type-to-filter combobox (`CategorySearchSelect`) with a search box inside
+  the popup, case-insensitive substring filtering, full keyboard support
+  (open with Enter/Space/arrows, navigate with ArrowUp/ArrowDown, commit
+  with Enter, dismiss with Escape), click-outside close, and a
+  "No matching categories" empty state. The closed trigger keeps the exact
+  look of the previous native select and the ARIA 1.2 combobox + listbox
+  pattern; no new dependencies were added
+
+### Changed
+- `CategorySelector` is now a thin adapter over `CategorySearchSelect`,
+  preserving its props contract (`handleChange` still receives an
+  event-like `{ currentTarget: { value, name } }`, values keep the
+  `,category,` format and `""` for the empty option)
+
+### Tests
+- New unit suite for `CategorySearchSelect` (open/close, filtering,
+  selection, keyboard navigation with clamping, empty state, click-outside,
+  empty-option reset) and new integration tests for type-to-filter entry
+  creation and the no-match empty state
+- Integration tests that drove the old native select via
+  `user.selectOptions` now open the combobox and click the option instead;
+  assertions and intent are unchanged
+- `CategorySelector.test.js.snap` regenerated for the new markup
+
 ## [1.1.0] - 2026-07-10
 
 ### Changed
