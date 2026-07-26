@@ -89,12 +89,21 @@ const createHandlers = ({ storage, tokenSecret, now = Date.now }) => {
     return { status: 201, body: issueSession(user) };
   };
 
+  // Hashed once per handler set; only used to equalize login timing below.
+  const dummyPasswordRecord = hashPassword("dummy-timing-equalizer");
+
   const login = async ({ body }) => {
     const { email, password } = body || {};
     if (!isNonEmptyString(email) || !isNonEmptyString(password))
       return invalidCredentials();
     const user = await storage.readJson(userKey(email));
-    if (!user) return invalidCredentials();
+    if (!user) {
+      // AC-1.5 also covers timing: without this, an unknown email would
+      // return before any scrypt work and reveal account existence. Burn
+      // the same hashing cost against a dummy record, then fail generically.
+      verifyPassword(password, dummyPasswordRecord);
+      return invalidCredentials();
+    }
     if (!verifyPassword(password, user.password)) return invalidCredentials();
     return { status: 200, body: issueSession(user) };
   };
