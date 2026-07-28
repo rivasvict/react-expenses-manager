@@ -1,19 +1,36 @@
 // Contract tests for RFC §3 endpoints 1–3, run with the Node built-in test
 // runner (node >= 18): npm run test:server
-const { test } = require("node:test");
-const assert = require("node:assert/strict");
-const { createApp } = require("../core/router");
-const { createMemoryStorage } = require("../core/storage");
-const { signToken, sha256Hex } = require("../core/crypto");
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { createApp, App, CreateAppOptions } from "../core/router";
+import { createMemoryStorage } from "../core/storage";
+import { signToken, sha256Hex } from "../core/crypto";
+import {
+  AppRequest,
+  AppResponse,
+  ErrorBody,
+  MeBody,
+  SessionBody,
+  UserRecord,
+} from "../core/handlers";
+
+// Handlers return a union of body shapes. These tests assert against
+// whichever shape the endpoint under test produces, so widen once here
+// instead of narrowing at every assertion.
+type TestBody = SessionBody & MeBody & ErrorBody;
+type TestResponse = AppResponse<TestBody>;
 
 const TOKEN_SECRET = "test-secret";
 
-const makeApp = (options = {}) =>
+const makeApp = (options: Partial<CreateAppOptions> = {}): App =>
   createApp({
     storage: createMemoryStorage(),
     tokenSecret: TOKEN_SECRET,
     ...options,
   });
+
+const call = (app: App, request: AppRequest): Promise<TestResponse> =>
+  app.handle(request) as Promise<TestResponse>;
 
 const jane = {
   email: "jane@example.com",
@@ -22,14 +39,14 @@ const jane = {
   lastName: "Doe",
 };
 
-const signup = (app, body = jane) =>
-  app.handle({ method: "POST", path: "/api/auth/signup", body });
+const signup = (app: App, body: unknown = jane): Promise<TestResponse> =>
+  call(app, { method: "POST", path: "/api/auth/signup", body });
 
-const login = (app, body) =>
-  app.handle({ method: "POST", path: "/api/auth/login", body });
+const login = (app: App, body: unknown): Promise<TestResponse> =>
+  call(app, { method: "POST", path: "/api/auth/login", body });
 
-const me = (app, token) =>
-  app.handle({
+const me = (app: App, token: string): Promise<TestResponse> =>
+  call(app, {
     method: "GET",
     path: "/api/me",
     headers: { authorization: `Bearer ${token}` },
@@ -72,9 +89,9 @@ test("signup stores no plaintext password (scrypt record only)", async () => {
   // Read the stored user record back through the storage interface and
   // assert it holds only an scrypt record (algo/salt/hash) — never the
   // plaintext password, anywhere in the serialized document (AC-1.2).
-  const stored = await storage.readJson(
+  const stored = (await storage.readJson<UserRecord>(
     `users/${sha256Hex("jane@example.com")}`
-  );
+  )) as UserRecord;
   assert.equal(stored.password.algo, "scrypt");
   assert.ok(stored.password.saltB64);
   assert.ok(stored.password.hashB64);
@@ -142,16 +159,14 @@ test("tampered or malformed tokens are rejected", async () => {
   assert.equal((await me(app, forged)).status, 401);
   assert.equal((await me(app, "garbage")).status, 401);
   assert.equal(
-    (
-      await app.handle({ method: "GET", path: "/api/me", headers: {} })
-    ).status,
+    (await call(app, { method: "GET", path: "/api/me", headers: {} })).status,
     401
   );
 });
 
 test("unknown routes return 404", async () => {
   const app = makeApp();
-  const result = await app.handle({ method: "GET", path: "/api/nope" });
+  const result = await call(app, { method: "GET", path: "/api/nope" });
   assert.equal(result.status, 404);
   assert.equal(result.body.error.code, "NOT_FOUND");
 });

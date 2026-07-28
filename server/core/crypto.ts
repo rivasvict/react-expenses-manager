@@ -1,19 +1,51 @@
 // Crypto primitives for the sync server (RFC §5). Plain Node, no dependencies.
-const crypto = require("node:crypto");
+import crypto from "node:crypto";
 
 const SCRYPT_PARAMS = { N: 16384, r: 8, p: 1 };
 const KEY_LENGTH = 64;
 const SALT_LENGTH = 16;
-const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days (AC-1.3)
+export const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days (AC-1.3)
 
-const base64url = (buffer) => Buffer.from(buffer).toString("base64url");
+// Storable password record: the scrypt cost parameters travel with the hash
+// so stored records stay verifiable if SCRYPT_PARAMS is ever tuned upwards.
+export interface ScryptPasswordRecord {
+  algo: "scrypt";
+  N: number;
+  r: number;
+  p: number;
+  saltB64: string;
+  hashB64: string;
+}
 
-const sha256Hex = (text) =>
+// Claims carried by the compact HMAC token; `iat`/`exp` are Unix seconds.
+export interface TokenPayload {
+  sub: string;
+  iat: number;
+  exp: number;
+}
+
+export interface SignTokenOptions {
+  sub: string;
+  secret: string;
+  now?: number;
+  ttlMs?: number;
+}
+
+export interface VerifyTokenOptions {
+  token: string;
+  secret: string;
+  now?: number;
+}
+
+const base64url = (buffer: Buffer | string): string =>
+  Buffer.from(buffer).toString("base64url");
+
+export const sha256Hex = (text: string): string =>
   crypto.createHash("sha256").update(text).digest("hex");
 
 // Hashes a plaintext password with scrypt (AC-1.2). Returns the storable
 // record; the plaintext is never persisted.
-const hashPassword = (password) => {
+export const hashPassword = (password: string): ScryptPasswordRecord => {
   const salt = crypto.randomBytes(SALT_LENGTH);
   const hash = crypto.scryptSync(password, salt, KEY_LENGTH, SCRYPT_PARAMS);
   return {
@@ -26,7 +58,10 @@ const hashPassword = (password) => {
   };
 };
 
-const verifyPassword = (password, record) => {
+export const verifyPassword = (
+  password: string,
+  record: ScryptPasswordRecord
+): boolean => {
   const { N, r, p, saltB64, hashB64 } = record;
   const expected = Buffer.from(hashB64, "base64");
   const actual = crypto.scryptSync(
@@ -38,13 +73,18 @@ const verifyPassword = (password, record) => {
   return crypto.timingSafeEqual(actual, expected);
 };
 
-const hmacSignature = (encodedPayload, secret) =>
+const hmacSignature = (encodedPayload: string, secret: string): string =>
   crypto.createHmac("sha256", secret).update(encodedPayload).digest("base64url");
 
 // Compact HMAC-SHA256-signed token: base64url(payload).base64url(sig),
 // payload { sub, iat, exp } (seconds). RFC §5.
-const signToken = ({ sub, secret, now = Date.now(), ttlMs = TOKEN_TTL_MS }) => {
-  const payload = {
+export const signToken = ({
+  sub,
+  secret,
+  now = Date.now(),
+  ttlMs = TOKEN_TTL_MS,
+}: SignTokenOptions): string => {
+  const payload: TokenPayload = {
     sub,
     iat: Math.floor(now / 1000),
     exp: Math.floor((now + ttlMs) / 1000),
@@ -55,7 +95,13 @@ const signToken = ({ sub, secret, now = Date.now(), ttlMs = TOKEN_TTL_MS }) => {
 
 // Returns the payload when the signature is valid and the token unexpired,
 // otherwise null. Never throws on malformed input.
-const verifyToken = ({ token, secret, now = Date.now() }) => {
+export const verifyToken = ({
+  token,
+  secret,
+  now = Date.now(),
+}: VerifyTokenOptions): TokenPayload | null => {
+  // Kept as a runtime guard, not just a type guard: tokens arrive from
+  // untrusted request headers and may not be strings at all.
   if (typeof token !== "string") return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
@@ -65,7 +111,11 @@ const verifyToken = ({ token, secret, now = Date.now() }) => {
   if (actual.length !== expected.length) return null;
   if (!crypto.timingSafeEqual(actual, expected)) return null;
   try {
-    const payload = JSON.parse(Buffer.from(encoded, "base64url").toString());
+    // Only `exp` is validated here; a payload that parses to anything else
+    // (null, a bare number) throws below and is caught as invalid.
+    const payload = JSON.parse(
+      Buffer.from(encoded, "base64url").toString()
+    ) as TokenPayload;
     if (typeof payload.exp !== "number" || payload.exp * 1000 <= now)
       return null;
     return payload;
@@ -74,14 +124,4 @@ const verifyToken = ({ token, secret, now = Date.now() }) => {
   }
 };
 
-const randomId = () => crypto.randomUUID();
-
-module.exports = {
-  sha256Hex,
-  hashPassword,
-  verifyPassword,
-  signToken,
-  verifyToken,
-  randomId,
-  TOKEN_TTL_MS,
-};
+export const randomId = (): string => crypto.randomUUID();

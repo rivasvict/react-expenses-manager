@@ -1,20 +1,43 @@
 // Method+path router for the sync server core. `createApp` wires the
 // handlers to the RFC §3 routes and exposes a single transport-agnostic
-// entry point, so the node:http adapter (server/index.js) and the contract
+// entry point, so the node:http adapter (server/index.ts) and the contract
 // tests exercise exactly the same code.
-const { createHandlers, ERROR_CODES } = require("./handlers");
+import {
+  createHandlers,
+  ERROR_CODES,
+  AppRequest,
+  AppResponse,
+  CreateHandlersOptions,
+  Handler,
+} from "./handlers";
 
-const createApp = ({ storage, tokenSecret, now }) => {
+interface Route {
+  method: string;
+  path: string;
+  handler: Handler;
+}
+
+export interface App {
+  handle(request: AppRequest): Promise<AppResponse>;
+}
+
+export type CreateAppOptions = CreateHandlersOptions;
+
+export const createApp = ({
+  storage,
+  tokenSecret,
+  now,
+}: CreateAppOptions): App => {
   const handlers = createHandlers({ storage, tokenSecret, now });
 
-  const routes = [
+  const routes: Route[] = [
     { method: "POST", path: "/api/auth/signup", handler: handlers.signup },
     { method: "POST", path: "/api/auth/login", handler: handlers.login },
     { method: "GET", path: "/api/me", handler: handlers.me },
   ];
 
   // request: { method, path, headers, body } → { status, body }
-  const handle = async (request) => {
+  const handle = async (request: AppRequest): Promise<AppResponse> => {
     const route = routes.find(
       (candidate) =>
         candidate.method === request.method && candidate.path === request.path
@@ -29,5 +52,3 @@ const createApp = ({ storage, tokenSecret, now }) => {
 
   return { handle };
 };
-
-module.exports = { createApp };

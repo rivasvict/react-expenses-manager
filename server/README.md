@@ -1,7 +1,10 @@
 # Sync server (local)
 
 Dependency-free plain Node implementation of the multi-user sync backend
-(RFC: `docs/multi-user-sync/RFC.md`). PR 1 ships the auth endpoints:
+(RFC: `docs/multi-user-sync/RFC.md`). Written in TypeScript and compiled
+ahead of run — there is no runtime dependency on `ts-node` or any npm
+package; the compiled output under `server/dist/` is plain CommonJS that
+only requires `node:` builtins. PR 1 ships the auth endpoints:
 
 | Endpoint | Purpose |
 |---|---|
@@ -19,6 +22,10 @@ are compact HMAC-SHA256-signed (`base64url(payload).base64url(sig)`,
 Terminal 1:  npm run sync-server     # http://localhost:4000
 Terminal 2:  npm start               # CRA dev server, http://localhost:3000
 ```
+
+`npm run sync-server` compiles first, then runs the output. To build
+without running, use `npm run build:server` (`tsc -p server/tsconfig.json`,
+output in `server/dist/`, gitignored).
 
 - Data is stored as JSON files under `server/.data/` (gitignored).
   **Reset the world:** delete `server/.data/`.
@@ -39,8 +46,9 @@ Terminal 2:  npm start               # CRA dev server, http://localhost:3000
 npm run test:server
 ```
 
-Runs the contract tests in `server/test/` with the Node built-in test
-runner (`node --test`). **Requires Node >= 18** — the React app itself is
+Compiles, then runs the contract tests in `server/test/` with the Node
+built-in test runner (`node --test`, against `server/dist/test/`).
+**Requires Node >= 18** — the React app itself is
 pinned to Node 16 (`.nvmrc`), so run this script with a newer system Node
 (any Node >= 18 works; CI/dev machines here use the system Node 22). The
 server runtime code only uses APIs available in Node >= 16.
@@ -51,9 +59,12 @@ CRA's jest deliberately does not scan `server/` (it only looks under
 ## Layout
 
 - `core/` — framework-free handlers, router, crypto (scrypt + HMAC
-  tokens), and the storage interface (`storage.js`, with the in-memory
+  tokens), and the storage interface (`storage.ts`, with the in-memory
   reference implementation used by tests)
-- `storage-fs.js` — on-disk JSON adapter (local dev)
-- `index.js` — `node:http` adapter with CORS (local dev entry point)
+- `storage-fs.ts` — on-disk JSON adapter (local dev)
+- `index.ts` — `node:http` adapter with CORS (local dev entry point)
+- `tsconfig.json` — server-only build (CommonJS → `server/dist/`); the
+  root `npm run typecheck` covers `src/` and does not read this file
+- `dist/` — compiled output (gitignored, rebuilt by the scripts above)
 - Cloud deployment (Lambda Function URL + S3 adapter) lands in a later PR
   (RFC §7).

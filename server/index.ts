@@ -3,10 +3,10 @@
 // storage under server/.data/ (gitignored).
 //
 // Run with: npm run sync-server   (defaults to port 4000)
-const http = require("node:http");
-const path = require("node:path");
-const { createApp } = require("./core/router");
-const { createFsStorage } = require("./storage-fs");
+import http from "node:http";
+import path from "node:path";
+import { createApp } from "./core/router";
+import { createFsStorage } from "./storage-fs";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
@@ -14,16 +14,20 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-token-secret";
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
+// This file runs compiled, from server/dist/, so the data directory is one
+// level up — it stays at server/.data/ (gitignored), as documented.
+const DATA_DIR = path.join(__dirname, "..", ".data");
+
 const app = createApp({
-  storage: createFsStorage({ dir: path.join(__dirname, ".data") }),
+  storage: createFsStorage({ dir: DATA_DIR }),
   tokenSecret: TOKEN_SECRET,
 });
 
-const readBody = (request) =>
+const readBody = (request: http.IncomingMessage): Promise<string> =>
   new Promise((resolve, reject) => {
-    const chunks = [];
+    const chunks: Buffer[] = [];
     let size = 0;
-    request.on("data", (chunk) => {
+    request.on("data", (chunk: Buffer) => {
       size += chunk.length;
       if (size > MAX_BODY_BYTES) {
         reject(new Error("Payload too large"));
@@ -37,7 +41,7 @@ const readBody = (request) =>
   });
 
 const server = http.createServer(async (request, response) => {
-  const sendJson = (status, body) => {
+  const sendJson = (status: number, body: unknown): void => {
     response.writeHead(status, {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": CORS_ORIGIN,
@@ -58,7 +62,7 @@ const server = http.createServer(async (request, response) => {
     }
 
     const rawBody = await readBody(request);
-    let body = null;
+    let body: unknown = null;
     if (rawBody) {
       try {
         body = JSON.parse(rawBody);
@@ -70,9 +74,15 @@ const server = http.createServer(async (request, response) => {
       }
     }
 
-    const { pathname } = new URL(request.url, `http://localhost:${PORT}`);
+    // `url`/`method` are always set for server-side requests; the fallbacks
+    // exist only to satisfy the types and route to the same 404 the core
+    // would return anyway.
+    const { pathname } = new URL(
+      request.url ?? "/",
+      `http://localhost:${PORT}`
+    );
     const result = await app.handle({
-      method: request.method,
+      method: request.method ?? "",
       path: pathname,
       headers: request.headers,
       body,
@@ -80,7 +90,10 @@ const server = http.createServer(async (request, response) => {
     sendJson(result.status, result.body);
   } catch (error) {
     // Never log request bodies here — they can contain credentials (AC-1.2).
-    console.error("sync-server error:", error.message);
+    console.error(
+      "sync-server error:",
+      error instanceof Error ? error.message : error
+    );
     sendJson(500, {
       error: { code: "INTERNAL_ERROR", message: "Something went wrong." },
     });
