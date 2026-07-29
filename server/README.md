@@ -46,8 +46,17 @@ output in `server/dist/`, gitignored).
 npm run test:server
 ```
 
-Compiles, then runs the contract tests in `server/test/` with the Node
-built-in test runner (`node --test`, against `server/dist/test/`).
+Compiles, then runs the tests with the Node built-in test runner
+(`node --test`, against the compiled output in `server/dist/`).
+
+Tests are colocated with the code they cover — `core/crypto.ts` is tested
+by `core/crypto.test.ts`, and so on — so every `.ts` source file here has a
+matching `.test.ts` beside it. The script lists one glob per source
+directory (`server/dist/*.test.js server/dist/core/*.test.js`) rather than
+passing a directory: Node 18 expands a directory argument recursively but
+does not accept globs, Node 20+ does the reverse, and only explicit
+per-directory globs work on both. **Add a glob when you add a directory.**
+
 **Requires Node >= 18** — the React app itself is
 pinned to Node 16 (`.nvmrc`), so run this script with a newer system Node
 (any Node >= 18 works; CI/dev machines here use the system Node 22). The
@@ -62,7 +71,10 @@ CRA's jest deliberately does not scan `server/` (it only looks under
   tokens), and the storage interface (`storage.ts`, with the in-memory
   reference implementation used by tests)
 - `storage-fs.ts` — on-disk JSON adapter (local dev)
-- `index.ts` — `node:http` adapter with CORS (local dev entry point)
+- `index.ts` — `node:http` adapter with CORS (local dev entry point).
+  Exports `createRequestListener` so the transport can be tested without
+  binding a port; it only calls `listen` when run as the entry point.
+- `*.test.ts` — colocated beside the file each one covers
 - `tsconfig.json` — server-only build (CommonJS → `server/dist/`); the
   root `npm run typecheck` covers `src/` and does not read this file
 - `dist/` — compiled output (gitignored, rebuilt by the scripts above)

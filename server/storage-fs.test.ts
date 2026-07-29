@@ -5,8 +5,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { createFsStorage } from "../storage-fs";
-import { StorageAdapter } from "../core/storage";
+import { createFsStorage } from "./storage-fs";
+import { StorageAdapter } from "./core/storage";
 
 // Each test gets its own temp directory, removed afterwards even on failure.
 const withTempDir = async (

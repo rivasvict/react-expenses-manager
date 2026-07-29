@@ -11,7 +11,7 @@ import {
   signToken,
   verifyPassword,
   verifyToken,
-} from "../core/crypto";
+} from "./crypto";
 
 const SECRET = "unit-test-secret";
 // A round number of milliseconds so `exp * 1000` lands exactly on `now` in the

@@ -42,7 +42,7 @@
     "lint:fix": "eslint . --fix",
     "build:server": "tsc -p server/tsconfig.json",
     "sync-server": "npm run build:server && node server/dist/index.js",
-    "test:server": "npm run build:server && node --test server/dist/test/*.test.js"
+    "test:server": "npm run build:server && node --test server/dist/*.test.js server/dist/core/*.test.js"
   },
   "eslintConfig": {
     "extends": "react-app"

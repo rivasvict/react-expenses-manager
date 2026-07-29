@@ -2,9 +2,9 @@
 // runner (node >= 18): npm run test:server
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createApp, App, CreateAppOptions } from "../core/router";
-import { createMemoryStorage } from "../core/storage";
-import { signToken, sha256Hex } from "../core/crypto";
+import { createApp, App, CreateAppOptions } from "./router";
+import { createMemoryStorage } from "./storage";
+import { signToken, sha256Hex } from "./crypto";
 import {
   AppRequest,
   AppResponse,
@@ -12,7 +12,7 @@ import {
   MeBody,
   SessionBody,
   UserRecord,
-} from "../core/handlers";
+} from "./handlers";
 
 // Handlers return a union of body shapes. These tests assert against
 // whichever shape the endpoint under test produces, so widen once here
