@@ -54,6 +54,8 @@ Node version is pinned in `.nvmrc`.
 
 **Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed.
 
+**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`.
+
 ## Key patterns
 
 - Components connect to Redux via `connect()` (class-style HOC pattern, not hooks)
@@ -75,6 +77,8 @@ Node version is pinned in `.nvmrc`.
 * Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
 * Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).
 * In integration tests, verify behaviour through what the user sees on screen (`screen.findByText`, `screen.getByRole`, etc.) rather than inspecting Redux store state or `localStorage` directly. Raw data-structure checks are an implementation detail; UI assertions test what actually matters.
+* Colocate unit test files with the file they test (e.g. `Foo.ts` → `Foo.test.ts` in the same directory), matching the existing convention under `src/`. This is distinct from `src/integrationTests/`, which stays a separate suite by design — see the helpers above.
+* Code under `server/` is TypeScript, compiled ahead of run (see the Server note under Architecture) — write new server code as `.ts`, not `.js`, and add its test file beside it.
 * Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there.
 
 ## GitHub issue creation
