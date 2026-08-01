@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.1] - 2026-08-01
+
+### Fixed
+- Buckets: a bucket whose carried-over debt already exceeds its allowance
+  (zero or negative availability) now shows 100% usage with the red/danger
+  indicator, even if nothing has been spent yet this month. Previously it
+  fell back to 0% whenever this month's spending was $0, hiding the overspend
+  carried in from prior months
+
 ## [1.6.0] - 2026-07-21
 
 ### Added
