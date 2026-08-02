@@ -117,7 +117,27 @@ describe("category + bucket creation (issue #100)", () => {
     );
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be negative/i);
+    expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
+
+    // We must still be on the add-bucket form, and storage must be untouched.
+    expect(screen.getByPlaceholderText(/insert bucket allowance/i)).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({
+      Food: 200,
+    });
+  });
+
+  it("rejects a zero allowance and creates nothing", async () => {
+    localStorage.setItem("categories", JSON.stringify(["Gym"]));
+    const { user } = await renderApp("/add-bucket");
+
+    await selectCategory(user, "Gym");
+    await user.type(
+      screen.getByPlaceholderText(/insert bucket allowance/i),
+      "0"
+    );
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
 
     // We must still be on the add-bucket form, and storage must be untouched.
     expect(screen.getByPlaceholderText(/insert bucket allowance/i)).toBeInTheDocument();

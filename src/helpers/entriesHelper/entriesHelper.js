@@ -283,8 +283,9 @@ const BUCKET_ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
 
 /**
  * Validates a bucket's monthly allowance (used by both AddBucket and
- * EditBucket): it must be a well-formed number and cannot be negative, since
- * a negative spending limit has no meaning.
+ * EditBucket): it must be a well-formed number greater than zero, since a
+ * zero or negative spending limit has no meaning (a zero allowance also
+ * breaks the carry-on percentage calculation, which divides by it).
  *
  * @param {string|number} allowance - The raw allowance value from the form.
  * @returns {string|null} An error message, or null when the allowance is valid.
@@ -296,8 +297,8 @@ function getBucketAllowanceValidationError(allowance) {
     return "Allowance must be a valid number";
   }
 
-  if (parseFloat(trimmedAllowance) < 0) {
-    return "Allowance cannot be negative";
+  if (parseFloat(trimmedAllowance) <= 0) {
+    return "Allowance must be greater than zero";
   }
 
   return null;

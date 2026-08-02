@@ -233,7 +233,36 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await user.type(input, "-50");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be negative/i);
+    expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
+
+    // Still on the edit form, and the stored limit is untouched.
+    expect(screen.getByPlaceholderText(/insert bucket amount/i)).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({
+      Food: [{ from: "0000-00", limit: 200 }],
+    });
+  });
+
+  it("rejects a zero allowance and leaves the existing limit untouched", async () => {
+    localStorage.setItem(
+      "buckets",
+      JSON.stringify({ Food: [{ from: "0000-00", limit: 200 }] })
+    );
+    seedEntries([
+      { date: ts(2026, JANUARY), amount: "100", type: "income", categories_path: ",salary," },
+    ]);
+
+    const { user } = await renderApp("/buckets");
+    await screen.findByText("May 2026");
+
+    await user.click(await screen.findByRole("link", { name: /edit food/i }));
+    await screen.findByText(/edit bucket: food/i);
+
+    const input = screen.getByPlaceholderText(/insert bucket amount/i);
+    await user.clear(input);
+    await user.type(input, "0");
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
 
     // Still on the edit form, and the stored limit is untouched.
     expect(screen.getByPlaceholderText(/insert bucket amount/i)).toBeInTheDocument();

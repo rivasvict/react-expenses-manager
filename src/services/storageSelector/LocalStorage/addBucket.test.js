@@ -47,7 +47,14 @@ describe("LocalStorage.addBucket (issue #100)", () => {
   it("rejects a negative allowance without persisting", async () => {
     await expect(
       storage.addBucket({ bucket: { Gym: -50 } })
-    ).rejects.toThrow(/cannot be negative/i);
+    ).rejects.toThrow(/greater than zero/i);
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({});
+  });
+
+  it("rejects a zero allowance without persisting", async () => {
+    await expect(
+      storage.addBucket({ bucket: { Gym: 0 } })
+    ).rejects.toThrow(/greater than zero/i);
     expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({});
   });
 
