@@ -186,6 +186,16 @@ describe("buckets carry-on (issue #97)", () => {
     // negative amount.
     expect(bucketSpending("bucket-food")).toBe("Spent: $0.00");
     expect(bucketRemaining("bucket-food")).toBe("Remaining: -$100.00");
+  });
+
+  it("shows a magnitude-aware percentage with the danger indicator when carried debt exceeds the allowance", async () => {
+    // Same setup as above: allowance 200, carried debt -300 -> availability -100.
+    seedEntries([
+      { date: ts(2026, APRIL), amount: "500", type: "expense", categories_path: ",food," },
+    ]);
+
+    await renderApp("/buckets");
+    await screen.findByText("May 2026");
 
     // Even with no spending this month, the $300 carried debt against a $200
     // allowance already amounts to 150% consumption (100% + 50% of the
