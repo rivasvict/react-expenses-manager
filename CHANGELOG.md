@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.1] - 2026-08-02
+
+### Fixed
+- Buckets: adding or editing a bucket now rejects a negative monthly
+  allowance, both in the form (clear inline error, "Allowance cannot be
+  negative") and at the storage layer as a safety net. Previously a negative
+  value could only be blocked by the input's regex silently swallowing the
+  keystroke, with no explicit validation or error message
+
 ## [1.6.0] - 2026-07-21
 
 ### Added

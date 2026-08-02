@@ -44,6 +44,13 @@ describe("LocalStorage.addBucket (issue #100)", () => {
     ).rejects.toThrow(/cannot be empty/i);
   });
 
+  it("rejects a negative allowance without persisting", async () => {
+    await expect(
+      storage.addBucket({ bucket: { Gym: -50 } })
+    ).rejects.toThrow(/cannot be negative/i);
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({});
+  });
+
   it("removes the category from the standalone categories list once it gets a bucket", async () => {
     localStorage.setItem("categories", JSON.stringify(["Gym", "Yoga"]));
 

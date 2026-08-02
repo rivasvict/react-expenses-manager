@@ -105,4 +105,24 @@ describe("category + bucket creation (issue #100)", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be empty/i);
   });
+
+  it("rejects a negative allowance and creates nothing", async () => {
+    localStorage.setItem("categories", JSON.stringify(["Gym"]));
+    const { user } = await renderApp("/add-bucket");
+
+    await selectCategory(user, "Gym");
+    await user.type(
+      screen.getByPlaceholderText(/insert bucket allowance/i),
+      "-50"
+    );
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be negative/i);
+
+    // We must still be on the add-bucket form, and storage must be untouched.
+    expect(screen.getByPlaceholderText(/insert bucket allowance/i)).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({
+      Food: 200,
+    });
+  });
 });

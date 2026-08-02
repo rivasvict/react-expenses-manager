@@ -9,10 +9,10 @@ import ContentTileSection from "../../ContentTitleSection";
 import { addBucket } from "../../../../redux/expensesManager/actionCreators";
 import {
   getBucketValidationError,
+  getBucketAllowanceValidationError,
   getUnbudgetedCategories,
 } from "../../../../helpers/entriesHelper/entriesHelper";
 
-const DIGIT_MATCHER = /^\d*(\.)*\d+$/;
 const BUCKETS_ROUTE = "/buckets";
 
 /**
@@ -41,8 +41,9 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
       return;
     }
 
-    if (!DIGIT_MATCHER.test(allowance)) {
-      setError("Allowance must be a valid number");
+    const allowanceError = getBucketAllowanceValidationError(allowance);
+    if (allowanceError) {
+      setError(allowanceError);
       return;
     }
 
