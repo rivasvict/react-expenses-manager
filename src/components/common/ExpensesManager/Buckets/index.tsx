@@ -36,11 +36,12 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
         carriedBuckets[bucketName];
       // Availability can be zero or negative once debt is carried over, so we
       // guard the percentage calculation (it rejects a zero/undefined whole).
-      // A zero/negative availability means the bucket is already fully
-      // consumed (or over) regardless of this month's spending, so it must
-      // read as 100% rather than falling back to 0%.
       const consuptionPercentage =
-        availability > 0 ? calculatePercentage(spending, availability) : 100;
+        availability > 0
+          ? calculatePercentage(spending, availability)
+          : spending > 0
+            ? 100
+            : 0;
       return {
         name: bucketName.toLowerCase(),
         label: bucketName,
