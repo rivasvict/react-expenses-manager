@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.2] - 2026-08-02
+
+### Fixed
+- Buckets: a bucket whose carried-over debt already exceeds its allowance
+  (zero or negative availability) now shows a magnitude-aware usage
+  percentage with the danger/red indicator, instead of falling back to 0%
+  whenever nothing had been spent yet this month. The percentage now reads
+  as "100% + how far past the allowance the carried debt goes" (e.g. a $300
+  debt against a $200 allowance reads 150%, not a flat, uninformative 100%)
+  (issue #155)
+
 ## [1.6.1] - 2026-08-02
 
 ### Fixed

@@ -186,5 +186,15 @@ describe("buckets carry-on (issue #97)", () => {
     // negative amount.
     expect(bucketSpending("bucket-food")).toBe("Spent: $0.00");
     expect(bucketRemaining("bucket-food")).toBe("Remaining: -$100.00");
+
+    // Even with no spending this month, the $300 carried debt against a $200
+    // allowance already amounts to 150% consumption (100% + 50% of the
+    // allowance over the line), shown with the danger/red indicator (issue #155).
+    expect(screen.getByTestId("bucket-food-percentage").textContent).toBe(
+      "150%"
+    );
+    expect(screen.getByTestId("bucket-food-percentage").className).toContain(
+      "danger"
+    );
   });
 });
