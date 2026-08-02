@@ -5,6 +5,35 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.3] - 2026-08-02
+
+### Changed
+- Buckets: a monthly allowance of exactly 0 is now rejected, not just
+  negative values — the allowance validation (form + storage layer) now
+  requires a value strictly greater than zero. This also closes the open
+  "what if allowance is 0" gap flagged in issue #155, since a zero allowance
+  would have made the carry-on percentage calculation divide by zero
+
+## [1.6.2] - 2026-08-02
+
+### Fixed
+- Buckets: a bucket whose carried-over debt already exceeds its allowance
+  (zero or negative availability) now shows a magnitude-aware usage
+  percentage with the danger/red indicator, instead of falling back to 0%
+  whenever nothing had been spent yet this month. The percentage now reads
+  as "100% + how far past the allowance the carried debt goes" (e.g. a $300
+  debt against a $200 allowance reads 150%, not a flat, uninformative 100%)
+  (issue #155)
+
+## [1.6.1] - 2026-08-02
+
+### Fixed
+- Buckets: adding or editing a bucket now rejects a negative monthly
+  allowance, both in the form (clear inline error, "Allowance cannot be
+  negative") and at the storage layer as a safety net. Previously a negative
+  value could only be blocked by the input's regex silently swallowing the
+  keystroke, with no explicit validation or error message
+
 ## [1.6.0] - 2026-07-21
 
 ### Added

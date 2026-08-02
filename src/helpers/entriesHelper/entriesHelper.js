@@ -279,6 +279,31 @@ function getBucketValidationError({ categoryName, buckets = {} }) {
   return null;
 }
 
+const BUCKET_ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
+
+/**
+ * Validates a bucket's monthly allowance (used by both AddBucket and
+ * EditBucket): it must be a well-formed number greater than zero, since a
+ * zero or negative spending limit has no meaning (a zero allowance also
+ * breaks the carry-on percentage calculation, which divides by it).
+ *
+ * @param {string|number} allowance - The raw allowance value from the form.
+ * @returns {string|null} An error message, or null when the allowance is valid.
+ */
+function getBucketAllowanceValidationError(allowance) {
+  const trimmedAllowance = String(allowance ?? "").trim();
+
+  if (!BUCKET_ALLOWANCE_MATCHER.test(trimmedAllowance)) {
+    return "Allowance must be a valid number";
+  }
+
+  if (parseFloat(trimmedAllowance) <= 0) {
+    return "Allowance must be greater than zero";
+  }
+
+  return null;
+}
+
 const getEmtpyMonthModel = () => ({
   incomes: [],
   expenses: [],
@@ -642,6 +667,7 @@ export {
   getCategoryValidationError,
   getUnbudgetedCategories,
   getBucketValidationError,
+  getBucketAllowanceValidationError,
   getGroupedFilledEntriesByDate,
   quantitiesToPercentages,
   getFilteredEntriesByCategory,

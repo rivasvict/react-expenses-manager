@@ -132,6 +132,7 @@ const normalizeBucketValue = (value) => {
 // to the array form on the first edit.
 const editBucketForMonth = async ({ bucketName, limit, fromYearMonth }) => {
   if (!bucketName) throw new Error("No bucket name was set");
+  if (Number(limit) <= 0) throw new Error("Allowance must be greater than zero");
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
 
@@ -183,6 +184,7 @@ const addBucketData = async ({ bucket }) => {
   const [name, value] = Object.entries(bucket)[0] || [];
   const trimmedName = (name || "").trim();
   if (!trimmedName) throw new Error("Category name cannot be empty");
+  if (Number(value) <= 0) throw new Error("Allowance must be greater than zero");
 
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const alreadyExists = Object.keys(storedBuckets).some(
