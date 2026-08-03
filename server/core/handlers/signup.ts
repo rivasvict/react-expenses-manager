@@ -34,6 +34,14 @@ export const createSignupHandler = ({
         ERROR_CODES.VALIDATION_ERROR,
         "A valid email is required."
       );
+    // TODO: enforce stricter password requirements here — today any
+    // non-empty string is accepted, so "a" is a valid account password.
+    // scrypt storage does not compensate for a weak secret. Policy is being
+    // decided in:
+    // https://github.com/rivasvict/react-expenses-manager/issues/159
+    // Note this must stay signup-only: login deliberately validates nothing
+    // beyond non-emptiness so pre-policy accounts keep working and its
+    // failure response stays the single generic 401 (AC-1.5).
     if (!isNonEmptyString(password))
       return error(
         HTTP_STATUS.BAD_REQUEST,

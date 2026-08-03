@@ -32,6 +32,16 @@ export const unauthorized = (): AppResponse<ErrorBody> =>
     "You need to sign in again."
   );
 
+// Projects a stored user record down to the four fields that may cross the
+// wire. This is a whitelist, not a pass-through: UserRecord also carries the
+// scrypt `password` record, `partyId` and `createdAt`, and destructuring
+// here is what keeps all three out of every signup, login and /api/me
+// response (AC-1.2).
+//
+// Deliberately a whitelist rather than a `delete`/omit of known-secret
+// fields: a field added to UserRecord later is excluded by default, so
+// leaking it takes a positive edit here instead of a forgotten one.
+// responses.test.ts asserts the exact key set, so widening it fails.
 export const publicUser = ({
   id,
   email,

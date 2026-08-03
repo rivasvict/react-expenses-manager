@@ -87,16 +87,28 @@ test("signup stores no plaintext password (scrypt record only)", async () => {
   const app = makeApp({ storage });
   await signup(app);
 
-  // Read the stored user record back through the storage interface and
-  // assert it holds only an scrypt record (algo/salt/hash) — never the
-  // plaintext password, anywhere in the serialized document (AC-1.2).
+  // Read the stored user record back through the storage interface: what
+  // signup persisted must be an scrypt record (algo/salt/hash) and nothing
+  // else derived from the password (AC-1.2).
   const stored = (await storage.readJson<UserRecord>(
     `users/${sha256Hex("jane@example.com")}`
   )) as UserRecord;
   assert.equal(stored.password.algo, "scrypt");
   assert.ok(stored.password.saltB64);
   assert.ok(stored.password.hashB64);
-  assert.ok(!JSON.stringify(stored).includes(jane.password));
+
+  // Then: the plaintext password appears *nowhere* in the stored document.
+  //
+  // Checking `stored.password` alone would only prove the field we expect
+  // to be hashed is hashed. Serializing the whole record and searching it
+  // also catches the plaintext being copied somewhere unexpected — a stray
+  // field, a debug echo, a future addition to UserRecord.
+  const serialized = JSON.stringify(stored);
+  assert.equal(
+    serialized.includes(jane.password),
+    false,
+    "the plaintext password must not appear anywhere in the stored user record"
+  );
 });
 
 test("duplicate email (case-insensitive) is rejected with EMAIL_TAKEN", async () => {
@@ -160,9 +172,27 @@ test("tampered or malformed tokens are rejected", async () => {
   const app = makeApp();
   const { body } = await signup(app);
 
+  // Three different ways of not presenting a valid token. All three must
+  // reach the same 401, because /api/me may only ever answer to a token this
+  // server signed and has not expired.
+
+  // 1. Correctly formed and structurally valid — right user id, right
+  //    payload shape, unexpired — but signed with a different secret. This
+  //    is the one that matters: it fails only because the HMAC does not
+  //    verify, which is what proves the signature is actually being checked
+  //    rather than the payload merely being decoded and trusted.
   const forged = signToken({ sub: body.user.id, secret: "other-secret" });
   assert.equal((await me(app, forged)).status, HTTP_STATUS.UNAUTHORIZED);
+
+  // 2. Not a token at all. verifyToken must reject junk by returning null
+  //    rather than throwing on the split/base64/JSON.parse it performs — an
+  //    exception here would surface as a 500 and hand an unauthenticated
+  //    caller a way to trip the error path.
   assert.equal((await me(app, "garbage")).status, HTTP_STATUS.UNAUTHORIZED);
+
+  // 3. No Authorization header at all — the unauthenticated default. Pinned
+  //    alongside the others so "missing" can never be treated more leniently
+  //    than "invalid".
   assert.equal(
     (await call(app, { method: "GET", path: "/api/me", headers: {} })).status,
     HTTP_STATUS.UNAUTHORIZED

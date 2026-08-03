@@ -48,7 +48,7 @@ test("routes are matched on method and path together", async () => {
   assert.equal(signup.status, HTTP_STATUS.CREATED);
 });
 
-test("all three RFC §3 routes are wired", async () => {
+test("POST /api/auth/signup, POST /api/auth/login and GET /api/me are all wired", async () => {
   const app = makeApp();
   const signup = (await app.handle({
     method: "POST",
