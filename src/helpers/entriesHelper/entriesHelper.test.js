@@ -21,6 +21,14 @@ describe("Entries helper", () => {
       expect(getExpenseSavingsPercentages(1000, 250)).toStrictEqual([25, 75]);
     });
 
+    it("should split evenly when expenses are half of incomes", () => {
+      expect(getExpenseSavingsPercentages(1000, 500)).toStrictEqual([50, 50]);
+    });
+
+    it("should compute the correct split for a non-round percentage", () => {
+      expect(getExpenseSavingsPercentages(1000, 300)).toStrictEqual([30, 70]);
+    });
+
     it("should return 100% savings when there are no expenses", () => {
       expect(getExpenseSavingsPercentages(1000, 0)).toStrictEqual([0, 100]);
     });
