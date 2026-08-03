@@ -8,7 +8,7 @@ import path from "node:path";
 import { createApp, App } from "./core/router";
 import { createFsStorage } from "./storage-fs";
 import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
-import { readBody } from "./utils";
+import { PayloadTooLargeError, readBody } from "./utils";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
@@ -88,6 +88,17 @@ export const createRequestListener = ({
       });
       sendJson(result.status, result.body);
     } catch (error) {
+      // An oversized body is a client mistake with a specific status, not an
+      // unexpected failure — answer 413 rather than the generic 500 below.
+      if (error instanceof PayloadTooLargeError) {
+        sendJson(HTTP_STATUS.PAYLOAD_TOO_LARGE, {
+          error: {
+            code: ERROR_CODES.PAYLOAD_TOO_LARGE,
+            message: "Request body is too large.",
+          },
+        });
+        return;
+      }
       // Never log request bodies here — they can contain credentials (AC-1.2).
       console.error(
         "sync-server error:",

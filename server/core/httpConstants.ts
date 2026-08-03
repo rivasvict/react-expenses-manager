@@ -13,6 +13,7 @@ export const HTTP_STATUS = {
   UNAUTHORIZED: 401,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  PAYLOAD_TOO_LARGE: 413,
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
@@ -22,15 +23,17 @@ export type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
 // are restated here rather than imported because the server stays
 // dependency-free and must not reach into src/.
 //
-// INTERNAL_ERROR has no RFC entry: it is the transport's catch-all for an
-// unexpected throw, and is listed here so the adapter does not hand-roll the
-// string either.
+// INTERNAL_ERROR and PAYLOAD_TOO_LARGE have no RFC entry: both are raised by
+// the transport rather than a handler (an unexpected throw, and a body over
+// the size cap). They are listed here so the adapter does not hand-roll the
+// strings either.
 export const ERROR_CODES = {
   VALIDATION_ERROR: "VALIDATION_ERROR",
   EMAIL_TAKEN: "EMAIL_TAKEN",
   INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
   UNAUTHORIZED: "UNAUTHORIZED",
   NOT_FOUND: "NOT_FOUND",
+  PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   INTERNAL_ERROR: "INTERNAL_ERROR",
 } as const;
 

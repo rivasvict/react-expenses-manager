@@ -194,24 +194,47 @@ test("the CORS origin is configurable and set on normal replies too", () =>
     { corsOrigin: "https://app.example.com" }
   ));
 
-test("a body over the size cap is rejected rather than buffered", () =>
+test("a body over the size cap is rejected with 413 PAYLOAD_TOO_LARGE", () =>
   withServer(
     async (request) => {
-      const response = await request({
-        method: "POST",
-        path: "/api/auth/signup",
-        body: JSON.stringify({ ...jane, padding: "x".repeat(4096) }),
-        headers: { "Content-Type": "application/json" },
-      }).catch((error: Error) => error);
+      const response = await postJson(request, "/api/auth/signup", {
+        ...jane,
+        padding: "x".repeat(4096),
+      });
 
-      // The listener destroys the socket once the cap is passed, so the
-      // client sees either a 500 from the error path or a transport-level
-      // reset — never a successful signup.
-      if (response instanceof Error) {
-        assert.match(response.message, /socket hang up|ECONNRESET|aborted/);
-        return;
-      }
-      assert.notEqual(response.status, HTTP_STATUS.CREATED);
+      assert.equal(response.status, HTTP_STATUS.PAYLOAD_TOO_LARGE);
+      const body = response.json() as { error: { code: string } };
+      assert.equal(body.error.code, ERROR_CODES.PAYLOAD_TOO_LARGE);
     },
     { maxBodyBytes: 1024 }
+  ));
+
+test("an oversized signup body creates no account", () =>
+  withServer(
+    async (request) => {
+      await postJson(request, "/api/auth/signup", {
+        ...jane,
+        padding: "x".repeat(4096),
+      });
+
+      // The cap must reject before the handler runs, not merely change the
+      // status the client sees: signing up again must not hit EMAIL_TAKEN.
+      const retry = await postJson(request, "/api/auth/signup", jane);
+      assert.equal(retry.status, HTTP_STATUS.CREATED);
+    },
+    { maxBodyBytes: 1024 }
+  ));
+
+test("a body at exactly the cap is still accepted", () =>
+  withServer(
+    async (request) => {
+      const payload = JSON.stringify(jane);
+      const response = await postJson(request, "/api/auth/signup", jane);
+
+      // Pins the boundary as inclusive, so the 413 path cannot creep into
+      // rejecting legitimate requests.
+      assert.equal(response.status, HTTP_STATUS.CREATED);
+      assert.ok(Buffer.byteLength(payload) > 0);
+    },
+    { maxBodyBytes: Buffer.byteLength(JSON.stringify(jane)) }
   ));

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - GitHub Actions workflow for server tests using Node 18+, enabling CI validation
   of the sync server independent of the React app's Node version pin
+- Sync server: a request body over the size cap is now answered with
+  `413 PAYLOAD_TOO_LARGE` instead of a generic 500 or a dropped connection, so
+  clients can tell an oversized upload apart from a server fault
 
 ## [1.6.0] - 2026-07-21
 
