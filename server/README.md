@@ -64,10 +64,27 @@ portably: Node 18 expands a directory argument recursively but rejects
 globs, while Node 20+ treats positionals as globs and fails on a bare
 directory. Explicit file paths work on every supported version.
 
-**Requires Node >= 18** — the React app itself is
-pinned to Node 16 (`.nvmrc`), so run this script with a newer system Node
-(any Node >= 18 works; CI/dev machines here use the system Node 22). The
-server runtime code only uses APIs available in Node >= 16.
+### Node version
+
+**Requires Node >= 18** (for the built-in test runner). There are two
+`.nvmrc` files in this repo, deliberately:
+
+| File | Pins | Applies to |
+|---|---|---|
+| `.nvmrc` (repo root) | `16.13.1` | the React app — `npm start`, `npm test`, `npm run build` |
+| `server/.nvmrc` | `18` | this server — `npm run sync-server`, `npm run test:server` |
+
+The React app's toolchain is pinned to Node 16 and the server's test runner
+needs 18+, so a single version cannot serve both. Run `nvm use` from
+`server/` before working here, and from the repo root when working on the
+app.
+
+`18` is the supported floor, not a ceiling — anything newer works (local dev
+here runs Node 22). CI pins `18.x` explicitly in
+`.github/workflows/server-tests.yml` rather than reading this file, so the
+floor is what actually gets exercised on every push; keep the two in step.
+The server runtime code itself only uses APIs available in Node >= 16 — it
+is the test runner that sets the floor.
 
 CRA's jest deliberately does not scan `server/` (it only looks under
 `src/`), so these tests only run via `npm run test:server`.
