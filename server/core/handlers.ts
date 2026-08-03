@@ -1,5 +1,6 @@
 // Auth endpoint handlers (RFC §3, endpoints 1–3). Framework-free: each
 // handler takes a plain request description and returns { status, body }.
+// The shapes these handlers speak live in ./handlers.types.
 import {
   sha256Hex,
   hashPassword,
@@ -7,108 +8,43 @@ import {
   signToken,
   verifyToken,
   randomId,
-  ScryptPasswordRecord,
 } from "./crypto";
-import { StorageAdapter } from "./storage";
 import { ERROR_CODES, ErrorCode, HTTP_STATUS } from "./httpConstants";
+import {
+  AppRequest,
+  AppResponse,
+  CreateHandlersOptions,
+  ErrorBody,
+  Handler,
+  Handlers,
+  LoginRequestBody,
+  PublicUser,
+  SessionBody,
+  SignupRequestBody,
+  UserIdPointer,
+  UserRecord,
+} from "./handlers.types";
 
-// Re-exported so existing importers of `./handlers` keep working; the
-// definitions live in ./httpConstants.
+// Re-exported so importers of `./handlers` need not know which sibling
+// module a name is declared in: constants live in ./httpConstants, types in
+// ./handlers.types.
 export { ERROR_CODES };
 export type { ErrorCode };
-
-// --- Stored records -------------------------------------------------------
-
-// The persisted user document, keyed by sha256 of the normalized email.
-export interface UserRecord {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: ScryptPasswordRecord;
-  partyId: string | null;
-  createdAt: number;
-}
-
-// Secondary pointer record: user id → the email-keyed user record's key.
-export interface UserIdPointer {
-  userKey: string;
-}
-
-// --- Wire shapes ----------------------------------------------------------
-
-// The subset of the user record that is safe to return over the wire.
-export interface PublicUser {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface ErrorBody {
-  error: { code: ErrorCode; message: string };
-}
-
-export interface SessionBody {
-  token: string;
-  user: PublicUser;
-}
-
-// Parties land in PR 2; until then the contract returns party: null.
-export interface MeBody {
-  user: PublicUser;
-  party: null;
-}
-
-export type ResponseBody = SessionBody | MeBody | ErrorBody;
-
-// Mirrors node:http's IncomingHttpHeaders so the http adapter can pass its
-// headers straight through, while keeping `authorization` a plain string.
-export interface RequestHeaders {
-  authorization?: string;
-  [name: string]: string | string[] | undefined;
-}
-
-export interface AppRequest {
-  method: string;
-  path: string;
-  headers?: RequestHeaders;
-  // Parsed JSON from the transport: untrusted and unvalidated until a
-  // handler narrows it.
-  body?: unknown;
-}
-
-export interface AppResponse<TBody = ResponseBody> {
-  status: number;
-  body: TBody;
-}
-
-export type Handler = (request: AppRequest) => Promise<AppResponse>;
-
-export interface Handlers {
-  signup: Handler;
-  login: Handler;
-  me: Handler;
-}
-
-export interface CreateHandlersOptions {
-  storage: StorageAdapter;
-  tokenSecret: string;
-  now?: () => number;
-}
-
-// Request bodies arrive as untyped JSON; every field is checked before use.
-interface SignupRequestBody {
-  email?: unknown;
-  password?: unknown;
-  firstName?: unknown;
-  lastName?: unknown;
-}
-
-interface LoginRequestBody {
-  email?: unknown;
-  password?: unknown;
-}
+export type {
+  AppRequest,
+  AppResponse,
+  CreateHandlersOptions,
+  ErrorBody,
+  Handler,
+  Handlers,
+  MeBody,
+  PublicUser,
+  RequestHeaders,
+  ResponseBody,
+  SessionBody,
+  UserIdPointer,
+  UserRecord,
+} from "./handlers.types";
 
 // --- Helpers --------------------------------------------------------------
 

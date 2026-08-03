@@ -79,6 +79,7 @@ Node version is pinned in `.nvmrc`.
 * In integration tests, verify behaviour through what the user sees on screen (`screen.findByText`, `screen.getByRole`, etc.) rather than inspecting Redux store state or `localStorage` directly. Raw data-structure checks are an implementation detail; UI assertions test what actually matters.
 * Colocate unit test files with the file they test (e.g. `Foo.ts` → `Foo.test.ts` in the same directory), matching the existing convention under `src/`. This is distinct from `src/integrationTests/`, which stays a separate suite by design — see the helpers above.
 * Code under `server/` is TypeScript, compiled ahead of run (see the Server note under Architecture) — write new server code as `.ts`, not `.js`, and add its test file beside it.
+* In `server/`, when a file declares **more than two** types (`interface`/`type`), move them into a sibling `*.types.ts` file — `handlers.ts` → `handlers.types.ts`, `crypto.ts` → `crypto.types.ts`. The implementation file imports what it needs and re-exports the public ones, so existing importers keep working and the implementation file stays about behaviour. Files with two or fewer types keep them inline; splitting those is noise.
 * Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there.
 
 ## GitHub issue creation

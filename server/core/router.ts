@@ -2,26 +2,12 @@
 // handlers to the RFC §3 routes and exposes a single transport-agnostic
 // entry point, so the node:http adapter (server/index.ts) and the contract
 // tests exercise exactly the same code.
-import {
-  createHandlers,
-  AppRequest,
-  AppResponse,
-  CreateHandlersOptions,
-  Handler,
-} from "./handlers";
+import { createHandlers } from "./handlers";
+import { AppRequest, AppResponse } from "./handlers.types";
 import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
+import { App, CreateAppOptions, Route } from "./router.types";
 
-interface Route {
-  method: string;
-  path: string;
-  handler: Handler;
-}
-
-export interface App {
-  handle(request: AppRequest): Promise<AppResponse>;
-}
-
-export type CreateAppOptions = CreateHandlersOptions;
+export type { App, CreateAppOptions, Route } from "./router.types";
 
 export const createApp = ({
   storage,

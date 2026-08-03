@@ -1,41 +1,24 @@
 // Crypto primitives for the sync server (RFC §5). Plain Node, no dependencies.
 import crypto from "node:crypto";
+// The record and token shapes live in ./crypto.types.
+import {
+  ScryptPasswordRecord,
+  SignTokenOptions,
+  TokenPayload,
+  VerifyTokenOptions,
+} from "./crypto.types";
 
 const SCRYPT_PARAMS = { N: 16384, r: 8, p: 1 };
 const KEY_LENGTH = 64;
 const SALT_LENGTH = 16;
 export const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days (AC-1.3)
 
-// Storable password record: the scrypt cost parameters travel with the hash
-// so stored records stay verifiable if SCRYPT_PARAMS is ever tuned upwards.
-export interface ScryptPasswordRecord {
-  algo: "scrypt";
-  N: number;
-  r: number;
-  p: number;
-  saltB64: string;
-  hashB64: string;
-}
-
-// Claims carried by the compact HMAC token; `iat`/`exp` are Unix seconds.
-export interface TokenPayload {
-  sub: string;
-  iat: number;
-  exp: number;
-}
-
-export interface SignTokenOptions {
-  sub: string;
-  secret: string;
-  now?: number;
-  ttlMs?: number;
-}
-
-export interface VerifyTokenOptions {
-  token: string;
-  secret: string;
-  now?: number;
-}
+export type {
+  ScryptPasswordRecord,
+  SignTokenOptions,
+  TokenPayload,
+  VerifyTokenOptions,
+} from "./crypto.types";
 
 const base64url = (buffer: Buffer | string): string =>
   Buffer.from(buffer).toString("base64url");
