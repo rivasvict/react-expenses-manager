@@ -51,11 +51,18 @@ Compiles, then runs the tests with the Node built-in test runner
 
 Tests are colocated with the code they cover — `core/crypto.ts` is tested
 by `core/crypto.test.ts`, and so on — so every `.ts` source file here has a
-matching `.test.ts` beside it. The script lists one glob per source
-directory (`server/dist/*.test.js server/dist/core/*.test.js`) rather than
-passing a directory: Node 18 expands a directory argument recursively but
-does not accept globs, Node 20+ does the reverse, and only explicit
-per-directory globs work on both. **Add a glob when you add a directory.**
+matching `.test.ts` beside it.
+
+Discovery is automatic. `testRunner.ts` walks `server/dist/` for
+`*.test.js` and hands `node --test` the explicit file paths, so a test file
+in a new directory is picked up with no script to update. It prints how many
+files it found, and **exits non-zero if it finds none** rather than
+reporting a vacuous pass.
+
+The walk exists because `node --test` cannot be pointed at this tree
+portably: Node 18 expands a directory argument recursively but rejects
+globs, while Node 20+ treats positionals as globs and fails on a bare
+directory. Explicit file paths work on every supported version.
 
 **Requires Node >= 18** — the React app itself is
 pinned to Node 16 (`.nvmrc`), so run this script with a newer system Node
@@ -67,13 +74,22 @@ CRA's jest deliberately does not scan `server/` (it only looks under
 
 ## Layout
 
-- `core/` — framework-free handlers, router, crypto (scrypt + HMAC
-  tokens), and the storage interface (`storage.ts`, with the in-memory
-  reference implementation used by tests)
+- `core/` — framework-free router, crypto (scrypt + HMAC tokens), shared
+  status/error-code constants (`httpConstants.ts`), and the storage
+  interface (`storage.ts`, with the in-memory reference implementation used
+  by tests)
+- `core/handlers/` — one module per endpoint (`signup.ts`, `login.ts`,
+  `me.ts`) plus the collaborators they share (session minting, response
+  shaping, storage keys, field guards); `core/handlers.ts` is just the
+  wiring that builds the set
+- `*.types.ts` — type declarations extracted from any file that declared
+  more than two of them
 - `storage-fs.ts` — on-disk JSON adapter (local dev)
 - `index.ts` — `node:http` adapter with CORS (local dev entry point).
   Exports `createRequestListener` so the transport can be tested without
   binding a port; it only calls `listen` when run as the entry point.
+- `testRunner.ts` — test entry point for `npm run test:server`: discovers
+  the compiled `*.test.js` files and runs them
 - `*.test.ts` — colocated beside the file each one covers
 - `tsconfig.json` — server-only build (CommonJS → `server/dist/`); the
   root `npm run typecheck` covers `src/` and does not read this file
