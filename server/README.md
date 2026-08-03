@@ -88,6 +88,7 @@ CRA's jest deliberately does not scan `server/` (it only looks under
 - `index.ts` — `node:http` adapter with CORS (local dev entry point).
   Exports `createRequestListener` so the transport can be tested without
   binding a port; it only calls `listen` when run as the entry point.
+- `utils.ts` — transport helpers for the http adapter (request body reading)
 - `testRunner.ts` — test entry point for `npm run test:server`: discovers
   the compiled `*.test.js` files and runs them
 - `*.test.ts` — colocated beside the file each one covers

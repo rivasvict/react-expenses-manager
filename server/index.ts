@@ -8,6 +8,7 @@ import path from "node:path";
 import { createApp, App } from "./core/router";
 import { createFsStorage } from "./storage-fs";
 import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
+import { readBody } from "./utils";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
@@ -25,26 +26,6 @@ export interface RequestListenerOptions {
   maxBodyBytes?: number;
   port?: number;
 }
-
-const readBody = (
-  request: http.IncomingMessage,
-  maxBodyBytes: number
-): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    let size = 0;
-    request.on("data", (chunk: Buffer) => {
-      size += chunk.length;
-      if (size > maxBodyBytes) {
-        reject(new Error("Payload too large"));
-        request.destroy();
-        return;
-      }
-      chunks.push(chunk);
-    });
-    request.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-    request.on("error", reject);
-  });
 
 // Exported so the transport layer is testable without binding a well-known
 // port: the tests build a listener over an in-memory storage app and drive it
