@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.4] - 2026-08-03
+
+### Fixed
+- Dashboard balance chart: percentages are now calculated with incomes as
+  the 100% base, and the chart shows Expenses % / Savings % (instead of the
+  previous Incomes % / Expenses % split against an `incomes + expenses`
+  base, which understated both figures). Overspending (expenses > incomes)
+  and zero incomes are both capped at 100% expenses / 0% savings rather than
+  showing negative savings or hiding the chart (#157)
+
 ## [1.6.3] - 2026-08-02
 
 ### Changed
