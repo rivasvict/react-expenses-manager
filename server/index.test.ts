@@ -8,6 +8,7 @@ import { AddressInfo } from "node:net";
 import { createRequestListener } from "./index";
 import { createApp } from "./core/router";
 import { createMemoryStorage } from "./core/storage";
+import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
 
 const TOKEN_SECRET = "test-secret";
 
@@ -98,7 +99,7 @@ test("a JSON POST body reaches the handler and the reply is JSON", () =>
   withServer(async (request) => {
     const response = await postJson(request, "/api/auth/signup", jane);
 
-    assert.equal(response.status, 201);
+    assert.equal(response.status, HTTP_STATUS.CREATED);
     assert.equal(response.headers["content-type"], "application/json");
     const body = response.json() as { token: string; user: { email: string } };
     assert.ok(body.token);
@@ -114,9 +115,9 @@ test("a malformed JSON body returns 400 VALIDATION_ERROR", () =>
       headers: { "Content-Type": "application/json" },
     });
 
-    assert.equal(response.status, 400);
+    assert.equal(response.status, HTTP_STATUS.BAD_REQUEST);
     assert.deepEqual(response.json(), {
-      error: { code: "VALIDATION_ERROR", message: "Invalid JSON body." },
+      error: { code: ERROR_CODES.VALIDATION_ERROR, message: "Invalid JSON body." },
     });
   }));
 
@@ -126,9 +127,9 @@ test("an empty body is passed through as null, not a parse error", () =>
     // proves the transport did not short-circuit with "Invalid JSON body".
     const response = await request({ method: "POST", path: "/api/auth/login" });
 
-    assert.equal(response.status, 401);
+    assert.equal(response.status, HTTP_STATUS.UNAUTHORIZED);
     const body = response.json() as { error: { code: string } };
-    assert.equal(body.error.code, "INVALID_CREDENTIALS");
+    assert.equal(body.error.code, ERROR_CODES.INVALID_CREDENTIALS);
   }));
 
 test("the query string is stripped before routing", () =>
@@ -136,16 +137,16 @@ test("the query string is stripped before routing", () =>
     const response = await request({ method: "GET", path: "/api/me?foo=bar" });
 
     // Routed to /api/me (401 for the missing token), not 404.
-    assert.equal(response.status, 401);
+    assert.equal(response.status, HTTP_STATUS.UNAUTHORIZED);
   }));
 
 test("unknown paths return the core's 404", () =>
   withServer(async (request) => {
     const response = await request({ method: "GET", path: "/api/nope" });
 
-    assert.equal(response.status, 404);
+    assert.equal(response.status, HTTP_STATUS.NOT_FOUND);
     const body = response.json() as { error: { code: string } };
-    assert.equal(body.error.code, "NOT_FOUND");
+    assert.equal(body.error.code, ERROR_CODES.NOT_FOUND);
   }));
 
 test("an Authorization header is forwarded to the handler", () =>
@@ -159,7 +160,7 @@ test("an Authorization header is forwarded to the handler", () =>
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    assert.equal(me.status, 200);
+    assert.equal(me.status, HTTP_STATUS.OK);
     const body = me.json() as { user: { email: string } };
     assert.equal(body.user.email, "jane@example.com");
   }));
@@ -168,7 +169,7 @@ test("OPTIONS preflight returns 204 with CORS headers and no body", () =>
   withServer(async (request) => {
     const response = await request({ method: "OPTIONS", path: "/api/me" });
 
-    assert.equal(response.status, 204);
+    assert.equal(response.status, HTTP_STATUS.NO_CONTENT);
     assert.equal(response.raw, "");
     assert.equal(
       response.headers["access-control-allow-origin"],
@@ -210,7 +211,7 @@ test("a body over the size cap is rejected rather than buffered", () =>
         assert.match(response.message, /socket hang up|ECONNRESET|aborted/);
         return;
       }
-      assert.notEqual(response.status, 201);
+      assert.notEqual(response.status, HTTP_STATUS.CREATED);
     },
     { maxBodyBytes: 1024 }
   ));

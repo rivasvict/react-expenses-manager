@@ -7,6 +7,7 @@ import http from "node:http";
 import path from "node:path";
 import { createApp, App } from "./core/router";
 import { createFsStorage } from "./storage-fs";
+import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
@@ -65,7 +66,7 @@ export const createRequestListener = ({
 
     try {
       if (request.method === "OPTIONS") {
-        response.writeHead(204, {
+        response.writeHead(HTTP_STATUS.NO_CONTENT, {
           "Access-Control-Allow-Origin": corsOrigin,
           "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, Authorization",
@@ -81,8 +82,11 @@ export const createRequestListener = ({
         try {
           body = JSON.parse(rawBody);
         } catch (error) {
-          sendJson(400, {
-            error: { code: "VALIDATION_ERROR", message: "Invalid JSON body." },
+          sendJson(HTTP_STATUS.BAD_REQUEST, {
+            error: {
+              code: ERROR_CODES.VALIDATION_ERROR,
+              message: "Invalid JSON body.",
+            },
           });
           return;
         }
@@ -108,8 +112,11 @@ export const createRequestListener = ({
         "sync-server error:",
         error instanceof Error ? error.message : error
       );
-      sendJson(500, {
-        error: { code: "INTERNAL_ERROR", message: "Something went wrong." },
+      sendJson(HTTP_STATUS.INTERNAL_SERVER_ERROR, {
+        error: {
+          code: ERROR_CODES.INTERNAL_ERROR,
+          message: "Something went wrong.",
+        },
       });
     }
   };

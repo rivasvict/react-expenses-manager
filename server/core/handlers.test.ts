@@ -13,6 +13,7 @@ import {
   SessionBody,
   UserRecord,
 } from "./handlers";
+import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 // Handlers return a union of body shapes. These tests assert against
 // whichever shape the endpoint under test produces, so widen once here
@@ -56,7 +57,7 @@ test("signup → login → /api/me lifecycle", async () => {
   const app = makeApp();
 
   const signupResult = await signup(app);
-  assert.equal(signupResult.status, 201);
+  assert.equal(signupResult.status, HTTP_STATUS.CREATED);
   assert.ok(signupResult.body.token);
   assert.deepEqual(signupResult.body.user, {
     id: signupResult.body.user.id,
@@ -71,11 +72,11 @@ test("signup → login → /api/me lifecycle", async () => {
     email: "jane@example.com",
     password: jane.password,
   });
-  assert.equal(loginResult.status, 200);
+  assert.equal(loginResult.status, HTTP_STATUS.OK);
   assert.equal(loginResult.body.user.id, signupResult.body.user.id);
 
   const meResult = await me(app, loginResult.body.token);
-  assert.equal(meResult.status, 200);
+  assert.equal(meResult.status, HTTP_STATUS.OK);
   assert.equal(meResult.body.user.email, "jane@example.com");
   // PR 1: parties do not exist yet.
   assert.equal(meResult.body.party, null);
@@ -103,19 +104,19 @@ test("duplicate email (case-insensitive) is rejected with EMAIL_TAKEN", async ()
   await signup(app);
 
   const duplicate = await signup(app, { ...jane, email: "JANE@example.com" });
-  assert.equal(duplicate.status, 409);
-  assert.equal(duplicate.body.error.code, "EMAIL_TAKEN");
+  assert.equal(duplicate.status, HTTP_STATUS.CONFLICT);
+  assert.equal(duplicate.body.error.code, ERROR_CODES.EMAIL_TAKEN);
 });
 
 test("signup validates required fields", async () => {
   const app = makeApp();
   const missingEmail = await signup(app, { ...jane, email: "not-an-email" });
-  assert.equal(missingEmail.status, 400);
-  assert.equal(missingEmail.body.error.code, "VALIDATION_ERROR");
+  assert.equal(missingEmail.status, HTTP_STATUS.BAD_REQUEST);
+  assert.equal(missingEmail.body.error.code, ERROR_CODES.VALIDATION_ERROR);
 
   const missingPassword = await signup(app, { ...jane, password: "" });
-  assert.equal(missingPassword.status, 400);
-  assert.equal(missingPassword.body.error.code, "VALIDATION_ERROR");
+  assert.equal(missingPassword.status, HTTP_STATUS.BAD_REQUEST);
+  assert.equal(missingPassword.body.error.code, ERROR_CODES.VALIDATION_ERROR);
 });
 
 test("wrong password and unknown email return the identical generic 401 body (AC-1.5)", async () => {
@@ -131,10 +132,14 @@ test("wrong password and unknown email return the identical generic 401 body (AC
     password: "whatever",
   });
 
-  assert.equal(wrongPassword.status, 401);
-  assert.equal(unknownEmail.status, 401);
+  assert.equal(wrongPassword.status, HTTP_STATUS.UNAUTHORIZED);
+  assert.equal(unknownEmail.status, HTTP_STATUS.UNAUTHORIZED);
   assert.deepEqual(wrongPassword.body, unknownEmail.body);
-  assert.equal(wrongPassword.body.error.code, "INVALID_CREDENTIALS");
+  // Both branches must report INVALID_CREDENTIALS. Asserting each one
+  // explicitly (rather than only the wrong-password branch) means the pair
+  // cannot drift together into some other shared code and still pass.
+  assert.equal(wrongPassword.body.error.code, ERROR_CODES.INVALID_CREDENTIALS);
+  assert.equal(unknownEmail.body.error.code, ERROR_CODES.INVALID_CREDENTIALS);
 });
 
 test("expired token is rejected with 401 UNAUTHORIZED", async () => {
@@ -147,8 +152,8 @@ test("expired token is rejected with 401 UNAUTHORIZED", async () => {
     now: Date.now() - 31 * 24 * 60 * 60 * 1000, // issued 31 days ago
   });
   const result = await me(app, expiredToken);
-  assert.equal(result.status, 401);
-  assert.equal(result.body.error.code, "UNAUTHORIZED");
+  assert.equal(result.status, HTTP_STATUS.UNAUTHORIZED);
+  assert.equal(result.body.error.code, ERROR_CODES.UNAUTHORIZED);
 });
 
 test("tampered or malformed tokens are rejected", async () => {
@@ -156,17 +161,17 @@ test("tampered or malformed tokens are rejected", async () => {
   const { body } = await signup(app);
 
   const forged = signToken({ sub: body.user.id, secret: "other-secret" });
-  assert.equal((await me(app, forged)).status, 401);
-  assert.equal((await me(app, "garbage")).status, 401);
+  assert.equal((await me(app, forged)).status, HTTP_STATUS.UNAUTHORIZED);
+  assert.equal((await me(app, "garbage")).status, HTTP_STATUS.UNAUTHORIZED);
   assert.equal(
     (await call(app, { method: "GET", path: "/api/me", headers: {} })).status,
-    401
+    HTTP_STATUS.UNAUTHORIZED
   );
 });
 
 test("unknown routes return 404", async () => {
   const app = makeApp();
   const result = await call(app, { method: "GET", path: "/api/nope" });
-  assert.equal(result.status, 404);
-  assert.equal(result.body.error.code, "NOT_FOUND");
+  assert.equal(result.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(result.body.error.code, ERROR_CODES.NOT_FOUND);
 });

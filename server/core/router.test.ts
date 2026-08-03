@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { createApp, App } from "./router";
 import { createMemoryStorage } from "./storage";
 import { AppResponse, ErrorBody, SessionBody } from "./handlers";
+import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 const TOKEN_SECRET = "test-secret";
 
@@ -31,12 +32,12 @@ test("routes are matched on method and path together", async () => {
     path: "/api/auth/signup",
     body: jane,
   });
-  assert.equal(getSignup.status, 404);
-  assert.equal(errorCode(getSignup), "NOT_FOUND");
+  assert.equal(getSignup.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(errorCode(getSignup), ERROR_CODES.NOT_FOUND);
 
   // Right method, wrong path → 404.
   const postMe = await app.handle({ method: "POST", path: "/api/me" });
-  assert.equal(postMe.status, 404);
+  assert.equal(postMe.status, HTTP_STATUS.NOT_FOUND);
 
   // Both right → reaches the handler.
   const signup = await app.handle({
@@ -44,7 +45,7 @@ test("routes are matched on method and path together", async () => {
     path: "/api/auth/signup",
     body: jane,
   });
-  assert.equal(signup.status, 201);
+  assert.equal(signup.status, HTTP_STATUS.CREATED);
 });
 
 test("all three RFC §3 routes are wired", async () => {
@@ -54,21 +55,21 @@ test("all three RFC §3 routes are wired", async () => {
     path: "/api/auth/signup",
     body: jane,
   })) as AppResponse<SessionBody>;
-  assert.equal(signup.status, 201);
+  assert.equal(signup.status, HTTP_STATUS.CREATED);
 
   const login = await app.handle({
     method: "POST",
     path: "/api/auth/login",
     body: { email: jane.email, password: jane.password },
   });
-  assert.equal(login.status, 200);
+  assert.equal(login.status, HTTP_STATUS.OK);
 
   const me = await app.handle({
     method: "GET",
     path: "/api/me",
     headers: { authorization: `Bearer ${signup.body.token}` },
   });
-  assert.equal(me.status, 200);
+  assert.equal(me.status, HTTP_STATUS.OK);
 });
 
 test("path matching is exact — no prefix or trailing-slash matches", async () => {
@@ -84,7 +85,11 @@ test("path matching is exact — no prefix or trailing-slash matches", async () 
     "/api/auth/signup/x",
   ]) {
     const response = await app.handle({ method: "GET", path });
-    assert.equal(response.status, 404, `expected 404 for path ${path}`);
+    assert.equal(
+      response.status,
+      HTTP_STATUS.NOT_FOUND,
+      `expected a not-found status for path ${path}`
+    );
   }
 });
 
@@ -92,9 +97,9 @@ test("unknown routes return a NOT_FOUND error body", async () => {
   const app = makeApp();
   const response = await app.handle({ method: "GET", path: "/api/nope" });
 
-  assert.equal(response.status, 404);
+  assert.equal(response.status, HTTP_STATUS.NOT_FOUND);
   assert.deepEqual(response.body, {
-    error: { code: "NOT_FOUND", message: "Not found." },
+    error: { code: ERROR_CODES.NOT_FOUND, message: "Not found." },
   });
 });
 
@@ -110,5 +115,5 @@ test("each app instance gets isolated storage", async () => {
     path: "/api/auth/signup",
     body: jane,
   });
-  assert.equal(onSecond.status, 201);
+  assert.equal(onSecond.status, HTTP_STATUS.CREATED);
 });

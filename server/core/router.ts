@@ -4,12 +4,12 @@
 // tests exercise exactly the same code.
 import {
   createHandlers,
-  ERROR_CODES,
   AppRequest,
   AppResponse,
   CreateHandlersOptions,
   Handler,
 } from "./handlers";
+import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 interface Route {
   method: string;
@@ -44,7 +44,7 @@ export const createApp = ({
     );
     if (!route)
       return {
-        status: 404,
+        status: HTTP_STATUS.NOT_FOUND,
         body: { error: { code: ERROR_CODES.NOT_FOUND, message: "Not found." } },
       };
     return route.handler(request);

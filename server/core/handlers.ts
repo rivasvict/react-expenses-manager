@@ -10,18 +10,12 @@ import {
   ScryptPasswordRecord,
 } from "./crypto";
 import { StorageAdapter } from "./storage";
+import { ERROR_CODES, ErrorCode, HTTP_STATUS } from "./httpConstants";
 
-// Error codes duplicated from src/services/syncApi/contract.ts deliberately —
-// the server stays dependency-free; RFC §3 is the source of truth.
-export const ERROR_CODES = {
-  VALIDATION_ERROR: "VALIDATION_ERROR",
-  EMAIL_TAKEN: "EMAIL_TAKEN",
-  INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
-  UNAUTHORIZED: "UNAUTHORIZED",
-  NOT_FOUND: "NOT_FOUND",
-} as const;
-
-export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
+// Re-exported so existing importers of `./handlers` keep working; the
+// definitions live in ./httpConstants.
+export { ERROR_CODES };
+export type { ErrorCode };
 
 // --- Stored records -------------------------------------------------------
 
@@ -129,10 +123,18 @@ const error = (
 
 // AC-1.5: identical body whether the email exists or not.
 const invalidCredentials = (): AppResponse<ErrorBody> =>
-  error(401, ERROR_CODES.INVALID_CREDENTIALS, "Email or password is incorrect.");
+  error(
+    HTTP_STATUS.UNAUTHORIZED,
+    ERROR_CODES.INVALID_CREDENTIALS,
+    "Email or password is incorrect."
+  );
 
 const unauthorized = (): AppResponse<ErrorBody> =>
-  error(401, ERROR_CODES.UNAUTHORIZED, "You need to sign in again.");
+  error(
+    HTTP_STATUS.UNAUTHORIZED,
+    ERROR_CODES.UNAUTHORIZED,
+    "You need to sign in again."
+  );
 
 const publicUser = ({ id, email, firstName, lastName }: UserRecord): PublicUser => ({
   id,
@@ -169,12 +171,20 @@ export const createHandlers = ({
     const { email, password, firstName, lastName } = (body ||
       {}) as SignupRequestBody;
     if (!isEmail(email))
-      return error(400, ERROR_CODES.VALIDATION_ERROR, "A valid email is required.");
+      return error(
+        HTTP_STATUS.BAD_REQUEST,
+        ERROR_CODES.VALIDATION_ERROR,
+        "A valid email is required."
+      );
     if (!isNonEmptyString(password))
-      return error(400, ERROR_CODES.VALIDATION_ERROR, "A password is required.");
+      return error(
+        HTTP_STATUS.BAD_REQUEST,
+        ERROR_CODES.VALIDATION_ERROR,
+        "A password is required."
+      );
     if (!isNonEmptyString(firstName) || !isNonEmptyString(lastName))
       return error(
-        400,
+        HTTP_STATUS.BAD_REQUEST,
         ERROR_CODES.VALIDATION_ERROR,
         "First and last name are required."
       );
@@ -182,7 +192,7 @@ export const createHandlers = ({
     const key = userKey(email);
     if (await storage.readJson<UserRecord>(key))
       return error(
-        409,
+        HTTP_STATUS.CONFLICT,
         ERROR_CODES.EMAIL_TAKEN,
         "An account with this email already exists."
       );
@@ -198,7 +208,7 @@ export const createHandlers = ({
     };
     await storage.writeJson(key, user);
     await storage.writeJson(userIdKey(user.id), { userKey: key } as UserIdPointer);
-    return { status: 201, body: issueSession(user) };
+    return { status: HTTP_STATUS.CREATED, body: issueSession(user) };
   };
 
   // Hashed once per handler set; only used to equalize login timing below.
@@ -217,7 +227,7 @@ export const createHandlers = ({
       return invalidCredentials();
     }
     if (!verifyPassword(password, user.password)) return invalidCredentials();
-    return { status: 200, body: issueSession(user) };
+    return { status: HTTP_STATUS.OK, body: issueSession(user) };
   };
 
   // Resolves the bearer token to the stored user, or null.
@@ -241,7 +251,10 @@ export const createHandlers = ({
   const me: Handler = async (request) => {
     const user = await authenticate(request);
     if (!user) return unauthorized();
-    return { status: 200, body: { user: publicUser(user), party: null } };
+    return {
+      status: HTTP_STATUS.OK,
+      body: { user: publicUser(user), party: null },
+    };
   };
 
   return { signup, login, me };
