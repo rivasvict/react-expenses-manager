@@ -12,7 +12,7 @@ import {
   MeBody,
   SessionBody,
   UserRecord,
-} from "./handlers";
+} from "./handlers.types";
 import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 // Handlers return a union of body shapes. These tests assert against

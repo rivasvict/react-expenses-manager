@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createApp, App } from "./router";
 import { createMemoryStorage } from "./storage";
-import { AppResponse, ErrorBody, SessionBody } from "./handlers";
+import { AppResponse, ErrorBody, SessionBody } from "./handlers.types";
 import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 const TOKEN_SECRET = "test-secret";
