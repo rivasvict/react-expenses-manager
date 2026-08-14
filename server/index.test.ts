@@ -212,29 +212,54 @@ test("a body over the size cap is rejected with 413 PAYLOAD_TOO_LARGE", () =>
 test("an oversized signup body creates no account", () =>
   withServer(
     async (request) => {
-      await postJson(request, "/api/auth/signup", {
+      const oversized = await postJson(request, "/api/auth/signup", {
         ...jane,
         padding: "x".repeat(4096),
       });
+      assert.equal(oversized.status, HTTP_STATUS.PAYLOAD_TOO_LARGE);
 
       // The cap must reject before the handler runs, not merely change the
-      // status the client sees: signing up again must not hit EMAIL_TAKEN.
+      // status the client sees. Retrying with jane's ordinary body is what
+      // shows nothing was written: a second signup for an email already
+      // taken would answer 409 EMAIL_TAKEN, so 201 here means the rejected
+      // request persisted no account.
       const retry = await postJson(request, "/api/auth/signup", jane);
       assert.equal(retry.status, HTTP_STATUS.CREATED);
     },
     { maxBodyBytes: 1024 }
   ));
 
-test("a body at exactly the cap is still accepted", () =>
-  withServer(
+test("a body at exactly the cap is accepted and one byte more is not", () => {
+  // A single value drives the cap and both requests, so these really do sit
+  // on either side of the boundary rather than at some incidental size.
+  const atCap = JSON.stringify(jane);
+  const capBytes = Buffer.byteLength(atCap);
+  // The same body with one extra character in the email: one byte over.
+  const overCap = JSON.stringify({ ...jane, email: `x${jane.email}` });
+
+  return withServer(
     async (request) => {
-      const payload = JSON.stringify(jane);
-      const response = await postJson(request, "/api/auth/signup", jane);
+      const send = (body: string): Promise<Reply> =>
+        request({
+          method: "POST",
+          path: "/api/auth/signup",
+          body,
+          headers: { "Content-Type": "application/json" },
+        });
 
       // Pins the boundary as inclusive, so the 413 path cannot creep into
-      // rejecting legitimate requests.
-      assert.equal(response.status, HTTP_STATUS.CREATED);
-      assert.ok(Buffer.byteLength(payload) > 0);
+      // rejecting legitimate requests...
+      assert.equal(Buffer.byteLength(atCap), capBytes);
+      assert.equal((await send(atCap)).status, HTTP_STATUS.CREATED);
+
+      // ...and pins it exactly here rather than merely at or above here,
+      // so the cap cannot drift upward unnoticed.
+      assert.equal(Buffer.byteLength(overCap), capBytes + 1);
+      assert.equal(
+        (await send(overCap)).status,
+        HTTP_STATUS.PAYLOAD_TOO_LARGE
+      );
     },
-    { maxBodyBytes: Buffer.byteLength(JSON.stringify(jane)) }
-  ));
+    { maxBodyBytes: capBytes }
+  );
+});
