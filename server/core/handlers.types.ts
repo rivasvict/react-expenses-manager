@@ -94,18 +94,3 @@ export type IssueSession = (user: UserRecord) => SessionBody;
 // Resolves a request's bearer token back to the stored user record, or null
 // when the header is missing, malformed, expired or points at no record.
 export type Authenticate = (request: AppRequest) => Promise<UserRecord | null>;
-
-// --- Untrusted request bodies ---------------------------------------------
-
-// Request bodies arrive as untyped JSON; every field is checked before use.
-export interface SignupRequestBody {
-  email?: unknown;
-  password?: unknown;
-  firstName?: unknown;
-  lastName?: unknown;
-}
-
-export interface LoginRequestBody {
-  email?: unknown;
-  password?: unknown;
-}

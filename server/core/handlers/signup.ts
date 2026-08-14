@@ -4,7 +4,6 @@ import { hashPassword, randomId } from "../crypto";
 import {
   Handler,
   IssueSession,
-  SignupRequestBody,
   UserIdPointer,
   UserRecord,
 } from "../handlers.types";
@@ -12,7 +11,7 @@ import { ERROR_CODES, HTTP_STATUS } from "../httpConstants";
 import { StorageAdapter } from "../storage";
 import { error } from "./responses";
 import { userIdKey, userKey } from "./userKeys";
-import { isEmail, isNonEmptyString } from "./validation";
+import { isEmail, isNonEmptyString, requestFields } from "./validation";
 
 interface CreateSignupHandlerOptions {
   storage: StorageAdapter;
@@ -26,8 +25,7 @@ export const createSignupHandler = ({
   now,
 }: CreateSignupHandlerOptions): Handler =>
   async ({ body }) => {
-    const { email, password, firstName, lastName } = (body ||
-      {}) as SignupRequestBody;
+    const { email, password, firstName, lastName } = requestFields(body);
     if (!isEmail(email))
       return error(
         HTTP_STATUS.BAD_REQUEST,

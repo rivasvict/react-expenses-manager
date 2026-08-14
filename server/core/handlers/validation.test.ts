@@ -1,7 +1,24 @@
 // Unit tests for the request-field guards (./validation.ts).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isEmail, isNonEmptyString } from "./validation";
+import { isEmail, isNonEmptyString, requestFields } from "./validation";
+
+test("requestFields hands back the body's own fields when it is an object", () => {
+  const body = { email: "jane@example.com", password: 42 };
+  assert.deepEqual(requestFields(body), body);
+});
+
+test("requestFields turns a non-object body into an empty record", () => {
+  // The transport parses whatever JSON arrived, so the body may be any
+  // value at all. Each of these must read as `undefined` per field rather
+  // than throwing, leaving the guards above to reject it.
+  for (const body of [undefined, null, 42, "a string", true])
+    assert.deepEqual(
+      requestFields(body),
+      {},
+      `expected an empty record for ${JSON.stringify(body)}`
+    );
+});
 
 test("isNonEmptyString accepts only strings with non-space content", () => {
   assert.equal(isNonEmptyString("jane"), true);

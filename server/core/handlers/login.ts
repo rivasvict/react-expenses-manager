@@ -2,17 +2,12 @@
 // generic 401 body, and takes the same scrypt work, so neither the response
 // nor its timing reveals whether an account exists (AC-1.5).
 import { hashPassword, verifyPassword } from "../crypto";
-import {
-  Handler,
-  IssueSession,
-  LoginRequestBody,
-  UserRecord,
-} from "../handlers.types";
+import { Handler, IssueSession, UserRecord } from "../handlers.types";
 import { HTTP_STATUS } from "../httpConstants";
 import { StorageAdapter } from "../storage";
 import { invalidCredentials } from "./responses";
 import { userKey } from "./userKeys";
-import { isNonEmptyString } from "./validation";
+import { isNonEmptyString, requestFields } from "./validation";
 
 interface CreateLoginHandlerOptions {
   storage: StorageAdapter;
@@ -35,7 +30,7 @@ export const createLoginHandler = ({
   const dummyPasswordRecord = hashPassword(DUMMY_TIMING_EQUALIZER_PASSWORD);
 
   return async ({ body }) => {
-    const { email, password } = (body || {}) as LoginRequestBody;
+    const { email, password } = requestFields(body);
     if (!isNonEmptyString(email) || !isNonEmptyString(password))
       return invalidCredentials();
     const user = await storage.readJson<UserRecord>(userKey(email));
