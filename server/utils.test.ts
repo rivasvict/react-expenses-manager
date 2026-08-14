@@ -3,13 +3,39 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
 import { PassThrough } from "node:stream";
-import { PayloadTooLargeError, readBody } from "./utils";
+import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
 
 // readBody only ever touches the readable-stream surface of an
 // IncomingMessage, so a PassThrough stands in for one and keeps these tests
 // off the network.
 const fakeRequest = (): http.IncomingMessage & PassThrough =>
   new PassThrough() as http.IncomingMessage & PassThrough;
+
+// createJsonResponder only ever calls writeHead and end, so a pair of
+// recording stubs stands in for a ServerResponse and keeps these tests off
+// the network too.
+interface RecordedResponse {
+  response: http.ServerResponse;
+  writeHead: Array<{ status: number; headers: Record<string, string> }>;
+  ended: string[];
+}
+
+const fakeResponse = (): RecordedResponse => {
+  const recorded: RecordedResponse = {
+    response: null as unknown as http.ServerResponse,
+    writeHead: [],
+    ended: [],
+  };
+  recorded.response = {
+    writeHead: (status: number, headers: Record<string, string>) => {
+      recorded.writeHead.push({ status, headers });
+    },
+    end: (chunk: string) => {
+      recorded.ended.push(chunk);
+    },
+  } as unknown as http.ServerResponse;
+  return recorded;
+};
 
 test("readBody resolves with the whole body as utf8", async () => {
   const request = fakeRequest();
@@ -100,4 +126,46 @@ test("readBody propagates a stream error", async () => {
   request.emit("error", new Error("connection reset"));
 
   await assert.rejects(pending, /connection reset/);
+});
+
+test("createJsonResponder writes the status with JSON and CORS headers", () => {
+  const recorded = fakeResponse();
+
+  createJsonResponder(recorded.response, "https://app.example.com")(201, {});
+
+  assert.deepEqual(recorded.writeHead, [
+    {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "https://app.example.com",
+      },
+    },
+  ]);
+});
+
+test("createJsonResponder serializes the body as JSON", () => {
+  const recorded = fakeResponse();
+  const body = { error: { code: "NOT_FOUND", message: "No such route." } };
+
+  createJsonResponder(recorded.response, "*")(404, body);
+
+  assert.deepEqual(recorded.ended, [JSON.stringify(body)]);
+  assert.deepEqual(JSON.parse(recorded.ended[0]), body);
+});
+
+test("createJsonResponder applies its origin to every reply it sends", () => {
+  // The origin is captured once when the responder is built, so a handler
+  // cannot reply with the CORS header missing or stale on a later call.
+  const recorded = fakeResponse();
+  const sendJson = createJsonResponder(recorded.response, "https://app.example.com");
+
+  sendJson(200, { ok: true });
+  sendJson(500, { ok: false });
+
+  assert.deepEqual(
+    recorded.writeHead.map(({ headers }) => headers["Access-Control-Allow-Origin"]),
+    ["https://app.example.com", "https://app.example.com"]
+  );
+  assert.deepEqual(recorded.writeHead.map(({ status }) => status), [200, 500]);
 });

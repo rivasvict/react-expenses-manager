@@ -2,6 +2,24 @@
 // Dependency-free, like the rest of server/.
 import http from "node:http";
 
+// Sends one JSON reply. Bound to a single response, so the adapter can hand
+// it a status and a body without repeating the wire details.
+export type SendJson = (status: number, body: unknown) => void;
+
+// Builds the JSON responder for one request/response pair. Every JSON reply
+// the adapter sends goes through it, so the content type and the CORS header
+// are written in exactly one place instead of at each `writeHead` call.
+export const createJsonResponder = (
+  response: http.ServerResponse,
+  corsOrigin: string
+): SendJson => (status, body) => {
+  response.writeHead(status, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": corsOrigin,
+  });
+  response.end(JSON.stringify(body));
+};
+
 // Raised when a request body exceeds the configured cap, so the adapter can
 // answer 413 instead of falling through to a generic 500.
 export class PayloadTooLargeError extends Error {

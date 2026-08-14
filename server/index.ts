@@ -8,7 +8,7 @@ import path from "node:path";
 import { createApp, App } from "./core/router";
 import { createFsStorage } from "./storage-fs";
 import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
-import { PayloadTooLargeError, readBody } from "./utils";
+import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
@@ -37,13 +37,7 @@ export const createRequestListener = ({
   port = PORT,
 }: RequestListenerOptions): http.RequestListener =>
   async (request, response) => {
-    const sendJson = (status: number, body: unknown): void => {
-      response.writeHead(status, {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": corsOrigin,
-      });
-      response.end(JSON.stringify(body));
-    };
+    const sendJson = createJsonResponder(response, corsOrigin);
 
     try {
       if (request.method === "OPTIONS") {
