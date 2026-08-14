@@ -37,7 +37,9 @@ const fakeResponse = (): RecordedResponse => {
   return recorded;
 };
 
-test("readBody resolves with the whole body as utf8", async () => {
+// UTF-8-specific decoding is covered by the multi-byte test below; this one
+// is about concatenating the chunks a body arrives in.
+test("readBody resolves with the whole body joined across chunks", async () => {
   const request = fakeRequest();
   const pending = readBody(request, 1024);
 

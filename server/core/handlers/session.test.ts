@@ -100,7 +100,9 @@ test("authenticate rejects a missing or malformed Authorization header", async (
     await authenticate({ method: "GET", path: "/api/me", headers: {} }),
     null
   );
-  // Right token, wrong scheme.
+  // A valid token, sent without the "Bearer " scheme prefix. An
+  // Authorization header is "<scheme> <credentials>", and authenticate
+  // matches /^Bearer (.+)$/, so a bare token does not parse as one.
   assert.equal(
     await authenticate({
       method: "GET",
@@ -141,12 +143,14 @@ test("authenticate rejects an expired token", async () => {
 
 test("authenticate returns null when the id pointer is missing", async () => {
   // A well-signed token for a user that no longer exists must not resolve.
+  // The storage is empty, so no user-ids/ pointer was ever written for this
+  // `sub` — the token is genuine, the account behind it is not there.
   const authenticate = createAuthenticate({
     storage: createMemoryStorage(),
     tokenSecret: TOKEN_SECRET,
     now: Date.now,
   });
 
-  const token = signToken({ sub: "ghost", secret: TOKEN_SECRET });
+  const token = signToken({ sub: "nonexistent-user-id", secret: TOKEN_SECRET });
   assert.equal(await authenticate(authorized(token)), null);
 });

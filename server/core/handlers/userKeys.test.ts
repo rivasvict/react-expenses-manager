@@ -32,7 +32,17 @@ test("different emails get different keys", () => {
 
 test("userIdKey namespaces the pointer away from the primary record", () => {
   assert.equal(userIdKey("abc-123"), "user-ids/abc-123");
+});
+
+test("userKey and userIdKey never derive the same key from one value", () => {
   // The two key spaces must not collide: a user id can never be read back as
-  // a user record, or vice versa.
-  assert.ok(!userIdKey("abc-123").startsWith("users/"));
+  // a user record, or vice versa. Feeding the same value to both is the
+  // check that actually exercises that — asserting the "user-ids/" literal
+  // does not start with "users/" only restates the two prefix constants.
+  for (const value of ["abc-123", "jane@example.com", "users", ""])
+    assert.notEqual(
+      userIdKey(value),
+      userKey(value),
+      `both key functions collided on "${value}"`
+    );
 });

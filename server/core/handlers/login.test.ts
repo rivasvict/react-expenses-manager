@@ -75,16 +75,23 @@ test("a wrong password and an unknown email are indistinguishable (AC-1.5)", asy
   });
 
   // Same status and byte-identical body: the response must not disclose
-  // whether the account exists.
-  assert.equal(wrongPassword.status, HTTP_STATUS.UNAUTHORIZED);
-  assert.equal(unknownEmail.status, HTTP_STATUS.UNAUTHORIZED);
-  assert.deepEqual(wrongPassword.body, unknownEmail.body);
-  assert.deepEqual(wrongPassword.body, {
+  // whether the account exists. Each response is checked against the
+  // expected body directly rather than one being inferred from the other,
+  // so a failure names the path that drifted.
+  const expected = {
     error: {
       code: ERROR_CODES.INVALID_CREDENTIALS,
       message: "Email or password is incorrect.",
     },
-  });
+  };
+
+  assert.equal(wrongPassword.status, HTTP_STATUS.UNAUTHORIZED);
+  assert.equal(unknownEmail.status, HTTP_STATUS.UNAUTHORIZED);
+  assert.deepEqual(wrongPassword.body, expected);
+  assert.deepEqual(unknownEmail.body, expected);
+  // And identical to each other, which is the property under test: both
+  // must stay pinned to the same shape, not merely to a matching one.
+  assert.deepEqual(wrongPassword.body, unknownEmail.body);
 });
 
 test("missing or blank fields fail as invalid credentials, not validation", async () => {
