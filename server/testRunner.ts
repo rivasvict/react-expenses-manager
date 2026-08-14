@@ -15,7 +15,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
+// Compiled output only. This runner is always pointed at the tsc output
+// directory (see the entry point at the bottom of this file), and tsc emits
+// JavaScript there, so `.test.ts` is not a second suffix to match — no such
+// file ever exists under dist/. The `.ts` sources are matched by tsconfig's
+// `include`, not here.
 const TEST_FILE_SUFFIX = ".test.js";
+
+// Exit code surfaced for every way this runner can fail. Node reserves 0 for
+// success and treats any non-zero as failure, and nothing downstream tells
+// the failures apart, so they share one code rather than inventing a private
+// numbering CI would only have to ignore.
+export const EXIT_FAILURE = 1;
 
 // Every compiled test file under `dir`, recursively, sorted for a stable
 // run order. Returns [] when `dir` does not exist (an unbuilt tree), leaving
@@ -50,7 +61,7 @@ export const runTests = (dir: string): number => {
       "Refusing to report success — run `npm run build:server` first, or " +
         "check that the test files were emitted."
     );
-    return 1;
+    return EXIT_FAILURE;
   }
 
   console.log(`Running ${files.length} server test files with node --test`);
@@ -58,7 +69,7 @@ export const runTests = (dir: string): number => {
     stdio: "inherit",
   });
   // A null status means the child was killed by a signal; treat as failure.
-  return status ?? 1;
+  return status ?? EXIT_FAILURE;
 };
 
 // Compiled to server/dist/testRunner.js, so __dirname is the output root.

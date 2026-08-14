@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { findTestFiles, runTests } from "./testRunner";
+import { EXIT_FAILURE, findTestFiles, runTests } from "./testRunner";
 
 // Builds a throwaway tree from a { relativePath: contents } map.
 const withFixture = (
@@ -89,10 +89,13 @@ test("runTests fails loudly when it discovers no test files", () => {
   // The whole point of the runner: an empty discovery must not exit 0, or a
   // suite that silently stopped being found would look like a passing build.
   withFixture({ "handlers.js": "" }, (dir) => {
-    assert.equal(runTests(dir), 1);
+    assert.equal(runTests(dir), EXIT_FAILURE);
   });
 });
 
 test("runTests fails when the build output is missing entirely", () => {
-  assert.equal(runTests(path.join(os.tmpdir(), "no-such-dist-dir")), 1);
+  assert.equal(
+    runTests(path.join(os.tmpdir(), "no-such-dist-dir")),
+    EXIT_FAILURE
+  );
 });
