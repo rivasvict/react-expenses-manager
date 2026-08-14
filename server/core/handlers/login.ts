@@ -19,12 +19,20 @@ interface CreateLoginHandlerOptions {
   issueSession: IssueSession;
 }
 
+// Input for the throwaway hash that equalizes login timing (see below). Not a
+// secret and deliberately not configurable: it is never compared against a
+// real credential, its hash never leaves the process, and `hashPassword` salts
+// it randomly on every handler set, so its value carries no security weight.
+// Sourcing it from the environment would only add a variable that must never
+// be misconfigured — and one that could be set to some real user's password.
+const DUMMY_TIMING_EQUALIZER_PASSWORD = "dummy-timing-equalizer";
+
 export const createLoginHandler = ({
   storage,
   issueSession,
 }: CreateLoginHandlerOptions): Handler => {
   // Hashed once per handler set; only used to equalize login timing below.
-  const dummyPasswordRecord = hashPassword("dummy-timing-equalizer");
+  const dummyPasswordRecord = hashPassword(DUMMY_TIMING_EQUALIZER_PASSWORD);
 
   return async ({ body }) => {
     const { email, password } = (body || {}) as LoginRequestBody;
