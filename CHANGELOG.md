@@ -14,6 +14,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `413 PAYLOAD_TOO_LARGE` instead of a generic 500 or a dropped connection, so
   clients can tell an oversized upload apart from a server fault
 
+## [1.6.4] - 2026-08-03
+
+### Fixed
+- Dashboard balance chart: percentages are now calculated with incomes as
+  the 100% base, and the chart shows Expenses % / Savings % (instead of the
+  previous Incomes % / Expenses % split against an `incomes + expenses`
+  base, which understated both figures). Overspending (expenses > incomes)
+  and zero incomes are both capped at 100% expenses / 0% savings rather than
+  showing negative savings or hiding the chart (#157)
+
+## [1.6.3] - 2026-08-02
+
+### Changed
+- Buckets: a monthly allowance of exactly 0 is now rejected, not just
+  negative values — the allowance validation (form + storage layer) now
+  requires a value strictly greater than zero. This also closes the open
+  "what if allowance is 0" gap flagged in issue #155, since a zero allowance
+  would have made the carry-on percentage calculation divide by zero
+
+## [1.6.2] - 2026-08-02
+
+### Fixed
+- Buckets: a bucket whose carried-over debt already exceeds its allowance
+  (zero or negative availability) now shows a magnitude-aware usage
+  percentage with the danger/red indicator, instead of falling back to 0%
+  whenever nothing had been spent yet this month. The percentage now reads
+  as "100% + how far past the allowance the carried debt goes" (e.g. a $300
+  debt against a $200 allowance reads 150%, not a flat, uninformative 100%)
+  (issue #155)
+
+## [1.6.1] - 2026-08-02
+
+### Fixed
+- Buckets: adding or editing a bucket now rejects a negative monthly
+  allowance, both in the form (clear inline error, "Allowance cannot be
+  negative") and at the storage layer as a safety net. Previously a negative
+  value could only be blocked by the input's regex silently swallowing the
+  keystroke, with no explicit validation or error message
+
 ## [1.6.0] - 2026-07-21
 
 ### Added
