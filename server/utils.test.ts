@@ -37,8 +37,8 @@ const fakeResponse = (): RecordedResponse => {
   return recorded;
 };
 
-// UTF-8-specific decoding is covered by the multi-byte test below; this one
-// is about concatenating the chunks a body arrives in.
+// Two separate writes must be joined into one string, not just the last
+// chunk received or each chunk decoded on its own.
 test("readBody resolves with the whole body joined across chunks", async () => {
   const request = fakeRequest();
   const pending = readBody(request, 1024);
