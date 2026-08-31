@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.7.0] - 2026-07-26
+
+### Added
+- GitHub Actions workflow for server tests using Node 18+, enabling CI validation
+  of the sync server independent of the React app's Node version pin
+- Sync server: a request body over the size cap is now answered with
+  `413 PAYLOAD_TOO_LARGE` instead of a generic 500 or a dropped connection, so
+  clients can tell an oversized upload apart from a server fault
+
 ## [1.6.4] - 2026-08-03
 
 ### Fixed
