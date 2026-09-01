@@ -9,12 +9,19 @@ import {
 } from "../../../../redux/expensesManager/actionCreators";
 import { FormButton, FormContent, InputNumber } from "../../Forms";
 import { Col, Form, Row, Button } from "react-bootstrap";
-import { getActiveLimitForMonth, toYearMonth } from "../../../../helpers/entriesHelper/entriesHelper";
+import {
+  getActiveLimitForMonth,
+  getBucketAllowanceValidationError,
+  toYearMonth,
+} from "../../../../helpers/entriesHelper/entriesHelper";
+
+const ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
 
 const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
   const params = useParams();
   const { bucketName } = params;
   const [bucket, setBucket] = useState<{ name: string; value: number | "" }>({ name: "", value: 0 });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -48,6 +55,13 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
         formProps={{
           onSubmit: (event) => {
             event.preventDefault();
+
+            const allowanceError = getBucketAllowanceValidationError(bucket.value);
+            if (allowanceError) {
+              setError(allowanceError);
+              return;
+            }
+
             const editedBucket = { [bucket.name]: Number(bucket.value) };
             saveBucket(editedBucket);
             history.goBack();
@@ -75,12 +89,12 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
                       value={bucket?.value}
                       onChange={(event) => {
                         const value = event?.currentTarget?.value;
+                        setError(null);
                         if (!value) {
                           setBucket({ name: bucket?.name, value: "" });
                           return;
                         }
-                        const digitMatcher = /^\d*(\.)*\d+$/;
-                        if (digitMatcher.test(value)) {
+                        if (ALLOWANCE_MATCHER.test(value)) {
                           setBucket({
                             name: bucket?.name,
                             value: parseFloat(value),
@@ -89,6 +103,11 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
                       }}
                     ></InputNumber>
                   </Form.Group>
+                  {error && (
+                    <p className="edit-bucket-error text-danger" role="alert">
+                      {error}
+                    </p>
+                  )}
                 </Col>
               </Row>
               <Row className="bottom-container container-fluid vertical-standard-space">

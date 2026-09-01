@@ -4,10 +4,12 @@ import {
   updateFixedEntryDefinition,
   getEmptyFixedEntries,
 } from "../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
+import { getDefaultEntryFilters } from "../../../helpers/entriesHelper/filterSortHelper";
 const BALANCE = "balance";
 const BUCKET = "buckets";
 const CATEGORIES = "categories";
 const FIXED_ENTRIES = "fixedEntries";
+const ENTRY_FILTERS = "entryFilters";
 
 const getItemFromLocalStorageFactory =
   ({ itemType }) =>
@@ -54,6 +56,29 @@ const getFixedEntriesFromLocalStorage = async () => {
 
 const storeFixedEntriesInLocalStorage = storeInLocalStorageFactory({
   itemType: FIXED_ENTRIES,
+});
+
+// Filters & sorting for the entry lists, stored as one JSON object so a page
+// reload restores the exact same filtered view. Missing or corrupt data falls
+// back to the defaults (merged key-by-key so partial/older objects stay valid).
+const getEntryFiltersFromLocalStorage = async () => {
+  const storedData = localStorage.getItem(ENTRY_FILTERS) || "";
+  try {
+    const parsedData = storedData ? JSON.parse(storedData) : null;
+    const isPlainObject =
+      parsedData !== null &&
+      typeof parsedData === "object" &&
+      !Array.isArray(parsedData);
+    return isPlainObject
+      ? { ...getDefaultEntryFilters(), ...parsedData }
+      : getDefaultEntryFilters();
+  } catch (error) {
+    return getDefaultEntryFilters();
+  }
+};
+
+const storeEntryFiltersInLocalStorage = storeInLocalStorageFactory({
+  itemType: ENTRY_FILTERS,
 });
 
 // Creates a new recurring entry effective from `from` ("YYYY-MM"). The entry
@@ -114,6 +139,7 @@ const editBucketForMonth = async ({
   addedBy,
 }) => {
   if (!bucketName) throw new Error("No bucket name was set");
+  if (Number(limit) <= 0) throw new Error("Allowance must be greater than zero");
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
 
@@ -169,6 +195,7 @@ const addBucketData = async ({ bucket, addedBy }) => {
   const [name, value] = Object.entries(bucket)[0] || [];
   const trimmedName = (name || "").trim();
   if (!trimmedName) throw new Error("Category name cannot be empty");
+  if (Number(value) <= 0) throw new Error("Allowance must be greater than zero");
 
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const alreadyExists = Object.keys(storedBuckets).some(
@@ -296,6 +323,10 @@ const LocalStorage = () => ({
   addCategory: async ({ category }) => {
     return addCategoryData({ category });
   },
+  // Filters & sorting for the entry lists (search, scope, category, sortKey).
+  getEntryFilters: async () => getEntryFiltersFromLocalStorage(),
+  setEntryFilters: async ({ entryFilters }) =>
+    storeEntryFiltersInLocalStorage({ data: entryFilters }),
   getFixedEntries: async () => getFixedEntriesFromLocalStorage(),
   // Create a recurring income/expense effective from a month (issue #103). It
   // then shows up automatically in that month and every month forward.
