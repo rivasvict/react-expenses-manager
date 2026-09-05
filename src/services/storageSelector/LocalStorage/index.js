@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — only addCategory, addBucket and editBucket
+ * have colocated tests. The balance, import/export and fixed-entry paths
+ * (including the `addedBy` attribution threading added by the multi-user sync
+ * work) have no direct unit tests. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import { v4 as uuidv4 } from "uuid";
 import {
   addFixedEntryDefinition,
@@ -97,7 +105,8 @@ const addFixedEntryData = async ({ entry, from }) => {
     amount: entry.amount,
     description: entry.description,
     categories_path: entry.categories_path,
-    // Optional attribution (AC-1.6) — persisted as-is when present.
+    // Optional attribution (AC-1.6, docs/multi-user-sync/PRD.md) — persisted
+    // as-is when present.
     ...(entry.addedBy ? { addedBy: entry.addedBy } : {}),
   });
   await storeFixedEntriesInLocalStorage({ data: newFixedEntries });

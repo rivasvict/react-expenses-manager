@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — the `addedBy` attribution stamping is
+ * covered by ./attribution.test.js, but the rest of the action creators
+ * (balance loading, entry add/edit/remove, backup restore, buckets, fixed
+ * entries) have no direct unit tests. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import {
   getCurrentEmptyMonth,
   getGroupedFilledEntriesByDate,
@@ -97,9 +105,10 @@ const GetBalance =
     };
   };
 
-// Attribution (AC-1.6, RFC §2.3): newly created items are stamped with the
-// logged-in account at the action-creator layer; storage stays a dumb store.
-// Logged out → no field at all.
+// Attribution (AC-1.6 in docs/multi-user-sync/PRD.md, docs/multi-user-sync/
+// RFC.md §2.3): newly created items are stamped with the logged-in account at
+// the action-creator layer; storage stays a dumb store. Logged out → no field
+// at all.
 const withAddedBy = (item) => {
   const addedBy = getAddedBy();
   return addedBy ? { ...item, addedBy } : item;
