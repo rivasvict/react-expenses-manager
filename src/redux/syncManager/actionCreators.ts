@@ -1,5 +1,7 @@
 // Thunk action creators for account state. API errors are re-thrown so the
-// calling screen can render the exact copy for each error code (DESIGN §2).
+// calling screen can render the exact copy for each error code
+// (docs/multi-user-sync/DESIGN.md §2). RFC/AC tags below refer to
+// docs/multi-user-sync/RFC.md and docs/multi-user-sync/PRD.md.
 import { Dispatch } from "redux";
 import * as syncApi from "../../services/syncApi";
 import { AuthResponse } from "../../services/syncApi/contract";

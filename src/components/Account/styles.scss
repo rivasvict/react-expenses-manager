@@ -33,7 +33,8 @@
       margin-bottom: 1rem;
     }
 
-    // Same shape/colors as the header account chip (DESIGN §2.3).
+    // Same shape/colors as the header account chip
+    // (docs/multi-user-sync/DESIGN.md §2.3).
     &__initials {
       @include icon-chip(44px);
       flex: 0 0 auto;

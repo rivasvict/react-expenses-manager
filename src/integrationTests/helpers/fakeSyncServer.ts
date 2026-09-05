@@ -1,6 +1,7 @@
-// In-memory fetch stub implementing the auth portion of the sync API
-// contract (RFC §3, endpoints 1–3) so integration tests never touch the
-// network (NFR-5). Party/backup endpoints join in later PRs.
+// In-memory fetch stub implementing the auth portion of the sync API contract
+// (docs/multi-user-sync/RFC.md §3, endpoints 1–3) so integration tests never
+// touch the network (NFR-5, docs/multi-user-sync/PRD.md). Party/backup
+// endpoints join in later PRs. AC tags below are also in PRD.md.
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
 import { SyncUser } from "../../services/syncApi/contract";
