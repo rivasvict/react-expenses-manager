@@ -1,11 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import { Icon } from "@iconify/react";
 import GlyphIcon from "./GlyphIcon";
 import BrandMark from "./BrandMark";
-import accountIcon from "@iconify-icons/codicon/account";
-import { getInitials } from "../../helpers/general";
+import AccountChip from "./AccountChip";
 /**
  * TODO:
  * Reinstate the log-out action
@@ -33,33 +31,6 @@ const NAV_ITEMS = [
     icon: "database",
   },
 ];
-
-// Account entry point (DESIGN §1): a circular icon-button in the app bar —
-// a generic glyph when logged out, the user's initials when logged in.
-// Present at every viewport, independent of the tab bar's collapse.
-const AccountChip = ({ session }) => {
-  const user = session?.user;
-  const accountLabel = user
-    ? `Account: ${user.firstName} ${user.lastName}`
-    : "Account";
-  return (
-    <Link
-      to="/account"
-      className={`account-chip ${user ? "account-chip--logged-in" : ""}`}
-      aria-label={accountLabel}
-    >
-      {user ? (
-        <span aria-hidden="true">{getInitials(user)}</span>
-      ) : (
-        <Icon
-          icon={accountIcon}
-          className="account-chip__icon"
-          aria-hidden="true"
-        />
-      )}
-    </Link>
-  );
-};
 
 /**
  * App bar with a single nav that adapts by viewport: an inline icon+label nav
