@@ -8,9 +8,10 @@ interface MemberRowProps {
 }
 
 /**
- * One static row of the party member list (DESIGN §3.2): name/email plus a
- * right-aligned status — an Organizer badge, a muted "Blocked" label, or
- * nothing. The organizer's Block button joins in the party-management PR.
+ * One static row of the party member list (docs/multi-user-sync/DESIGN.md
+ * §3.2): name and email, plus a right-aligned status — an Organizer badge, a
+ * muted "Blocked" label, or nothing. The organizer's Block button joins in a
+ * later PR.
  */
 const MemberRow = ({ member, isSelf, isOrganizer }: MemberRowProps) => (
   <li className="member-row">

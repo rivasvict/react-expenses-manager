@@ -6,10 +6,10 @@ import {
 } from "./helpers/fakeSyncServer";
 
 /**
- * Integration tests for redeeming an invitation (multi-user sync PR 2):
- * the happy path, the EC-6/7/8 error states and their exact copy
- * (AC-2.5–2.7). All network traffic goes through the in-memory
- * fakeSyncServer.
+ * Integration tests for redeeming an invitation: the happy path, plus the
+ * EC-6/7/8 error states and their exact copy (AC-2.5–2.7,
+ * docs/multi-user-sync/PRD.md). All network traffic goes through the
+ * in-memory fakeSyncServer.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");

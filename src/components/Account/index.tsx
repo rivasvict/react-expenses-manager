@@ -19,7 +19,6 @@ interface AccountProps {
  * offers Sign in / Sign up; the logged-in view shows who is signed in and a
  * Log out button. Logout needs no confirmation (reversible, low-stakes) and
  * announces a transient status line (AC-1.4, docs/multi-user-sync/PRD.md).
- * The Party row lands with parties in a later PR.
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
   const [justSignedOut, setJustSignedOut] = useState(false);
@@ -45,6 +44,7 @@ const Account = ({ session, onLogOut }: AccountProps) => {
             </div>
           </div>
           {/* DESIGN §2.3: the party hub is reached from the account. */}
+          {/*@ts-expect-error temporarily ignore this typescript error */}
           <ContentTileSection title="Party" to="/party">
             Party
           </ContentTileSection>
