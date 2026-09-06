@@ -2,6 +2,16 @@
 // so the calling screen can render the exact copy for each error code
 // (docs/multi-user-sync/DESIGN.md §2/§3). RFC/AC/EC tags below refer to
 // docs/multi-user-sync/RFC.md and docs/multi-user-sync/PRD.md.
+//
+// TODO:
+// This module has no test file. signUp/signIn/logOut and the refreshMe/
+// createParty/generateInvitation/joinParty thunks are currently only
+// asserted end-to-end via src/integrationTests/accounts.test.tsx,
+// party.test.tsx and partyJoin.test.tsx. Worth covering directly: session
+// persistence on sign in/up, logOut clearing it, the deliberately swallowed
+// refreshMe failure, the SYNC_PARTY_SET dispatches, and the "Not signed in"
+// guards. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/160
 import { Dispatch } from "redux";
 import * as syncApi from "../../services/syncApi";
 import { AuthResponse, Party } from "../../services/syncApi/contract";
