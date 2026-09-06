@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * This module has no unit tests. The multi-user sync work added `getInitials`
+ * here without backfilling coverage for it or for the pre-existing helpers.
+ * Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
+
 function calculateTotal(...numbersToSum) {
   return (
     numbersToSum.reduce((accumulated, currentNumber) => {
@@ -47,10 +55,16 @@ const addViewHeightMobileConfig = () => {
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 };
 
+// "Jane" + "Doe" → "JD". Used by the header account chip and the account
+// screen (docs/multi-user-sync/DESIGN.md §2).
+const getInitials = ({ firstName, lastName }) =>
+  `${(firstName || "").charAt(0)}${(lastName || "").charAt(0)}`.toUpperCase();
+
 export {
   calculateTotal,
   setObjectToSessionStorage,
   postConfig,
   postConfigAuthenticated,
   addViewHeightMobileConfig,
+  getInitials,
 };

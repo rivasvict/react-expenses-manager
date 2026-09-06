@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — the `addedBy` attribution stamping is
+ * covered by ./attribution.test.js, but the rest of the action creators
+ * (balance loading, entry add/edit/remove, backup restore, buckets, fixed
+ * entries) have no direct unit tests. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import {
   getCurrentEmptyMonth,
   getGroupedFilledEntriesByDate,
@@ -9,6 +17,7 @@ import {
   buildBackupEnvelope,
   parseBackupEnvelope,
 } from "../../helpers/backupHelper/backupHelper";
+import { getAddedBy } from "../../services/session";
 import { getDefaultEntryFilters } from "../../helpers/entriesHelper/filterSortHelper";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
@@ -96,11 +105,20 @@ const GetBalance =
     };
   };
 
+// Attribution (AC-1.6 in docs/multi-user-sync/PRD.md, docs/multi-user-sync/
+// RFC.md §2.3): newly created items are stamped with the logged-in account at
+// the action-creator layer; storage stays a dumb store. Logged out → no field
+// at all.
+const withAddedBy = (item) => {
+  const addedBy = getAddedBy();
+  return addedBy ? { ...item, addedBy } : item;
+};
+
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      const savedEntry = await storage.setNewRecord(entry);
+      const savedEntry = await storage.setNewRecord(withAddedBy(entry));
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry: savedEntry, selectedDate } });
       dispatch(setAppLoading(false));
@@ -135,7 +153,7 @@ const EditEntry =
         const fixedEntries = await storage.getFixedEntries();
         const entries = getGroupedFilledEntriesByDate()(
           newBalance,
-          fixedEntries
+          fixedEntries,
         );
         dispatch({ type: EDIT_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
@@ -155,7 +173,7 @@ const RemoveEntry =
         const fixedEntries = await storage.getFixedEntries();
         const entries = getGroupedFilledEntriesByDate()(
           newBalance,
-          fixedEntries
+          fixedEntries,
         );
         dispatch({ type: REMOVE_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
@@ -199,7 +217,7 @@ const RestoreBackup =
         await storage.importData(data);
         const entries = getGroupedFilledEntriesByDate()(
           data.balance,
-          data.fixedEntries
+          data.fixedEntries,
         );
         dispatch({
           type: RESTORE_BACKUP,
@@ -262,11 +280,15 @@ const EditBucket =
       try {
         dispatch(setAppLoading(true));
         const [bucketName, limit] = Object.entries(bucket)[0];
-        const fromYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+        const fromYearMonth = toYearMonth(
+          selectedDate.year,
+          selectedDate.month,
+        );
         const response = await storage.editBucket({
           bucketName,
           limit,
           fromYearMonth,
+          addedBy: getAddedBy(),
         });
         dispatch({
           type: EDIT_BUCKET,
@@ -290,7 +312,10 @@ const AddBucket =
     return async (dispatch) => {
       dispatch(setAppLoading(true));
       try {
-        const response = await storage.addBucket({ bucket });
+        const response = await storage.addBucket({
+          bucket,
+          addedBy: getAddedBy(),
+        });
         const [categoryName] = Object.keys(bucket);
         dispatch({
           type: ADD_BUCKET,
@@ -450,17 +475,26 @@ const AddFixedEntry =
   ({ entry, from }) =>
     persistFixedEntriesAndRefresh({
       storage,
-      persist: (s) => s.addFixedEntry({ entry, from }),
+      persist: (s) => s.addFixedEntry({ entry: withAddedBy(entry), from }),
     });
 
-// Edits a recurring entry (by id) from the given month forward.
+// Edits a recurring entry (by id) from the given month forward. Each new
+// history state is an independently syncable item, so it gets its own
+// attribution stamp (RFC §2.3).
 const EditFixedEntry =
   ({ storage }) =>
   ({ id, from, amount, description, categories_path }) =>
     persistFixedEntriesAndRefresh({
       storage,
       persist: (s) =>
-        s.editFixedEntry({ id, from, amount, description, categories_path }),
+        s.editFixedEntry({
+          id,
+          from,
+          amount,
+          description,
+          categories_path,
+          addedBy: getAddedBy(),
+        }),
     });
 
 // Removes a recurring entry (by id) from the given month forward.
@@ -469,7 +503,7 @@ const RemoveFixedEntry =
   ({ id, from }) =>
     persistFixedEntriesAndRefresh({
       storage,
-      persist: (s) => s.removeFixedEntry({ id, from }),
+      persist: (s) => s.removeFixedEntry({ id, from, addedBy: getAddedBy() }),
     });
 
 export const ActionCreators = ({ storage }) => {

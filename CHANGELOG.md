@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.7.0] - 2026-07-26
 
 ### Added
+
 - GitHub Actions workflow for server tests using Node 18+, enabling CI validation
   of the sync server independent of the React app's Node version pin
 - Sync server: a request body over the size cap is now answered with
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.4] - 2026-08-03
 
 ### Fixed
+
 - Dashboard balance chart: percentages are now calculated with incomes as
   the 100% base, and the chart shows Expenses % / Savings % (instead of the
   previous Incomes % / Expenses % split against an `incomes + expenses`
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.3] - 2026-08-02
 
 ### Changed
+
 - Buckets: a monthly allowance of exactly 0 is now rejected, not just
   negative values — the allowance validation (form + storage layer) now
   requires a value strictly greater than zero. This also closes the open
@@ -36,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.2] - 2026-08-02
 
 ### Fixed
+
 - Buckets: a bucket whose carried-over debt already exceeds its allowance
   (zero or negative availability) now shows a magnitude-aware usage
   percentage with the danger/red indicator, instead of falling back to 0%
@@ -47,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.1] - 2026-08-02
 
 ### Fixed
+
 - Buckets: adding or editing a bucket now rejects a negative monthly
   allowance, both in the form (clear inline error, "Allowance cannot be
   negative") and at the storage layer as a safety net. Previously a negative
@@ -56,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.0] - 2026-07-21
 
 ### Added
+
 - Visual refresh: category-aware entry icons. Each entry row's chip now shows a
   glyph keyed to the entry's category (home, car, cart, coffee, briefcase, …)
   instead of a bare up/down arrow; the chip's income-green / expense-rose tint
@@ -64,9 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   free 2px-stroke glyph set (`GlyphIcon`) and a `categoryIcons` map covering
   every seed category, with a unit test asserting each resolves and unknowns
   fall back
-- Visual refresh: two-line entry rows. An entry *with* a description now shows
+- Visual refresh: two-line entry rows. An entry _with_ a description now shows
   its category as a semibold title over the description as muted subtext; an
-  entry *without* one keeps the single line. The rule is content-driven, so
+  entry _without_ one keeps the single line. The rule is content-driven, so
   rows never reshape on resize
 - Visual refresh: a two-tier monthly total tile on /summary, /expenses and
   /incomes — a muted label with a large, tone-colored value on a softly tinted
@@ -89,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   fallbacks pending brand sign-off before regenerating them from the source
 
 ### Changed
+
 - Visual refresh: the month navigator's Prev/Next steppers are now rounded
   squares (matching the app's control shape; circles stay reserved for the
   money chips) and, at the first/last month with data, the stepper stays in
@@ -98,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.5.1] - 2026-07-20
 
 ### Fixed
+
 - Mobile: the open filter sheet and its scrim now stack above the fixed
   bottom tab bar (`.app-nav`, z-index 100) — previously the nav painted
   over the sheet's "Clear all" / "Show N results" buttons and stole their
@@ -122,6 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.5.0] - 2026-07-20
 
 ### Added
+
 - Filters & sorting on the monthly summary (/summary): the shared toolbar
   (live search, sort, Filters button) and the Filters sheet/panel now render
   on the summary screen, and the ONE shared filter/sort state drives BOTH
@@ -142,6 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   against the filtered subsets
 
 ### Changed
+
 - The Summary screen is now Redux-connected (`entryFilters` +
   setEntryFilters/clearEntryFilters); the "Show" entry-type select is
   untouched — filters apply within whatever it displays, and the banner
@@ -150,6 +160,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   default), matching the /expenses and /incomes behavior
 
 ### Tests
+
 - New integration suite `summaryFilters.test.tsx` (11 tests): both-list
   narrowing from one search, shared sort ordering across lists, income
   categories in the picker, signed net total with polarity (positive green
@@ -161,6 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.4.0] - 2026-07-20
 
 ### Added
+
 - "Filters & sort" sheet on the incomes/expenses report: a Filters button
   (funnel icon) on the toolbar opens a bottom sheet over a scrim on narrow
   screens and an inline bordered panel on wide ones (same markup, pure CSS
@@ -191,6 +203,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   are native radios
 
 ### Changed
+
 - The standalone "Filter by category" control moved from the report screen
   into the Filters sheet/panel (same searchable dropdown, same semantics)
 - `EntriesSummary` accepts a `hideHeader` prop and `SummaryWithChart` a
@@ -198,6 +211,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   heading without affecting `/summary`
 
 ### Tests
+
 - New integration suite `filterSheet.test.tsx` (14 tests): sheet
   open/close with focus management, shared search/sort state between
   toolbar and sheet, live "Show N results" count, scope-toggle semantics,
@@ -211,6 +225,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.3.0] - 2026-07-20
 
 ### Added
+
 - Live search and sorting on the incomes/expenses monthly report: a slim
   toolbar under the total tile with a "Search entries" field (matches
   description and category name, case-insensitive, narrows the list as you
@@ -226,12 +241,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the pure filter/sort/descriptor logic
 
 ### Changed
+
 - The incomes/expenses "Filter by category" control now drives the shared
   `entryFilters.category` state instead of the legacy `category` field
   (the old field and its `CATEGORY_CHANGE` action remain in the reducer,
   unused, pending a follow-up removal)
 
 ### Tests
+
 - New unit suites for `filterSortHelper` (search scopes, literal category
   match incl. regex-special names, sort orders, ties, immutability,
   descriptors) and for the new `entryFilters` reducer cases
@@ -246,9 +263,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Testing Library rules, and a duplicated describe title in the skipped
   AddEntry suite was corrected
 
-## [1.2.1] - 2026-07-19
+## [1.2.2] - 2026-07-19
 
 ### Fixed
+
 - Category filter on the incomes/expenses report no longer breaks for
   categories whose name contains regex-special characters (e.g.
   "House (Rent)"). `getFilteredEntriesByCategory` used
@@ -258,9 +276,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `,house (rent),` path. It now matches the category value literally with
   `String.prototype.includes`
 
-## [1.2.0] - 2026-07-18
+## [1.2.1] - 2026-07-18
 
 ### Added
+
 - Searchable category dropdowns: every category select (entry form,
   incomes/expenses category filter, Add bucket) is now a hand-built
   type-to-filter combobox (`CategorySearchSelect`) with a search box inside
@@ -272,12 +291,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   pattern; no new dependencies were added
 
 ### Changed
+
 - `CategorySelector` is now a thin adapter over `CategorySearchSelect`,
   preserving its props contract (`handleChange` still receives an
   event-like `{ currentTarget: { value, name } }`, values keep the
   `,category,` format and `""` for the empty option)
 
 ### Tests
+
 - New unit suite for `CategorySearchSelect` (open/close, filtering,
   selection, keyboard navigation with clamping, empty state, click-outside,
   empty-option reset) and new integration tests for type-to-filter entry
@@ -287,9 +308,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   assertions and intent are unchanged
 - `CategorySelector.test.js.snap` regenerated for the new markup
 
+## [1.2.0] - 2026-07-12
+
+### Added
+
+- Accounts (multi-user sync, PR 1): optional sign up / sign in / log out —
+  the app remains fully functional without an account, and no existing
+  route is gated
+- Account entry point in the app header (generic glyph when logged out,
+  initials chip when logged in) and new in-app screens: `/account`,
+  `/sign-up`, `/sign-in`
+- Local sync server (`npm run sync-server`): dependency-free plain Node
+  service with scrypt password hashing, HMAC-signed 30-day tokens and
+  on-disk JSON storage under `server/.data/` (gitignored); contract tests
+  via `npm run test:server` (Node >= 18); see `server/README.md`
+- Sessions persist across reloads/restarts (`sync.session`) until logout
+  or token expiry; login/signup errors use clear, non-revealing copy
+- Attribution: entries, fixed-entry states and bucket states created while
+  logged in are stamped with `addedBy` (account id + first name) for the
+  upcoming sync review wizard; anonymous when logged out
+- `REACT_APP_SYNC_API_HOST` config (defaults to `http://localhost:4000`)
+
 ## [1.1.0] - 2026-07-10
 
 ### Changed
+
 - Complete UX/UI overhaul on a new design-token system (`variables.scss`):
   refined dark "calm fintech" palette, consistent card surfaces, radii,
   focus-visible rings, and semantic income (green) / expense (rose) colors
@@ -322,6 +365,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   ("I Aknowledge" → "Got it")
 
 ### Fixed
+
 - Refreshing (or landing directly) on `/summary` no longer shows an empty
   $0.00 report: the Summary screen derives its data from the store at render
   time instead of freezing whatever was loaded at mount
@@ -329,6 +373,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   washed out the gold "Add …" buttons with light text
 
 ### Tests
+
 - `entryCreation.test.tsx`: the income-creation assertion now tolerates the
   same amount appearing in both the savings hero and the incomes row (the
   seeded scenario has no expenses, so both legitimately read $1,000.00)
@@ -341,6 +386,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.4] - 2026-07-10
 
 ### Added
+
 - CI: `unit-tests` and `integration-tests` GitHub Actions workflows, running
   on push to `master` and on pull requests targeting `master`. Both pin
   Node via `.nvmrc`, install with `npm ci`, and split the suite using the
@@ -349,6 +395,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.3] - 2026-07-10
 
 ### Fixed
+
 - `App.test.js`: pass a real Redux store to `<App />` so the test no longer
   crashes inside `Provider`
 - `CategorySelector.test.js`: refreshed a snapshot that predated the
@@ -360,6 +407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   behavior stays deterministic
 
 ### Changed
+
 - Skipped 4 unit test suites (`Dashboard/index.test.js`,
   `AddEntry/index.test.js`, `Summaries/EntriesSummary.test.js`,
   `Summaries/EntrySummaryWithFilter.test.js`) that exercise component APIs
@@ -371,6 +419,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.2] - 2026-07-09
 
 ### Added
+
 - Fixed Entries: section totals for the Incomes and Expenses lists, showing
   the sum of the recurring entries applying to the viewed month (#113)
 
@@ -380,6 +429,7 @@ First stable release. This version consolidates the buckets, categories,
 fixed-entries, and backup/restore work into a single supported release.
 
 ### Added
+
 - Single-file backup & restore for the entire app's data (#109)
 - Fixed Entries: mark incomes/expenses as recurring per category, with a
   dedicated Fixed Entries page and the ability to promote a regular entry
@@ -394,6 +444,7 @@ fixed-entries, and backup/restore work into a single supported release.
 - `CLAUDE.md` project documentation for contributors
 
 ### Changed
+
 - Per-month bucket limit edits now apply from the edited month forward
   instead of retroactively (#102)
 - Negative bucket availability is now shown as `$0.00 (-deficit)` instead
@@ -402,6 +453,7 @@ fixed-entries, and backup/restore work into a single supported release.
 - Internal categories state renamed to `unbudgetedCategories` for clarity (#100)
 
 ### Fixed
+
 - New entries are now stamped with the selected month/year instead of the
   wall-clock date (#93)
 - Cross-year month filling and a missing entry UUID after creation (#91)

@@ -1,7 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import GlyphIcon from "./GlyphIcon";
 import BrandMark from "./BrandMark";
+import AccountChip from "./AccountChip";
 /**
  * TODO:
  * Reinstate the log-out action
@@ -35,7 +37,7 @@ const NAV_ITEMS = [
  * on wide screens, a fixed bottom tab bar on narrow ones. The same links stay
  * in the DOM in both layouts.
  */
-const Header = () => (
+const Header = ({ session }) => (
   <header className="app-header">
     <div className="app-header__bar">
       <Link to="/" className="app-header__brand">
@@ -69,8 +71,13 @@ const Header = () => (
          */}
         {/* <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button> */}
       </nav>
+      <AccountChip session={session} />
     </div>
   </header>
 );
 
-export default Header;
+const mapStateToProps = (state) => ({
+  session: state.syncManager.session,
+});
+
+export default connect(mapStateToProps)(Header);

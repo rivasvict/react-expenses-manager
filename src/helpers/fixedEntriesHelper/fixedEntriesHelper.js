@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — ./fixedEntriesHelper.test.js exercises the
+ * resolve/set/add/update/materialize paths, but `buildFixedEntry` and
+ * `getEmptyFixedEntries` are untested, and the `addedBy` stamp added by the
+ * multi-user sync work is only covered indirectly. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import { getYearMonthKey, getTimestampFromMonthAndYear } from "../date";
 
 /**
@@ -62,16 +70,26 @@ const setHistoryState = (history = [], from, state) =>
     byFromAscending
   );
 
-// Appends a brand new recurring entry effective from `from`. Returns a new list.
+// Appends a brand new recurring entry effective from `from`. Returns a new
+// list. `addedBy` is the optional attribution stamp (AC-1.6,
+// docs/multi-user-sync/PRD.md) carried by the initial history state.
 const addFixedEntryDefinition = (
   fixedEntries,
-  { id, type, from, amount, description, categories_path }
+  { id, type, from, amount, description, categories_path, addedBy }
 ) => [
   ...(fixedEntries || []),
   {
     id,
     type,
-    history: [{ from, amount, description, categories_path }],
+    history: [
+      {
+        from,
+        amount,
+        description,
+        categories_path,
+        ...(addedBy ? { addedBy } : {}),
+      },
+    ],
   },
 ];
 
