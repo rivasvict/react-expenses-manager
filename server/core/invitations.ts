@@ -43,7 +43,7 @@ export const generateCode = (): string => {
   return `${chars.slice(0, 4)}-${chars.slice(4)}`;
 };
 
-// The ENCRYPTION_SECRET env var is an arbitrary secret string; it is
+// The ENCRYPTION_KEY env var is an arbitrary secret string; it is
 // stretched to the 32 bytes AES-256 requires by hashing, so any value works
 // locally without the operator having to supply exact key material.
 export const deriveEncryptionKey = (secret: string): Buffer =>

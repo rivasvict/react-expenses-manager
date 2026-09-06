@@ -13,10 +13,10 @@ import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 // Dev-only default secrets; override in any real deployment (RFC §6). Left
-// unset, ENCRYPTION_SECRET falls back to the core's own dev default, so a
+// unset, ENCRYPTION_KEY falls back to the core's own dev default, so a
 // local run works with no environment at all.
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-token-secret";
-const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
 // This file runs compiled, from server/dist/, so the data directory is one
@@ -118,7 +118,7 @@ if (require.main === module) {
       app: createApp({
         storage: createFsStorage({ dir: DATA_DIR }),
         tokenSecret: TOKEN_SECRET,
-        encryptionSecret: ENCRYPTION_SECRET,
+        encryptionSecret: ENCRYPTION_KEY,
       }),
     })
   );
