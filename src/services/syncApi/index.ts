@@ -1,6 +1,6 @@
-// Typed HTTP client for the sync backend (RFC §3). All requests are JSON;
-// failures are surfaced as SyncApiError with the server's error code, or
-// NETWORK_ERROR when the server is unreachable.
+// Typed HTTP client for the sync backend (docs/multi-user-sync/RFC.md §3).
+// All requests are JSON; failures are surfaced as SyncApiError with the
+// server's error code, or NETWORK_ERROR when the server is unreachable.
 import { config } from "../../config";
 import { clearSession } from "../session";
 import {

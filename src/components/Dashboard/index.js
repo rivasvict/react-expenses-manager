@@ -91,8 +91,10 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}buckets`}>
               <Buckets selectedDate={selectedDate} />
             </Route>
-            {/* Account/auth screens (multi-user sync, DESIGN §2). Additive:
-                no existing route is gated by the session (AC-1.7). */}
+            {/* Account/auth screens (multi-user sync,
+                docs/multi-user-sync/DESIGN.md §2). Additive: no existing route
+                is gated by the session (AC-1.7,
+                docs/multi-user-sync/PRD.md). */}
             <Route path={`${match.url}account`}>
               <Account />
             </Route>

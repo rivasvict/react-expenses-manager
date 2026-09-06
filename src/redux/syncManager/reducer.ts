@@ -1,5 +1,7 @@
-// Sync/account state (RFC §1): a new slice, deliberately separate from the
-// dormant userManager (which targets the defunct expenses-manager-api).
+// Sync/account state (docs/multi-user-sync/RFC.md §1): a new slice,
+// deliberately separate from the dormant userManager (which targets the
+// defunct expenses-manager-api). AC tags below are in
+// docs/multi-user-sync/PRD.md.
 import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
 import {

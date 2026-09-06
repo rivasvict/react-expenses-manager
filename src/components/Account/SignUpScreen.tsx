@@ -16,9 +16,9 @@ import {
   SyncApiError,
 } from "../../services/syncApi/contract";
 
-// Same fields and validation rules as the dormant SignUp.js (DESIGN §2.2);
-// only the JSX wrapper differs (in-app MainContentContainer, not the
-// NoSessionContainer full-page takeover).
+// Same fields and validation rules as the dormant SignUp.js
+// (docs/multi-user-sync/DESIGN.md §2.2); only the JSX wrapper differs (in-app
+// MainContentContainer, not the NoSessionContainer full-page takeover).
 const buildUserModel = () =>
   FormModel({
     firstName: "",

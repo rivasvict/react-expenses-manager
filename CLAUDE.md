@@ -54,6 +54,8 @@ Node version is pinned in `.nvmrc`.
 
 **Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed.
 
+**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`.
+
 ## Key patterns
 
 - Components connect to Redux via `connect()` (class-style HOC pattern, not hooks)
@@ -66,6 +68,8 @@ Node version is pinned in `.nvmrc`.
 - **`renderApp.tsx`** — renders the full app in a `MemoryRouter` with a fresh Redux store; returns `{ user, store, ...RenderResult }`.
 - **`seed.ts`** — `seedEntries(entries)` writes entries to `localStorage`; `ts(year, month, day?)` builds a Unix-ms timestamp; month constants `JANUARY`–`DECEMBER` (0-indexed).
 - **`navigation.ts`** — `goToPrevMonth(user, expectedTitle)` and `goToNextMonth(user, expectedTitle)`: click the Prev/Next button and wait for the new month heading. Use these instead of inline `findByRole("button", …)` calls so the assertion pattern stays consistent across test files.
+- **`categorySelect.ts`** — `selectCategory(user, categoryName)`: opens the searchable category dropdown (`CategorySearchSelect`) and clicks the matching option. Use this instead of inline `click(combobox)` → `click(option)` pairs whenever a test just needs to pick a category. Its internal `findByRole("option", …)` throws when the category is missing, so option presence is still asserted. Tests that exercise the dropdown *mechanics* (type-to-filter, empty state, keyboard nav) should still drive the control directly. On `/expenses`/`/incomes` the category picker lives inside the Filters sheet, so call `openFilterSheet(user)` first.
+- **`filters.ts`** — `openFilterSheet(user)`: opens the "Filters & sort" sheet/panel from the entry-list toolbar and waits for its heading. `searchEntries(user, term)`: types into the toolbar's live "Search entries" field. Use these instead of inline queries whenever a test just needs to open the sheet or narrow the list; tests exercising the sheet/search mechanics themselves should drive the controls directly.
 
 ## General guidelines for development
 
@@ -73,4 +77,18 @@ Node version is pinned in `.nvmrc`.
 * Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
 * Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).
 * In integration tests, verify behaviour through what the user sees on screen (`screen.findByText`, `screen.getByRole`, etc.) rather than inspecting Redux store state or `localStorage` directly. Raw data-structure checks are an implementation detail; UI assertions test what actually matters.
+* Colocate unit test files with the file they test (e.g. `Foo.ts` → `Foo.test.ts` in the same directory), matching the existing convention under `src/`. This is distinct from `src/integrationTests/`, which stays a separate suite by design — see the helpers above.
+* Code under `server/` is TypeScript, compiled ahead of run (see the Server note under Architecture) — write new server code as `.ts`, not `.js`, and add its test file beside it.
+* A file's responsibilities should feel cohesive: someone opening it should be able to state what it is *for* in one sentence. This is **not** a one-function-per-file rule — helpers that serve a single concern belong together. Split a file once it has accumulated several unrelated jobs. For example: `server/core/handlers/responses.ts` holds four related functions and stays one file, while each endpoint gets its own module under `server/core/handlers/` with a colocated test, leaving `server/core/handlers.ts` as just the wiring.
+* In `server/`, when a file declares **more than two** types (`interface`/`type`), move them into a sibling `*.types.ts` file, which becomes the place those types are exported from — consumers import them from there directly. The implementation file imports what it needs and stays about behaviour; it re-exports a type only when callers need it alongside the behaviour they already import from that module, since re-exporting the rest just gives a type two import paths. Files with two or fewer types keep them inline; splitting those is noise. For example: `handlers.ts` → `handlers.types.ts`, `crypto.ts` → `crypto.types.ts`; `router.ts` re-exports `App` because callers of `createApp` need it, while `handlers.ts` re-exports nothing, as `createHandlers` is used on its own.
+* When creating **new files** — components, helpers, services, reducers — add their tests in the same PR, colocated as described above. When you only **edit an existing file** that lacks coverage, do *not* backfill its tests as part of that PR: add a `TODO` comment at the top of the file stating the gap, create (or reuse) a GitHub issue tracking it, and reference that issue's URL in the comment. This keeps a feature PR from turning into a test-backfill project while making sure the debt is written down rather than forgotten.
+* When a comment cites project documentation by tag or section — `DESIGN §2.1`, `RFC §3`, `AC-1.6`, `NFR-5` — it must also give the **path to the document**, so a reader can actually find it (e.g. `docs/multi-user-sync/DESIGN.md §2.1`). A bare tag is untraceable for anyone who does not already know where it lives. Give the full path at a file's *first* such reference; later mentions in that same file may use the short tag, since the path is already established at the top. Do not cite a PR by number for future work (`lands in PR 2`) — PR numbering shifts as branches are split and reordered; say "a later PR" instead.
+* A component defined inside another component's file must not exceed **5 lines**. Past that, move it into its own module (a directory with an `index.tsx`, matching `GlyphIcon`/`BrandMark`/`AccountChip` under `src/components/common/`, with a colocated `styles.scss` when it has styles of its own). The 5 lines are a ceiling to design comfortably under, **not** a target to hit: do not cut identifiers short, strip comments, or cram JSX just to get under the number. Use however many lines the implementation needs to stay clean and clear — and if that is more than 5, that is the signal it belongs in its own file.
 * Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there.
+
+## GitHub issue creation
+
+When creating a new issue via `gh issue create`:
+* Always add it to the `x-track` project using the `-p x-track` flag
+* Ask the user which existing milestone (if any) the issue should be added to, and include it with `-m` if specified
+* Example: `gh issue create --title "..." --body "..." -p x-track -m "v1.8.0"`

@@ -15,10 +15,11 @@ interface AccountProps {
 }
 
 /**
- * Account hub (DESIGN §2.1/§2.3): the logged-out view offers Sign in /
- * Sign up; the logged-in view shows who is signed in and a Log out button.
- * Logout needs no confirmation (reversible, low-stakes) and announces a
- * transient status line (AC-1.4). The Party row lands with parties in PR 2.
+ * Account hub (docs/multi-user-sync/DESIGN.md §2.1/§2.3): the logged-out view
+ * offers Sign in / Sign up; the logged-in view shows who is signed in and a
+ * Log out button. Logout needs no confirmation (reversible, low-stakes) and
+ * announces a transient status line (AC-1.4, docs/multi-user-sync/PRD.md).
+ * The Party row lands with parties in a later PR.
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
   const [justSignedOut, setJustSignedOut] = useState(false);

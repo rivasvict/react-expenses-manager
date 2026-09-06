@@ -1,6 +1,6 @@
-// Shared shapes and error codes for the sync API (RFC §3). The dep-free
-// server duplicates the error codes deliberately — RFC §3 is the source of
-// truth for both sides.
+// Shared shapes and error codes for the sync API (docs/multi-user-sync/RFC.md
+// §3). The dep-free server duplicates the error codes deliberately — RFC §3 is
+// the source of truth for both sides.
 
 export const SYNC_ERROR_CODES = {
   VALIDATION_ERROR: "VALIDATION_ERROR",
@@ -63,7 +63,8 @@ export interface PartyResponse {
 }
 
 export interface InvitationResponse {
-  // Returned exactly once; never retrievable again (AC-2.4).
+  // Returned exactly once; never retrievable again (AC-2.4,
+  // docs/multi-user-sync/PRD.md).
   code: string;
 }
 

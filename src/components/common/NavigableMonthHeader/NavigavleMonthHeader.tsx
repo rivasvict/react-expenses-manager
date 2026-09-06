@@ -28,35 +28,38 @@ const NavigableMonthHeader = ({
       dateAdjacencyType,
     });
 
+  // At the first/last month with data the stepper stays put but goes disabled,
+  // instead of vanishing (candidate 2) — the control never teleports under the
+  // thumb, and screen readers announce it as disabled rather than silently
+  // dropping it.
+  const canGoPrev = canGo("prev");
+  const canGoNext = canGo("next");
+
   return (
     <div className="month-header">
-      {canGo("prev") ? (
-        <button
-          type="button"
-          className="month-header__step"
-          aria-label="Previous month"
-          onClick={() => go("prev")}
-        >
-          <Icon icon={chevronLeft} aria-hidden="true" />
-        </button>
-      ) : (
-        <span className="month-header__step month-header__step--placeholder" />
-      )}
+      <button
+        type="button"
+        className="month-header__step"
+        aria-label="Previous month"
+        onClick={() => go("prev")}
+        disabled={!canGoPrev}
+        aria-disabled={!canGoPrev}
+      >
+        <Icon icon={chevronLeft} aria-hidden="true" />
+      </button>
       <ScreenTitle
         screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`}
       />
-      {canGo("next") ? (
-        <button
-          type="button"
-          className="month-header__step"
-          aria-label="Next month"
-          onClick={() => go("next")}
-        >
-          <Icon icon={chevronRight} aria-hidden="true" />
-        </button>
-      ) : (
-        <span className="month-header__step month-header__step--placeholder" />
-      )}
+      <button
+        type="button"
+        className="month-header__step"
+        aria-label="Next month"
+        onClick={() => go("next")}
+        disabled={!canGoNext}
+        aria-disabled={!canGoNext}
+      >
+        <Icon icon={chevronRight} aria-hidden="true" />
+      </button>
     </div>
   );
 };

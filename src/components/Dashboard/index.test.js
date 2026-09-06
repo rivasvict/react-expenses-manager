@@ -1,6 +1,9 @@
 // TODO(#116): This suite targets a removed class-based Dashboard API
 // (state.entries, addEntry/addIncome/addExpense/getSum). Skipped until it's
 // rewritten against the current functional, Redux-connected Dashboard.
+/* eslint-disable testing-library/await-async-query --
+   false positive: `findByType` here is react-test-renderer's synchronous API,
+   not a Testing Library query. Goes away with the TODO(#116) rewrite. */
 import React from "react";
 import Dashboard from ".";
 import renderer from "react-test-renderer";

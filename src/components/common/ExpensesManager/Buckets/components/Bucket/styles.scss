@@ -21,6 +21,7 @@ $bucket-danger: $chart-expense;
     }
 
     .usage-percentage {
+      @include money-figures();
       text-align: right;
       font-weight: 700;
       font-size: 0.9rem;
@@ -77,6 +78,7 @@ $bucket-danger: $chart-expense;
   }
 
   .bucket-figures {
+    @include money-figures();
     margin-top: 0.45rem;
     font-size: 0.88rem;
     color: $text-secondary;
