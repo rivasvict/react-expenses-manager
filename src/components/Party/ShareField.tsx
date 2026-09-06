@@ -62,7 +62,9 @@ const ShareField = ({
     >
       <Icon icon={copyIcon} aria-hidden="true" />
     </Button>
-    <span className="share-field__copied" aria-live="polite">
+    {/* Rendered empty rather than conditionally: a live region has to be in
+        the document before it changes, or the update may not be announced. */}
+    <span className="share-field__copied" role="status" aria-live="polite">
       {copied ? "Copied" : ""}
     </span>
   </div>
