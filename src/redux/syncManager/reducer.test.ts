@@ -61,7 +61,7 @@ const storeSession = (session: SyncSession) =>
 const loggedOut = (): SyncManagerState => ({
   session: null,
   party: null,
-  partyLoaded: false,
+  partyStatusResolved: false,
 });
 
 const loggedIn = (
@@ -102,7 +102,7 @@ describe("syncManager reducer", () => {
       // long as the /me refresh takes.
       const state = reducer(undefined, anyAction);
       expect(state.party).toBeNull();
-      expect(state.partyLoaded).toBe(false);
+      expect(state.partyStatusResolved).toBe(false);
     });
   });
 
@@ -150,7 +150,7 @@ describe("syncManager reducer", () => {
       });
 
       expect(state.party).toEqual(janesParty);
-      expect(state.partyLoaded).toBe(true);
+      expect(state.partyStatusResolved).toBe(true);
     });
 
     it("records 'no party' as an answer, not as an unanswered question", () => {
@@ -160,15 +160,15 @@ describe("syncManager reducer", () => {
       });
 
       // A /me that comes back with no party is what unlocks the create/join
-      // screen, so it must set partyLoaded even though party stays null.
+      // screen, so it must set partyStatusResolved even though party stays null.
       expect(state.party).toBeNull();
-      expect(state.partyLoaded).toBe(true);
+      expect(state.partyStatusResolved).toBe(true);
     });
 
     it("replaces the previous party rather than merging into it", () => {
       const canceled = { ...janesParty, canceled: true, name: "Renamed" };
 
-      const state = reducer(loggedIn(jane, { party: janesParty, partyLoaded: true }), {
+      const state = reducer(loggedIn(jane, { party: janesParty, partyStatusResolved: true }), {
         type: SYNC_PARTY_SET,
         payload: { party: canceled },
       });
@@ -195,14 +195,14 @@ describe("syncManager reducer", () => {
 
     it("drops the cached party too", () => {
       const state = reducer(
-        loggedIn(jane, { party: janesParty, partyLoaded: true }),
+        loggedIn(jane, { party: janesParty, partyStatusResolved: true }),
         { type: SYNC_SESSION_CLEARED }
       );
 
       // Logging out — or having a token rejected — must not leave the
       // previous member's party on screen for whoever signs in next.
       expect(state).toEqual(loggedOut());
-      expect(state.partyLoaded).toBe(false);
+      expect(state.partyStatusResolved).toBe(false);
     });
 
     it("is a no-op when already logged out", () => {
@@ -214,7 +214,7 @@ describe("syncManager reducer", () => {
 
   describe("unknown actions", () => {
     it("returns the current state untouched", () => {
-      const current = loggedIn(jane, { party: janesParty, partyLoaded: true });
+      const current = loggedIn(jane, { party: janesParty, partyStatusResolved: true });
 
       expect(reducer(current, anyAction)).toBe(current);
     });

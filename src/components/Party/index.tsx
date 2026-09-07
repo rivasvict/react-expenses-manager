@@ -17,7 +17,10 @@ import "./styles.scss";
 interface PartyProps {
   session: SyncSession | null;
   party: PartyShape | null;
-  partyLoaded: boolean;
+  // Whether the initial GET /me membership check has come back — *not* whether
+  // a party was found. `party === null` means "no party" once this is true and
+  // "we don't know yet" while it is false.
+  partyStatusResolved: boolean;
   onRefreshMe: () => void;
   onCreateParty: () => Promise<PartyShape>;
 }
@@ -34,7 +37,7 @@ interface PartyProps {
 const Party = ({
   session,
   party,
-  partyLoaded,
+  partyStatusResolved,
   onRefreshMe,
   onCreateParty,
 }: PartyProps) => {
@@ -79,7 +82,9 @@ const Party = ({
         </div>
       ) : party ? (
         <PartyDetailView party={party} selfId={session.user.id} />
-      ) : partyLoaded ? (
+      ) : partyStatusResolved ? (
+        // No party in the store *and* the membership check has come back, so
+        // this is a real "no party" rather than a not-yet-answered one.
         <NoPartyView onCreateClick={handleCreateParty} error={error} />
       ) : (
         <p className="party-card__hint text-secondary" role="status">
@@ -100,7 +105,7 @@ const Party = ({
 const mapStateToProps = (state: any) => ({
   session: state.syncManager.session,
   party: state.syncManager.party,
-  partyLoaded: state.syncManager.partyLoaded,
+  partyStatusResolved: state.syncManager.partyStatusResolved,
 });
 
 const mapActionsToProps = (dispatch: any) => ({

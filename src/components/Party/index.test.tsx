@@ -16,7 +16,7 @@ import Party from ".";
 /**
  * Unit tests for the party hub (docs/multi-user-sync/DESIGN.md §3). The
  * thunks are mocked, so these assert the hub's own job: choosing which view
- * to render from session/party/partyLoaded, and confirming before creating.
+ * to render from session/party/partyStatusResolved, and confirming before creating.
  */
 
 jest.mock("../../redux/syncManager/actionCreators", () => ({
@@ -59,12 +59,12 @@ const janesParty: PartyShape = {
 const renderHub = ({
   session = null as SyncSession | null,
   party = null as PartyShape | null,
-  partyLoaded = false,
+  partyStatusResolved = false,
 } = {}) => {
   const user = userEvent.setup();
   const store = setupStore();
   if (session) store.dispatch({ type: SYNC_SESSION_SET, payload: { session } });
-  if (partyLoaded) store.dispatch({ type: SYNC_PARTY_SET, payload: { party } });
+  if (partyStatusResolved) store.dispatch({ type: SYNC_PARTY_SET, payload: { party } });
   render(
     <Provider store={store}>
       <MemoryRouter initialEntries={["/party"]}>
@@ -90,7 +90,7 @@ afterEach(() => {
 });
 
 it("refreshes membership from the server on mount", async () => {
-  renderHub({ session: jane, partyLoaded: true });
+  renderHub({ session: jane, partyStatusResolved: true });
 
   // RFC §2.2 (docs/multi-user-sync/RFC.md): party state is never cached as
   // authoritative, so the hub asks rather than trusting what it was given.
@@ -118,7 +118,7 @@ it("shows a loading state before the first refresh answers", () => {
 });
 
 it("offers create and join once the refresh reports no party", () => {
-  renderHub({ session: jane, partyLoaded: true });
+  renderHub({ session: jane, partyStatusResolved: true });
 
   expect(
     screen.getByRole("button", { name: "Create a party" })
@@ -127,7 +127,7 @@ it("offers create and join once the refresh reports no party", () => {
 });
 
 it("shows the party detail once there is a party", () => {
-  renderHub({ session: jane, party: janesParty, partyLoaded: true });
+  renderHub({ session: jane, party: janesParty, partyStatusResolved: true });
 
   expect(
     screen.getByRole("heading", { name: "Jane's Party" })
@@ -142,7 +142,7 @@ it("shows the party detail once there is a party", () => {
 });
 
 it("confirms before creating a party", async () => {
-  const { user } = renderHub({ session: jane, partyLoaded: true });
+  const { user } = renderHub({ session: jane, partyStatusResolved: true });
 
   await user.click(screen.getByRole("button", { name: "Create a party" }));
 
@@ -152,7 +152,7 @@ it("confirms before creating a party", async () => {
 
 it("creates nothing when the confirmation is declined", async () => {
   confirmSpy.mockReturnValue(false);
-  const { user } = renderHub({ session: jane, partyLoaded: true });
+  const { user } = renderHub({ session: jane, partyStatusResolved: true });
 
   await user.click(screen.getByRole("button", { name: "Create a party" }));
 
@@ -163,7 +163,7 @@ it("surfaces a create failure and re-checks membership", async () => {
   createPartyMock.mockReturnValue(() =>
     Promise.reject(new Error("You already belong to a party."))
   );
-  const { user } = renderHub({ session: jane, partyLoaded: true });
+  const { user } = renderHub({ session: jane, partyStatusResolved: true });
 
   await user.click(screen.getByRole("button", { name: "Create a party" }));
 

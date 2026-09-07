@@ -17,7 +17,7 @@ export interface SyncManagerState {
   party: Party | null;
   // False until the first /me refresh resolves, so screens can tell
   // "no party" apart from "not loaded yet".
-  partyLoaded: boolean;
+  partyStatusResolved: boolean;
 }
 
 interface SyncAction {
@@ -31,7 +31,7 @@ interface SyncAction {
 const getDefaultState = (): SyncManagerState => ({
   session: getSession(),
   party: null,
-  partyLoaded: false,
+  partyStatusResolved: false,
 });
 
 export const reducer = (
@@ -44,12 +44,17 @@ export const reducer = (
       return { ...currentState, session: action.payload?.session || null };
     case SYNC_SESSION_CLEARED:
       // Logging out (or a dead token) also drops the cached party.
-      return { ...currentState, session: null, party: null, partyLoaded: false };
+      return {
+        ...currentState,
+        session: null,
+        party: null,
+        partyStatusResolved: false,
+      };
     case SYNC_PARTY_SET:
       return {
         ...currentState,
         party: action.payload?.party || null,
-        partyLoaded: true,
+        partyStatusResolved: true,
       };
     default:
       return currentState;
