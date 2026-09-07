@@ -1,4 +1,5 @@
-// Unit tests for the party-creation handler (./createParty.ts).
+// Unit tests for the party-creation handler (./createParty.ts). The AC tags
+// named below are the acceptance criteria in docs/multi-user-sync/PRD.md.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createCreatePartyHandler } from "./createParty";

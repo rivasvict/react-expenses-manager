@@ -21,9 +21,9 @@ export const HTTP_STATUS = {
 
 export type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
 
-// Machine-readable `error.code` values. RFC §3 is the source of truth; these
-// are restated here rather than imported because the server stays
-// dependency-free and must not reach into src/.
+// Machine-readable `error.code` values. docs/multi-user-sync/RFC.md §3 is the
+// source of truth; these are restated here rather than imported because the
+// server stays dependency-free and must not reach into src/.
 //
 // INTERNAL_ERROR and PAYLOAD_TOO_LARGE are raised by the transport rather
 // than a handler (an unexpected throw, and a body over the size cap). They

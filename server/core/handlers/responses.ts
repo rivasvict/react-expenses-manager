@@ -20,7 +20,8 @@ export const error = (
   body: { error: { code, message } },
 });
 
-// AC-1.5: identical body whether the email exists or not.
+// AC-1.5 (docs/multi-user-sync/PRD.md): identical body whether the email
+// exists or not.
 export const invalidCredentials = (): AppResponse<ErrorBody> =>
   error(
     HTTP_STATUS.UNAUTHORIZED,

@@ -25,7 +25,7 @@ export interface UserIdPointer {
 
 // One member as the party record stores them. Names and email are
 // denormalized onto the party so rendering the member list is a single read
-// rather than one user lookup per member (RFC §2.1).
+// rather than one user lookup per member (docs/multi-user-sync/RFC.md §2.1).
 export interface PartyMember {
   id: string;
   firstName: string;

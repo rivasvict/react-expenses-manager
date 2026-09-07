@@ -1,4 +1,5 @@
-// Unit tests for the shared response shaping (./responses.ts).
+// Unit tests for the shared response shaping (./responses.ts). The AC tags
+// named below are the acceptance criteria in docs/multi-user-sync/PRD.md.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {

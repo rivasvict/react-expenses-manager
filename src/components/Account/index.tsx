@@ -43,7 +43,8 @@ const Account = ({ session, onLogOut }: AccountProps) => {
               <p className="account-card__email">{session.user.email}</p>
             </div>
           </div>
-          {/* DESIGN §2.3: the party hub is reached from the account. */}
+          {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
+              from the account. */}
           {/*@ts-expect-error temporarily ignore this typescript error */}
           <ContentTileSection title="Party" to="/party">
             Party
