@@ -45,7 +45,6 @@ const Account = ({ session, onLogOut }: AccountProps) => {
           </div>
           {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
               from the account. */}
-          {/*@ts-expect-error temporarily ignore this typescript error */}
           <ContentTileSection title="Party" to="/party">
             Party
           </ContentTileSection>
