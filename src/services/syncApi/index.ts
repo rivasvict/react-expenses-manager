@@ -1,6 +1,16 @@
 // Typed HTTP client for the sync backend (docs/multi-user-sync/RFC.md §3).
 // All requests are JSON; failures are surfaced as SyncApiError with the
 // server's error code, or NETWORK_ERROR when the server is unreachable.
+//
+// TODO:
+// The colocated index.test.ts covers signup/login/getMe and the generic
+// failure handling, but not the party calls this file gained later:
+// createParty, createInvitation and joinParty have no direct tests, and the
+// setOnUnauthorized 401 hook (clearing the session on an UNAUTHORIZED
+// response) is only exercised end-to-end. They are currently asserted through
+// src/integrationTests/party.test.tsx and partyJoin.test.tsx. Direct coverage
+// is tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/160
 import { config } from "../../config";
 import { clearSession } from "../session";
 import {
