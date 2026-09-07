@@ -137,6 +137,10 @@ it("shows a loading label while the invitation is being generated", async () => 
 });
 
 it("reports a failure and stays on step one so it can be retried", async () => {
+  // A non-organizer really can reach this: /party/invite is an ungated route
+  // and this screen runs no organizer check, so direct navigation, a bookmark,
+  // or a stale tab whose owner has since lost organizer status all land here
+  // and are refused by the server rather than by the UI.
   rejectWith("Only the organizer can invite members.");
   const { user } = renderInvite();
   await generate(user);

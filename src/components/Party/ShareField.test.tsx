@@ -41,6 +41,10 @@ it("calls back when the copy button is used", async () => {
   expect(onCopy).toHaveBeenCalledTimes(1);
 });
 
+// "Live region" is the ARIA term for an element a screen reader announces when
+// its content changes, without the user having to move focus into it. Here it
+// is the `role="status"` element with `aria-live="polite"`, which is how the
+// "Copied" confirmation reaches a non-sighted user at all.
 it("announces the copy confirmation in a live region", () => {
   renderField({ copied: true });
 
