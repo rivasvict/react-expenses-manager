@@ -136,7 +136,7 @@ describe("invitation generation", () => {
 });
 
 describe("member (non-organizer) view", () => {
-  it("hides all organizer controls and explains who manages members (AC-2.12/AC-2.2)", async () => {
+  it("hides all organizer controls and explains who manages members", async () => {
     server.seedUser(jane);
     server.seedUser(tom);
     server.seedPartyWithMembers([jane.email, tom.email]);
