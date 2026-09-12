@@ -16,6 +16,9 @@ import { config } from "../../config";
 import { clearSession } from "../session";
 import {
   AuthResponse,
+  BackupDownloadResponse,
+  BackupEnvelope,
+  BackupUploadResponse,
   InvitationResponse,
   MeResponse,
   PartyResponse,
@@ -152,5 +155,32 @@ export const cancelParty = ({
   request<PartyResponse>("/api/party/cancel", {
     method: "POST",
     body: {},
+    token,
+  });
+
+// RFC §3 endpoint 9. A 404 NO_BACKUP here is the EC-1 signal, not a
+// failure — the caller decides what to do with it.
+export const getBackup = ({
+  token,
+}: {
+  token: string;
+}): Promise<BackupDownloadResponse> =>
+  request<BackupDownloadResponse>("/api/party/backup", { token });
+
+// RFC §3 endpoint 10. `baseVersion: null` is the create-only first sync;
+// otherwise it is the version the caller downloaded, and the server answers
+// 409 VERSION_CONFLICT when that is no longer current.
+export const putBackup = ({
+  token,
+  baseVersion,
+  envelope,
+}: {
+  token: string;
+  baseVersion: string | null;
+  envelope: BackupEnvelope;
+}): Promise<BackupUploadResponse> =>
+  request<BackupUploadResponse>("/api/party/backup", {
+    method: "PUT",
+    body: { baseVersion, envelope },
     token,
   });

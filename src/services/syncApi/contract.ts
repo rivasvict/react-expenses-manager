@@ -19,8 +19,14 @@ export const SYNC_ERROR_CODES = {
   BLOCKED: "BLOCKED",
   // 404 from GET /api/party/backup while no backup exists yet (EC-1).
   NO_BACKUP: "NO_BACKUP",
+  // 409 from PUT /api/party/backup when the uploaded baseVersion no longer
+  // matches the stored backup (EC-2) — the client must download again.
+  VERSION_CONFLICT: "VERSION_CONFLICT",
   // 409 when the server exhausts its CAS retry on a concurrent update.
   CONFLICT: "CONFLICT",
+  // 413 from the transport layer when a request body exceeds 1 MB (RFC §3,
+  // endpoint 10).
+  PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   // Used by the client for transport-level failures (server unreachable).
   NETWORK_ERROR: "NETWORK_ERROR",
 } as const;
@@ -71,6 +77,36 @@ export interface InvitationResponse {
   // Returned exactly once; never retrievable again (AC-2.4,
   // docs/multi-user-sync/PRD.md).
   code: string;
+}
+
+// The single-file backup's data slices (buildBackupEnvelope in
+// src/helpers/backupHelper/backupHelper.js) — the sync path reuses the
+// exact same shape (RFC §2.3), so entries, buckets, categories and fixed
+// entries stay whatever the backup feature already writes.
+export interface BackupData {
+  balance: any[];
+  buckets: { [name: string]: any };
+  categories: string[];
+  fixedEntries: any[];
+}
+
+export interface BackupEnvelope {
+  app: string;
+  schemaVersion: number;
+  exportedAt: string;
+  data: BackupData;
+}
+
+// RFC §3 endpoint 9: the stored envelope plus the version to send back as
+// `baseVersion` on the next upload.
+export interface BackupDownloadResponse {
+  version: string;
+  envelope: BackupEnvelope;
+}
+
+// RFC §3 endpoint 10: the version just written.
+export interface BackupUploadResponse {
+  version: string;
 }
 
 export interface SyncApiError extends Error {

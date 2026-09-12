@@ -2,7 +2,7 @@
 // Each one narrows `unknown`, so a handler that passes the guard can use the
 // value without further casting.
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
 // Makes a parsed JSON body destructurable without asserting anything about

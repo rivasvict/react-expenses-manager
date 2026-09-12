@@ -1,6 +1,7 @@
 import { reducer, SyncManagerState } from "./reducer";
 import {
   SYNC_PARTY_SET,
+  SYNC_PENDING_REVIEW_SET,
   SYNC_SESSION_CLEARED,
   SYNC_SESSION_SET,
 } from "./actions";
@@ -56,12 +57,13 @@ const tokenExpiringAt = (expSeconds: number) => {
 const storeSession = (session: SyncSession) =>
   window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 
-// The slice's three fields move together often enough that spelling all of
-// them out at every call site would bury what each test is actually about.
+// The slice's fields move together often enough that spelling all of them
+// out at every call site would bury what each test is actually about.
 const loggedOut = (): SyncManagerState => ({
   session: null,
   party: null,
   partyStatusResolved: false,
+  pendingReviewCount: null,
 });
 
 const loggedIn = (
@@ -209,6 +211,56 @@ describe("syncManager reducer", () => {
       const state = reducer(loggedOut(), { type: SYNC_SESSION_CLEARED });
 
       expect(state).toEqual(loggedOut());
+    });
+
+    it("drops a pending review along with the session", () => {
+      const state = reducer(
+        loggedIn(jane, { party: janesParty, partyStatusResolved: true, pendingReviewCount: 3 }),
+        { type: SYNC_SESSION_CLEARED }
+      );
+
+      // A review belongs to the party it was downloaded from; whoever signs
+      // in next must not inherit its count.
+      expect(state.pendingReviewCount).toBeNull();
+    });
+  });
+
+  describe("SYNC_PENDING_REVIEW_SET", () => {
+    it("stores the incoming-change count for the review screen", () => {
+      const state = reducer(loggedIn(jane, { party: janesParty }), {
+        type: SYNC_PENDING_REVIEW_SET,
+        payload: { pendingReviewCount: 2 },
+      });
+
+      expect(state.pendingReviewCount).toBe(2);
+    });
+
+    it("clears the count when the payload carries null (review abandoned)", () => {
+      const state = reducer(loggedIn(jane, { pendingReviewCount: 2 }), {
+        type: SYNC_PENDING_REVIEW_SET,
+        payload: { pendingReviewCount: null },
+      });
+
+      expect(state.pendingReviewCount).toBeNull();
+    });
+
+    it("treats a missing count as no pending review", () => {
+      const state = reducer(loggedIn(jane, { pendingReviewCount: 2 }), {
+        type: SYNC_PENDING_REVIEW_SET,
+      });
+
+      expect(state.pendingReviewCount).toBeNull();
+    });
+
+    it("leaves the session and party alone", () => {
+      const state = reducer(
+        loggedIn(jane, { party: janesParty, partyStatusResolved: true }),
+        { type: SYNC_PENDING_REVIEW_SET, payload: { pendingReviewCount: 1 } }
+      );
+
+      expect(state.session).toEqual(jane);
+      expect(state.party).toEqual(janesParty);
+      expect(state.partyStatusResolved).toBe(true);
     });
   });
 

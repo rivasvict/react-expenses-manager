@@ -17,6 +17,7 @@ import { createFsStorage } from "../storage-fs";
 import {
   AppRequest,
   AppResponse,
+  BackupBody,
   ErrorBody,
   InvitationBody,
   InvitationPointer,
@@ -26,12 +27,19 @@ import {
   SessionBody,
   UserRecord,
 } from "./handlers.types";
+import { backupKey } from "./handlers/partyKeys";
+import { BACKUP_APP_ID } from "./handlers/putBackup";
 import { ERROR_CODES, HTTP_STATUS } from "./httpConstants";
 
 // Handlers return a union of body shapes. These tests assert against
 // whichever shape the endpoint under test produces, so widen once here
 // instead of narrowing at every assertion.
-type TestBody = SessionBody & MeBody & PartyBody & InvitationBody & ErrorBody;
+type TestBody = SessionBody &
+  MeBody &
+  PartyBody &
+  InvitationBody &
+  BackupBody &
+  ErrorBody;
 type TestResponse = AppResponse<TestBody>;
 
 const TOKEN_SECRET = "test-secret";
@@ -120,12 +128,27 @@ const getBackup = (app: App, token: string): Promise<TestResponse> =>
     headers: asBearer(token),
   });
 
-const putBackup = (app: App, token: string): Promise<TestResponse> =>
+// A well-formed envelope around whatever `balance` stands in for the data.
+const envelopeWith = (balance: unknown) => ({
+  app: BACKUP_APP_ID,
+  schemaVersion: 1,
+  exportedAt: "2026-05-15T12:00:00.000Z",
+  data: { balance, buckets: {}, categories: [], fixedEntries: [] },
+});
+
+const putBackup = (
+  app: App,
+  token: string,
+  body: { baseVersion: string | null; envelope: unknown } = {
+    baseVersion: null,
+    envelope: envelopeWith([]),
+  }
+): Promise<TestResponse> =>
   call(app, {
     method: "PUT",
     path: "/api/party/backup",
     headers: asBearer(token),
-    body: { baseVersion: null, envelope: {} },
+    body,
   });
 
 // Signs up someone with Jane's password, returning their { token, user }.
@@ -757,6 +780,74 @@ test("the backup routes need a session and a party", async () => {
   assert.equal(partyless.body.error.code, ERROR_CODES.NO_PARTY);
 });
 
+test("backup upload and download round-trip under compare-and-swap (EC-1/EC-2)", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+
+  // EC-1: the first sync is a create-only upload.
+  const first = await putBackup(app, organizer.token, {
+    baseVersion: null,
+    envelope: envelopeWith(["jane's entries"]),
+  });
+  assert.equal(first.status, HTTP_STATUS.OK);
+  assert.equal(first.body.version, "1");
+
+  // A second create-only upload (another member's first sync racing in) is
+  // refused rather than overwriting Jane's.
+  const raced = await putBackup(app, member.token, {
+    baseVersion: null,
+    envelope: envelopeWith(["tom's entries"]),
+  });
+  assert.equal(raced.status, HTTP_STATUS.CONFLICT);
+  assert.equal(raced.body.error.code, ERROR_CODES.VERSION_CONFLICT);
+
+  // Any member downloads the current backup plus the version to build on.
+  const download = await getBackup(app, member.token);
+  assert.equal(download.status, HTTP_STATUS.OK);
+  assert.equal(download.body.version, "1");
+  assert.deepEqual(download.body.envelope, envelopeWith(["jane's entries"]));
+
+  // Building on the downloaded version succeeds and bumps it.
+  const merged = await putBackup(app, member.token, {
+    baseVersion: download.body.version,
+    envelope: envelopeWith(["jane's entries", "tom's entries"]),
+  });
+  assert.equal(merged.status, HTTP_STATUS.OK);
+  assert.equal(merged.body.version, "2");
+
+  // EC-2: Jane still holds version 1 — her upload is refused and the
+  // backup keeps Tom's merge.
+  const stale = await putBackup(app, organizer.token, {
+    baseVersion: "1",
+    envelope: envelopeWith(["jane's newer entries"]),
+  });
+  assert.equal(stale.status, HTTP_STATUS.CONFLICT);
+  assert.equal(stale.body.error.code, ERROR_CODES.VERSION_CONFLICT);
+  const current = await getBackup(app, organizer.token);
+  assert.equal(current.body.version, "2");
+  assert.deepEqual(
+    current.body.envelope,
+    envelopeWith(["jane's entries", "tom's entries"])
+  );
+});
+
+test("a malformed backup envelope is refused with 400 VALIDATION_ERROR", async () => {
+  const app = makeApp();
+  const { organizer } = await setupOrganizerAndMember(app);
+
+  const upload = await putBackup(app, organizer.token, {
+    baseVersion: null,
+    envelope: { app: "some-other-app", data: {} },
+  });
+  assert.equal(upload.status, HTTP_STATUS.BAD_REQUEST);
+  assert.equal(upload.body.error.code, ERROR_CODES.VALIDATION_ERROR);
+
+  // Nothing was stored, so a download still reports EC-1.
+  const download = await getBackup(app, organizer.token);
+  assert.equal(download.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(download.body.error.code, ERROR_CODES.NO_BACKUP);
+});
+
 test("blocked or canceled users are free to create or join a new party (DESIGN §3.6)", async () => {
   const app = makeApp();
   const { organizer, member } = await setupOrganizerAndMember(app);
@@ -817,15 +908,14 @@ test("block and cancel mutate only the party record — never user or backup dat
   const app = makeApp({ storage });
   const { organizer, member, party } = await setupOrganizerAndMember(app);
 
-  // Stand in for the backup object a later PR will store, plus the current
-  // user pointer record.
-  const backupKey = `parties/${party.id}.backup`;
-  await storage.writeJsonVersioned(
-    backupKey,
-    { uploadedBy: member.user.id, envelope: { data: "tom's entries" } },
-    { expectedVersion: null }
-  );
-  const backupBefore = await storage.readJsonVersioned(backupKey);
+  // Tom syncs first, so the backup holds his entries; then snapshot it and
+  // the current user pointer record.
+  const uploaded = await putBackup(app, member.token, {
+    baseVersion: null,
+    envelope: envelopeWith(["tom's entries"]),
+  });
+  assert.equal(uploaded.status, HTTP_STATUS.OK);
+  const backupBefore = await storage.readJsonVersioned(backupKey(party.id));
   const memberPointerBefore = await storage.readJson(
     `user-ids/${member.user.id}`
   );
@@ -835,7 +925,10 @@ test("block and cancel mutate only the party record — never user or backup dat
 
   // The backup (the blocked member's already-synced entries) and the user
   // pointer are identical; only the party record changed.
-  assert.deepEqual(await storage.readJsonVersioned(backupKey), backupBefore);
+  assert.deepEqual(
+    await storage.readJsonVersioned(backupKey(party.id)),
+    backupBefore
+  );
   assert.deepEqual(
     await storage.readJson(`user-ids/${member.user.id}`),
     memberPointerBefore

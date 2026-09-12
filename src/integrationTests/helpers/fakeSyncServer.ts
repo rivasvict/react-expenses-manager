@@ -1,11 +1,14 @@
-// In-memory fetch stub implementing the auth + party portion of the sync API
-// contract (docs/multi-user-sync/RFC.md §3, endpoints 1–8) so integration
-// tests never touch the network (NFR-5, docs/multi-user-sync/PRD.md). The
-// backup endpoints (9–10) join in a later PR, when the client starts calling
-// them. AC/EC tags below are also in PRD.md.
+// In-memory fetch stub implementing the sync API contract
+// (docs/multi-user-sync/RFC.md §3, endpoints 1–10: auth, party, invitations,
+// backup) so integration tests never touch the network (NFR-5,
+// docs/multi-user-sync/PRD.md). AC/EC tags below are also in PRD.md.
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
-import { Party, SyncUser } from "../../services/syncApi/contract";
+import {
+  BackupEnvelope,
+  Party,
+  SyncUser,
+} from "../../services/syncApi/contract";
 
 interface FakeUserSeed {
   email: string;
@@ -33,6 +36,13 @@ interface FakePartyRecord {
   // Keyed by normalized code. Plaintext is fine here — this is an
   // in-memory test double, not at-rest storage.
   invitations: { [code: string]: FakeInvitation };
+  backup: { version: string; envelope: BackupEnvelope } | null;
+}
+
+interface FakeFailure {
+  status: number;
+  code: string;
+  message: string;
 }
 
 export interface FakeSyncServer {
@@ -51,15 +61,27 @@ export interface FakeSyncServer {
   ) => string;
   /** Adds a redeemable invitation to the seeded party; returns the code. */
   seedInvitation: (options: { password: string; used?: boolean }) => string;
+  /** Flags an already-seeded member as blocked (a state transition after
+   *  the app rendered — "the organizer blocked them in another tab"). */
+  seedBlockMember: (email: string) => void;
+  /** Cancels the seeded party (state transition after render). */
+  seedCancelParty: () => void;
+  /** Stores a remote backup for the seeded party ("uploaded by Tom"). */
+  seedRemoteBackup: (envelope: BackupEnvelope) => void;
+  /** Everything PUT to /api/party/backup, in order. */
+  getUploadedBackups: () => {
+    baseVersion: string | null;
+    envelope: BackupEnvelope;
+  }[];
+  /** Every request the app made, as "METHOD /path" strings (AC-3.1). */
+  getRequests: () => string[];
   /**
    * Makes the next request matching "METHOD /path" fail once: with the
-   * given contract error (e.g. 409 CONFLICT on CAS-retry exhaustion), or
-   * with a network failure when no error is given.
+   * given contract error (e.g. 409 VERSION_CONFLICT), or with a network
+   * failure when no error is given. Repeated calls for the same request
+   * queue up, one failure per call.
    */
-  failNext: (
-    request: string,
-    error?: { status: number; code: string; message: string }
-  ) => void;
+  failNext: (request: string, error?: FakeFailure) => void;
   /** Restores whatever window.fetch was before install. */
   restore: () => void;
 }
@@ -100,6 +122,10 @@ const normalizeCode = (code: string): string =>
 
 const CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
+// Same app id the real server checks (server/core/handlers/putBackup.ts) and
+// the backup helper writes (src/helpers/backupHelper/backupHelper.js).
+const BACKUP_APP_ID = "react-expenses-manager";
+
 export const installFakeSyncServer = (): FakeSyncServer => {
   const users: FakeUserRecord[] = [];
   const parties: FakePartyRecord[] = [];
@@ -122,6 +148,17 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     const user = findByEmail(email);
     if (!user) throw new Error(`fakeSyncServer: no seeded user for ${email}`);
     return user;
+  };
+
+  // The most recently seeded party — what the seed* transition helpers act
+  // on, so a test never has to thread the party id back in.
+  const mustFindSeededParty = (helper: string): FakePartyRecord => {
+    const party = parties[parties.length - 1];
+    if (!party)
+      throw new Error(
+        `fakeSyncServer.${helper}: seed a party first (seedPartyWithMembers)`
+      );
+    return party;
   };
 
   // Party as the requester sees it (RFC §3 /api/me shape).
@@ -169,6 +206,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       canceled: false,
       memberIds: [{ id: organizer.id, blocked: false }],
       invitations: {},
+      backup: null,
     };
     parties.push(party);
     organizer.partyId = party.id;
@@ -221,6 +259,15 @@ export const installFakeSyncServer = (): FakeSyncServer => {
 
   const notOrganizer = (action: string) =>
     errorResponse(403, "NOT_ORGANIZER", `Only the organizer can ${action}.`);
+
+  // One-shot failure injections, keyed by "METHOD /path" (failNext seam);
+  // repeated failNext calls for the same key queue up.
+  const pendingFailures = new Map<string, (FakeFailure | null)[]>();
+  const uploadedBackups: {
+    baseVersion: string | null;
+    envelope: BackupEnvelope;
+  }[] = [];
+  const requestLog: string[] = [];
 
   const handle = (
     method: string,
@@ -290,12 +337,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       if (!user.partyId)
         return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
       const party = parties.find((candidate) => candidate.id === user.partyId)!;
-      if (party.organizerId !== user.id)
-        return errorResponse(
-          403,
-          "NOT_ORGANIZER",
-          "Only the organizer can invite members."
-        );
+      if (party.organizerId !== user.id) return notOrganizer("invite members");
       if (party.canceled)
         return errorResponse(410, "PARTY_CANCELED", "This party was canceled.");
       const { password } = body || {};
@@ -367,6 +409,62 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
+    // Endpoints 9–10 — backup download/upload. Mirrors the real server's
+    // requirePartyAccess precedence exactly: NO_PARTY, then BLOCKED (403),
+    // then PARTY_CANCELED (410), before any data is read or written.
+    if (path === "/api/party/backup" && (method === "GET" || method === "PUT")) {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
+      const member = party.memberIds.find(
+        (candidate) => candidate.id === user.id
+      );
+      if (member && member.blocked)
+        return errorResponse(
+          403,
+          "BLOCKED",
+          "You've been removed from this party by its organizer."
+        );
+      if (party.canceled)
+        return errorResponse(410, "PARTY_CANCELED", "This party was canceled.");
+
+      if (method === "GET") {
+        if (!party.backup)
+          return errorResponse(404, "NO_BACKUP", "No backup has been uploaded yet.");
+        return jsonResponse(200, party.backup);
+      }
+
+      // PUT — baseVersion compare-and-swap, like the real server: null is
+      // create-only (EC-1), anything else must match the stored version
+      // (EC-2).
+      const { baseVersion, envelope } = body || {};
+      if (baseVersion !== null && typeof baseVersion !== "string")
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "baseVersion must be a version string or null."
+        );
+      if (!envelope || envelope.app !== BACKUP_APP_ID)
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "A valid backup envelope is required."
+        );
+      const currentVersion = party.backup ? party.backup.version : null;
+      if (baseVersion !== currentVersion)
+        return errorResponse(
+          409,
+          "VERSION_CONFLICT",
+          "The party backup changed since your download."
+        );
+      const version = String(Number(currentVersion || "0") + 1);
+      party.backup = { version, envelope };
+      uploadedBackups.push({ baseVersion, envelope });
+      return jsonResponse(200, { version });
+    }
+
     // Endpoint 7 — the organizer blocks a member (AC-2.9).
     const blockMatch = /^\/api\/party\/members\/([^/]+)\/block$/.exec(path);
     if (method === "POST" && blockMatch) {
@@ -408,12 +506,6 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     return errorResponse(404, "NOT_FOUND", "Not found.");
   };
 
-  // One-shot failure injections, keyed by "METHOD /path" (failNext seam).
-  const pendingFailures = new Map<
-    string,
-    { status: number; code: string; message: string } | null
-  >();
-
   const previousFetch = window.fetch;
   window.fetch = (async (input: any, init: any = {}) => {
     const url = typeof input === "string" ? input : input?.url;
@@ -426,9 +518,10 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     const method = init.method || "GET";
 
     const failureKey = `${method} ${path}`;
-    if (pendingFailures.has(failureKey)) {
-      const failure = pendingFailures.get(failureKey)!;
-      pendingFailures.delete(failureKey);
+    requestLog.push(failureKey);
+    const queued = pendingFailures.get(failureKey);
+    if (queued && queued.length > 0) {
+      const failure = queued.shift()!;
       // No error given → transport failure, like an unreachable server.
       if (!failure) throw new TypeError("Failed to fetch");
       return errorResponse(failure.status, failure.code, failure.message);
@@ -464,17 +557,33 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       return party.id;
     },
     seedInvitation: ({ password, used = false }) => {
-      const party = parties[parties.length - 1];
-      if (!party)
-        throw new Error(
-          "fakeSyncServer.seedInvitation: seed a party first (seedPartyWithMembers)"
-        );
+      const party = mustFindSeededParty("seedInvitation");
       const code = generateCode();
       party.invitations[normalizeCode(code)] = { password, used };
       return code;
     },
+    seedBlockMember: (email) => {
+      const user = mustFindByEmail(email);
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        throw new Error("fakeSyncServer.seedBlockMember: user has no party");
+      const member = party.memberIds.find(
+        (candidate) => candidate.id === user.id
+      )!;
+      member.blocked = true;
+    },
+    seedCancelParty: () => {
+      mustFindSeededParty("seedCancelParty").canceled = true;
+    },
+    seedRemoteBackup: (envelope) => {
+      mustFindSeededParty("seedRemoteBackup").backup = { version: "1", envelope };
+    },
+    getUploadedBackups: () => [...uploadedBackups],
+    getRequests: () => [...requestLog],
     failNext: (request, error) => {
-      pendingFailures.set(request, error || null);
+      const queued = pendingFailures.get(request) || [];
+      queued.push(error || null);
+      pendingFailures.set(request, queued);
     },
     restore: () => {
       window.fetch = previousFetch;
