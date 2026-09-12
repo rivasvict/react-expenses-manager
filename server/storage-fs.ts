@@ -32,9 +32,11 @@ export const createFsStorage = ({ dir }: FsStorageOptions): StorageAdapter => {
   // this is a dev server, and simplicity beats throughput at family scale.
   let casChain: Promise<unknown> = Promise.resolve();
   const serialized = <T>(operation: () => Promise<T>): Promise<T> => {
-    const result = casChain.then(operation, operation);
-    // Keep the chain alive whatever the operation's outcome, so one rejected
-    // write does not wedge every write after it.
+    const result = casChain.then(operation);
+    // What keeps the chain alive across a failure: the link the *next* write
+    // waits on is the caught one, so it always fulfills and that write still
+    // runs. `result` itself stays rejected for the caller to handle. Without
+    // this, one rejected write would wedge every write queued after it.
     casChain = result.catch(() => undefined);
     return result;
   };
