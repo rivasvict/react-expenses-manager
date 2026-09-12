@@ -339,7 +339,8 @@ test("only the organizer can generate invitations (403 NOT_ORGANIZER)", async ()
   const { organizer } = await setupOrganizer(app);
   const invited = await createInvitation(app, organizer.token, INVITE_PASSWORD);
 
-  // Tom joins as a plain member, so he is in the party but does not run it.
+  // Tom joins as a plain member: he belongs to the party but is not its
+  // organizer.
   const tom = await signUpAs(app, tomSeed);
   await joinParty(app, tom.token, {
     code: invited.body.code,
@@ -354,9 +355,10 @@ test("only the organizer can generate invitations (403 NOT_ORGANIZER)", async ()
 test("generating an invitation requires belonging to a party (404 NO_PARTY)", async () => {
   const app = makeApp();
 
-  // Being in someone else's party but not running it is FORBIDDEN (above);
-  // having no party at all is a different failure and must not be reported
-  // as the same one.
+  // A user who belongs to a party but is not its organizer is rejected with
+  // 403 NOT_ORGANIZER — see "only the organizer can generate invitations (403
+  // NOT_ORGANIZER)". This test covers the other, more basic failure: having no
+  // party at all, which gets 404 NO_PARTY and must not be conflated with it.
   const sam = await signUpAs(app, samSeed);
   const noParty = await createInvitation(app, sam.token, "pass");
 
