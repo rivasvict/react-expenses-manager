@@ -349,10 +349,17 @@ test("only the organizer can generate invitations (403 NOT_ORGANIZER)", async ()
   const denied = await createInvitation(app, tom.token, "another-pass");
   assert.equal(denied.status, HTTP_STATUS.FORBIDDEN);
   assert.equal(denied.body.error.code, ERROR_CODES.NOT_ORGANIZER);
+});
 
-  // Someone with no party at all is a different failure, not the same one.
+test("generating an invitation requires belonging to a party (404 NO_PARTY)", async () => {
+  const app = makeApp();
+
+  // Being in someone else's party but not running it is FORBIDDEN (above);
+  // having no party at all is a different failure and must not be reported
+  // as the same one.
   const sam = await signUpAs(app, samSeed);
   const noParty = await createInvitation(app, sam.token, "pass");
+
   assert.equal(noParty.status, HTTP_STATUS.NOT_FOUND);
   assert.equal(noParty.body.error.code, ERROR_CODES.NO_PARTY);
 });

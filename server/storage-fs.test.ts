@@ -160,6 +160,9 @@ test("a create-only write on an existing key is refused", () =>
     assert.equal(second, null);
     const record = await storage.readJsonVersioned<UserDoc>("parties/p1");
     assert.deepEqual(record?.value, jane);
+    // Stated both ways on purpose: the stored value is still the original,
+    // and specifically is NOT the payload the refused write carried.
+    assert.notDeepEqual(record?.value, { id: "clobbered" });
     assert.equal(record?.version, "1");
   }));
 
@@ -183,6 +186,8 @@ test("a write with a stale version is refused and changes nothing", () =>
     assert.equal(loser, null);
     const record = await storage.readJsonVersioned<UserDoc>("parties/p1");
     assert.equal(record?.value.email, "winner@example.com");
+    // As above: the winner's value survived, and the loser's never landed.
+    assert.notEqual(record?.value.email, "loser@example.com");
   }));
 
 test("concurrent compare-and-swap writes: exactly one of them wins", () =>

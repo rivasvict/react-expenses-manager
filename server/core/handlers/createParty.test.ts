@@ -130,6 +130,38 @@ test("an unauthenticated request is refused with 401", async () => {
   );
 });
 
+// The create-only write can only be refused if the generated id already
+// exists — a randomId() collision. That is far too unlikely to provoke by
+// generating ids, so the refusal is injected at the storage seam instead.
+const refusingCreateOnlyWrites = (storage: StorageAdapter): StorageAdapter => ({
+  ...storage,
+  writeJsonVersioned: async () => null,
+});
+
+test("a party id collision is reported as a retryable conflict", async () => {
+  const storage = refusingCreateOnlyWrites(createMemoryStorage());
+
+  const response = await handlerFor(jane, storage)(request);
+
+  assert.equal(response.status, HTTP_STATUS.CONFLICT);
+  assert.equal((response.body as ErrorBody).error.code, ERROR_CODES.CONFLICT);
+});
+
+test("a party that was not persisted leaves the user unattached", async () => {
+  const inner = createMemoryStorage();
+  await inner.writeJson(userKey(jane.email), jane);
+
+  await handlerFor(jane, refusingCreateOnlyWrites(inner))(request);
+
+  // The backlink is written only after the party lands. Pointing the user at
+  // a party that was never stored would strand them: /api/me would look up a
+  // party id that resolves to nothing, with no way back to creating one.
+  assert.equal(
+    (await inner.readJson<UserRecord>(userKey(jane.email)))?.partyId,
+    null
+  );
+});
+
 test("two parties created in a row get different ids", async () => {
   const storage = createMemoryStorage();
   const first = await handlerFor(jane, storage)(request);
