@@ -72,6 +72,59 @@ test("POST /api/auth/signup, POST /api/auth/login and GET /api/me are all wired"
   assert.equal(me.status, HTTP_STATUS.OK);
 });
 
+test("the three party routes are wired to their own handlers", async () => {
+  const app = makeApp();
+  const signup = (await app.handle({
+    method: "POST",
+    path: "/api/auth/signup",
+    body: jane,
+  })) as AppResponse<SessionBody>;
+  const headers = { authorization: `Bearer ${signup.body.token}` };
+
+  // Each route is identified by the answer only its own handler gives, so a
+  // path wired to the wrong handler would fail here rather than pass by
+  // accidentally returning some other success.
+  const created = await app.handle({
+    method: "POST",
+    path: "/api/party",
+    headers,
+  });
+  assert.equal(created.status, HTTP_STATUS.CREATED);
+
+  const invited = await app.handle({
+    method: "POST",
+    path: "/api/party/invitations",
+    headers,
+    body: { password: "invite-pass" },
+  });
+  assert.equal(invited.status, HTTP_STATUS.CREATED);
+
+  // Jane already has a party, so join's own precondition is what answers.
+  const joined = await app.handle({
+    method: "POST",
+    path: "/api/party/join",
+    headers,
+    body: { code: "AAAA-AAAA", password: "invite-pass" },
+  });
+  assert.equal(joined.status, HTTP_STATUS.CONFLICT);
+  assert.equal(errorCode(joined), ERROR_CODES.ALREADY_IN_PARTY);
+});
+
+test("the party routes reject a wrong method rather than falling through", async () => {
+  const app = makeApp();
+
+  // /api/party/invitations sits under /api/party; neither path has a GET
+  // route wired, so both fall through to the router's 404.
+  for (const path of ["/api/party", "/api/party/invitations", "/api/party/join"]) {
+    const response = await app.handle({ method: "GET", path });
+    assert.equal(
+      response.status,
+      HTTP_STATUS.NOT_FOUND,
+      `expected a not-found status for GET ${path}`
+    );
+  }
+});
+
 test("path matching is exact — no prefix or trailing-slash matches", async () => {
   const app = makeApp();
 

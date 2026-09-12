@@ -3,15 +3,26 @@
 // defunct expenses-manager-api). AC tags below are in
 // docs/multi-user-sync/PRD.md.
 import { getSession, SyncSession } from "../../services/session";
-import { SYNC_SESSION_CLEARED, SYNC_SESSION_SET } from "./actions";
+import { Party } from "../../services/syncApi/contract";
+import {
+  SYNC_PARTY_SET,
+  SYNC_SESSION_CLEARED,
+  SYNC_SESSION_SET,
+} from "./actions";
 
 export interface SyncManagerState {
   session: SyncSession | null;
+  // Party membership is never cached as authoritative (RFC §2.2): it is
+  // null until a GET /me (or party action) response fills it in.
+  party: Party | null;
+  // False until the first /me refresh resolves, so screens can tell
+  // "no party" apart from "not loaded yet".
+  partyStatusResolved: boolean;
 }
 
 interface SyncAction {
   type: string;
-  payload?: { session?: SyncSession };
+  payload?: { session?: SyncSession; party?: Party | null };
 }
 
 // The persisted session is the source of truth (sync.session present ⇔
@@ -19,6 +30,8 @@ interface SyncAction {
 // survive reloads (AC-1.3).
 const getDefaultState = (): SyncManagerState => ({
   session: getSession(),
+  party: null,
+  partyStatusResolved: false,
 });
 
 export const reducer = (
@@ -30,7 +43,19 @@ export const reducer = (
     case SYNC_SESSION_SET:
       return { ...currentState, session: action.payload?.session || null };
     case SYNC_SESSION_CLEARED:
-      return { ...currentState, session: null };
+      // Logging out (or a dead token) also drops the cached party.
+      return {
+        ...currentState,
+        session: null,
+        party: null,
+        partyStatusResolved: false,
+      };
+    case SYNC_PARTY_SET:
+      return {
+        ...currentState,
+        party: action.payload?.party || null,
+        partyStatusResolved: true,
+      };
     default:
       return currentState;
   }

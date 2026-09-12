@@ -97,8 +97,187 @@ test("keys that escape the storage dir are rejected", () =>
         /^Error: Invalid storage key: /,
         `readJson should reject key ${key}`
       );
+      // The versioned methods take the same keys and so need the same guard;
+      // a CAS write that skipped it would be a way back out of the dir.
+      await assert.rejects(
+        () => storage.writeJsonVersioned(key, { pwned: true }, { expectedVersion: null }),
+        /^Error: Invalid storage key: /,
+        `writeJsonVersioned should reject key ${key}`
+      );
+      await assert.rejects(
+        () => storage.readJsonVersioned(key),
+        /^Error: Invalid storage key: /,
+        `readJsonVersioned should reject key ${key}`
+      );
     }
 
     // Nothing was created outside the storage dir by the attempts above.
     assert.equal(await exists(path.join(dir, "..", "secret.json")), false);
+  }));
+
+// --- Versioned (compare-and-swap) keys ------------------------------------
+
+test("readJsonVersioned returns null for a key never written", () =>
+  withTempDir(async (_dir, storage) => {
+    assert.equal(await storage.readJsonVersioned("parties/nobody"), null);
+  }));
+
+test("a versioned write round-trips through the on-disk envelope", () =>
+  withTempDir(async (dir, storage) => {
+    const version = await storage.writeJsonVersioned("parties/p1", jane, {
+      expectedVersion: null,
+    });
+
+    assert.equal(version, "1");
+    assert.deepEqual(await storage.readJsonVersioned<UserDoc>("parties/p1"), {
+      value: jane,
+      version: "1",
+    });
+    // The version really is on disk, not held in the adapter's closure: a
+    // fresh adapter over the same dir has to be able to continue the chain,
+    // or a restarted server would lose every party's version.
+    const reopened = createFsStorage({ dir });
+    assert.equal(
+      await reopened.writeJsonVersioned("parties/p1", jane, {
+        expectedVersion: "1",
+      }),
+      "2"
+    );
+  }));
+
+test("a create-only write on an existing key is refused", () =>
+  withTempDir(async (_dir, storage) => {
+    await storage.writeJsonVersioned("parties/p1", jane, {
+      expectedVersion: null,
+    });
+
+    const second = await storage.writeJsonVersioned(
+      "parties/p1",
+      { id: "clobbered" },
+      { expectedVersion: null }
+    );
+
+    assert.equal(second, null);
+    const record = await storage.readJsonVersioned<UserDoc>("parties/p1");
+    assert.deepEqual(record?.value, jane);
+    // Stated both ways on purpose: the stored value is still the original,
+    // and specifically is NOT the payload the refused write carried.
+    assert.notDeepEqual(record?.value, { id: "clobbered" });
+    assert.equal(record?.version, "1");
+  }));
+
+test("a write with a stale version is refused and changes nothing", () =>
+  withTempDir(async (_dir, storage) => {
+    await storage.writeJsonVersioned("parties/p1", jane, {
+      expectedVersion: null,
+    });
+    await storage.writeJsonVersioned(
+      "parties/p1",
+      { ...jane, email: "winner@example.com" },
+      { expectedVersion: "1" }
+    );
+
+    const loser = await storage.writeJsonVersioned(
+      "parties/p1",
+      { ...jane, email: "loser@example.com" },
+      { expectedVersion: "1" }
+    );
+
+    assert.equal(loser, null);
+    const record = await storage.readJsonVersioned<UserDoc>("parties/p1");
+    assert.equal(record?.value.email, "winner@example.com");
+    // As above: the winner's value survived, and the loser's never landed.
+    assert.notEqual(record?.value.email, "loser@example.com");
+  }));
+
+test("concurrent compare-and-swap writes: exactly one of them wins", () =>
+  withTempDir(async (_dir, storage) => {
+    await storage.writeJsonVersioned("parties/p1", { count: 0 }, {
+      expectedVersion: null,
+    });
+
+    // Ten writers all holding version "1", fired without awaiting between
+    // them. Reading the current version and writing the file are separate
+    // awaits, so without the adapter's serialization several of these would
+    // interleave — each passing the version check before any of them wrote —
+    // and all report success. Exactly one may.
+    const results = await Promise.all(
+      Array.from({ length: 10 }, (_value, index) =>
+        storage.writeJsonVersioned(
+          "parties/p1",
+          { count: index + 1 },
+          { expectedVersion: "1" }
+        )
+      )
+    );
+
+    assert.equal(results.filter((version) => version !== null).length, 1);
+    assert.equal((await storage.readJsonVersioned("parties/p1"))?.version, "2");
+  }));
+
+test("sequential compare-and-swap writes each build on the last", () =>
+  withTempDir(async (_dir, storage) => {
+    let version = await storage.writeJsonVersioned("parties/p1", { count: 0 }, {
+      expectedVersion: null,
+    });
+
+    for (let count = 1; count <= 5; count += 1) {
+      version = await storage.writeJsonVersioned(
+        "parties/p1",
+        { count },
+        { expectedVersion: version }
+      );
+      assert.equal(version, String(count + 1));
+    }
+
+    const record = await storage.readJsonVersioned<{ count: number }>(
+      "parties/p1"
+    );
+    assert.deepEqual(record, { value: { count: 5 }, version: "6" });
+  }));
+
+test("a rejected CAS write does not wedge the writes queued behind it", () =>
+  withTempDir(async (_dir, storage) => {
+    await storage.writeJsonVersioned("parties/p1", { count: 0 }, {
+      expectedVersion: null,
+    });
+
+    // An escaping key throws inside the serialized section. The chain has to
+    // survive that, or one bad request would stall every CAS write after it.
+    await assert.rejects(() =>
+      storage.writeJsonVersioned("../escape", {}, { expectedVersion: null })
+    );
+
+    assert.equal(
+      await storage.writeJsonVersioned(
+        "parties/p1",
+        { count: 1 },
+        { expectedVersion: "1" }
+      ),
+      "2"
+    );
+  }));
+
+test("a versioned key is stored wrapped in a version envelope", () =>
+  withTempDir(async (dir, storage) => {
+    await storage.writeJson("users/jane", jane);
+    await storage.writeJsonVersioned("parties/p1", jane, {
+      expectedVersion: null,
+    });
+
+    // The two families of methods are not interchangeable on one key: a
+    // versioned key holds { version, data } on disk while a plain one holds
+    // the bare value. That is why core/storage.ts documents them as disjoint
+    // namespaces — reading a key through the other pair yields the wrong
+    // shape rather than an error, which is the trap this pins.
+    const onDisk = JSON.parse(
+      await fs.readFile(path.join(dir, "parties", "p1.json"), "utf8")
+    );
+    assert.deepEqual(Object.keys(onDisk).sort(), ["data", "version"]);
+    assert.deepEqual(onDisk.data, jane);
+
+    const plainOnDisk = JSON.parse(
+      await fs.readFile(path.join(dir, "users", "jane.json"), "utf8")
+    );
+    assert.deepEqual(plainOnDisk, jane);
   }));

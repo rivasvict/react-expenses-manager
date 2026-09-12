@@ -1,6 +1,7 @@
-// Local dev sync server (RFC §6, NFR-4): node:http adapter around the
-// framework-free core, with CORS for the CRA dev server and on-disk JSON
-// storage under server/.data/ (gitignored).
+// Local dev sync server (docs/multi-user-sync/RFC.md §6, and NFR-4 in
+// docs/multi-user-sync/PRD.md): node:http adapter around the framework-free
+// core, with CORS for the CRA dev server and on-disk JSON storage under
+// server/.data/ (gitignored).
 //
 // Run with: npm run sync-server   (defaults to port 4000)
 import http from "node:http";
@@ -12,8 +13,11 @@ import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
 
 const PORT = Number(process.env.PORT) || 4000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
-// Dev-only default secret; override in any real deployment (RFC §6).
+// Dev-only default secrets; override in any real deployment (RFC §6). Left
+// unset, ENCRYPTION_KEY falls back to the core's own dev default, so a
+// local run works with no environment at all.
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-token-secret";
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
 // This file runs compiled, from server/dist/, so the data directory is one
@@ -115,6 +119,7 @@ if (require.main === module) {
       app: createApp({
         storage: createFsStorage({ dir: DATA_DIR }),
         tokenSecret: TOKEN_SECRET,
+        encryptionSecret: ENCRYPTION_KEY,
       }),
     })
   );

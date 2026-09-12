@@ -4,17 +4,23 @@ Dependency-free plain Node implementation of the multi-user sync backend
 (RFC: `docs/multi-user-sync/RFC.md`). Written in TypeScript and compiled
 ahead of run — there is no runtime dependency on `ts-node` or any npm
 package; the compiled output under `server/dist/` is plain CommonJS that
-only requires `node:` builtins. PR 1 ships the auth endpoints:
+only requires `node:` builtins.
 
 | Endpoint | Purpose |
 |---|---|
 | `POST /api/auth/signup` | Create an account → `201 {token, user}` |
 | `POST /api/auth/login` | Log in → `200 {token, user}` |
-| `GET /api/me` | Current user (Bearer token) → `200 {user, party: null}` |
+| `GET /api/me` | Current user + party, if any (Bearer token) → `200 {user, party}` |
+| `POST /api/party` | Create a party; caller becomes organizer → `201 {party}` |
+| `POST /api/party/invitations` | Organizer generates a one-time invite code → `201 {code}` |
+| `POST /api/party/join` | Redeem an invite code + password → `200 {party}` |
 
 Passwords are scrypt-hashed (never stored or logged in plaintext); tokens
 are compact HMAC-SHA256-signed (`base64url(payload).base64url(sig)`,
-30-day expiry).
+30-day expiry). Invitation codes exist at rest only as a keyed HMAC lookup
+hash; invitation records (the invite password and its `used` flag) are
+AES-256-GCM-encrypted — neither the code nor the password is ever stored
+in plaintext (RFC §5).
 
 ## Run locally
 
@@ -34,6 +40,9 @@ output in `server/dist/`, gitignored).
   - `PORT` — defaults to `4000`
   - `TOKEN_SECRET` — token signing secret; defaults to a dev-only value.
     Override for anything beyond local development.
+  - `ENCRYPTION_KEY` — stretched (via sha256) to the 32 bytes AES-256-GCM
+    needs for invitation records; any string works locally, defaults to a
+    dev-only value. Override for anything beyond local development.
   - `CORS_ORIGIN` — allowed browser origin
 - The frontend reads the server URL from `REACT_APP_SYNC_API_HOST`
   (defaults to `http://localhost:4000`, see `.env.template`).
@@ -91,14 +100,18 @@ CRA's jest deliberately does not scan `server/` (it only looks under
 
 ## Layout
 
-- `core/` — framework-free router, crypto (scrypt + HMAC tokens), shared
+- `core/` — framework-free router, crypto (scrypt + HMAC tokens),
+  invitation crypto (`invitations.ts` — code generation/normalization,
+  keyed lookup hashing, AES-256-GCM record encryption), shared
   status/error-code constants (`httpConstants.ts`), and the storage
   interface (`storage.ts`, with the in-memory reference implementation used
-  by tests)
+  by tests) — including the compare-and-swap `readJsonVersioned`/
+  `writeJsonVersioned` pair parties are mutated through
 - `core/handlers/` — one module per endpoint (`signup.ts`, `login.ts`,
-  `me.ts`) plus the collaborators they share (session minting, response
-  shaping, storage keys, field guards); `core/handlers.ts` is just the
-  wiring that builds the set
+  `me.ts`, `createParty.ts`, `createInvitation.ts`, `joinParty.ts`) plus the
+  collaborators they share (session minting, response shaping, storage
+  keys, party mutation/CAS retry, field guards); `core/handlers.ts` is just
+  the wiring that builds the set
 - `*.types.ts` — type declarations extracted from any file that declared
   more than two of them
 - `storage-fs.ts` — on-disk JSON adapter (local dev)

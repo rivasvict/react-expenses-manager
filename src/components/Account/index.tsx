@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 import { MainContentContainer } from "../common/MainContentContainer";
 import ButtonLikeLink from "../common/ButtonLikeLink";
+import ContentTileSection from "../common/ContentTitleSection";
 import { logOut } from "../../redux/syncManager/actionCreators";
 import { getInitials } from "../../helpers/general";
 import { SyncSession } from "../../services/session";
@@ -18,7 +19,6 @@ interface AccountProps {
  * offers Sign in / Sign up; the logged-in view shows who is signed in and a
  * Log out button. Logout needs no confirmation (reversible, low-stakes) and
  * announces a transient status line (AC-1.4, docs/multi-user-sync/PRD.md).
- * The Party row lands with parties in a later PR.
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
   const [justSignedOut, setJustSignedOut] = useState(false);
@@ -43,6 +43,11 @@ const Account = ({ session, onLogOut }: AccountProps) => {
               <p className="account-card__email">{session.user.email}</p>
             </div>
           </div>
+          {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
+              from the account. */}
+          <ContentTileSection title="Party" to="/party">
+            Party
+          </ContentTileSection>
           <Button
             variant="secondary"
             className="full-width"
