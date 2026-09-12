@@ -1,6 +1,18 @@
-// Thunk action creators for account and party state. API errors are
-// re-thrown so the calling screen can render the exact copy for each error
-// code (DESIGN §2/§3).
+// Thunk action creators for account and party state. API errors are re-thrown
+// so the calling screen can render the exact copy for each error code
+// (docs/multi-user-sync/DESIGN.md §2/§3). RFC/AC/EC tags below refer to
+// docs/multi-user-sync/RFC.md and docs/multi-user-sync/PRD.md.
+//
+// TODO:
+// This module has no test file. signUp/signIn/logOut and the refreshMe/
+// createParty/generateInvitation/joinParty/blockMember/cancelParty thunks
+// are currently only asserted end-to-end via
+// src/integrationTests/accounts.test.tsx, party.test.tsx, partyJoin.test.tsx
+// and partyManagement.test.tsx. Worth covering directly: session persistence
+// on sign in/up, logOut clearing it, the deliberately swallowed refreshMe
+// failure, the SYNC_PARTY_SET dispatches, and the "Not signed in" guards.
+// Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/160
 import { Dispatch } from "redux";
 import * as syncApi from "../../services/syncApi";
 import { AuthResponse, Party } from "../../services/syncApi/contract";
@@ -105,8 +117,10 @@ export const joinParty =
     return party;
   };
 
-// AC-2.9: blocks a member (organizer only). The member keeps their record
-// — and their already-synced entries — but immediately loses sync access.
+// AC-2.9: blocks a member (organizer only). The member keeps their row — and
+// their already-synced entries — but immediately loses sync access. The
+// returned party replaces the cached one, so the row flips to Blocked
+// without a separate refresh.
 export const blockMember =
   ({ userId }: { userId: string }) =>
   async (dispatch: Dispatch): Promise<Party> => {
@@ -121,7 +135,7 @@ export const blockMember =
   };
 
 // AC-2.10: cancels the party (organizer only). Nobody's local data is
-// touched; the canceled state re-renders for every member on /me refresh.
+// touched; other members see the canceled state on their next /me refresh.
 export const cancelParty =
   () =>
   async (dispatch: Dispatch): Promise<Party> => {

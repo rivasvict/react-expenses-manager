@@ -29,6 +29,13 @@ const CATEGORICAL_COLORS = [
  */
 export const INCOME_EXPENSE_COLORS = ["#199e70", "#e66767"];
 
+/**
+ * Semantic pair for expense-vs-savings charts (e.g. the dashboard balance
+ * donut), where expenses are shown in the warning/expense red and savings
+ * reuses the income green to signal "kept" money.
+ */
+export const EXPENSE_SAVINGS_COLORS = ["#e66767", "#199e70"];
+
 const SURFACE_COLOR = "#161b22";
 const LEGEND_TEXT_COLOR = "#9aa4b2";
 

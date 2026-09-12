@@ -8,6 +8,7 @@ it("Renders CategorySelector component properly", () => {
       <CategorySelector
         handleChange={jest.fn()}
         name="CategorySelector"
+        id="category-selector"
         value=""
         categoryOptions={[
           { name: "Cat1", value: "cat1" },

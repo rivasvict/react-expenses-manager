@@ -1,6 +1,9 @@
 // TODO(#116): This suite drives entryModel/categoryOptions/handleEntry props
 // the current AddEntry component doesn't accept. Skipped until it's rewritten
 // against the real component.
+/* eslint-disable testing-library/no-unnecessary-act, testing-library/no-render-in-setup --
+   legacy react-dom `render` pattern (not Testing Library's) in a skipped
+   suite; goes away with the TODO(#116) rewrite. */
 import React from "react";
 import AddEntry from ".";
 import { render, unmountComponentAtNode } from "react-dom";
@@ -77,7 +80,7 @@ describe.skip("Test AddEntry component", () => {
     });
   });
 
-  describe("handleSumbit test in valid data input", () => {
+  describe("handleSumbit test in invalid data input", () => {
     let validDataModel = null;
     beforeEach(() => {
       validDataModel = entryData.invalid;

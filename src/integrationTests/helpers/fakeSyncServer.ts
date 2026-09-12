@@ -1,6 +1,8 @@
-// In-memory fetch stub implementing the auth + party portion of the sync
-// API contract (RFC §3, endpoints 1–6) so integration tests never touch
-// the network (NFR-5). Backup endpoints join in a later PR.
+// In-memory fetch stub implementing the auth + party portion of the sync API
+// contract (docs/multi-user-sync/RFC.md §3, endpoints 1–8) so integration
+// tests never touch the network (NFR-5, docs/multi-user-sync/PRD.md). The
+// backup endpoints (9–10) join in a later PR, when the client starts calling
+// them. AC/EC tags below are also in PRD.md.
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
 import { Party, SyncUser } from "../../services/syncApi/contract";
@@ -205,9 +207,9 @@ export const installFakeSyncServer = (): FakeSyncServer => {
   const unauthorized = () =>
     errorResponse(401, "UNAUTHORIZED", "You need to sign in again.");
 
-  // Like the real server (DESIGN §3.6): blocked members and members of
-  // canceled parties are free to create/join elsewhere; only an active
-  // membership blocks it.
+  // Like the real server (docs/multi-user-sync/DESIGN.md §3.6): blocked
+  // members and members of canceled parties are free to create/join
+  // elsewhere; only an active membership stands in the way.
   const hasActiveMembership = (user: FakeUserRecord): boolean => {
     const party = parties.find((candidate) => candidate.id === user.partyId);
     if (!party || party.canceled) return false;
@@ -216,6 +218,9 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     );
     return !(member && member.blocked);
   };
+
+  const notOrganizer = (action: string) =>
+    errorResponse(403, "NOT_ORGANIZER", `Only the organizer can ${action}.`);
 
   const handle = (
     method: string,
@@ -351,7 +356,8 @@ export const installFakeSyncServer = (): FakeSyncServer => {
           "That password doesn't match this invitation."
         );
       invitation.used = true;
-      // Re-invited past member: refresh the existing record, no duplicate.
+      // A re-invited past member gets their existing row back, not a
+      // duplicate — the same rule as the real server.
       const existing = party.memberIds.find(
         (candidate) => candidate.id === user.id
       );
@@ -361,7 +367,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
-    // RFC §3.7 — organizer blocks a member (AC-2.9).
+    // Endpoint 7 — the organizer blocks a member (AC-2.9).
     const blockMatch = /^\/api\/party\/members\/([^/]+)\/block$/.exec(path);
     if (method === "POST" && blockMatch) {
       const user = authenticate(headers);
@@ -369,12 +375,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       const party = parties.find((candidate) => candidate.id === user.partyId);
       if (!party)
         return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
-      if (party.organizerId !== user.id)
-        return errorResponse(
-          403,
-          "NOT_ORGANIZER",
-          "Only the organizer can block members."
-        );
+      if (party.organizerId !== user.id) return notOrganizer("block members");
       const targetId = decodeURIComponent(blockMatch[1]);
       if (targetId === party.organizerId)
         return errorResponse(
@@ -391,7 +392,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
-    // RFC §3.8 — organizer cancels the party (AC-2.10).
+    // Endpoint 8 — the organizer cancels the party (AC-2.10).
     if (method === "POST" && path === "/api/party/cancel") {
       const user = authenticate(headers);
       if (!user) return unauthorized();
@@ -399,11 +400,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       if (!party)
         return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
       if (party.organizerId !== user.id)
-        return errorResponse(
-          403,
-          "NOT_ORGANIZER",
-          "Only the organizer can cancel the party."
-        );
+        return notOrganizer("cancel the party");
       party.canceled = true;
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
