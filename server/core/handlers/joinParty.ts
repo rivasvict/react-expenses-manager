@@ -9,7 +9,6 @@ import {
   InvitationPointer,
   InvitationRecord,
   MutateParty,
-  PartyMember,
   PartyMutation,
   PartyRecord,
   SetUserPartyId,
@@ -19,6 +18,7 @@ import { codeLookupHash, decryptRecord, encryptRecord } from "../invitations";
 import { StorageAdapter } from "../storage";
 import { error, publicParty, publicUser, unauthorized } from "./responses";
 import { invitationPointerKey, partyKey } from "./partyKeys";
+import { isBlockedIn } from "./partyAccess";
 import { isNonEmptyString, requestFields } from "./validation";
 
 interface JoinPartyHandlerOptions {
@@ -36,18 +36,6 @@ const invitationNotFound = () =>
     ERROR_CODES.INVITATION_NOT_FOUND,
     "That invitation code doesn't exist."
   );
-
-// The member list with `joining` in it as an active member. A user who was
-// in this party before (blocked, then re-invited) already has a row, which
-// is refreshed in place rather than duplicated — one row per person is what
-// keeps attribution history and the block flag unambiguous.
-const withActiveMember = (
-  members: PartyMember[],
-  joining: PartyMember
-): PartyMember[] =>
-  members.some((member) => member.id === joining.id)
-    ? members.map((member) => (member.id === joining.id ? joining : member))
-    : [...members, joining];
 
 export const createJoinPartyHandler = ({
   storage,
@@ -111,6 +99,20 @@ export const createJoinPartyHandler = ({
           ),
         };
 
+      // A member blocked from this exact party cannot let themselves back in
+      // by redeeming a different unused code for it — that would silently
+      // undo the organizer's block. Re-admitting them is a deliberate
+      // organizer action, tracked separately in issue #136, not a side
+      // effect of an old code.
+      if (isBlockedIn(party, user.id))
+        return {
+          response: error(
+            HTTP_STATUS.FORBIDDEN,
+            ERROR_CODES.BLOCKED,
+            "You've been removed from this party by its organizer."
+          ),
+        };
+
       const invitation = decryptRecord<InvitationRecord>(
         party.invitations[lookupHash],
         encryptionKey
@@ -140,10 +142,7 @@ export const createJoinPartyHandler = ({
       return {
         party: {
           ...party,
-          members: withActiveMember(party.members, {
-            ...publicUser(user),
-            blocked: false,
-          }),
+          members: [...party.members, { ...publicUser(user), blocked: false }],
           invitations: {
             ...party.invitations,
             [lookupHash]: encryptRecord(

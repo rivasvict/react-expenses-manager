@@ -94,7 +94,7 @@ const Party = ({
   // AC-2.9: the confirmation carries the consequences (DESIGN §3.2).
   const handleBlockClick = (member: PartyMember) => {
     const confirmed = window.confirm(
-      `Block ${member.firstName} ${member.lastName}? They'll immediately lose the ability to sync. Entries they've already contributed stay in the party's history.`
+      `Block ${member.firstName} ${member.lastName}? This cannot be undone. They'll immediately lose the ability to sync, and entries they've already contributed stay in the party's history.`
     );
     if (!confirmed) return;
     runMembershipAction(
@@ -107,7 +107,7 @@ const Party = ({
   const handleCancelClick = () => {
     if (!party) return;
     const confirmed = window.confirm(
-      `Cancel ${party.name}? No member will be able to sync afterward. Nobody's local data is deleted.`
+      `Cancel ${party.name}? This cannot be undone. No member will be able to sync afterward, and nobody's local data is deleted.`
     );
     if (!confirmed) return;
     runMembershipAction(onCancelParty, "Could not cancel the party.");

@@ -65,7 +65,7 @@ describe("blocking a member", () => {
     );
 
     expect(confirmSpy).toHaveBeenCalledWith(
-      "Block Tom Doe? They'll immediately lose the ability to sync. Entries they've already contributed stay in the party's history."
+      "Block Tom Doe? This cannot be undone. They'll immediately lose the ability to sync, and entries they've already contributed stay in the party's history."
     );
     // The row shows the muted Blocked label; the Block button is gone.
     expect(await screen.findByText("Blocked")).toBeInTheDocument();
@@ -166,7 +166,7 @@ describe("canceling the party", () => {
     );
 
     expect(confirmSpy).toHaveBeenCalledWith(
-      "Cancel Jane's Party? No member will be able to sync afterward. Nobody's local data is deleted."
+      "Cancel Jane's Party? This cannot be undone. No member will be able to sync afterward, and nobody's local data is deleted."
     );
     expect(
       await screen.findByText(

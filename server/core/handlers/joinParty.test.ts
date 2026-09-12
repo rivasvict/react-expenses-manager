@@ -313,8 +313,9 @@ test("a member of a canceled party may join elsewhere", async () => {
   assert.equal((response.body as PartyBody).party.id, "party-1");
 });
 
-test("a re-invited past member gets their existing row back, not a second one", async () => {
-  // Tom was in Jane's party before and was blocked; Jane invites him again.
+test("a member blocked in this party cannot restore access by redeeming an old code", async () => {
+  // Tom was in Jane's party before and was blocked there; he still holds a
+  // valid, unused invitation code for that same party.
   const storage = await seeded(
     partyWith({
       members: [
@@ -340,15 +341,12 @@ test("a re-invited past member gets their existing row back, not a second one", 
     request()
   );
 
-  assert.equal(response.status, HTTP_STATUS.OK);
-  const { party } = response.body as PartyBody;
-  // One row per person: a duplicate would leave the block flag ambiguous
-  // and double-count him everywhere the list is shown.
-  assert.deepEqual(
-    party.members.map((member) => member.id),
-    [jane.id, tom.id]
-  );
-  assert.equal(party.youAreBlocked, false);
+  assert.equal(response.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal((response.body as ErrorBody).error.code, ERROR_CODES.BLOCKED);
+  // Redeeming is refused, so the invitation stays usable and Tom's row is
+  // untouched — re-admitting him is a deliberate organizer action, not a
+  // side effect of an old code.
+  assert.equal(await invitationIsUsed(storage), false);
   const stored = (await readParty(storage))?.value;
   assert.equal(
     stored?.members.filter((member) => member.id === tom.id).length,
@@ -356,7 +354,7 @@ test("a re-invited past member gets their existing row back, not a second one", 
   );
   assert.equal(
     stored?.members.find((member) => member.id === tom.id)?.blocked,
-    false
+    true
   );
 });
 

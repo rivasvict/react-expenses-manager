@@ -49,6 +49,14 @@ export const createBlockMemberHandler =
             "Only the organizer can block members."
           ),
         };
+      if (party.canceled)
+        return {
+          response: error(
+            HTTP_STATUS.GONE,
+            ERROR_CODES.PARTY_CANCELED,
+            "This party was canceled."
+          ),
+        };
       // The organizer is the one person who can never be blocked — there
       // would be nobody left to manage the party (AC-2.12).
       if (targetId === party.organizerId)

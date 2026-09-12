@@ -36,7 +36,7 @@ const readUsersParty = async (
     ? storage.readJsonVersioned<PartyRecord>(partyKey(user.partyId))
     : null;
 
-const isBlockedIn = (party: PartyRecord, userId: string): boolean =>
+export const isBlockedIn = (party: PartyRecord, userId: string): boolean =>
   party.members.some((member) => member.id === userId && member.blocked);
 
 const noParty = () =>

@@ -35,6 +35,14 @@ export const createCancelPartyHandler =
             "Only the organizer can cancel the party."
           ),
         };
+      if (party.canceled)
+        return {
+          response: error(
+            HTTP_STATUS.GONE,
+            ERROR_CODES.PARTY_CANCELED,
+            "This party was canceled."
+          ),
+        };
       return { party: { ...party, canceled: true } };
     });
     if (!outcome.party) return outcome.response;

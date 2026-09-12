@@ -135,14 +135,21 @@ test("a plain member cannot cancel the party (403 NOT_ORGANIZER, AC-2.12)", asyn
   assert.deepEqual(await readParty(storage), before);
 });
 
-test("cancelling an already-canceled party is a harmless repeat", async () => {
-  const storage = await seeded();
-  await handlerFor(jane, storage)(request);
+test("cancelling an already-canceled party is refused with 410", async () => {
+  const storage = createMemoryStorage();
+  await storage.writeJsonVersioned(
+    partyKey(party.id),
+    { ...party, canceled: true },
+    { expectedVersion: null }
+  );
 
   const response = await handlerFor(jane, storage)(request);
 
-  assert.equal(response.status, HTTP_STATUS.OK);
-  assert.equal((response.body as PartyBody).party.canceled, true);
+  assert.equal(response.status, HTTP_STATUS.GONE);
+  assert.equal(
+    (response.body as ErrorBody).error.code,
+    ERROR_CODES.PARTY_CANCELED
+  );
 });
 
 test("a user with no party is refused with 404 NO_PARTY", async () => {

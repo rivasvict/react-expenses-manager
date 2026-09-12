@@ -786,7 +786,7 @@ test("blocked or canceled users are free to create or join a new party (DESIGN �
   assert.equal(joined.body.party.id, tomParty.body.party.id);
 });
 
-test("a re-invited blocked member rejoins as one active row (no duplicate)", async () => {
+test("a member blocked in this party cannot rejoin with a fresh invitation for it", async () => {
   const app = makeApp();
   const { organizer, member, party } = await setupOrganizerAndMember(app);
   await blockMember(app, organizer.token, member.user.id);
@@ -797,16 +797,19 @@ test("a re-invited blocked member rejoins as one active row (no duplicate)", asy
     password: INVITE_PASSWORD,
   });
 
-  assert.equal(rejoined.status, HTTP_STATUS.OK);
-  assert.equal(rejoined.body.party.id, party.id);
-  assert.equal(rejoined.body.party.youAreBlocked, false);
-  assert.deepEqual(
-    rejoined.body.party.members.map((row) => row.id),
-    [organizer.user.id, member.user.id]
-  );
-  // The gate admits him again.
+  assert.equal(rejoined.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(rejoined.body.error.code, ERROR_CODES.BLOCKED);
+  // The gate still refuses him — nothing was silently undone.
   const download = await getBackup(app, member.token);
-  assert.equal(download.body.error.code, ERROR_CODES.NO_BACKUP);
+  assert.equal(download.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(download.body.error.code, ERROR_CODES.BLOCKED);
+  const stillBlocked = (await me(app, organizer.token)).body.party;
+  assert.equal(stillBlocked?.id, party.id);
+  assert.ok(
+    stillBlocked?.members.some(
+      (row) => row.id === member.user.id && row.blocked
+    )
+  );
 });
 
 test("block and cancel mutate only the party record — never user or backup data (AC-2.9)", async () => {

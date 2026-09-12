@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.9.1] - 2026-09-12
+
+### Fixed
+
+- Server: `joinParty` no longer lets a member blocked from a party restore
+  their own access by redeeming a still-unused invitation code for that same
+  party — the redeem is now refused with `403 BLOCKED` instead of silently
+  un-blocking the row; re-admitting a past blocked member remains a
+  deliberate organizer action, tracked separately in issue #136
+- Server: `blockMember` and `cancelParty` now check `party.canceled` (like
+  `createInvitation` already did) and refuse with `410 PARTY_CANCELED`
+  instead of mutating an already-canceled party
+- The Cancel and Block confirmation dialogs now say the action cannot be
+  undone
+
 ## [1.9.0] - 2026-09-12
 
 ### Added

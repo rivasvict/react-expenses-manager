@@ -182,6 +182,19 @@ test("the organizer cannot block themself (400 VALIDATION_ERROR)", async () => {
   assert.deepEqual(blockedIds((await readParty(storage))!.value), []);
 });
 
+test("blocking a member in an already-canceled party is refused with 410", async () => {
+  const storage = await seeded({ ...party, canceled: true });
+
+  const response = await handlerFor(jane, storage)(blockRequest(tom.id));
+
+  assert.equal(response.status, HTTP_STATUS.GONE);
+  assert.equal(
+    (response.body as ErrorBody).error.code,
+    ERROR_CODES.PARTY_CANCELED
+  );
+  assert.deepEqual(blockedIds((await readParty(storage))!.value), []);
+});
+
 test("blocking someone who is not a member is 404 NOT_FOUND", async () => {
   const storage = await seeded();
 
