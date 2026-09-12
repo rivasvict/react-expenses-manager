@@ -7,10 +7,11 @@ import {
 import { seedEntries, ts, MAY } from "./helpers/seed";
 
 /**
- * Integration tests for the sync card's gating (multi-user sync PR 4,
- * DESIGN §4.1, AC-2.11): the button is disabled with an always-rendered
- * explanatory caption for every non-ready state, and sync is a manual,
- * explicit action — never automatic (AC-3.1).
+ * Integration tests for the sync card's gating
+ * (docs/multi-user-sync/DESIGN.md §4.1; AC-2.11, docs/multi-user-sync/PRD.md):
+ * the button is disabled with an always-rendered explanatory caption for
+ * every non-ready state, and sync is a manual, explicit action — never
+ * automatic (AC-3.1).
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");

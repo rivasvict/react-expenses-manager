@@ -108,9 +108,10 @@ const DataManagement = ({
               )}
             </Col>
           </Row>
-          {/* Sync with your party (multi-user sync, DESIGN §4): another way
-              of keeping data safe, so it sits between backup and the danger
-              zone. The existing cards above/below are untouched (AC-3.7). */}
+          {/* Sync with your party (docs/multi-user-sync/DESIGN.md §4):
+              another way of keeping data safe, so it sits between backup
+              and the danger zone. The existing cards above/below are
+              untouched (AC-3.7, docs/multi-user-sync/PRD.md). */}
           <Row>
             <SyncCard />
           </Row>

@@ -6,10 +6,12 @@ import {
 } from "./helpers/fakeSyncServer";
 
 /**
- * Integration tests for accounts (multi-user sync PR 1): sign up, sign in,
- * sign out, session persistence, and the guarantee that the app stays fully
- * functional when logged out (AC-1.1–1.7). All network traffic goes through
- * the in-memory fakeSyncServer — no real requests.
+ * Integration tests for accounts (multi-user sync): sign up, sign in, sign
+ * out, session persistence, and the guarantee that the app stays fully
+ * functional when logged out (AC-1.1–1.7, defined in
+ * docs/multi-user-sync/PRD.md). All network traffic goes through the
+ * in-memory fakeSyncServer — no real requests. DESIGN § references below are
+ * in docs/multi-user-sync/DESIGN.md.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");

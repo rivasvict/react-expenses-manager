@@ -1,13 +1,10 @@
 import React, { useRef, useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
-import { Icon } from "@iconify/react";
-import copyIcon from "@iconify-icons/codicon/copy";
-import eyeIcon from "@iconify-icons/codicon/eye";
-import eyeClosedIcon from "@iconify-icons/codicon/eye-closed";
+import { Form } from "react-bootstrap";
 import { MainContentContainer } from "../common/MainContentContainer";
 import { FormButton, InputPassword } from "../common/Forms";
+import ShareField from "./ShareField";
 import { generateInvitation } from "../../redux/syncManager/actionCreators";
 import "./styles.scss";
 
@@ -17,64 +14,15 @@ interface InviteScreenProps {
   onGenerateInvitation: (payload: { password: string }) => Promise<string>;
 }
 
-// A read-only monospace field + Copy icon button + transient "Copied" live
-// text (DESIGN §3.4). No toast primitive exists in the app; the inline
-// aria-live confirmation avoids introducing one.
-const ShareField = ({
-  label,
-  value,
-  masked = false,
-  copied,
-  onCopy,
-  revealed,
-  onToggleReveal,
-}: {
-  label: string;
-  value: string;
-  masked?: boolean;
-  copied: boolean;
-  onCopy: () => void;
-  revealed?: boolean;
-  onToggleReveal?: () => void;
-}) => (
-  <div className="share-field">
-    <span className="share-field__label">{label}</span>
-    <input
-      className="share-field__value"
-      type={masked && !revealed ? "password" : "text"}
-      value={value}
-      readOnly
-      aria-label={label}
-    />
-    {masked && onToggleReveal && (
-      <Button
-        variant="secondary"
-        className="share-field__icon-button"
-        aria-label={revealed ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
-        onClick={onToggleReveal}
-      >
-        <Icon icon={revealed ? eyeClosedIcon : eyeIcon} aria-hidden="true" />
-      </Button>
-    )}
-    <Button
-      variant="secondary"
-      className="share-field__icon-button"
-      aria-label={`Copy ${label.toLowerCase()}`}
-      onClick={onCopy}
-    >
-      <Icon icon={copyIcon} aria-hidden="true" />
-    </Button>
-    <span className="share-field__copied" aria-live="polite">
-      {copied ? "Copied" : ""}
-    </span>
-  </div>
-);
-
 /**
- * Organizer generates an invitation (DESIGN §3.4, AC-2.3): step 1 sets the
- * invitation password, step 2 shows the one-time code + password with copy
- * buttons. Neither secret is ever logged or persisted client-side — they
- * exist only in component state (AC-2.4/NFR-2).
+ * Organizer generates an invitation (docs/multi-user-sync/DESIGN.md §3.4;
+ * AC-2.3, docs/multi-user-sync/PRD.md): step 1 sets the invitation password,
+ * step 2 shows the one-time code and password with copy buttons.
+ *
+ * Neither secret is ever logged or persisted client-side — they exist only
+ * in this component's state (AC-2.4/NFR-2). The code in particular is
+ * unrecoverable once this screen is left: the server keeps no plaintext copy,
+ * so leaving without copying it means generating a new one.
  */
 const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
   const history = useHistory();

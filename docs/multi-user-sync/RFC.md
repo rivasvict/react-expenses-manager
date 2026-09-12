@@ -147,7 +147,7 @@ Errors: `{ "error": { "code": "<CODE>", "message": "<human text>" } }`.
 | 7 | `POST /api/party/members/{userId}/block` | ✓ org | `{}` → `200 {party}` | 403 `NOT_ORGANIZER`; 404 `NO_PARTY` |
 | 8 | `POST /api/party/cancel` | ✓ org | `{}` → `200 {party}` | 403 `NOT_ORGANIZER`; 404 `NO_PARTY` |
 | 9 | `GET /api/party/backup` | ✓ | → `200 {version, envelope}` | 404 `NO_BACKUP` (EC-1) or `NO_PARTY`; 403 `BLOCKED` (EC-9); 410 `PARTY_CANCELED` |
-| 10 | `PUT /api/party/backup` | ✓ | `{baseVersion, envelope}` → `200 {version}` | 409 `VERSION_CONFLICT` (EC-2); 403 `BLOCKED`; 410 `PARTY_CANCELED`; 404 `NO_PARTY`; 400 `VALIDATION_ERROR` (bad/oversized envelope, limit 1 MB) |
+| 10 | `PUT /api/party/backup` | ✓ | `{baseVersion, envelope}` → `200 {version}` | 409 `VERSION_CONFLICT` (EC-2); 403 `BLOCKED`; 410 `PARTY_CANCELED`; 404 `NO_PARTY`; 400 `VALIDATION_ERROR` (bad envelope); 413 `PAYLOAD_TOO_LARGE` (body over the 1 MB cap — answered by the transport before any handler runs, so an oversized envelope never reaches the 400 check) |
 
 Notes:
 - `PUT` with `baseVersion: null` means "create only" (EC-1) — rejected with

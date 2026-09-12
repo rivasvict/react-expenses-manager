@@ -1,5 +1,7 @@
-// Sync/account state (RFC §1): a new slice, deliberately separate from the
-// dormant userManager (which targets the defunct expenses-manager-api).
+// Sync/account state (docs/multi-user-sync/RFC.md §1): a new slice,
+// deliberately separate from the dormant userManager (which targets the
+// defunct expenses-manager-api). AC tags below are in
+// docs/multi-user-sync/PRD.md.
 import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
 import {
@@ -16,10 +18,10 @@ export interface SyncManagerState {
   party: Party | null;
   // False until the first /me refresh resolves, so screens can tell
   // "no party" apart from "not loaded yet".
-  partyLoaded: boolean;
-  // Incoming-change count for the /sync-review screen; null when no
-  // review is pending. The full staged item set arrives with the wizard
-  // PR — nothing is ever applied unreviewed.
+  partyStatusResolved: boolean;
+  // Incoming-change count for the /sync-review screen (RFC §4.3 step 4);
+  // null when no review is pending. The full staged item set arrives with
+  // the review wizard in a later PR — nothing is ever applied unreviewed.
   pendingReviewCount: number | null;
 }
 
@@ -38,7 +40,7 @@ interface SyncAction {
 const getDefaultState = (): SyncManagerState => ({
   session: getSession(),
   party: null,
-  partyLoaded: false,
+  partyStatusResolved: false,
   pendingReviewCount: null,
 });
 
@@ -51,19 +53,20 @@ export const reducer = (
     case SYNC_SESSION_SET:
       return { ...currentState, session: action.payload?.session || null };
     case SYNC_SESSION_CLEARED:
-      // Logging out (or a dead token) also drops the cached party.
+      // Logging out (or a dead token) also drops the cached party — and any
+      // review that was pending for it.
       return {
         ...currentState,
         session: null,
         party: null,
-        partyLoaded: false,
+        partyStatusResolved: false,
         pendingReviewCount: null,
       };
     case SYNC_PARTY_SET:
       return {
         ...currentState,
         party: action.payload?.party || null,
-        partyLoaded: true,
+        partyStatusResolved: true,
       };
     case SYNC_PENDING_REVIEW_SET:
       return {

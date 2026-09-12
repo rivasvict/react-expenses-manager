@@ -7,12 +7,13 @@ import {
 import { seedEntries, ts, MAY } from "./helpers/seed";
 
 /**
- * Integration tests for the no-wizard sync paths (multi-user sync PR 4):
- * EC-1 first sync, "You're up to date" (AC-3.3), silent upload of
- * local-only additions, download failure (AC-3.11), stale blocked/
- * canceled rejections (EC-9), version-conflict restart (EC-2) and the
- * review placeholder's safe abandonment. All network traffic goes
- * through the in-memory fakeSyncServer.
+ * Integration tests for the no-wizard sync paths
+ * (docs/multi-user-sync/RFC.md §4.3; AC/EC tags in
+ * docs/multi-user-sync/PRD.md): EC-1 first sync, "You're up to date"
+ * (AC-3.3), silent upload of local-only additions, download failure
+ * (AC-3.11), stale blocked/canceled rejections (EC-9), version-conflict
+ * restart (EC-2) and the review placeholder's safe abandonment. All
+ * network traffic goes through the in-memory fakeSyncServer.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");

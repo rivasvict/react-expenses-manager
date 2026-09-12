@@ -12,11 +12,12 @@ interface SyncReviewProps {
 }
 
 /**
- * Minimal /sync-review placeholder (multi-user sync PR 4): the full
- * DESIGN §4.3 wizard lands in the next PR. Until then the only offered
- * action is Cancel review — DESIGN's safe-abandonment rule: nothing has
- * been applied (decisions would be staged in component state only), so
- * canceling changes nothing on this device.
+ * Minimal /sync-review placeholder: the full item-by-item review wizard
+ * (docs/multi-user-sync/DESIGN.md §4.3) lands in a later PR. Until then the
+ * only offered action is Cancel review — DESIGN §4.3's safe-abandonment
+ * rule: nothing has been applied (decisions would be staged in component
+ * state only, docs/multi-user-sync/RFC.md §4.3 step 4), so canceling
+ * changes nothing on this device.
  */
 const SyncReview = ({
   pendingReviewCount,
@@ -42,7 +43,7 @@ const SyncReview = ({
             : `Your party has ${pendingReviewCount} incoming ${
                 pendingReviewCount === 1 ? "change" : "changes"
               } to review.`}{" "}
-          Reviewing changes item by item arrives in the next update — nothing
+          Reviewing changes item by item arrives in a later update — nothing
           is applied to this device until you review it.
         </p>
         <Button

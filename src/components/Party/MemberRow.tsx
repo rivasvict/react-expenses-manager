@@ -6,16 +6,18 @@ interface MemberRowProps {
   member: PartyMember;
   isSelf: boolean;
   isOrganizer: boolean;
-  // Present only when the viewer may block this member (organizer viewing
-  // an active, non-self row — AC-2.12); the parent owns the confirm.
+  // Present only when the viewer may block this member — the organizer
+  // looking at someone else's active row (AC-2.12,
+  // docs/multi-user-sync/PRD.md). The caller decides that and owns the
+  // confirmation; the row only offers the button.
   onBlock?: () => void;
 }
 
 /**
- * One static row of the party member list (DESIGN §3.2): name/email plus a
- * right-aligned status — an Organizer badge, a Block button (organizer
- * view, AC-2.9), a muted "Blocked" label, or nothing. There is no
- * un-block affordance — out of scope by design.
+ * One static row of the party member list (docs/multi-user-sync/DESIGN.md
+ * §3.2): name and email, plus a right-aligned status — an Organizer badge, a
+ * Block button (organizer view, AC-2.9), a muted "Blocked" label, or nothing.
+ * There is no un-block affordance: out of scope by design.
  */
 const MemberRow = ({ member, isSelf, isOrganizer, onBlock }: MemberRowProps) => (
   <li className="member-row">

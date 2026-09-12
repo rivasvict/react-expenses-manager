@@ -19,12 +19,13 @@ import { formatRelativeTime } from "../../../../helpers/date";
 interface SyncCardProps {
   session: SyncSession | null;
   party: Party | null;
-  partyLoaded: boolean;
+  partyStatusResolved: boolean;
   onRefreshMe: () => void;
   onSync: () => Promise<SyncOutcome>;
 }
 
-// DESIGN §4.2 banner copy, keyed by outcome/error.
+// Banner copy keyed by outcome/error (docs/multi-user-sync/DESIGN.md §4.2).
+// AC/EC tags in this file are in docs/multi-user-sync/PRD.md.
 const COPY = {
   upToDate: "You're up to date.",
   firstSync:
@@ -44,14 +45,14 @@ const COPY = {
 const getCaption = (
   session: SyncSession | null,
   party: Party | null,
-  partyLoaded: boolean
+  partyStatusResolved: boolean
 ): { enabled: boolean; caption: string } => {
   if (!session)
     return {
       enabled: false,
       caption: "Sign in and join a party to sync your entries across devices.",
     };
-  if (!partyLoaded && !party)
+  if (!partyStatusResolved && !party)
     return { enabled: false, caption: "Checking your party…" };
   if (!party)
     return {
@@ -82,12 +83,14 @@ const getCaption = (
 /**
  * The "Sync with your party" card on Data Management (DESIGN §4.1–4.2).
  * Sync is a manual, explicit action (AC-3.1): the only network calls to
- * the backup endpoints happen inside the button's click handler.
+ * the backup endpoints happen inside the button's click handler. The
+ * no-wizard outcomes render here; incoming changes hand off to
+ * /sync-review.
  */
 const SyncCard = ({
   session,
   party,
-  partyLoaded,
+  partyStatusResolved,
   onRefreshMe,
   onSync,
 }: SyncCardProps) => {
@@ -102,7 +105,7 @@ const SyncCard = ({
     if (session) onRefreshMe();
   }, [session, onRefreshMe]);
 
-  const { enabled, caption } = getCaption(session, party, partyLoaded);
+  const { enabled, caption } = getCaption(session, party, partyStatusResolved);
 
   const handleSync = async () => {
     setIsSyncing(true);
@@ -182,7 +185,7 @@ const SyncCard = ({
 const mapStateToProps = (state: any) => ({
   session: state.syncManager.session,
   party: state.syncManager.party,
-  partyLoaded: state.syncManager.partyLoaded,
+  partyStatusResolved: state.syncManager.partyStatusResolved,
 });
 
 const mapActionsToProps = (dispatch: any) => ({

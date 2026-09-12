@@ -1,8 +1,9 @@
-// The manual sync flow (RFC §4.3), no-wizard paths: download → diff →
-// either "up to date" (with a silent upload when only local additions
-// exist), the EC-1 first-sync upload, or routing to /sync-review when
-// there are incoming changes (the wizard itself is the next PR — nothing
-// is ever applied unreviewed).
+// The manual sync flow (docs/multi-user-sync/RFC.md §4.3), no-wizard paths:
+// download → diff → either "up to date" (with a silent upload when only
+// local additions exist), the EC-1 first-sync upload, or routing to
+// /sync-review when there are incoming changes (the wizard itself is a
+// later PR — nothing is ever applied unreviewed). AC/EC tags are in
+// docs/multi-user-sync/PRD.md.
 //
 // The commit (sync.state write) happens ONLY on an upload 200 (RFC §4.3
 // step 6); every failure path leaves localStorage completely untouched
@@ -14,6 +15,7 @@ import { getSyncState, setSyncState } from "../../services/syncState";
 import {
   diffSnapshots,
   snapshotsContentEqual,
+  Rejections,
 } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
   BackupData,
@@ -27,7 +29,6 @@ import {
 } from "../../helpers/backupHelper/backupHelper";
 import storageSelector from "../../services/storageSelector";
 import { STORAGE_TYPES } from "../../constants";
-import { Rejections } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import { SYNC_PENDING_REVIEW_SET } from "./actions";
 
 // App data stays on local storage (RFC §1) — sync reads the same snapshot

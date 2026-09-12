@@ -1,5 +1,6 @@
-// Merge & idempotency engine for multi-user sync (RFC §4). All pure
-// functions, no I/O — every EC combination is unit-testable here.
+// Merge & idempotency engine for multi-user sync (docs/multi-user-sync/RFC.md
+// §4). All pure functions, no I/O — every EC combination
+// (docs/multi-user-sync/PRD.md) is unit-testable here.
 //
 // Every syncable unit gets an itemKey and a contentHash (RFC §4.1):
 //   Entry                    entry:{id}                    entry minus id

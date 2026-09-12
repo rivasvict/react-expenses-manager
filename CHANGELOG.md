@@ -5,76 +5,412 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.5.0] - 2026-07-12
+## [1.10.0] - 2026-09-12
 
 ### Added
-- Sync engine + Data Management sync card (multi-user sync, PR 4): a
-  manual "Sync with party" button — never automatic — that downloads the
-  party backup, diffs it against local data and handles every no-review
-  path end to end
-- First sync (no remote backup yet) uploads local data as the party's
-  starting point with a distinct confirmation; identical states show
-  "You're up to date."; local-only additions upload silently
-- Explanatory captions under the button for every disabled state (logged
-  out, no party, blocked, canceled) plus a "Last synced" caption;
-  download failures, stale blocked/canceled rejections and repeated
-  version conflicts each get their own alert, leaving local data
-  untouched
-- Incoming changes route to a minimal "Review changes" screen offering
-  only Cancel review (nothing is ever applied unreviewed); the full
-  review wizard arrives next
-- Pure merge engine (`syncMergeHelper`): canonical hashing, item
-  identity, additive-only diff with permanent per-item rejection memory,
-  and merge application incl. fixed-entry tombstones and
-  case-insensitive bucket keys
-- Server: real backup upload with baseVersion compare-and-swap (409
-  VERSION_CONFLICT on mismatch, create-only for the first sync);
-  oversized bodies now return 413 PAYLOAD_TOO_LARGE; malformed
-  percent-encoding in paths returns 404 instead of 500
-- Existing Download/Restore/Clear cards are byte-identical and untouched
 
-## [1.4.0] - 2026-07-12
+- Sync engine (multi-user sync): a manual "Sync with party" card on Data
+  Management — never automatic (AC-3.1, `docs/multi-user-sync/PRD.md`) —
+  that downloads the party backup, diffs it against local data and handles
+  every no-review path end to end (`docs/multi-user-sync/RFC.md` §4.3):
+  the first sync (no remote backup yet) uploads local data as the party's
+  starting point with a distinct confirmation, identical states show
+  "You're up to date.", and local-only additions upload silently; a single
+  version conflict restarts transparently
+- Explanatory captions under the sync button for every disabled state
+  (logged out, no party, blocked, canceled) plus a "Last synced" caption
+  (`docs/multi-user-sync/DESIGN.md` §4.1); download failures, stale
+  blocked/canceled rejections and repeated version conflicts each get their
+  own alert, leaving local data untouched (AC-3.11)
+- Incoming changes route to a minimal "Review changes" screen offering only
+  Cancel review — nothing is ever applied unreviewed; the item-by-item
+  review wizard arrives in a later release
+- Client merge engine (`syncMergeHelper`, `docs/multi-user-sync/RFC.md`
+  §4.1–4.2): canonical hashing, item identity, additive-only diff with
+  permanent per-item rejection memory persisted in `sync.state` (RFC §2.2),
+  and merge application incl. fixed-entry tombstones and case-insensitive
+  bucket keys
+- Server: real backup download and upload (`docs/multi-user-sync/RFC.md`
+  §3, endpoints 9–10) — the upload is a baseVersion compare-and-swap,
+  create-only for the first sync and `409 VERSION_CONFLICT` on a stale
+  version; the placeholder `501 NOT_IMPLEMENTED` answer is gone
+- Existing Download/Restore/Clear-all cards are untouched (AC-3.7)
+
+## [1.9.1] - 2026-09-12
+
+### Fixed
+
+- Server: `joinParty` no longer lets a member blocked from a party restore
+  their own access by redeeming a still-unused invitation code for that same
+  party — the redeem is now refused with `403 BLOCKED` instead of silently
+  un-blocking the row; re-admitting a past blocked member remains a
+  deliberate organizer action, tracked separately in issue #136
+- Server: `blockMember` and `cancelParty` now check `party.canceled` (like
+  `createInvitation` already did) and refuse with `410 PARTY_CANCELED`
+  instead of mutating an already-canceled party
+- The Cancel and Block confirmation dialogs now say the action cannot be
+  undone
+
+## [1.9.0] - 2026-09-12
 
 ### Added
-- Party management (multi-user sync, PR 3): the organizer can block a
-  member (confirm dialog; the member keeps their record and their
-  already-contributed entries, but immediately loses sync access) and
-  cancel the party (confirm dialog; nobody's local data is touched)
+
+- Party management (multi-user sync): the organizer can block a member
+  (confirm dialog; the member keeps their row and their already-contributed
+  entries, but immediately loses sync access) and cancel the party (confirm
+  dialog; nobody's local data is touched) — `docs/multi-user-sync/DESIGN.md`
+  §3.2
 - Blocked members and members of a canceled party see dedicated `/party`
   views explaining what happened, and are free to create or join another
-  party
-- Server: block/cancel endpoints plus a shared party-access enforcement
-  layer — blocked members get 403 BLOCKED and canceled parties 410
-  PARTY_CANCELED on the backup endpoints, so the upcoming sync
-  implementation inherits the enforcement unchanged
-- Organizer-only visibility for Block/Cancel controls; members see a
-  read-only list
+  party (`docs/multi-user-sync/DESIGN.md` §3.6); a re-invited past member
+  gets their existing row back rather than a duplicate
+- Organizer-only visibility for the Block and Cancel controls; members keep
+  a read-only list
+- Server: block/cancel endpoints (`docs/multi-user-sync/RFC.md` §3,
+  endpoints 7–8) plus a shared party-access gate — blocked members get
+  `403 BLOCKED` and canceled parties `410 PARTY_CANCELED` on the backup
+  routes (endpoints 9–10, wired as placeholders), so the sync engine landing
+  in a later PR inherits the enforcement unchanged
+- Server: the router now matches `:name` path parameters
+  (`/api/party/members/:userId/block`)
 
-## [1.3.0] - 2026-07-12
+### Changed
+
+- Server: "already in a party" (`409 ALREADY_IN_PARTY` on create/join) now
+  means an *active* membership — a blocked member, or a member of a canceled
+  party, is no longer refused a fresh start
+
+## [1.8.0] - 2026-09-06
 
 ### Added
-- Parties (multi-user sync, PR 2): a logged-in user can create one party
-  and becomes its organizer; the party is auto-named "{first name}'s
-  Party"
+
+- Parties (multi-user sync): a logged-in user can create one party and
+  becomes its organizer; the party is auto-named "{first name}'s Party"
 - Invitations: the organizer generates a one-time code plus an
-  organizer-chosen password from `/party/invite` (code shown exactly
-  once, copy buttons with a transient "Copied" confirmation); invitations
-  are stored only as a sha256 lookup key plus an AES-256-GCM-encrypted
-  record — never in plaintext
-- Joining: `/party/join` redeems a code + password; a wrong password
-  never consumes the invitation, a redeemed invitation is permanently
-  invalid, and a user already in a party is rejected without consuming it
-- Party hub `/party` (reached from Account): no-party, organizer and
-  member views; organizer-only controls stay hidden from members, and
-  create/join affordances disappear once in a party
+  organizer-chosen password from `/party/invite` (code shown exactly once,
+  copy buttons with a transient "Copied" confirmation); invitations are
+  stored only as a keyed HMAC-SHA256 lookup hash plus an AES-256-GCM
+  encrypted record — neither the code nor the password is ever at rest in
+  plaintext
+- Joining: `/party/join` redeems a code + password; a wrong password never
+  consumes the invitation, a redeemed invitation is permanently invalid,
+  and a user already in a party is rejected without consuming it
+- Party hub `/party` (reached from Account): no-party, organizer and member
+  views; organizer-only controls stay hidden from members, and create/join
+  affordances disappear once in a party
 - Server: party/invitation endpoints with compare-and-swap updates on the
-  party record; `/api/me` now returns the party
-- Central 401 handling in the sync API client: a rejected token clears
-  the stored session and degrades the UI to logged-out
+  party record, so one invitation can only ever be redeemed once even under
+  concurrent requests; `/api/me` now returns the party
+- Central 401 handling in the sync API client: a rejected token clears the
+  stored session and degrades the UI to logged-out
+
+## [1.7.0] - 2026-07-26
+
+### Added
+
+- GitHub Actions workflow for server tests using Node 18+, enabling CI validation
+  of the sync server independent of the React app's Node version pin
+- Sync server: a request body over the size cap is now answered with
+  `413 PAYLOAD_TOO_LARGE` instead of a generic 500 or a dropped connection, so
+  clients can tell an oversized upload apart from a server fault
+
+## [1.6.4] - 2026-08-03
+
+### Fixed
+
+- Dashboard balance chart: percentages are now calculated with incomes as
+  the 100% base, and the chart shows Expenses % / Savings % (instead of the
+  previous Incomes % / Expenses % split against an `incomes + expenses`
+  base, which understated both figures). Overspending (expenses > incomes)
+  and zero incomes are both capped at 100% expenses / 0% savings rather than
+  showing negative savings or hiding the chart (#157)
+
+## [1.6.3] - 2026-08-02
+
+### Changed
+
+- Buckets: a monthly allowance of exactly 0 is now rejected, not just
+  negative values — the allowance validation (form + storage layer) now
+  requires a value strictly greater than zero. This also closes the open
+  "what if allowance is 0" gap flagged in issue #155, since a zero allowance
+  would have made the carry-on percentage calculation divide by zero
+
+## [1.6.2] - 2026-08-02
+
+### Fixed
+
+- Buckets: a bucket whose carried-over debt already exceeds its allowance
+  (zero or negative availability) now shows a magnitude-aware usage
+  percentage with the danger/red indicator, instead of falling back to 0%
+  whenever nothing had been spent yet this month. The percentage now reads
+  as "100% + how far past the allowance the carried debt goes" (e.g. a $300
+  debt against a $200 allowance reads 150%, not a flat, uninformative 100%)
+  (issue #155)
+
+## [1.6.1] - 2026-08-02
+
+### Fixed
+
+- Buckets: adding or editing a bucket now rejects a negative monthly
+  allowance, both in the form (clear inline error, "Allowance cannot be
+  negative") and at the storage layer as a safety net. Previously a negative
+  value could only be blocked by the input's regex silently swallowing the
+  keystroke, with no explicit validation or error message
+
+## [1.6.0] - 2026-07-21
+
+### Added
+
+- Visual refresh: category-aware entry icons. Each entry row's chip now shows a
+  glyph keyed to the entry's category (home, car, cart, coffee, briefcase, …)
+  instead of a bare up/down arrow; the chip's income-green / expense-rose tint
+  still carries direction. Custom (user-created) categories fall back to the
+  arrow, so nothing ever renders a broken chip. Backed by a single dependency-
+  free 2px-stroke glyph set (`GlyphIcon`) and a `categoryIcons` map covering
+  every seed category, with a unit test asserting each resolves and unknowns
+  fall back
+- Visual refresh: two-line entry rows. An entry _with_ a description now shows
+  its category as a semibold title over the description as muted subtext; an
+  entry _without_ one keeps the single line. The rule is content-driven, so
+  rows never reshape on resize
+- Visual refresh: a two-tier monthly total tile on /summary, /expenses and
+  /incomes — a muted label with a large, tone-colored value on a softly tinted
+  card (expense-rose / income-green, neutral at zero), replacing the flat
+  `label: amount` string
+- Visual refresh: tabular figures for money columns via a shared
+  `money-figures` mixin, so right-aligned amounts, totals, the balance hero and
+  bucket numbers line up in a grid instead of drifting row to row
+- Visual refresh: navigation destinations now use their own glyphs (grid for
+  Categories, a bucket for Buckets) and the active tab's indicator is a compact
+  soft-gold lozenge behind the icon (at the app's control radius) rather than a
+  full-width tint
+- Visual refresh: a whisper-faint gold page glow — one fixed radial wash
+  anchored to the top of the page, under every surface layer so it never
+  touches content contrast (new `$glow-page` token)
+- Visual refresh: the brand mark is now a single SVG source (`BrandMark` /
+  `public/logo.svg`) rendered as the header lockup and served as a vector
+  favicon, keeping the gold-over-slate double-bar motif on the app's rounded-
+  square shape. The raster `logo192/512.png` and `favicon.ico` stay as
+  fallbacks pending brand sign-off before regenerating them from the source
+
+### Changed
+
+- Visual refresh: the month navigator's Prev/Next steppers are now rounded
+  squares (matching the app's control shape; circles stay reserved for the
+  money chips) and, at the first/last month with data, the stepper stays in
+  place disabled instead of vanishing — so the control never teleports under
+  the thumb and screen readers announce it rather than dropping it silently
+
+## [1.5.1] - 2026-07-20
+
+### Fixed
+
+- Mobile: the open filter sheet and its scrim now stack above the fixed
+  bottom tab bar (`.app-nav`, z-index 100) — previously the nav painted
+  over the sheet's "Clear all" / "Show N results" buttons and stole their
+  taps, making them unreachable on phones. The sheet's bottom padding also
+  gains `env(safe-area-inset-bottom)` clearance for devices with a home
+  indicator
+- The gold filtered banner now renders BETWEEN the toolbar/filter panel
+  and the matching rows on all three screens (/expenses, /incomes,
+  /summary), matching the approved mock — the toolbar stays on top while
+  filtering; the unfiltered layout (tile above toolbar) is unchanged
+- Banner surface softened to match the mock: border is now
+  gold at 30% alpha (`rgba($accent, 0.3)`) instead of full-strength gold
+  on all sides, and the background is a vertical gold wash
+  (`rgba($accent, 0.10)` → `rgba($accent, 0.04)`) instead of a gradient
+  into a hardcoded surface color; the 3px solid gold left bar is kept
+- The toolbar's Sort button now carries the leading sort-arrows icon from
+  the mock ("⇅ Sort: Date"), mirroring the magnifier and funnel icons on
+  its siblings
+- Narrow phones: slightly trimmed toolbar paddings/gaps and search font
+  size so the "Search entries" placeholder no longer truncates at 390px
+
+## [1.5.0] - 2026-07-20
+
+### Added
+
+- Filters & sorting on the monthly summary (/summary): the shared toolbar
+  (live search, sort, Filters button) and the Filters sheet/panel now render
+  on the summary screen, and the ONE shared filter/sort state drives BOTH
+  the incomes and the expenses lists simultaneously — a filter set on
+  /expenses or /incomes is already active when navigating to /summary and
+  vice versa
+- Gold banner variant for /summary: "Filtered view · both lists" with the
+  combined "N of M entries" across both lists and a signed net filtered
+  total ("Filtered total · net", e.g. "+$3,125.02") — income-green when
+  positive, expense-rose when negative, neutral at zero
+- "Matching incomes" / "Matching expenses" section headers with per-list
+  money totals while filtered (`ListSectionHeader` gained an optional
+  `totalText` shown instead of the entry count)
+- The sheet's category picker on /summary offers income AND expense
+  categories, since one filter drives both lists
+- Combined empty state on /summary when zero entries match across both
+  lists; charts (type doughnut and per-type category charts) recompute
+  against the filtered subsets
+
+### Changed
+
+- The Summary screen is now Redux-connected (`entryFilters` +
+  setEntryFilters/clearEntryFilters); the "Show" entry-type select is
+  untouched — filters apply within whatever it displays, and the banner
+  keeps reporting both lists
+- Both /summary lists now honor the shared sort key (date-newest-first by
+  default), matching the /expenses and /incomes behavior
+
+### Tests
+
+- New integration suite `summaryFilters.test.tsx` (11 tests): both-list
+  narrowing from one search, shared sort ordering across lists, income
+  categories in the picker, signed net total with polarity (positive green
+  / negative rose), per-list Matching headers with totals, chip removal
+  and Clear restoring tile + default sort, cross-screen filter carryover
+  from /expenses, "Show" select regression and interplay, and the combined
+  empty state
+
+## [1.4.0] - 2026-07-20
+
+### Added
+
+- "Filters & sort" sheet on the incomes/expenses report: a Filters button
+  (funnel icon) on the toolbar opens a bottom sheet over a scrim on narrow
+  screens and an inline bordered panel on wide ones (same markup, pure CSS
+  switch at the nav breakpoint). It holds the shared search field, a
+  "Search in" segmented toggle ("All text" matches category + description;
+  "Description only" scopes to the entry's description, with hint copy),
+  the searchable category picker, the shared "Sort by" options ("same as
+  toolbar"), a "Clear all" button and a primary "Show N results" button
+  with a live count that simply dismisses (filtering is live — no Apply)
+- Gold "Filtered view" banner that replaces the total tile whenever any
+  filter is active: funnel indicator, "N of M entries", one removable chip
+  per active filter (quoted search term, "Category: X", "Description
+  only"), a dashed gold divider, the "Filtered total" in expense-rose /
+  income-green, and an outlined Clear button that removes every filter AND
+  resets the sort to Date. Count and total sit in `aria-live="polite"`
+  regions
+- Gold count badge on the Filters button for active filters beyond search
+- List section header above the rows: uppercase tinted "Expenses"/"Incomes"
+  ("Matching expenses/incomes" while filtered) with a right-aligned entry
+  count
+- Dashed-border empty state for zero matches ("No entries match your
+  filters", "Try a different search term or a broader category.", and a
+  "Clear all filters" button) while the banner keeps showing "$0.00" and
+  "0 of M entries"
+- Accessibility: focus moves to the sheet heading on open and back to the
+  Filters button on close; Escape and the scrim close the sheet; chip
+  removers are real labelled buttons; scope and sort options in the sheet
+  are native radios
+
+### Changed
+
+- The standalone "Filter by category" control moved from the report screen
+  into the Filters sheet/panel (same searchable dropdown, same semantics)
+- `EntriesSummary` accepts a `hideHeader` prop and `SummaryWithChart` a
+  `listHeader` node so the new section header can replace the built-in list
+  heading without affecting `/summary`
+
+### Tests
+
+- New integration suite `filterSheet.test.tsx` (14 tests): sheet
+  open/close with focus management, shared search/sort state between
+  toolbar and sheet, live "Show N results" count, scope-toggle semantics,
+  banner replacing the tile with chips/count/total, per-chip removal,
+  Clear resetting the sort, badge counting, section headers, empty state,
+  and symmetric /incomes coverage
+- New helper `integrationTests/helpers/filters.ts` (`openFilterSheet`,
+  `searchEntries`), registered in the CLAUDE.md helper list; category
+  filter tests now open the sheet before picking a category
+
+## [1.3.0] - 2026-07-20
+
+### Added
+
+- Live search and sorting on the incomes/expenses monthly report: a slim
+  toolbar under the total tile with a "Search entries" field (matches
+  description and category name, case-insensitive, narrows the list as you
+  type) and a "Sort: <key>" button opening a single-select popover menu
+  ("Date — newest first" (default), "Amount — highest first",
+  "Name — A → Z" tie-broken by description) with full keyboard support
+  (arrows, Enter, Escape) and a gold check on the selected option
+- The visible total and the category doughnut chart now recompute from the
+  searched/sorted/filtered subset
+- Filters and the sort key are shared app state (`entryFilters` in the
+  `expensesManager` slice) persisted to `localStorage`, so they survive
+  month navigation and a page reload; new `filterSortHelper` module holds
+  the pure filter/sort/descriptor logic
+
+### Changed
+
+- The incomes/expenses "Filter by category" control now drives the shared
+  `entryFilters.category` state instead of the legacy `category` field
+  (the old field and its `CATEGORY_CHANGE` action remain in the reducer,
+  unused, pending a follow-up removal)
+
+### Tests
+
+- New unit suites for `filterSortHelper` (search scopes, literal category
+  match incl. regex-special names, sort orders, ties, immutability,
+  descriptors) and for the new `entryFilters` reducer cases
+- New integration suite `filterSortEntries.test.tsx`: live search
+  narrowing/restoring, category-name matches, total updates, row-order
+  assertions for every sort key, keyboard operation of the sort menu,
+  category-filter regression (incl. "House (Rent)"), persistence across
+  month navigation and across a fresh app render, and symmetric /incomes
+  coverage
+- Lint gate restored to green: the skipped legacy TODO(#116) suites now
+  carry targeted `eslint-disable` comments for their false-positive
+  Testing Library rules, and a duplicated describe title in the skipped
+  AddEntry suite was corrected
+
+## [1.2.2] - 2026-07-19
+
+### Fixed
+
+- Category filter on the incomes/expenses report no longer breaks for
+  categories whose name contains regex-special characters (e.g.
+  "House (Rent)"). `getFilteredEntriesByCategory` used
+  `categories_path.match(category)`, which treated the selected category
+  value as a regular expression, so the parentheses in "House (Rent)" were
+  parsed as a capture group and never matched the stored
+  `,house (rent),` path. It now matches the category value literally with
+  `String.prototype.includes`
+
+## [1.2.1] - 2026-07-18
+
+### Added
+
+- Searchable category dropdowns: every category select (entry form,
+  incomes/expenses category filter, Add bucket) is now a hand-built
+  type-to-filter combobox (`CategorySearchSelect`) with a search box inside
+  the popup, case-insensitive substring filtering, full keyboard support
+  (open with Enter/Space/arrows, navigate with ArrowUp/ArrowDown, commit
+  with Enter, dismiss with Escape), click-outside close, and a
+  "No matching categories" empty state. The closed trigger keeps the exact
+  look of the previous native select and the ARIA 1.2 combobox + listbox
+  pattern; no new dependencies were added
+
+### Changed
+
+- `CategorySelector` is now a thin adapter over `CategorySearchSelect`,
+  preserving its props contract (`handleChange` still receives an
+  event-like `{ currentTarget: { value, name } }`, values keep the
+  `,category,` format and `""` for the empty option)
+
+### Tests
+
+- New unit suite for `CategorySearchSelect` (open/close, filtering,
+  selection, keyboard navigation with clamping, empty state, click-outside,
+  empty-option reset) and new integration tests for type-to-filter entry
+  creation and the no-match empty state
+- Integration tests that drove the old native select via
+  `user.selectOptions` now open the combobox and click the option instead;
+  assertions and intent are unchanged
+- `CategorySelector.test.js.snap` regenerated for the new markup
 
 ## [1.2.0] - 2026-07-12
 
 ### Added
+
 - Accounts (multi-user sync, PR 1): optional sign up / sign in / log out —
   the app remains fully functional without an account, and no existing
   route is gated
@@ -95,6 +431,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.1.0] - 2026-07-10
 
 ### Changed
+
 - Complete UX/UI overhaul on a new design-token system (`variables.scss`):
   refined dark "calm fintech" palette, consistent card surfaces, radii,
   focus-visible rings, and semantic income (green) / expense (rose) colors
@@ -127,6 +464,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   ("I Aknowledge" → "Got it")
 
 ### Fixed
+
 - Refreshing (or landing directly) on `/summary` no longer shows an empty
   $0.00 report: the Summary screen derives its data from the store at render
   time instead of freezing whatever was loaded at mount
@@ -134,6 +472,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   washed out the gold "Add …" buttons with light text
 
 ### Tests
+
 - `entryCreation.test.tsx`: the income-creation assertion now tolerates the
   same amount appearing in both the savings hero and the incomes row (the
   seeded scenario has no expenses, so both legitimately read $1,000.00)
@@ -146,6 +485,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.4] - 2026-07-10
 
 ### Added
+
 - CI: `unit-tests` and `integration-tests` GitHub Actions workflows, running
   on push to `master` and on pull requests targeting `master`. Both pin
   Node via `.nvmrc`, install with `npm ci`, and split the suite using the
@@ -154,6 +494,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.3] - 2026-07-10
 
 ### Fixed
+
 - `App.test.js`: pass a real Redux store to `<App />` so the test no longer
   crashes inside `Provider`
 - `CategorySelector.test.js`: refreshed a snapshot that predated the
@@ -165,6 +506,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   behavior stays deterministic
 
 ### Changed
+
 - Skipped 4 unit test suites (`Dashboard/index.test.js`,
   `AddEntry/index.test.js`, `Summaries/EntriesSummary.test.js`,
   `Summaries/EntrySummaryWithFilter.test.js`) that exercise component APIs
@@ -176,6 +518,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.0.2] - 2026-07-09
 
 ### Added
+
 - Fixed Entries: section totals for the Incomes and Expenses lists, showing
   the sum of the recurring entries applying to the viewed month (#113)
 
@@ -185,6 +528,7 @@ First stable release. This version consolidates the buckets, categories,
 fixed-entries, and backup/restore work into a single supported release.
 
 ### Added
+
 - Single-file backup & restore for the entire app's data (#109)
 - Fixed Entries: mark incomes/expenses as recurring per category, with a
   dedicated Fixed Entries page and the ability to promote a regular entry
@@ -199,6 +543,7 @@ fixed-entries, and backup/restore work into a single supported release.
 - `CLAUDE.md` project documentation for contributors
 
 ### Changed
+
 - Per-month bucket limit edits now apply from the edited month forward
   instead of retroactively (#102)
 - Negative bucket availability is now shown as `$0.00 (-deficit)` instead
@@ -207,6 +552,7 @@ fixed-entries, and backup/restore work into a single supported release.
 - Internal categories state renamed to `unbudgetedCategories` for clarity (#100)
 
 ### Fixed
+
 - New entries are now stamped with the selected month/year instead of the
   wall-clock date (#93)
 - Cross-year month filling and a missing entry UUID after creation (#91)
