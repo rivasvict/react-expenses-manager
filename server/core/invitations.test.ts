@@ -120,12 +120,24 @@ test("the ciphertext exposes nothing from the record", () => {
   assert.ok(!encrypted.includes(Buffer.from(record.password).toString("base64")));
 });
 
+// GCM (Galois/Counter Mode) is the AES mode ./invitations.ts encrypts under.
+// It is *authenticated* encryption: alongside the ciphertext it produces an
+// authentication tag, so tampering is detected on decrypt rather than
+// silently decoding to garbage — that is what the two "tampered" tests below
+// exercise.
+//
+// The IV (initialization vector, GCM's 12-byte nonce) is a per-encryption
+// random value mixed in so the same plaintext never encrypts to the same
+// ciphertext twice. `encryptRecord` draws a fresh one on every call and
+// prefixes it to the output, since decryption needs it back.
 test("each encryption of the same record differs (fresh IV per record)", () => {
   const first = encryptRecord(record, key);
   const second = encryptRecord(record, key);
 
-  // A reused IV under GCM is catastrophic — two records under one nonce leak
-  // their XOR. Identical input producing identical output is the symptom.
+  // Reusing one IV across two records under the same key is a real break, not
+  // just untidy: the keystream repeats, so XOR-ing the two ciphertexts
+  // cancels it and leaks the XOR of the plaintexts. Identical input producing
+  // identical output is the symptom this asserts against.
   assert.notEqual(first, second);
   assert.deepEqual(decryptRecord<Record>(first, key), record);
   assert.deepEqual(decryptRecord<Record>(second, key), record);

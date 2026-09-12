@@ -53,9 +53,9 @@ export const createJoinPartyHandler = ({
         "An invitation code and password are required."
       );
 
-    // EC-6 before anything else: a user who already belongs to a party is
-    // turned away without the invitation being touched, so it stays
-    // redeemable by whoever it was actually meant for.
+    // EC-6 (docs/multi-user-sync/PRD.md) before anything else: a user who
+    // already belongs to a party is turned away without the invitation being
+    // touched, so it stays redeemable by whoever it was actually meant for.
     if (user.partyId)
       return error(
         HTTP_STATUS.CONFLICT,
