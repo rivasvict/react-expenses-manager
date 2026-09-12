@@ -113,7 +113,8 @@ test("the three party routes are wired to their own handlers", async () => {
 test("the party routes reject a wrong method rather than falling through", async () => {
   const app = makeApp();
 
-  // /api/party/invitations sits under /api/party; neither may answer a GET.
+  // /api/party/invitations sits under /api/party; neither path has a GET
+  // route wired, so both fall through to the router's 404.
   for (const path of ["/api/party", "/api/party/invitations", "/api/party/join"]) {
     const response = await app.handle({ method: "GET", path });
     assert.equal(

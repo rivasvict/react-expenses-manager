@@ -168,7 +168,7 @@ test("hand-typed variants of the code resolve to the same invitation", async () 
   }
 });
 
-test("a wrong password is refused and does NOT consume the invitation (EC-7)", async () => {
+test("a wrong password is refused and does NOT consume the invitation", async () => {
   const storage = await seeded(partyWith());
 
   const response = await handlerFor(tom, storage)(
@@ -185,7 +185,7 @@ test("a wrong password is refused and does NOT consume the invitation (EC-7)", a
   assert.equal((await readParty(storage))?.value.members.length, 1);
 });
 
-test("an already-used invitation is permanently rejected (AC-2.6/EC-8)", async () => {
+test("an already-used invitation is permanently rejected", async () => {
   const storage = await seeded(partyWith({}, { ...invitation, used: true }));
 
   const response = await handlerFor(tom, storage)(request());
@@ -213,7 +213,7 @@ test("a used invitation reports the same way for a wrong password", async () => 
   );
 });
 
-test("a user already in a party is refused without consuming it (EC-6)", async () => {
+test("a user already in a party is refused without consuming it", async () => {
   const storage = await seeded(partyWith());
 
   const response = await handlerFor(

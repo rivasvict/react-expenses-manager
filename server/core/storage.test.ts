@@ -167,7 +167,7 @@ test("a write with a stale version is refused and changes nothing", async () => 
   assert.equal(record?.version, "2");
 });
 
-test("versioned values are snapshotted, like the plain ones", async () => {
+test("versioned values are snapshotted and not mutable, like the plain ones", async () => {
   const storage = createMemoryStorage();
   const mutable = { id: "p-1", tags: ["owner"] };
   await storage.writeJsonVersioned("parties/p1", mutable, {

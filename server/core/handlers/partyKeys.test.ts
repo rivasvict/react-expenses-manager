@@ -14,7 +14,12 @@ test("invitationPointerKey namespaces the lookup hash under invitations/", () =>
   assert.equal(invitationPointerKey("deadbeef"), "invitations/deadbeef");
 });
 
-test("both key builders are pure functions of their input", () => {
+// Only determinism is claimed here, because repeated calls are all a
+// black-box test can actually observe: a function could mutate shared state
+// or log on the side and still return the same string twice. That the
+// builders are also side-effect free is evident from ./partyKeys.ts instead —
+// each is a one-line template literal over its argument, closing over nothing.
+test("both key builders are deterministic for a given input", () => {
   assert.equal(partyKey("abc-123"), partyKey("abc-123"));
   assert.equal(invitationPointerKey("hash"), invitationPointerKey("hash"));
 });
