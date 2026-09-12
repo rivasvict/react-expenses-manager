@@ -1,5 +1,5 @@
 import { config } from "../../config";
-import { getMe, login, signup } from "./index";
+import { blockMember, cancelParty, getMe, login, signup } from "./index";
 import { SYNC_ERROR_CODES, SyncApiError, isSyncApiError } from "./contract";
 
 /**
@@ -120,6 +120,64 @@ describe("syncApi", () => {
       expect(options.method).toBe("GET");
       expect(options.headers.Authorization).toBe("Bearer tok");
       expect(options.body).toBeUndefined();
+    });
+  });
+
+  describe("blockMember", () => {
+    const party = {
+      id: "party-1",
+      name: "Jane's Party",
+      organizerId: jane.id,
+      canceled: false,
+      youAreBlocked: false,
+      members: [],
+    };
+
+    it("POSTs to the member's block path with a bearer token and an empty body", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ party }));
+
+      await expect(
+        blockMember({ token: "tok", userId: "u2" })
+      ).resolves.toEqual({ party });
+
+      const [url, options] = fetchMock.mock.calls[0];
+      expect(url).toBe(`${HOST}/api/party/members/u2/block`);
+      expect(options.method).toBe("POST");
+      expect(options.headers.Authorization).toBe("Bearer tok");
+      expect(JSON.parse(options.body)).toEqual({});
+    });
+
+    it("percent-encodes the member id so it cannot alter the path", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ party }));
+
+      await blockMember({ token: "tok", userId: "u2/../cancel?x=1" });
+
+      const [url] = fetchMock.mock.calls[0];
+      expect(url).toBe(
+        `${HOST}/api/party/members/${encodeURIComponent("u2/../cancel?x=1")}/block`
+      );
+    });
+  });
+
+  describe("cancelParty", () => {
+    it("POSTs to the cancel path with a bearer token and an empty body", async () => {
+      const party = {
+        id: "party-1",
+        name: "Jane's Party",
+        organizerId: jane.id,
+        canceled: true,
+        youAreBlocked: false,
+        members: [],
+      };
+      fetchMock.mockResolvedValue(jsonResponse({ party }));
+
+      await expect(cancelParty({ token: "tok" })).resolves.toEqual({ party });
+
+      const [url, options] = fetchMock.mock.calls[0];
+      expect(url).toBe(`${HOST}/api/party/cancel`);
+      expect(options.method).toBe("POST");
+      expect(options.headers.Authorization).toBe("Bearer tok");
+      expect(JSON.parse(options.body)).toEqual({});
     });
   });
 

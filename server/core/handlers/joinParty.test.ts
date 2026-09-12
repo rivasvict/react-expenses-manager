@@ -6,6 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createJoinPartyHandler } from "./joinParty";
 import { createMutateParty, createSetUserPartyId } from "./parties";
+import { createHasActivePartyMembership } from "./partyAccess";
 import { invitationPointerKey, partyKey } from "./partyKeys";
 import { userKey } from "./userKeys";
 import {
@@ -109,10 +110,58 @@ const handlerFor = (user: UserRecord | null, storage: StorageAdapter): Handler =
   createJoinPartyHandler({
     storage,
     authenticate: async () => user,
+    hasActivePartyMembership: createHasActivePartyMembership({ storage }),
     mutateParty: createMutateParty({ storage }),
     setUserPartyId: createSetUserPartyId({ storage }),
     encryptionKey,
   });
+
+// Tom's own, separate party — the "elsewhere" he already belongs to in the
+// EC-6 cases. Stored under a different id so it never collides with the
+// party holding the invitation.
+const ELSEWHERE_ID = "party-elsewhere";
+const elsewhereWith = (overrides: {
+  canceled?: boolean;
+  tomBlocked?: boolean;
+}): PartyRecord => ({
+  id: ELSEWHERE_ID,
+  name: "Sam's Party",
+  organizerId: "user-3",
+  members: [
+    {
+      id: "user-3",
+      firstName: "Sam",
+      lastName: "Doe",
+      email: "sam@example.com",
+      blocked: false,
+    },
+    {
+      id: tom.id,
+      firstName: "Tom",
+      lastName: "Doe",
+      email: tom.email,
+      blocked: overrides.tomBlocked ?? false,
+    },
+  ],
+  canceled: overrides.canceled ?? false,
+  invitations: {},
+  createdAt: NOW,
+});
+
+const seededWithElsewhere = async (
+  elsewhere: PartyRecord
+): Promise<StorageAdapter> => {
+  const storage = await seeded(partyWith());
+  await storage.writeJsonVersioned(partyKey(elsewhere.id), elsewhere, {
+    expectedVersion: null,
+  });
+  return storage;
+};
+
+const tomIn = (party: PartyRecord): UserRecord => ({
+  ...tom,
+  partyId: party.id,
+});
 
 const request = (
   body: unknown = { code: CODE, password: INVITE_PASSWORD }
@@ -214,12 +263,10 @@ test("a used invitation reports the same way for a wrong password", async () => 
 });
 
 test("a user already in a party is refused without consuming it", async () => {
-  const storage = await seeded(partyWith());
+  const elsewhere = elsewhereWith({});
+  const storage = await seededWithElsewhere(elsewhere);
 
-  const response = await handlerFor(
-    { ...tom, partyId: "party-elsewhere" },
-    storage
-  )(request());
+  const response = await handlerFor(tomIn(elsewhere), storage)(request());
 
   assert.equal(response.status, HTTP_STATUS.CONFLICT);
   assert.equal(
@@ -227,6 +274,88 @@ test("a user already in a party is refused without consuming it", async () => {
     ERROR_CODES.ALREADY_IN_PARTY
   );
   assert.equal(await invitationIsUsed(storage), false);
+});
+
+// DESIGN §3.6 (docs/multi-user-sync/DESIGN.md): a membership that is no
+// longer active — blocked, or in a canceled party — does not stand in the
+// way of joining somewhere else, even though the user's record still points
+// at the old party.
+
+test("a member blocked elsewhere may join", async () => {
+  const elsewhere = elsewhereWith({ tomBlocked: true });
+  const storage = await seededWithElsewhere(elsewhere);
+
+  const response = await handlerFor(tomIn(elsewhere), storage)(request());
+
+  assert.equal(response.status, HTTP_STATUS.OK);
+  assert.equal((response.body as PartyBody).party.id, "party-1");
+  assert.equal(
+    (await storage.readJson<UserRecord>(userKey(tom.email)))?.partyId,
+    "party-1"
+  );
+  // The old party keeps its (blocked) row for him — nothing is rewritten
+  // there on the way out.
+  const old = await storage.readJsonVersioned<PartyRecord>(
+    partyKey(ELSEWHERE_ID)
+  );
+  assert.ok(
+    old?.value.members.some((member) => member.id === tom.id && member.blocked)
+  );
+});
+
+test("a member of a canceled party may join elsewhere", async () => {
+  const elsewhere = elsewhereWith({ canceled: true });
+  const storage = await seededWithElsewhere(elsewhere);
+
+  const response = await handlerFor(tomIn(elsewhere), storage)(request());
+
+  assert.equal(response.status, HTTP_STATUS.OK);
+  assert.equal((response.body as PartyBody).party.id, "party-1");
+});
+
+test("a member blocked in this party cannot restore access by redeeming an old code", async () => {
+  // Tom was in Jane's party before and was blocked there; he still holds a
+  // valid, unused invitation code for that same party.
+  const storage = await seeded(
+    partyWith({
+      members: [
+        {
+          id: jane.id,
+          firstName: "Jane",
+          lastName: "Doe",
+          email: jane.email,
+          blocked: false,
+        },
+        {
+          id: tom.id,
+          firstName: "Tom",
+          lastName: "Doe",
+          email: tom.email,
+          blocked: true,
+        },
+      ],
+    })
+  );
+
+  const response = await handlerFor({ ...tom, partyId: "party-1" }, storage)(
+    request()
+  );
+
+  assert.equal(response.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal((response.body as ErrorBody).error.code, ERROR_CODES.BLOCKED);
+  // Redeeming is refused, so the invitation stays usable and Tom's row is
+  // untouched — re-admitting him is a deliberate organizer action, not a
+  // side effect of an old code.
+  assert.equal(await invitationIsUsed(storage), false);
+  const stored = (await readParty(storage))?.value;
+  assert.equal(
+    stored?.members.filter((member) => member.id === tom.id).length,
+    1
+  );
+  assert.equal(
+    stored?.members.find((member) => member.id === tom.id)?.blocked,
+    true
+  );
 });
 
 test("an unknown code is not found", async () => {

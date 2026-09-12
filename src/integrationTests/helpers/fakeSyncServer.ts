@@ -1,7 +1,8 @@
 // In-memory fetch stub implementing the auth + party portion of the sync API
-// contract (docs/multi-user-sync/RFC.md §3, endpoints 1–6) so integration
-// tests never touch the network (NFR-5, docs/multi-user-sync/PRD.md). Backup
-// endpoints join in a later PR. AC/EC tags below are also in PRD.md.
+// contract (docs/multi-user-sync/RFC.md §3, endpoints 1–8) so integration
+// tests never touch the network (NFR-5, docs/multi-user-sync/PRD.md). The
+// backup endpoints (9–10) join in a later PR, when the client starts calling
+// them. AC/EC tags below are also in PRD.md.
 import { config } from "../../config";
 import { setSession, SyncSession } from "../../services/session";
 import { Party, SyncUser } from "../../services/syncApi/contract";
@@ -41,9 +42,13 @@ export interface FakeSyncServer {
   loginAs: (email: string) => SyncSession;
   /**
    * Creates a party with already-seeded users: the first email becomes the
-   * organizer, the rest join as members. Returns the party id.
+   * organizer, the rest join as members. Options seed pre-blocked members
+   * (by email) or a canceled party. Returns the party id.
    */
-  seedPartyWithMembers: (emails: string[]) => string;
+  seedPartyWithMembers: (
+    emails: string[],
+    options?: { blocked?: string[]; canceled?: boolean }
+  ) => string;
   /** Adds a redeemable invitation to the seeded party; returns the code. */
   seedInvitation: (options: { password: string; used?: boolean }) => string;
   /**
@@ -202,6 +207,21 @@ export const installFakeSyncServer = (): FakeSyncServer => {
   const unauthorized = () =>
     errorResponse(401, "UNAUTHORIZED", "You need to sign in again.");
 
+  // Like the real server (docs/multi-user-sync/DESIGN.md §3.6): blocked
+  // members and members of canceled parties are free to create/join
+  // elsewhere; only an active membership stands in the way.
+  const hasActiveMembership = (user: FakeUserRecord): boolean => {
+    const party = parties.find((candidate) => candidate.id === user.partyId);
+    if (!party || party.canceled) return false;
+    const member = party.memberIds.find(
+      (candidate) => candidate.id === user.id
+    );
+    return !(member && member.blocked);
+  };
+
+  const notOrganizer = (action: string) =>
+    errorResponse(403, "NOT_ORGANIZER", `Only the organizer can ${action}.`);
+
   const handle = (
     method: string,
     path: string,
@@ -254,7 +274,7 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     if (method === "POST" && path === "/api/party") {
       const user = authenticate(headers);
       if (!user) return unauthorized();
-      if (user.partyId)
+      if (hasActiveMembership(user))
         return errorResponse(
           409,
           "ALREADY_IN_PARTY",
@@ -300,8 +320,9 @@ export const installFakeSyncServer = (): FakeSyncServer => {
           "VALIDATION_ERROR",
           "An invitation code and password are required."
         );
-      // EC-6 first: an existing membership never consumes the invitation.
-      if (user.partyId)
+      // EC-6 first: an existing (active) membership never consumes the
+      // invitation; blocked/canceled users may join elsewhere.
+      if (hasActiveMembership(user))
         return errorResponse(
           409,
           "ALREADY_IN_PARTY",
@@ -335,8 +356,52 @@ export const installFakeSyncServer = (): FakeSyncServer => {
           "That password doesn't match this invitation."
         );
       invitation.used = true;
-      party.memberIds.push({ id: user.id, blocked: false });
+      // A re-invited past member gets their existing row back, not a
+      // duplicate — the same rule as the real server.
+      const existing = party.memberIds.find(
+        (candidate) => candidate.id === user.id
+      );
+      if (existing) existing.blocked = false;
+      else party.memberIds.push({ id: user.id, blocked: false });
       user.partyId = party.id;
+      return jsonResponse(200, { party: publicParty(party, user.id) });
+    }
+
+    // Endpoint 7 — the organizer blocks a member (AC-2.9).
+    const blockMatch = /^\/api\/party\/members\/([^/]+)\/block$/.exec(path);
+    if (method === "POST" && blockMatch) {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
+      if (party.organizerId !== user.id) return notOrganizer("block members");
+      const targetId = decodeURIComponent(blockMatch[1]);
+      if (targetId === party.organizerId)
+        return errorResponse(
+          400,
+          "VALIDATION_ERROR",
+          "The organizer cannot be blocked."
+        );
+      const target = party.memberIds.find(
+        (candidate) => candidate.id === targetId
+      );
+      if (!target)
+        return errorResponse(404, "NOT_FOUND", "That member isn't in your party.");
+      target.blocked = true;
+      return jsonResponse(200, { party: publicParty(party, user.id) });
+    }
+
+    // Endpoint 8 — the organizer cancels the party (AC-2.10).
+    if (method === "POST" && path === "/api/party/cancel") {
+      const user = authenticate(headers);
+      if (!user) return unauthorized();
+      const party = parties.find((candidate) => candidate.id === user.partyId);
+      if (!party)
+        return errorResponse(404, "NO_PARTY", "You don't belong to a party.");
+      if (party.organizerId !== user.id)
+        return notOrganizer("cancel the party");
+      party.canceled = true;
       return jsonResponse(200, { party: publicParty(party, user.id) });
     }
 
@@ -384,14 +449,18 @@ export const installFakeSyncServer = (): FakeSyncServer => {
       setSession(session);
       return session;
     },
-    seedPartyWithMembers: (emails) => {
+    seedPartyWithMembers: (emails, { blocked = [], canceled = false } = {}) => {
       const [organizerEmail, ...memberEmails] = emails;
       const party = createPartyRecord(mustFindByEmail(organizerEmail));
       memberEmails.forEach((email) => {
         const member = mustFindByEmail(email);
-        party.memberIds.push({ id: member.id, blocked: false });
+        party.memberIds.push({
+          id: member.id,
+          blocked: blocked.includes(email),
+        });
         member.partyId = party.id;
       });
+      party.canceled = canceled;
       return party.id;
     },
     seedInvitation: ({ password, used = false }) => {

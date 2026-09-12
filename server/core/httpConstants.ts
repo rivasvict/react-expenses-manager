@@ -17,6 +17,7 @@ export const HTTP_STATUS = {
   GONE: 410,
   PAYLOAD_TOO_LARGE: 413,
   INTERNAL_SERVER_ERROR: 500,
+  NOT_IMPLEMENTED: 501,
 } as const;
 
 export type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
@@ -41,11 +42,19 @@ export const ERROR_CODES = {
   INVITATION_NOT_FOUND: "INVITATION_NOT_FOUND",
   INVITATION_WRONG_PASSWORD: "INVITATION_WRONG_PASSWORD",
   INVITATION_USED: "INVITATION_USED",
+  // The caller's own member record is blocked (EC-9,
+  // docs/multi-user-sync/PRD.md): every party-data endpoint refuses them.
+  BLOCKED: "BLOCKED",
+  // GET /api/party/backup before any backup has been uploaded (EC-1).
+  NO_BACKUP: "NO_BACKUP",
   // Raised when a compare-and-swap on the party record loses its retry to a
   // concurrent update; the caller is expected to retry the whole request.
   CONFLICT: "CONFLICT",
   PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   INTERNAL_ERROR: "INTERNAL_ERROR",
+  // Temporary scaffolding, not part of RFC §3: PUT /api/party/backup answers
+  // with it until the sync engine lands in a later PR. Remove it then.
+  NOT_IMPLEMENTED: "NOT_IMPLEMENTED",
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

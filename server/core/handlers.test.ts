@@ -1,4 +1,4 @@
-// Contract tests for RFC §3 endpoints 1–6 (docs/multi-user-sync/RFC.md), run
+// Contract tests for RFC §3 endpoints 1–10 (docs/multi-user-sync/RFC.md), run
 // with the Node built-in test runner (node >= 18): npm run test:server
 //
 // These drive the whole app through createApp, so they pin what a client
@@ -93,6 +93,41 @@ const joinParty = (
     body,
   });
 
+const blockMember = (
+  app: App,
+  token: string,
+  userId: string
+): Promise<TestResponse> =>
+  call(app, {
+    method: "POST",
+    path: `/api/party/members/${encodeURIComponent(userId)}/block`,
+    headers: asBearer(token),
+    body: {},
+  });
+
+const cancelParty = (app: App, token: string): Promise<TestResponse> =>
+  call(app, {
+    method: "POST",
+    path: "/api/party/cancel",
+    headers: asBearer(token),
+    body: {},
+  });
+
+const getBackup = (app: App, token: string): Promise<TestResponse> =>
+  call(app, {
+    method: "GET",
+    path: "/api/party/backup",
+    headers: asBearer(token),
+  });
+
+const putBackup = (app: App, token: string): Promise<TestResponse> =>
+  call(app, {
+    method: "PUT",
+    path: "/api/party/backup",
+    headers: asBearer(token),
+    body: { baseVersion: null, envelope: {} },
+  });
+
 // Signs up someone with Jane's password, returning their { token, user }.
 const signUpAs = async (
   app: App,
@@ -123,6 +158,20 @@ const setupOrganizer = async (app: App) => {
 };
 
 const INVITE_PASSWORD = "invite-pass";
+
+// Jane organizes a party and Tom joins it through a real invitation — the
+// starting point for endpoints 7–10.
+const setupOrganizerAndMember = async (app: App) => {
+  const { organizer, party } = await setupOrganizer(app);
+  const invited = await createInvitation(app, organizer.token, INVITE_PASSWORD);
+  const member = await signUpAs(app, tomSeed);
+  const joined = await joinParty(app, member.token, {
+    code: invited.body.code,
+    password: INVITE_PASSWORD,
+  });
+  assert.equal(joined.status, HTTP_STATUS.OK);
+  return { organizer, member, party };
+};
 
 // Runs `run` against an app backed by a real temp directory, removed
 // afterwards even on failure.
@@ -566,3 +615,236 @@ test("an invitation minted under one encryption secret is unreadable under anoth
     assert.equal(result.status, HTTP_STATUS.NOT_FOUND);
     assert.equal(result.body.error.code, ERROR_CODES.INVITATION_NOT_FOUND);
   }));
+
+// --- Endpoint 7: POST /api/party/members/{userId}/block --------------------
+
+test("organizer blocks a member: flagged, kept in the list, youAreBlocked on /me (AC-2.9)", async () => {
+  const app = makeApp();
+  const { organizer, member, party } = await setupOrganizerAndMember(app);
+
+  const blocked = await blockMember(app, organizer.token, member.user.id);
+  assert.equal(blocked.status, HTTP_STATUS.OK);
+  const memberRow = blocked.body.party.members.find(
+    (row) => row.id === member.user.id
+  );
+  assert.equal(memberRow?.blocked, true);
+  assert.equal(blocked.body.party.members.length, 2);
+
+  // The blocked member still sees the party on /me — flagged, so the client
+  // can render the blocked view rather than a party they cannot use.
+  const memberMe = await me(app, member.token);
+  assert.equal(memberMe.body.party?.id, party.id);
+  assert.equal(memberMe.body.party?.youAreBlocked, true);
+  // The organizer's own view of the same party is not flagged.
+  assert.equal((await me(app, organizer.token)).body.party?.youAreBlocked, false);
+});
+
+test("block: unknown target is 404, the organizer themself is 400", async () => {
+  const app = makeApp();
+  const { organizer } = await setupOrganizerAndMember(app);
+
+  const unknown = await blockMember(app, organizer.token, "nobody");
+  assert.equal(unknown.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(unknown.body.error.code, ERROR_CODES.NOT_FOUND);
+
+  const self = await blockMember(app, organizer.token, organizer.user.id);
+  assert.equal(self.status, HTTP_STATUS.BAD_REQUEST);
+  assert.equal(self.body.error.code, ERROR_CODES.VALIDATION_ERROR);
+});
+
+test("non-organizer block and cancel are refused with 403 NOT_ORGANIZER (AC-2.12)", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+
+  const blockAttempt = await blockMember(app, member.token, organizer.user.id);
+  assert.equal(blockAttempt.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(blockAttempt.body.error.code, ERROR_CODES.NOT_ORGANIZER);
+
+  const cancelAttempt = await cancelParty(app, member.token);
+  assert.equal(cancelAttempt.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(cancelAttempt.body.error.code, ERROR_CODES.NOT_ORGANIZER);
+
+  // And neither attempt changed anything.
+  const organizerMe = await me(app, organizer.token);
+  assert.equal(organizerMe.body.party?.canceled, false);
+  assert.ok(organizerMe.body.party?.members.every((row) => !row.blocked));
+});
+
+test("block and cancel without a party are 404 NO_PARTY", async () => {
+  const app = makeApp();
+  const sam = await signUpAs(app, samSeed);
+
+  const blockAttempt = await blockMember(app, sam.token, "anyone");
+  assert.equal(blockAttempt.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(blockAttempt.body.error.code, ERROR_CODES.NO_PARTY);
+
+  const cancelAttempt = await cancelParty(app, sam.token);
+  assert.equal(cancelAttempt.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(cancelAttempt.body.error.code, ERROR_CODES.NO_PARTY);
+});
+
+// --- Endpoint 8: POST /api/party/cancel ------------------------------------
+
+test("organizer cancels the party: canceled on every member's /me (AC-2.10)", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+
+  const canceled = await cancelParty(app, organizer.token);
+  assert.equal(canceled.status, HTTP_STATUS.OK);
+  assert.equal(canceled.body.party.canceled, true);
+
+  assert.equal((await me(app, organizer.token)).body.party?.canceled, true);
+  assert.equal((await me(app, member.token)).body.party?.canceled, true);
+});
+
+test("a canceled party issues no further invitations", async () => {
+  const app = makeApp();
+  const { organizer } = await setupOrganizerAndMember(app);
+  await cancelParty(app, organizer.token);
+
+  const invited = await createInvitation(app, organizer.token, INVITE_PASSWORD);
+  assert.equal(invited.status, HTTP_STATUS.GONE);
+  assert.equal(invited.body.error.code, ERROR_CODES.PARTY_CANCELED);
+});
+
+// --- Endpoints 9–10: the backup routes behind the party-access gate --------
+
+test("a blocked member gets 403 BLOCKED on backup GET and PUT (EC-9)", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+  await blockMember(app, organizer.token, member.user.id);
+
+  const download = await getBackup(app, member.token);
+  assert.equal(download.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(download.body.error.code, ERROR_CODES.BLOCKED);
+
+  const upload = await putBackup(app, member.token);
+  assert.equal(upload.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(upload.body.error.code, ERROR_CODES.BLOCKED);
+
+  // The organizer still passes the gate: 404 NO_BACKUP is the contract's
+  // answer while no backup exists (EC-1).
+  const organizerDownload = await getBackup(app, organizer.token);
+  assert.equal(organizerDownload.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(organizerDownload.body.error.code, ERROR_CODES.NO_BACKUP);
+});
+
+test("a canceled party gets 410 PARTY_CANCELED on backup GET and PUT for everyone", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+  await cancelParty(app, organizer.token);
+
+  for (const token of [organizer.token, member.token]) {
+    const download = await getBackup(app, token);
+    assert.equal(download.status, HTTP_STATUS.GONE);
+    assert.equal(download.body.error.code, ERROR_CODES.PARTY_CANCELED);
+    const upload = await putBackup(app, token);
+    assert.equal(upload.status, HTTP_STATUS.GONE);
+    assert.equal(upload.body.error.code, ERROR_CODES.PARTY_CANCELED);
+  }
+});
+
+test("the backup routes need a session and a party", async () => {
+  const app = makeApp();
+
+  const anonymous = await call(app, { method: "GET", path: "/api/party/backup" });
+  assert.equal(anonymous.status, HTTP_STATUS.UNAUTHORIZED);
+  assert.equal(anonymous.body.error.code, ERROR_CODES.UNAUTHORIZED);
+
+  const sam = await signUpAs(app, samSeed);
+  const partyless = await getBackup(app, sam.token);
+  assert.equal(partyless.status, HTTP_STATUS.NOT_FOUND);
+  assert.equal(partyless.body.error.code, ERROR_CODES.NO_PARTY);
+});
+
+test("blocked or canceled users are free to create or join a new party (DESIGN §3.6)", async () => {
+  const app = makeApp();
+  const { organizer, member } = await setupOrganizerAndMember(app);
+  await blockMember(app, organizer.token, member.user.id);
+
+  // Blocked Tom starts his own party; his blocked row stays behind in Jane's.
+  const tomParty = await createParty(app, member.token);
+  assert.equal(tomParty.status, HTTP_STATUS.CREATED);
+  assert.equal(tomParty.body.party.name, "Tom's Party");
+  const janeParty = (await me(app, organizer.token)).body.party;
+  assert.ok(
+    janeParty?.members.some(
+      (row) => row.id === member.user.id && row.blocked
+    )
+  );
+  // And /me now follows Tom's pointer to the new party.
+  assert.equal((await me(app, member.token)).body.party?.id, tomParty.body.party.id);
+
+  // Jane cancels hers, then joins Tom's through a fresh invitation.
+  await cancelParty(app, organizer.token);
+  const invited = await createInvitation(app, member.token, "new-pass");
+  const joined = await joinParty(app, organizer.token, {
+    code: invited.body.code,
+    password: "new-pass",
+  });
+  assert.equal(joined.status, HTTP_STATUS.OK);
+  assert.equal(joined.body.party.id, tomParty.body.party.id);
+});
+
+test("a member blocked in this party cannot rejoin with a fresh invitation for it", async () => {
+  const app = makeApp();
+  const { organizer, member, party } = await setupOrganizerAndMember(app);
+  await blockMember(app, organizer.token, member.user.id);
+
+  const invited = await createInvitation(app, organizer.token, INVITE_PASSWORD);
+  const rejoined = await joinParty(app, member.token, {
+    code: invited.body.code,
+    password: INVITE_PASSWORD,
+  });
+
+  assert.equal(rejoined.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(rejoined.body.error.code, ERROR_CODES.BLOCKED);
+  // The gate still refuses him — nothing was silently undone.
+  const download = await getBackup(app, member.token);
+  assert.equal(download.status, HTTP_STATUS.FORBIDDEN);
+  assert.equal(download.body.error.code, ERROR_CODES.BLOCKED);
+  const stillBlocked = (await me(app, organizer.token)).body.party;
+  assert.equal(stillBlocked?.id, party.id);
+  assert.ok(
+    stillBlocked?.members.some(
+      (row) => row.id === member.user.id && row.blocked
+    )
+  );
+});
+
+test("block and cancel mutate only the party record — never user or backup data (AC-2.9)", async () => {
+  const storage = createMemoryStorage();
+  const app = makeApp({ storage });
+  const { organizer, member, party } = await setupOrganizerAndMember(app);
+
+  // Stand in for the backup object a later PR will store, plus the current
+  // user pointer record.
+  const backupKey = `parties/${party.id}.backup`;
+  await storage.writeJsonVersioned(
+    backupKey,
+    { uploadedBy: member.user.id, envelope: { data: "tom's entries" } },
+    { expectedVersion: null }
+  );
+  const backupBefore = await storage.readJsonVersioned(backupKey);
+  const memberPointerBefore = await storage.readJson(
+    `user-ids/${member.user.id}`
+  );
+
+  await blockMember(app, organizer.token, member.user.id);
+  await cancelParty(app, organizer.token);
+
+  // The backup (the blocked member's already-synced entries) and the user
+  // pointer are identical; only the party record changed.
+  assert.deepEqual(await storage.readJsonVersioned(backupKey), backupBefore);
+  assert.deepEqual(
+    await storage.readJson(`user-ids/${member.user.id}`),
+    memberPointerBefore
+  );
+  const stored = (await storage.readJsonVersioned<PartyRecord>(
+    `parties/${party.id}`
+  ))?.value;
+  assert.equal(stored?.canceled, true);
+  assert.ok(
+    stored?.members.some((row) => row.id === member.user.id && row.blocked)
+  );
+});

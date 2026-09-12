@@ -5,6 +5,7 @@ import { verifyPassword } from "../crypto";
 import {
   Authenticate,
   Handler,
+  HasActivePartyMembership,
   InvitationPointer,
   InvitationRecord,
   MutateParty,
@@ -17,11 +18,13 @@ import { codeLookupHash, decryptRecord, encryptRecord } from "../invitations";
 import { StorageAdapter } from "../storage";
 import { error, publicParty, publicUser, unauthorized } from "./responses";
 import { invitationPointerKey, partyKey } from "./partyKeys";
+import { isBlockedIn } from "./partyAccess";
 import { isNonEmptyString, requestFields } from "./validation";
 
 interface JoinPartyHandlerOptions {
   storage: StorageAdapter;
   authenticate: Authenticate;
+  hasActivePartyMembership: HasActivePartyMembership;
   mutateParty: MutateParty;
   setUserPartyId: SetUserPartyId;
   encryptionKey: Buffer;
@@ -37,6 +40,7 @@ const invitationNotFound = () =>
 export const createJoinPartyHandler = ({
   storage,
   authenticate,
+  hasActivePartyMembership,
   mutateParty,
   setUserPartyId,
   encryptionKey,
@@ -56,7 +60,9 @@ export const createJoinPartyHandler = ({
     // EC-6 (docs/multi-user-sync/PRD.md) before anything else: a user who
     // already belongs to a party is turned away without the invitation being
     // touched, so it stays redeemable by whoever it was actually meant for.
-    if (user.partyId)
+    // "Belongs" means actively: blocked members and members of a canceled
+    // party may join elsewhere (docs/multi-user-sync/DESIGN.md §3.6).
+    if (await hasActivePartyMembership(user))
       return error(
         HTTP_STATUS.CONFLICT,
         ERROR_CODES.ALREADY_IN_PARTY,
@@ -90,6 +96,20 @@ export const createJoinPartyHandler = ({
             HTTP_STATUS.GONE,
             ERROR_CODES.PARTY_CANCELED,
             "This party was canceled."
+          ),
+        };
+
+      // A member blocked from this exact party cannot let themselves back in
+      // by redeeming a different unused code for it — that would silently
+      // undo the organizer's block. Re-admitting them is a deliberate
+      // organizer action, tracked separately in issue #136, not a side
+      // effect of an old code.
+      if (isBlockedIn(party, user.id))
+        return {
+          response: error(
+            HTTP_STATUS.FORBIDDEN,
+            ERROR_CODES.BLOCKED,
+            "You've been removed from this party by its organizer."
           ),
         };
 

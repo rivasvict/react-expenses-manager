@@ -1,12 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import MemberRow from "./MemberRow";
 import { PartyMember } from "../../services/syncApi/contract";
 
 /**
  * Unit tests for one member list row (docs/multi-user-sync/DESIGN.md §3.2).
  * The row's whole job is showing who someone is and what their standing in
- * the party is, so these pin which status it shows when.
+ * the party is, so these pin which status it shows when — including when
+ * the Block button (AC-2.9, docs/multi-user-sync/PRD.md) is offered.
  */
 
 const tom: PartyMember = {
@@ -69,4 +71,46 @@ it("shows the Organizer badge rather than Blocked for a blocked organizer", () =
 
   expect(screen.getByText("Organizer")).toBeInTheDocument();
   expect(screen.queryByText("Blocked")).not.toBeInTheDocument();
+});
+
+it("offers a Block button for an active member when the viewer may block", () => {
+  renderRow({ onBlock: jest.fn() });
+
+  // Named after the member, so a screen-reader user hears who they are
+  // about to block rather than a bare "Block" per row.
+  expect(
+    screen.getByRole("button", { name: "Block Tom Doe" })
+  ).toBeInTheDocument();
+});
+
+it("calls back when Block is clicked", async () => {
+  const onBlock = jest.fn();
+  renderRow({ onBlock });
+
+  await userEvent.click(screen.getByRole("button", { name: "Block Tom Doe" }));
+
+  expect(onBlock).toHaveBeenCalledTimes(1);
+});
+
+it("offers no Block button when the viewer may not block", () => {
+  // The member view (AC-2.12): the control is absent, not merely inert.
+  renderRow();
+
+  expect(screen.queryByRole("button")).not.toBeInTheDocument();
+});
+
+it("offers no Block button for an already-blocked member", () => {
+  renderRow({ member: { ...tom, blocked: true }, onBlock: jest.fn() });
+
+  expect(screen.getByText("Blocked")).toBeInTheDocument();
+  expect(screen.queryByRole("button")).not.toBeInTheDocument();
+});
+
+it("offers no Block button for the organizer, even when allowed to block", () => {
+  // The organizer can never be blocked, so their row never offers it —
+  // whatever the caller passes.
+  renderRow({ isOrganizer: true, onBlock: jest.fn() });
+
+  expect(screen.getByText("Organizer")).toBeInTheDocument();
+  expect(screen.queryByRole("button")).not.toBeInTheDocument();
 });

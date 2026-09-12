@@ -5,12 +5,13 @@
 //
 // TODO:
 // This module has no test file. signUp/signIn/logOut and the refreshMe/
-// createParty/generateInvitation/joinParty thunks are currently only
-// asserted end-to-end via src/integrationTests/accounts.test.tsx,
-// party.test.tsx and partyJoin.test.tsx. Worth covering directly: session
-// persistence on sign in/up, logOut clearing it, the deliberately swallowed
-// refreshMe failure, the SYNC_PARTY_SET dispatches, and the "Not signed in"
-// guards. Tracked in:
+// createParty/generateInvitation/joinParty/blockMember/cancelParty thunks
+// are currently only asserted end-to-end via
+// src/integrationTests/accounts.test.tsx, party.test.tsx, partyJoin.test.tsx
+// and partyManagement.test.tsx. Worth covering directly: session persistence
+// on sign in/up, logOut clearing it, the deliberately swallowed refreshMe
+// failure, the SYNC_PARTY_SET dispatches, and the "Not signed in" guards.
+// Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/160
 import { Dispatch } from "redux";
 import * as syncApi from "../../services/syncApi";
@@ -112,6 +113,35 @@ export const joinParty =
       code,
       password,
     });
+    setParty(dispatch, party);
+    return party;
+  };
+
+// AC-2.9: blocks a member (organizer only). The member keeps their row — and
+// their already-synced entries — but immediately loses sync access. The
+// returned party replaces the cached one, so the row flips to Blocked
+// without a separate refresh.
+export const blockMember =
+  ({ userId }: { userId: string }) =>
+  async (dispatch: Dispatch): Promise<Party> => {
+    const session = getSession();
+    if (!session) throw new Error("Not signed in");
+    const { party } = await syncApi.blockMember({
+      token: session.token,
+      userId,
+    });
+    setParty(dispatch, party);
+    return party;
+  };
+
+// AC-2.10: cancels the party (organizer only). Nobody's local data is
+// touched; other members see the canceled state on their next /me refresh.
+export const cancelParty =
+  () =>
+  async (dispatch: Dispatch): Promise<Party> => {
+    const session = getSession();
+    if (!session) throw new Error("Not signed in");
+    const { party } = await syncApi.cancelParty({ token: session.token });
     setParty(dispatch, party);
     return party;
   };

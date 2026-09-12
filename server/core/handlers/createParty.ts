@@ -5,6 +5,7 @@ import { randomId } from "../crypto";
 import {
   Authenticate,
   Handler,
+  HasActivePartyMembership,
   PartyRecord,
   SetUserPartyId,
 } from "../handlers.types";
@@ -16,6 +17,7 @@ import { partyKey } from "./partyKeys";
 interface CreatePartyHandlerOptions {
   storage: StorageAdapter;
   authenticate: Authenticate;
+  hasActivePartyMembership: HasActivePartyMembership;
   setUserPartyId: SetUserPartyId;
   now: () => number;
 }
@@ -23,6 +25,7 @@ interface CreatePartyHandlerOptions {
 export const createCreatePartyHandler = ({
   storage,
   authenticate,
+  hasActivePartyMembership,
   setUserPartyId,
   now,
 }: CreatePartyHandlerOptions): Handler =>
@@ -30,8 +33,11 @@ export const createCreatePartyHandler = ({
     const user = await authenticate(request);
     if (!user) return unauthorized();
     // AC-2.2: at most one party per user, so an existing membership is
-    // refused rather than silently replaced.
-    if (user.partyId)
+    // refused rather than silently replaced. "Existing" means active: a
+    // member who was blocked, or whose party was canceled, is free to start
+    // over here even though their record still points at the old party
+    // (docs/multi-user-sync/DESIGN.md §3.6).
+    if (await hasActivePartyMembership(user))
       return error(
         HTTP_STATUS.CONFLICT,
         ERROR_CODES.ALREADY_IN_PARTY,

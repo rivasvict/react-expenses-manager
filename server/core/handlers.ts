@@ -1,21 +1,29 @@
-// Endpoint handlers (docs/multi-user-sync/RFC.md §3, endpoints 1–6).
+// Endpoint handlers (docs/multi-user-sync/RFC.md §3, endpoints 1–10).
 // Framework-free: each handler takes a plain request description and returns
 // { status, body }.
 //
 // This file is only the wiring. Each endpoint lives in its own module under
 // ./handlers/, alongside the collaborators they share (response shaping,
-// storage keys, field guards, session minting, party writes). The shapes they
-// all speak live in ./handlers.types.
+// storage keys, field guards, session minting, party writes, party access).
+// The shapes they all speak live in ./handlers.types.
 import { CreateHandlersOptions, Handlers } from "./handlers.types";
 import { deriveEncryptionKey } from "./invitations";
 import { createIssueSession, createAuthenticate } from "./handlers/session";
 import { createMutateParty, createSetUserPartyId } from "./handlers/parties";
+import {
+  createHasActivePartyMembership,
+  createRequirePartyAccess,
+} from "./handlers/partyAccess";
 import { createSignupHandler } from "./handlers/signup";
 import { createLoginHandler } from "./handlers/login";
 import { createMeHandler } from "./handlers/me";
 import { createCreatePartyHandler } from "./handlers/createParty";
 import { createCreateInvitationHandler } from "./handlers/createInvitation";
 import { createJoinPartyHandler } from "./handlers/joinParty";
+import { createBlockMemberHandler } from "./handlers/blockMember";
+import { createCancelPartyHandler } from "./handlers/cancelParty";
+import { createGetBackupHandler } from "./handlers/getBackup";
+import { createPutBackupHandler } from "./handlers/putBackup";
 
 // Dev-only fallback, matching the one server/index.ts uses for the token
 // secret: any string works locally because it is stretched into a key. A real
@@ -36,6 +44,11 @@ export const createHandlers = ({
   const encryptionKey = deriveEncryptionKey(encryptionSecret);
   const mutateParty = createMutateParty({ storage });
   const setUserPartyId = createSetUserPartyId({ storage });
+  const hasActivePartyMembership = createHasActivePartyMembership({ storage });
+  const requirePartyAccess = createRequirePartyAccess({
+    storage,
+    authenticate,
+  });
 
   return {
     signup: createSignupHandler({ storage, issueSession, now }),
@@ -44,6 +57,7 @@ export const createHandlers = ({
     createParty: createCreatePartyHandler({
       storage,
       authenticate,
+      hasActivePartyMembership,
       setUserPartyId,
       now,
     }),
@@ -57,9 +71,14 @@ export const createHandlers = ({
     joinParty: createJoinPartyHandler({
       storage,
       authenticate,
+      hasActivePartyMembership,
       mutateParty,
       setUserPartyId,
       encryptionKey,
     }),
+    blockMember: createBlockMemberHandler({ authenticate, mutateParty }),
+    cancelParty: createCancelPartyHandler({ authenticate, mutateParty }),
+    getBackup: createGetBackupHandler({ requirePartyAccess }),
+    putBackup: createPutBackupHandler({ requirePartyAccess }),
   };
 };

@@ -8,6 +8,8 @@ import {
 
 export interface Route {
   method: string;
+  // A literal path, or a pattern with `:name` segments that capture into
+  // AppRequest.params — see matchPath in ./router.ts.
   path: string;
   handler: Handler;
 }

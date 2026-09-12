@@ -1,19 +1,25 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import { PartyMember } from "../../services/syncApi/contract";
 
 interface MemberRowProps {
   member: PartyMember;
   isSelf: boolean;
   isOrganizer: boolean;
+  // Present only when the viewer may block this member — the organizer
+  // looking at someone else's active row (AC-2.12,
+  // docs/multi-user-sync/PRD.md). The caller decides that and owns the
+  // confirmation; the row only offers the button.
+  onBlock?: () => void;
 }
 
 /**
  * One static row of the party member list (docs/multi-user-sync/DESIGN.md
  * §3.2): name and email, plus a right-aligned status — an Organizer badge, a
- * muted "Blocked" label, or nothing. The organizer's Block button joins in a
- * later PR.
+ * Block button (organizer view, AC-2.9), a muted "Blocked" label, or nothing.
+ * There is no un-block affordance: out of scope by design.
  */
-const MemberRow = ({ member, isSelf, isOrganizer }: MemberRowProps) => (
+const MemberRow = ({ member, isSelf, isOrganizer, onBlock }: MemberRowProps) => (
   <li className="member-row">
     <div className="member-row__identity">
       <span className="member-row__name">
@@ -25,6 +31,16 @@ const MemberRow = ({ member, isSelf, isOrganizer }: MemberRowProps) => (
     {isOrganizer && <span className="member-row__badge">Organizer</span>}
     {!isOrganizer && member.blocked && (
       <span className="member-row__blocked">Blocked</span>
+    )}
+    {!isOrganizer && !member.blocked && onBlock && (
+      <Button
+        variant="secondary"
+        className="member-row__block"
+        aria-label={`Block ${member.firstName} ${member.lastName}`}
+        onClick={onBlock}
+      >
+        Block
+      </Button>
     )}
   </li>
 );

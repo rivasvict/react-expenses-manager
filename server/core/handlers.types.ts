@@ -129,6 +129,11 @@ export interface AppRequest {
   // Parsed JSON from the transport: untrusted and unvalidated until a
   // handler narrows it.
   body?: unknown;
+  // Path parameters captured by the router from a `:name` segment in the
+  // matched route (e.g. `userId` for /api/party/members/:userId/block),
+  // already percent-decoded. Absent on a request that never went through the
+  // router, such as a handler called directly in a unit test.
+  params?: Record<string, string>;
 }
 
 export interface AppResponse<TBody = ResponseBody> {
@@ -145,6 +150,10 @@ export interface Handlers {
   createParty: Handler;
   createInvitation: Handler;
   joinParty: Handler;
+  blockMember: Handler;
+  cancelParty: Handler;
+  getBackup: Handler;
+  putBackup: Handler;
 }
 
 export interface CreateHandlersOptions {
@@ -187,3 +196,34 @@ export type SetUserPartyId = (
   user: UserRecord,
   partyId: string
 ) => Promise<void>;
+
+// Whether the user currently belongs to a party they can act in: a partyId
+// that resolves to a record that is not canceled and in which their own
+// member record is not blocked (docs/multi-user-sync/DESIGN.md §3.6). See
+// ./handlers/partyAccess.ts.
+export type HasActivePartyMembership = (user: UserRecord) => Promise<boolean>;
+
+// What a party-data endpoint gets once the caller has been admitted: their
+// user record, the party as just read, and the version to hand a later
+// compare-and-swap write.
+export interface PartyAccess {
+  user: UserRecord;
+  party: PartyRecord;
+  version: string;
+}
+
+// The outcome of RequirePartyAccess, told apart by which key is set (the
+// same shape as PartyMutation): either the caller is admitted, or the
+// finished refusal to return as-is.
+export type PartyAccessResult =
+  | { access: PartyAccess; response?: undefined }
+  | { access?: undefined; response: AppResponse<ErrorBody> };
+
+// The gate every party-*data* endpoint runs through (RFC §3, endpoints
+// 9–10): authenticates the request and refuses it with NO_PARTY, BLOCKED or
+// PARTY_CANCELED before any data is read or written. Membership endpoints
+// (create, join) do not use it — being blocked or canceled is exactly when a
+// user is allowed to move on to another party.
+export type RequirePartyAccess = (
+  request: AppRequest
+) => Promise<PartyAccessResult>;

@@ -108,9 +108,11 @@ CRA's jest deliberately does not scan `server/` (it only looks under
   by tests) — including the compare-and-swap `readJsonVersioned`/
   `writeJsonVersioned` pair parties are mutated through
 - `core/handlers/` — one module per endpoint (`signup.ts`, `login.ts`,
-  `me.ts`, `createParty.ts`, `createInvitation.ts`, `joinParty.ts`) plus the
-  collaborators they share (session minting, response shaping, storage
-  keys, party mutation/CAS retry, field guards); `core/handlers.ts` is just
+  `me.ts`, `createParty.ts`, `createInvitation.ts`, `joinParty.ts`,
+  `blockMember.ts`, `cancelParty.ts`, and the `getBackup.ts`/`putBackup.ts`
+  placeholders) plus the collaborators they share (session minting,
+  response shaping, storage keys, party mutation/CAS retry, party access —
+  the blocked/canceled gate — and field guards); `core/handlers.ts` is just
   the wiring that builds the set
 - `*.types.ts` — type declarations extracted from any file that declared
   more than two of them

@@ -3,11 +3,12 @@
 // server's error code, or NETWORK_ERROR when the server is unreachable.
 //
 // TODO:
-// The colocated index.test.ts covers signup/login/getMe and the generic
-// failure handling, but not the party calls this file gained later:
-// createParty, createInvitation and joinParty have no direct tests, and the
-// setOnUnauthorized 401 hook (clearing the session on an UNAUTHORIZED
-// response) is only exercised end-to-end. They are currently asserted through
+// The colocated index.test.ts covers signup/login/getMe, blockMember,
+// cancelParty and the generic failure handling, but not every party call
+// this file gained along the way: createParty, createInvitation and
+// joinParty have no direct tests, and the setOnUnauthorized 401 hook
+// (clearing the session on an UNAUTHORIZED response) is only exercised
+// end-to-end. They are currently asserted through
 // src/integrationTests/party.test.tsx and partyJoin.test.tsx. Direct coverage
 // is tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/160
@@ -124,5 +125,32 @@ export const joinParty = ({
   request<PartyResponse>("/api/party/join", {
     method: "POST",
     body: { code, password },
+    token,
+  });
+
+// RFC §3 endpoint 7. The member id travels in the path, so it is encoded:
+// ids are opaque server-issued strings and must not be able to alter the
+// route.
+export const blockMember = ({
+  token,
+  userId,
+}: {
+  token: string;
+  userId: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>(
+    `/api/party/members/${encodeURIComponent(userId)}/block`,
+    { method: "POST", body: {}, token }
+  );
+
+// RFC §3 endpoint 8.
+export const cancelParty = ({
+  token,
+}: {
+  token: string;
+}): Promise<PartyResponse> =>
+  request<PartyResponse>("/api/party/cancel", {
+    method: "POST",
+    body: {},
     token,
   });

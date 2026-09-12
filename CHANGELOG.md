@@ -5,6 +5,50 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.9.1] - 2026-09-12
+
+### Fixed
+
+- Server: `joinParty` no longer lets a member blocked from a party restore
+  their own access by redeeming a still-unused invitation code for that same
+  party — the redeem is now refused with `403 BLOCKED` instead of silently
+  un-blocking the row; re-admitting a past blocked member remains a
+  deliberate organizer action, tracked separately in issue #136
+- Server: `blockMember` and `cancelParty` now check `party.canceled` (like
+  `createInvitation` already did) and refuse with `410 PARTY_CANCELED`
+  instead of mutating an already-canceled party
+- The Cancel and Block confirmation dialogs now say the action cannot be
+  undone
+
+## [1.9.0] - 2026-09-12
+
+### Added
+
+- Party management (multi-user sync): the organizer can block a member
+  (confirm dialog; the member keeps their row and their already-contributed
+  entries, but immediately loses sync access) and cancel the party (confirm
+  dialog; nobody's local data is touched) — `docs/multi-user-sync/DESIGN.md`
+  §3.2
+- Blocked members and members of a canceled party see dedicated `/party`
+  views explaining what happened, and are free to create or join another
+  party (`docs/multi-user-sync/DESIGN.md` §3.6); a re-invited past member
+  gets their existing row back rather than a duplicate
+- Organizer-only visibility for the Block and Cancel controls; members keep
+  a read-only list
+- Server: block/cancel endpoints (`docs/multi-user-sync/RFC.md` §3,
+  endpoints 7–8) plus a shared party-access gate — blocked members get
+  `403 BLOCKED` and canceled parties `410 PARTY_CANCELED` on the backup
+  routes (endpoints 9–10, wired as placeholders), so the sync engine landing
+  in a later PR inherits the enforcement unchanged
+- Server: the router now matches `:name` path parameters
+  (`/api/party/members/:userId/block`)
+
+### Changed
+
+- Server: "already in a party" (`409 ALREADY_IN_PARTY` on create/join) now
+  means an *active* membership — a blocked member, or a member of a canceled
+  party, is no longer refused a fresh start
+
 ## [1.8.0] - 2026-09-06
 
 ### Added
