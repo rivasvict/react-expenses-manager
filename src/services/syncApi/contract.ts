@@ -29,6 +29,13 @@ export const SYNC_ERROR_CODES = {
   PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   // Used by the client for transport-level failures (server unreachable).
   NETWORK_ERROR: "NETWORK_ERROR",
+  // Client-only: the downloaded envelope's `schemaVersion` is not one this
+  // build knows, so `parseBackupEnvelope` refuses it. Never sent by the
+  // server — it does not validate `schemaVersion` on upload at all (that
+  // negotiation is tracked in issue #170). Exists so an app-version
+  // mismatch across the party's devices is not reported as a network
+  // failure.
+  UNSUPPORTED_SCHEMA_VERSION: "UNSUPPORTED_SCHEMA_VERSION",
 } as const;
 
 export type SyncErrorCode =

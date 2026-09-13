@@ -32,6 +32,11 @@ const COPY = {
     "This is the first sync for your party. Your data is now the starting point — future syncs will compare against it.",
   connectionFailed:
     "Couldn't reach your party. Check your connection and try again.",
+  // A party member on a newer release uploaded a backup whose schema this
+  // build cannot read. Distinct from a network failure: the user can act
+  // on it. Negotiating schema versions is tracked in issue #170.
+  unsupportedSchemaVersion:
+    "This device's app version is too old to read your party's data. Update the app and sync again.",
   declinedBlocked:
     "This sync was declined: you've been removed from your party by its organizer. Nothing on this device was changed.",
   declinedCanceled:
@@ -134,6 +139,10 @@ const SyncCard = ({
           setAlert(COPY.conflict);
         } else if (syncError.code === SYNC_ERROR_CODES.NETWORK_ERROR) {
           setAlert(COPY.connectionFailed);
+        } else if (
+          syncError.code === SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION
+        ) {
+          setAlert(COPY.unsupportedSchemaVersion);
         } else {
           setAlert(syncError.message || COPY.connectionFailed);
         }

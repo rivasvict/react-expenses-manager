@@ -21,6 +21,7 @@ import {
   BackupData,
   BackupEnvelope,
   SYNC_ERROR_CODES,
+  createSyncApiError,
   isSyncApiError,
 } from "../../services/syncApi/contract";
 import {
@@ -55,6 +56,24 @@ const commitSyncState = (
 
 const isVersionConflict = (error: unknown) =>
   isSyncApiError(error) && error.code === SYNC_ERROR_CODES.VERSION_CONFLICT;
+
+// The backup parser rejects any envelope whose `schemaVersion` this build
+// does not know, with a plain Error. Every other failure the sync flow can
+// raise is a SyncApiError carrying a `code`, so without this the card's
+// catch block cannot tell a stale app apart from an unreachable server.
+const parseEnvelopeOrFail = (envelope: BackupEnvelope): BackupData => {
+  try {
+    return parseBackupEnvelope(JSON.stringify(envelope));
+  } catch (parseError) {
+    throw createSyncApiError({
+      code: SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION,
+      message:
+        parseError instanceof Error
+          ? parseError.message
+          : "This party's backup could not be read by this app version.",
+    });
+  }
+};
 
 export const syncWithParty =
   () =>
@@ -106,9 +125,13 @@ export const syncWithParty =
       }
 
       // Step 2 — validate (reusing the backup parser) and diff.
-      const remoteData = parseBackupEnvelope(
-        JSON.stringify(downloaded.envelope)
-      );
+      // `parseBackupEnvelope` throws a plain Error for a `schemaVersion`
+      // this build does not know, which the card would otherwise report as
+      // "couldn't reach your party". Re-thrown as a contract error so the
+      // card can name the real cause: an app-version mismatch between the
+      // party's devices. Negotiating the schema version properly (server
+      // side, migrate-forward policy) is tracked in issue #170.
+      const remoteData = parseEnvelopeOrFail(downloaded.envelope);
       const incoming = diffSnapshots({
         localData,
         remoteData,

@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.10.1] - 2026-09-13
+
+### Fixed
+
+- Sync: a party backup written against a backup schema version this build
+  does not know is no longer reported as "Couldn't reach your party. Check
+  your connection and try again." The sync flow now re-throws
+  `parseBackupEnvelope`'s refusal as the new `UNSUPPORTED_SCHEMA_VERSION`
+  contract code (`docs/multi-user-sync/RFC.md` §3), and the sync card shows
+  a banner naming the real cause — the device's app version is behind the
+  rest of the party's — so the user can act on it. Negotiating the schema
+  version end to end (server-side validation, migrate-forward policy)
+  remains tracked in issue #170
+
 ## [1.10.0] - 2026-09-12
 
 ### Added

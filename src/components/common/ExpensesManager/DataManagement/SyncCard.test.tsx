@@ -269,6 +269,24 @@ describe("errors", () => {
     );
   });
 
+  it("UNSUPPORTED_SCHEMA_VERSION: names the app-version mismatch, not the connection", async () => {
+    syncRejectsWith(
+      apiError(
+        SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION,
+        "Unsupported backup version: 2"
+      )
+    );
+    const { user } = renderCard({ session: jane, party: janesParty });
+
+    await clickSync(user);
+
+    const banner = await screen.findByRole("alert");
+    expect(banner).toHaveTextContent(
+      "This device's app version is too old to read your party's data. Update the app and sync again."
+    );
+    expect(banner).not.toHaveTextContent("Check your connection");
+  });
+
   it("any other contract error: shows the server's own message", async () => {
     syncRejectsWith(
       apiError(SYNC_ERROR_CODES.VALIDATION_ERROR, "A valid backup envelope is required.")

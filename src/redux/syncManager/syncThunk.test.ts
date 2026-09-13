@@ -323,6 +323,23 @@ describe("syncWithParty", () => {
     expect(storedSyncState()).toBeNull();
   });
 
+  it("a backup whose schema this build cannot read fails as UNSUPPORTED_SCHEMA_VERSION, not a network error", async () => {
+    // A member on a newer release uploaded an envelope written against a
+    // schema version this build does not know (issue #170).
+    getBackupMock.mockResolvedValue({
+      version: "3",
+      envelope: { ...envelope([groceries]), schemaVersion: 2 },
+    });
+
+    await expect(run().result).rejects.toMatchObject({
+      code: SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION,
+    });
+
+    // Nothing uploaded, nothing committed (AC-3.11).
+    expect(putBackupMock).not.toHaveBeenCalled();
+    expect(storedSyncState()).toBeNull();
+  });
+
   it("an upload failure other than a conflict is re-thrown and commits nothing", async () => {
     getBackupMock.mockRejectedValue(noBackup());
     putBackupMock.mockRejectedValue(
