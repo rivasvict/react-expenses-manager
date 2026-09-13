@@ -157,6 +157,24 @@ export const snapshotsContentEqual = (
   return canonicalStringify(categoriesA) === canonicalStringify(categoriesB);
 };
 
+// Categories are not syncable units (extractItems ignores them), yet
+// snapshotsContentEqual compares them — so a snapshot being uploaded must
+// carry both sides' categories or the upload silently drops the other
+// member's. Set union, local order first; categories are an unordered list
+// of names, so order carries no meaning. Making categories a first-class
+// syncable item is tracked in
+// https://github.com/rivasvict/react-expenses-manager/issues/173.
+export const unionCategories = (
+  local: string[] = [],
+  remote: string[] = []
+): string[] => {
+  const merged = [...(local || [])];
+  (remote || []).forEach((category) => {
+    if (merged.indexOf(category) === -1) merged.push(category);
+  });
+  return merged;
+};
+
 const byFromAscending = (first: any, second: any) =>
   first.from < second.from ? -1 : 1;
 

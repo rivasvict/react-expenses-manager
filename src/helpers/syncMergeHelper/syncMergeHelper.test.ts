@@ -5,6 +5,7 @@ import {
   diffSnapshots,
   extractItems,
   snapshotsContentEqual,
+  unionCategories,
 } from "./syncMergeHelper";
 import { BackupData } from "../../services/syncApi/contract";
 
@@ -153,6 +154,44 @@ describe("snapshotsContentEqual", () => {
   it("detects local-only additions", () => {
     const a = { ...emptyData(), balance: [entry("e1")] };
     expect(snapshotsContentEqual(a, emptyData())).toBe(false);
+  });
+});
+
+describe("unionCategories", () => {
+  it("keeps every category from both sides", () => {
+    expect(unionCategories(["gym", "pets"], ["pets", "travel"])).toEqual([
+      "gym",
+      "pets",
+      "travel",
+    ]);
+  });
+
+  it("does not duplicate categories both sides already have", () => {
+    expect(unionCategories(["gym"], ["gym"])).toEqual(["gym"]);
+  });
+
+  it("keeps local order and appends remote-only categories after it", () => {
+    expect(unionCategories(["pets", "gym"], ["travel", "gym"])).toEqual([
+      "pets",
+      "gym",
+      "travel",
+    ]);
+  });
+
+  it("treats either side being empty or missing as nothing to add", () => {
+    expect(unionCategories([], ["gym"])).toEqual(["gym"]);
+    expect(unionCategories(["gym"], [])).toEqual(["gym"]);
+    expect(unionCategories(undefined, undefined)).toEqual([]);
+  });
+
+  it("never mutates its inputs", () => {
+    const local = ["gym"];
+    const remote = ["pets"];
+
+    unionCategories(local, remote);
+
+    expect(local).toEqual(["gym"]);
+    expect(remote).toEqual(["pets"]);
   });
 });
 
