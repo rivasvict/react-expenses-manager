@@ -20,12 +20,41 @@ it diverged from the repo's main branch.
 ```bash
 BASE_BRANCH=$(git remote show origin 2>/dev/null | sed -n '/HEAD branch/s/.*: //p')
 BASE_BRANCH=${BASE_BRANCH:-master}
-MERGE_BASE=$(git merge-base HEAD "origin/$BASE_BRANCH" 2>/dev/null || git merge-base HEAD "$BASE_BRANCH")
+git fetch origin "$BASE_BRANCH"
+MERGE_BASE=$(git merge-base HEAD "origin/$BASE_BRANCH")
 git diff --name-only --diff-filter=AM "$MERGE_BASE"...HEAD -- src/integrationTests
 ```
 
+**Always fetch the base branch from origin first** (`git fetch origin
+"$BASE_BRANCH"`) and diff against `origin/$BASE_BRANCH`, never a possibly
+stale local `master`/main branch ref. A stale local base branch makes files
+that were already merged upstream (via another PR) look like they belong
+to the current branch, inflating the scope with cases that don't belong to
+it. Confirm the base branch's local ref is updated too (e.g.
+`git fetch origin "$BASE_BRANCH":"$BASE_BRANCH"` if safe to fast-forward,
+or just rely on `origin/$BASE_BRANCH` throughout) before computing the
+diff.
+
 If that list is empty, ask the user which test(s) to target rather than
 guessing.
+
+## Get user approval before running
+
+Before starting the app or spawning the subagent: read each target test
+file, enumerate every distinct state/scenario it asserts, and present the
+user a concise list of the cases you intend to capture (grouped by test
+file). Ask them to confirm this matches what actually changed on the
+branch, or tell you to add/drop cases. Only proceed to standing up the app
+and spawning the subagent after they approve the list.
+
+## Sample data fixture
+
+`src/integrationTests/fixtures/expenses-backup.sample.json` holds a
+ready-made set of expense/income entries for scenarios that need existing
+data to look realistic (sync flows, CSV import/export, buckets, etc.). Seed
+it via the same API path used for other test data (e.g. restore/import it
+against the running app or sync server) rather than hand-typing entries in
+the browser, whenever a scenario needs non-empty data.
 
 ## Delegate to a subagent
 
@@ -144,30 +173,48 @@ npm test -- --testPathPattern="<name-fragment>" --watchAll=false
 
 ## Where screenshots go
 
-Save every screenshot under:
+One flat folder **per branch** — never per test file, per feature, or
+nested subdirectories:
 
 ```
-src/.e2e-screenshots/<feature-purpose>/
+src/.e2e-screenshots/<branch-name>/
 ```
 
-`<feature-purpose>` is a descriptive, dashed, **at most 5 words** slug for
-what the tests cover (e.g. `party-block-and-cancel`, `bucket-limits`,
-`csv-import-export`) — not the test file's literal name. Name each file so
-its place in the scenario order and what it proves are both obvious, e.g.:
+`<branch-name>` is the current git branch name with `/` replaced by `-`
+(e.g. `sync-stack/5-sync-engine` → `sync-stack-5-sync-engine`). All
+screenshots for the run live directly inside this one folder — no
+per-test-file or per-feature subdirectories. Name each file so its place in
+the overall scenario order and what it proves are both obvious, prefixed by
+which test file it belongs to:
 
 ```
-src/.e2e-screenshots/party-block-and-cancel/
-  01-no-party-yet.jpg
-  02-party-created-organizer-alone.jpg
+src/.e2e-screenshots/sync-stack-5-sync-engine/
+  01-accounts-logged-out.jpg
+  02-accounts-signup-form.jpg
+  03-party-created-organizer-alone.jpg
   ...
-  06-block-confirmed-row-shows-blocked.jpg
+  12-partyManagement-block-confirmed-row-shows-blocked.jpg
+CASES.md
 ```
+
+**Isolate runs:** before capturing anything, delete and recreate this
+branch's folder (`rm -rf src/.e2e-screenshots/<branch-name>` then
+`mkdir -p`) so a re-run never mixes stale screenshots from a previous
+attempt with the current one.
+
+**`CASES.md`:** alongside the screenshots (same folder, not a
+subdirectory), write a plain list of every test case covered in this run —
+one line per case, grouped by source test file, each naming the screenshot
+file(s) that prove it. This is the same list the user approved before the
+run started; update it to reflect what was actually captured (including
+any scenario marked as not reproducible, and why).
 
 This directory is gitignored (`/src/.e2e-screenshots`) — it is scratch
 proof for the user to review, not a repo artifact. **Never delete it
-yourself** once written; it stays until the user explicitly asks for it to
-be removed (in this session or a later one). Do not clean it up as part of
-"finishing" the task — only the servers you started get torn down.
+yourself** once written (other than the pre-run cleanup of the same
+branch's folder above); it stays until the user explicitly asks for it to
+be removed. Do not clean it up as part of "finishing" the task — only the
+servers you started get torn down.
 
 ## Final report
 
@@ -175,8 +222,10 @@ Report back (from the subagent, then relayed by the parent to the user):
 
 - The list of test files covered and the scope (diff range) used.
 - Whether `npm test` passed for those files.
-- The screenshot directory path and a short list mapping each file to the
-  scenario it proves.
+- The absolute screenshot directory path, given as a plain path the user
+  can copy-paste straight into their file explorer (no markdown link
+  wrapping, no backticks that would need stripping).
+- The full list of test cases covered, i.e. the contents of `CASES.md`.
 - Any scenario that could **not** be reproduced live (e.g. a test that
   relies on injecting a synthetic server error only the fake test server
   can produce) — name it and say why, rather than silently skipping it.
