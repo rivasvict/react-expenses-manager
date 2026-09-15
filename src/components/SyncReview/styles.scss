@@ -110,9 +110,14 @@
     }
 
     &__categories,
-    &__date {
+    &__date,
+    &__history {
       font-size: 0.85rem;
       margin-bottom: 0.2rem;
+    }
+
+    &__history {
+      font-style: italic;
     }
 
     &__actions {
@@ -152,6 +157,10 @@
         color: $text-secondary;
         font-size: 0.82rem;
         margin-bottom: 0.2rem;
+      }
+
+      .review-card__field-error {
+        color: $expense;
       }
     }
   }

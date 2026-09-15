@@ -13,6 +13,9 @@ import { getItemFacts } from "./itemFacts";
 
 interface ReviewItemCardProps {
   item: IncomingItem;
+  // How many history states this card's decision covers (RFC §4.1): 1 for
+  // an entry or an edit, N for a brand-new fixed entry / bucket.
+  stateCount?: number;
   buckets: any;
   unbudgetedCategories: string[];
   onAccept: (item: IncomingItem, modified: boolean) => void;
@@ -49,9 +52,33 @@ const ModifyForm = ({
   const [categoriesPath, setCategoriesPath] = useState(
     source.categories_path || ""
   );
-  const [date, setDate] = useState(
-    item.kind === "entry" ? dayjs(source.date).format("YYYY-MM-DD") : ""
-  );
+  const initialDate =
+    item.kind === "entry" ? dayjs(source.date).format("YYYY-MM-DD") : "";
+  const [date, setDate] = useState(initialDate);
+
+  // Nothing upstream of this form validates what the user types, and what
+  // it produces is written to localStorage AND uploaded to every member of
+  // the party in one action — so it is validated here.
+  const isAmountValid =
+    amount.trim() !== "" && Number.isFinite(Number(amount));
+  const isDateValid = item.kind !== "entry" || dayjs(date).isValid();
+  const canSave = isAmountValid && isDateValid;
+
+  // The field only carries a day, so rebuilding the timestamp from it would
+  // move an 18:40 entry to local midnight and re-sync it to every member as
+  // a change the user never made. The original time of day is kept.
+  const nextTimestamp = (): number => {
+    if (date === initialDate) return source.date;
+    const original = dayjs(source.date);
+    const picked = dayjs(date);
+    if (!original.isValid()) return picked.valueOf();
+    return picked
+      .hour(original.hour())
+      .minute(original.minute())
+      .second(original.second())
+      .millisecond(original.millisecond())
+      .valueOf();
+  };
 
   const entryType =
     item.kind === "entry" ? item.entry.type : item.fixed?.type || "expense";
@@ -63,6 +90,7 @@ const ModifyForm = ({
 
   const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
+    if (!canSave) return;
     if (item.kind === "entry") {
       onSave({
         ...item,
@@ -71,7 +99,7 @@ const ModifyForm = ({
           amount,
           description,
           categories_path: categoriesPath,
-          date: dayjs(date).valueOf(),
+          date: nextTimestamp(),
         },
       });
     } else if (item.kind === "fixed") {
@@ -92,7 +120,7 @@ const ModifyForm = ({
         ...item,
         bucket: {
           ...item.bucket!,
-          state: { ...item.bucket!.state, limit: Number(amount) || 0 },
+          state: { ...item.bucket!.state, limit: Number(amount) },
         },
       });
     }
@@ -110,6 +138,11 @@ const ModifyForm = ({
           value={amount}
           onChange={(event: any) => setAmount(event.currentTarget.value)}
         />
+        {!isAmountValid && (
+          <Form.Text className="review-card__field-error" role="alert">
+            Enter a number.
+          </Form.Text>
+        )}
       </Form.Group>
       {item.kind !== "bucket" && (
         <React.Fragment>
@@ -125,7 +158,12 @@ const ModifyForm = ({
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label htmlFor="modify-category">Category</Form.Label>
+            {/* CategorySearchSelect names the combobox with
+                aria-labelledby={`${id}-label`}, so the label needs the id
+                as well as htmlFor — same as EntryForm's. */}
+            <Form.Label id="modify-category-label" htmlFor="modify-category">
+              Category
+            </Form.Label>
             <CategorySelector
               id="modify-category"
               name="categories"
@@ -148,9 +186,19 @@ const ModifyForm = ({
             value={date}
             onChange={(event: any) => setDate(event.currentTarget.value)}
           />
+          {!isDateValid && (
+            <Form.Text className="review-card__field-error" role="alert">
+              Enter a date.
+            </Form.Text>
+          )}
         </Form.Group>
       )}
-      <Button variant="primary" type="submit" className="full-width">
+      <Button
+        variant="primary"
+        type="submit"
+        className="full-width"
+        disabled={!canSave}
+      >
         Save & accept
       </Button>
       <Button
@@ -171,6 +219,7 @@ const ModifyForm = ({
  */
 const ReviewItemCard = ({
   item,
+  stateCount = 1,
   buckets,
   unbudgetedCategories,
   onAccept,
@@ -218,6 +267,12 @@ const ReviewItemCard = ({
           )}
           {facts.dateText && (
             <p className="review-card__date text-secondary">{facts.dateText}</p>
+          )}
+          {stateCount > 1 && (
+            <p className="review-card__history text-secondary">
+              New here — your decision covers its full history ({stateCount}{" "}
+              changes).
+            </p>
           )}
           <div className="review-card__actions">
             <Button
