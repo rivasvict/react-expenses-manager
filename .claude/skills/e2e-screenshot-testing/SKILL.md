@@ -116,6 +116,27 @@ check, don't assume:
    Do not fall back to static/inline-HTML mockups or skip the screenshots —
    either the browser tooling works or the user is told what to enable.
 
+## No git-tracked changes
+
+Running this task must **not** result in any changes tracked by git. All
+work output stays in `src/.e2e-screenshots/` (which is gitignored).
+
+If temporary tools, scripts, or helpers are needed during the run (e.g., a
+Playwright script to drive screenshots, an API helper, or test data), they
+must live inside the run's screenshot directory in a `tools/` subdirectory:
+
+```
+src/.e2e-screenshots/<branch-name>/tools/
+  screenshot-driver.ts
+  api-seeder.ts
+  <other temp utilities>
+```
+
+These are cleanup-optional scratch files, not repo changes. Do not edit any
+files under `src/` or elsewhere in the repo (except the gitignored
+screenshot folder). If an edge case requires a test file change to proceed,
+stop and escalate to the parent rather than making the change yourself.
+
 ## Standing up the app
 
 Check both before doing anything else:
@@ -171,9 +192,14 @@ asserts (e.g. "dismissed confirm leaves X unchanged", "row shows Blocked",
    immediately following a page navigation can miss because the page
    hasn't settled yet. Read the input's `.value` back (via the browser's JS
    evaluation) after typing, or take a screenshot, before clicking submit.
-5. Capture one screenshot per asserted state, in the order the test file
-   presents them, right after the state is reached (not before, not several
-   actions later).
+5. **Capture one screenshot per asserted state on each screen involved.**
+   When a test asserts multiple things (e.g., "error alert appears" AND
+   "dashboard entry is still there"), capture screenshots of BOTH states,
+   not just the primary one. If a case narrates verifying something on a
+   secondary screen ("then re-checked X and it still shows Y"), that
+   verification must have a screenshot — no narrative-only verification
+   without visual proof. Capture in the order the test file presents them,
+   right after each state is reached (not before, not several actions later).
 
 ## Every approved case must be captured — no silent downgrade
 
@@ -182,6 +208,14 @@ case is a hard requirement, not a best-effort target.** "The test suite
 passes" is never a substitute for a screenshot and must never be reported
 as if it closes out a case — the whole point of this skill is a *visual*
 proof the automated suite cannot provide on its own.
+
+Every distinct assertion in a case must have visual proof. If a case
+narrates verifying something on a second or third screen (e.g.,
+"dashboard was then re-checked and the entry still renders"), that claim
+needs its own screenshot — do not skip it just because the primary
+assertion (the error alert) was already captured. "Proven by the test
+suite" is never an acceptable substitute for a screenshot, including
+secondary-screen assertions.
 
 If a case seems hard to reproduce live (state seeding, injected server
 errors, a multi-step flow), that is expected — work through it via the API
@@ -248,9 +282,14 @@ src/.e2e-screenshots/<branch-name>/
 `<branch-name>` is the current git branch name with `/` replaced by `-`
 (e.g. `sync-stack/5-sync-engine` → `sync-stack-5-sync-engine`). All
 screenshots for the run live directly inside this one folder — no
-per-test-file or per-feature subdirectories. Name each file so its place in
-the overall scenario order and what it proves are both obvious, prefixed by
-which test file it belongs to:
+per-test-file or per-feature subdirectories.
+
+**Filename format:** `[case_number]-[description].jpg` for the primary
+assertion of each case. For cases requiring multiple screenshots (when one
+case asserts states across multiple screens), add a sub-index suffix:
+`[case_number]_[n]-[description].jpg` where `n` increments (1, 2, 3…) for
+each additional screen within the same case. This makes it instantly clear
+which screenshots belong together and why each screen matters.
 
 ```
 src/.e2e-screenshots/sync-stack-5-sync-engine/
@@ -258,6 +297,10 @@ src/.e2e-screenshots/sync-stack-5-sync-engine/
   02-accounts-signup-form.jpg
   03-party-created-organizer-alone.jpg
   ...
+  10-download-failure-alert.jpg
+  10_1-download-failure-dashboard-unchanged.jpg
+  11-blocked-after-load-alert.jpg
+  11_1-blocked-after-load-card-disabled.jpg
   12-partyManagement-block-confirmed-row-shows-blocked.jpg
 CASES.md
 ```
@@ -270,9 +313,11 @@ attempt with the current one.
 **`CASES.md`:** alongside the screenshots (same folder, not a
 subdirectory), write a plain list of every test case covered in this run —
 one line per case, grouped by source test file, each naming the screenshot
-file(s) that prove it. This is the same list the user approved before the
-run started; update it to reflect what was actually captured (including
-any scenario marked as not reproducible, and why).
+file(s) that prove it. For cases with multiple screenshots (e.g., case 10
+with both `10-alert.jpg` and `10_1-dashboard.jpg`), list them together on
+the same line so their relationship is clear. This is the same list the user
+approved before the run started; update it to reflect what was actually
+captured (including any scenario marked as not reproducible, and why).
 
 This directory is gitignored (`/src/.e2e-screenshots`) — it is scratch
 proof for the user to review, not a repo artifact. **Never delete it
