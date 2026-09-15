@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.10.2] - 2026-09-13
+
+### Fixed
+
+- Sync: the silent "local-only additions" upload no longer erases a
+  category that only another party member has. `extractItems`
+  (`src/helpers/syncMergeHelper/syncMergeHelper.ts`,
+  `docs/multi-user-sync/RFC.md` §4.1) does not treat categories as syncable
+  units while `snapshotsContentEqual` still compares them, so a
+  categories-only difference produced an empty diff and an upload of the
+  local snapshot wholesale — dropping the other member's category, which
+  their next sync restored, flipping it in and out of the party backup
+  indefinitely. The upload now unions both sides' category lists
+  (`unionCategories`). Making categories a first-class syncable item, so
+  they also propagate through the review flow rather than merely survive,
+  is tracked in issue #173
+
 ## [1.10.1] - 2026-09-13
 
 ### Fixed

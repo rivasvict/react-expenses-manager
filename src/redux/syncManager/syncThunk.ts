@@ -15,6 +15,7 @@ import { getSyncState, setSyncState } from "../../services/syncState";
 import {
   diffSnapshots,
   snapshotsContentEqual,
+  unionCategories,
   Rejections,
 } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
@@ -143,12 +144,24 @@ export const syncWithParty =
         if (snapshotsContentEqual(localData, remoteData)) {
           return { type: "up-to-date" }; // AC-3.3 — no upload
         }
-        // Local-only additions: silent upload of the local snapshot.
+        // Local-only additions: silent upload of the local snapshot, with
+        // both sides' categories unioned in. Categories are not syncable
+        // units, so uploading `localData` untouched would erase any
+        // category only the other member has — see
+        // https://github.com/rivasvict/react-expenses-manager/issues/173,
+        // which tracks making categories a first-class syncable item so
+        // they also propagate through the review flow, not just survive.
         try {
           const { version } = await syncApi.putBackup({
             token,
             baseVersion: downloaded.version,
-            envelope: buildBackupEnvelope(localData) as BackupEnvelope,
+            envelope: buildBackupEnvelope({
+              ...localData,
+              categories: unionCategories(
+                localData.categories,
+                remoteData.categories
+              ),
+            }) as BackupEnvelope,
           });
           commitSyncState(party.id, version, syncState.rejections);
           return { type: "up-to-date" };

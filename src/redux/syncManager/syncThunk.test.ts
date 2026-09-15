@@ -191,6 +191,53 @@ describe("syncWithParty", () => {
     expect(getSyncState(janesParty.id).lastSyncedVersion).toBe("4");
   });
 
+  it("a category only the other member has is unioned into the upload, not dropped", async () => {
+    // Same entries on both sides, but Tom added a category. Categories are
+    // not syncable units, so nothing is incoming — yet the snapshots differ,
+    // so this takes the local-only-additions branch and uploads. That upload
+    // must not erase Tom's category from the party backup (issue #173).
+    mockExportData.mockResolvedValue({
+      ...snapshot([groceries]),
+      categories: ["gym"],
+    });
+    getBackupMock.mockResolvedValue({
+      version: "3",
+      envelope: {
+        ...envelope([groceries]),
+        data: { ...snapshot([groceries]), categories: ["travel"] },
+      },
+    });
+    putBackupMock.mockResolvedValue({ version: "4" });
+
+    await expect(run().result).resolves.toEqual({ type: "up-to-date" });
+
+    const upload = putBackupMock.mock.calls[0][0];
+    expect(upload.envelope.data.categories).toEqual(["gym", "travel"]);
+    // The rest of the snapshot is still the local one.
+    expect(upload.envelope.data.balance).toEqual([groceries]);
+  });
+
+  it("uploads the union alongside local-only entry additions", async () => {
+    mockExportData.mockResolvedValue({
+      ...snapshot([groceries, cinema]),
+      categories: ["gym"],
+    });
+    getBackupMock.mockResolvedValue({
+      version: "3",
+      envelope: {
+        ...envelope([groceries]),
+        data: { ...snapshot([groceries]), categories: ["gym", "travel"] },
+      },
+    });
+    putBackupMock.mockResolvedValue({ version: "4" });
+
+    await expect(run().result).resolves.toEqual({ type: "up-to-date" });
+
+    const upload = putBackupMock.mock.calls[0][0];
+    expect(upload.envelope.data.categories).toEqual(["gym", "travel"]);
+    expect(upload.envelope.data.balance).toEqual([groceries, cinema]);
+  });
+
   it("incoming changes → routes to review, uploads nothing, writes nothing", async () => {
     getBackupMock.mockResolvedValue({
       version: "3",
