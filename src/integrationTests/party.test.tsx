@@ -6,10 +6,10 @@ import {
 } from "./helpers/fakeSyncServer";
 
 /**
- * Integration tests for parties (multi-user sync PR 2): create a party,
- * generate an invitation, and the organizer/member view split
- * (AC-2.1–2.4, AC-2.12). All network traffic goes through the in-memory
- * fakeSyncServer.
+ * Integration tests for parties: create a party, generate an invitation, and
+ * the organizer/member view split (AC-2.1–2.4 and AC-2.12,
+ * docs/multi-user-sync/PRD.md). All network traffic goes through the
+ * in-memory fakeSyncServer.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -136,7 +136,7 @@ describe("invitation generation", () => {
 });
 
 describe("member (non-organizer) view", () => {
-  it("hides all organizer controls and explains who manages members (AC-2.12/AC-2.2)", async () => {
+  it("hides all organizer controls and explains who manages members", async () => {
     server.seedUser(jane);
     server.seedUser(tom);
     server.seedPartyWithMembers([jane.email, tom.email]);

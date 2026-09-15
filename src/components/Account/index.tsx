@@ -15,10 +15,10 @@ interface AccountProps {
 }
 
 /**
- * Account hub (DESIGN §2.1/§2.3): the logged-out view offers Sign in /
- * Sign up; the logged-in view shows who is signed in and a Log out button.
- * Logout needs no confirmation (reversible, low-stakes) and announces a
- * transient status line (AC-1.4). The Party row lands with parties in PR 2.
+ * Account hub (docs/multi-user-sync/DESIGN.md §2.1/§2.3): the logged-out view
+ * offers Sign in / Sign up; the logged-in view shows who is signed in and a
+ * Log out button. Logout needs no confirmation (reversible, low-stakes) and
+ * announces a transient status line (AC-1.4, docs/multi-user-sync/PRD.md).
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
   const [justSignedOut, setJustSignedOut] = useState(false);
@@ -43,7 +43,8 @@ const Account = ({ session, onLogOut }: AccountProps) => {
               <p className="account-card__email">{session.user.email}</p>
             </div>
           </div>
-          {/* DESIGN §2.3: the party hub is reached from the account. */}
+          {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
+              from the account. */}
           <ContentTileSection title="Party" to="/party">
             Party
           </ContentTileSection>

@@ -1,13 +1,23 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — only addCategory, addBucket and editBucket
+ * have colocated tests. The balance, import/export and fixed-entry paths
+ * (including the `addedBy` attribution threading added by the multi-user sync
+ * work) have no direct unit tests. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import { v4 as uuidv4 } from "uuid";
 import {
   addFixedEntryDefinition,
   updateFixedEntryDefinition,
   getEmptyFixedEntries,
 } from "../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
+import { getDefaultEntryFilters } from "../../../helpers/entriesHelper/filterSortHelper";
 const BALANCE = "balance";
 const BUCKET = "buckets";
 const CATEGORIES = "categories";
 const FIXED_ENTRIES = "fixedEntries";
+const ENTRY_FILTERS = "entryFilters";
 
 const getItemFromLocalStorageFactory =
   ({ itemType }) =>
@@ -56,6 +66,29 @@ const storeFixedEntriesInLocalStorage = storeInLocalStorageFactory({
   itemType: FIXED_ENTRIES,
 });
 
+// Filters & sorting for the entry lists, stored as one JSON object so a page
+// reload restores the exact same filtered view. Missing or corrupt data falls
+// back to the defaults (merged key-by-key so partial/older objects stay valid).
+const getEntryFiltersFromLocalStorage = async () => {
+  const storedData = localStorage.getItem(ENTRY_FILTERS) || "";
+  try {
+    const parsedData = storedData ? JSON.parse(storedData) : null;
+    const isPlainObject =
+      parsedData !== null &&
+      typeof parsedData === "object" &&
+      !Array.isArray(parsedData);
+    return isPlainObject
+      ? { ...getDefaultEntryFilters(), ...parsedData }
+      : getDefaultEntryFilters();
+  } catch (error) {
+    return getDefaultEntryFilters();
+  }
+};
+
+const storeEntryFiltersInLocalStorage = storeInLocalStorageFactory({
+  itemType: ENTRY_FILTERS,
+});
+
 // Creates a new recurring entry effective from `from` ("YYYY-MM"). The entry
 // carries the same fields as a regular one, so several can share a category.
 const addFixedEntryData = async ({ entry, from }) => {
@@ -72,7 +105,8 @@ const addFixedEntryData = async ({ entry, from }) => {
     amount: entry.amount,
     description: entry.description,
     categories_path: entry.categories_path,
-    // Optional attribution (AC-1.6) — persisted as-is when present.
+    // Optional attribution (AC-1.6, docs/multi-user-sync/PRD.md) — persisted
+    // as-is when present.
     ...(entry.addedBy ? { addedBy: entry.addedBy } : {}),
   });
   await storeFixedEntriesInLocalStorage({ data: newFixedEntries });
@@ -114,6 +148,7 @@ const editBucketForMonth = async ({
   addedBy,
 }) => {
   if (!bucketName) throw new Error("No bucket name was set");
+  if (Number(limit) <= 0) throw new Error("Allowance must be greater than zero");
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const historyBuckets = normalizeBucketValue(storedBuckets[bucketName] ?? 0);
 
@@ -169,6 +204,7 @@ const addBucketData = async ({ bucket, addedBy }) => {
   const [name, value] = Object.entries(bucket)[0] || [];
   const trimmedName = (name || "").trim();
   if (!trimmedName) throw new Error("Category name cannot be empty");
+  if (Number(value) <= 0) throw new Error("Allowance must be greater than zero");
 
   const storedBuckets = (await getBucketsFromLocalStorage()) || {};
   const alreadyExists = Object.keys(storedBuckets).some(
@@ -296,6 +332,10 @@ const LocalStorage = () => ({
   addCategory: async ({ category }) => {
     return addCategoryData({ category });
   },
+  // Filters & sorting for the entry lists (search, scope, category, sortKey).
+  getEntryFilters: async () => getEntryFiltersFromLocalStorage(),
+  setEntryFilters: async ({ entryFilters }) =>
+    storeEntryFiltersInLocalStorage({ data: entryFilters }),
   getFixedEntries: async () => getFixedEntriesFromLocalStorage(),
   // Create a recurring income/expense effective from a month (issue #103). It
   // then shows up automatically in that month and every month forward.

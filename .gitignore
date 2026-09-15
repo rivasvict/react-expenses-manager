@@ -27,3 +27,7 @@ yarn-error.log*
 *.swp
 # sync server local data
 /server/.data
+# sync server compiled output
+/server/dist
+# e2e screenshot proof captured by the e2e-screenshot-testing skill
+/src/.e2e-screenshots

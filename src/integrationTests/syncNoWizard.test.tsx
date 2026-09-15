@@ -7,12 +7,13 @@ import {
 import { seedEntries, ts, MAY } from "./helpers/seed";
 
 /**
- * Integration tests for the no-wizard sync paths (multi-user sync PR 4):
- * EC-1 first sync, "You're up to date" (AC-3.3), silent upload of
- * local-only additions, download failure (AC-3.11), stale blocked/
- * canceled rejections (EC-9), version-conflict restart (EC-2) and the
- * review placeholder's safe abandonment. All network traffic goes
- * through the in-memory fakeSyncServer.
+ * Integration tests for the no-wizard sync paths
+ * (docs/multi-user-sync/RFC.md §4.3; AC/EC tags in
+ * docs/multi-user-sync/PRD.md): EC-1 first sync, "You're up to date"
+ * (AC-3.3), silent upload of local-only additions, download failure
+ * (AC-3.11), stale blocked/canceled rejections (EC-9), version-conflict
+ * restart (EC-2) and the review placeholder's safe abandonment. All
+ * network traffic goes through the in-memory fakeSyncServer.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -256,7 +257,7 @@ describe("no-wizard sync paths", () => {
     await clickSync(user);
 
     // Routed to the review wizard (nothing applied unreviewed). This
-    // assertion moved from the PR-4 placeholder copy to the wizard's
+    // assertion moved from the earlier placeholder copy to the wizard's
     // progress text — the safe-abandonment invariants below are unchanged.
     expect(await screen.findByText("Review changes")).toBeInTheDocument();
     expect(screen.getByText("Item 1 of 1")).toBeInTheDocument();

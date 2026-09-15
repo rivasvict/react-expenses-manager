@@ -50,3 +50,50 @@ a.content-title-selection {
 .content-title-selection.tile-tone--expense .tile-content {
   color: $expense;
 }
+
+// Two-tier total tile (candidate 8): label/value hierarchy on a soft-tinted
+// card. The largest number on these screens finally gets the weight it deserves.
+.content-title-selection--total {
+  .tile-inner--total {
+    align-items: baseline;
+  }
+
+  .tile-total__label {
+    color: $text-secondary;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tile-total__value {
+    @include money-figures();
+    flex: 0 0 auto;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: $text-primary;
+    white-space: nowrap;
+  }
+
+  // Sign drives the tint; a zero/net total keeps the neutral surface + value.
+  &.tile-tone--expense {
+    background-color: $expense-soft;
+    border-color: rgba($expense, 0.28);
+
+    .tile-total__value {
+      color: $expense;
+    }
+  }
+
+  &.tile-tone--income {
+    background-color: $income-soft;
+    border-color: rgba($income, 0.28);
+
+    .tile-total__value {
+      color: $income;
+    }
+  }
+}

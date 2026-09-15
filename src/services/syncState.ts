@@ -1,8 +1,9 @@
-// Persisted sync metadata (RFC §2.2): localStorage key "sync.state".
-// `rejections` is the permanent AC-3.9 memory; the whole record is written
-// ONLY when an upload completes with 200 (RFC §4.3 step 6) — abandoned
-// reviews and failed uploads leave no trace. The state is scoped to a
-// party: reading it for a different party returns a fresh record.
+// Persisted sync metadata (docs/multi-user-sync/RFC.md §2.2): localStorage
+// key "sync.state". `rejections` is the permanent AC-3.9 memory
+// (docs/multi-user-sync/PRD.md); the whole record is written ONLY when an
+// upload completes with 200 (RFC §4.3 step 6) — abandoned reviews and
+// failed uploads leave no trace. The state is scoped to a party: reading it
+// for a different party returns a fresh record.
 import { Rejections } from "../helpers/syncMergeHelper/syncMergeHelper";
 
 export const SYNC_STATE_STORAGE_KEY = "sync.state";

@@ -1,27 +1,22 @@
-import { capitalize } from "lodash";
 import DoughnutChart, {
-  INCOME_EXPENSE_COLORS,
+  EXPENSE_SAVINGS_COLORS,
 } from "../../../../../common/DoughnutChart";
-import { ENTRY_TYPES_PLURAL } from "../../../../../../constants";
-import { quantitiesToPercentages } from "../../../../../../helpers/entriesHelper/entriesHelper";
+import { getExpenseSavingsPercentages } from "../../../../../../helpers/entriesHelper/entriesHelper";
 
 const BalanceChart = ({ incomesSum, expensesSum }) => {
   const totalSum = incomesSum + Math.abs(expensesSum);
-  const [incomePercentage, expensePercentage] = quantitiesToPercentages([
+  const [expensePercentage, savingsPercentage] = getExpenseSavingsPercentages(
     incomesSum,
-    expensesSum,
-  ]);
+    expensesSum
+  );
 
   return (
     <DoughnutChart
       data={{
-        labels: [
-          capitalize(ENTRY_TYPES_PLURAL.INCOMES),
-          capitalize(ENTRY_TYPES_PLURAL.EXPENSES),
-        ],
-        chartData: [incomePercentage, expensePercentage],
+        labels: ["Expenses", "Savings"],
+        chartData: [expensePercentage, savingsPercentage],
       }}
-      colors={INCOME_EXPENSE_COLORS}
+      colors={EXPENSE_SAVINGS_COLORS}
       shouldShow={!!totalSum}
     />
   );

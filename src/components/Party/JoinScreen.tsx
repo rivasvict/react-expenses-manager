@@ -11,7 +11,9 @@ import {
 } from "../../services/syncApi/contract";
 import "./styles.scss";
 
-// DESIGN §3.5: invitation-specific error copy, never technical.
+// Invitation-specific error copy, never technical
+// (docs/multi-user-sync/DESIGN.md §3.5): each of these is something the
+// invitee can act on, which a raw error code is not.
 const JOIN_ERROR_COPY: { [code: string]: string } = {
   [SYNC_ERROR_CODES.INVITATION_WRONG_PASSWORD]:
     "That password doesn't match this invitation. Double-check it with whoever invited you and try again.",
@@ -28,9 +30,10 @@ interface JoinScreenProps {
 }
 
 /**
- * Invitee redeems an invitation (DESIGN §3.5, AC-2.5–2.7). The fields stay
- * filled on a wrong password so the user can retry immediately — the
- * invitation is not consumed (EC-7).
+ * Invitee redeems an invitation (DESIGN §3.5; AC-2.5–2.7,
+ * docs/multi-user-sync/PRD.md). The fields stay filled on a wrong password so
+ * the user can retry immediately, which is safe precisely because a wrong
+ * password does not consume the invitation server-side (EC-7).
  */
 const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
   const history = useHistory();

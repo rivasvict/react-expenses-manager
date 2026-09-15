@@ -15,13 +15,16 @@ afterEach(() => {
 });
 
 describe("navigation", () => {
-  it("does not show a Prev button when there is no data", async () => {
-    // localStorage has no entries — the app should show only the current month
-    // with no possibility to navigate to previous months
+  it("disables the Prev button when there is no earlier data", async () => {
+    // localStorage has no entries — the app shows only the current month. The
+    // stepper stays in place but is disabled rather than vanishing, so it never
+    // teleports under the thumb at the data edge.
     await renderApp("/");
 
     await screen.findByText("May 2026");
-    expect(screen.queryByRole("button", { name: /prev/i })).not.toBeInTheDocument();
+    expect(
+      await screen.findByRole("button", { name: /prev/i })
+    ).toBeDisabled();
   });
 
   it("shows the current month (May 2026) when opening the app", async () => {

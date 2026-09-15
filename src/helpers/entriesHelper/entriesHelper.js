@@ -27,7 +27,7 @@ function getFilteredEntriesByCategory({
   const entriesToFilter =
     entries[selectedYear]?.[selectedMonth]?.[entryTypePlural];
   return category.length
-    ? entriesToFilter.filter((entry) => entry.categories_path.match(category))
+    ? entriesToFilter.filter((entry) => entry.categories_path.includes(category))
     : entriesToFilter || [];
 }
 
@@ -274,6 +274,31 @@ function getBucketValidationError({ categoryName, buckets = {} }) {
 
   if (alreadyExists) {
     return `A bucket for "${trimmedName}" already exists`;
+  }
+
+  return null;
+}
+
+const BUCKET_ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
+
+/**
+ * Validates a bucket's monthly allowance (used by both AddBucket and
+ * EditBucket): it must be a well-formed number greater than zero, since a
+ * zero or negative spending limit has no meaning (a zero allowance also
+ * breaks the carry-on percentage calculation, which divides by it).
+ *
+ * @param {string|number} allowance - The raw allowance value from the form.
+ * @returns {string|null} An error message, or null when the allowance is valid.
+ */
+function getBucketAllowanceValidationError(allowance) {
+  const trimmedAllowance = String(allowance ?? "").trim();
+
+  if (!BUCKET_ALLOWANCE_MATCHER.test(trimmedAllowance)) {
+    return "Allowance must be a valid number";
+  }
+
+  if (parseFloat(trimmedAllowance) <= 0) {
+    return "Allowance must be greater than zero";
   }
 
   return null;
@@ -630,6 +655,30 @@ const quantitiesToPercentages = (quantities) => {
   return quantities.map((quantity) => (Math.abs(quantity) / totalSum) * 100);
 };
 
+/**
+ * Function to convert incomes/expenses sums into expense/savings percentages,
+ * using incomes as the 100% base (instead of incomes + expenses).
+ * Overspending (expenses > incomes) and zero incomes are both capped at
+ * 100% expenses / 0% savings, rather than showing negative savings or
+ * hiding the chart.
+ * @param {number} incomesSum
+ * @param {number} expensesSum
+ * @returns {[number, number]} [expensePercentage, savingsPercentage]
+ */
+const getExpenseSavingsPercentages = (incomesSum, expensesSum) => {
+  const incomes = Math.abs(incomesSum);
+  const expenses = Math.abs(expensesSum);
+
+  if (!incomes || expenses >= incomes) {
+    return incomes ? [100, 0] : expenses ? [100, 0] : [0, 0];
+  }
+
+  const expensePercentage = (expenses / incomes) * 100;
+  const savingsPercentage = 100 - expensePercentage;
+
+  return [expensePercentage, savingsPercentage];
+};
+
 export {
   EXPENSE_CATEGORIES,
   INCOME_CATEGORIES,
@@ -642,8 +691,10 @@ export {
   getCategoryValidationError,
   getUnbudgetedCategories,
   getBucketValidationError,
+  getBucketAllowanceValidationError,
   getGroupedFilledEntriesByDate,
   quantitiesToPercentages,
+  getExpenseSavingsPercentages,
   getFilteredEntriesByCategory,
   getDatedEntries,
   getCategoryPercentagesFromEntries,

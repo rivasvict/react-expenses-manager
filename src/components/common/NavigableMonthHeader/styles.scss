@@ -25,7 +25,9 @@
     color: $text-primary;
     background-color: $bg-raised;
     border: 1px solid $border-subtle;
-    border-radius: 50%;
+    // Rounded square joins the app's control shape language (buttons, inputs,
+    // nav pills); circles stay reserved for the entry-row money chips.
+    border-radius: $radius-control;
     cursor: pointer;
     transition: background-color $transition-quick, border-color $transition-quick;
 
@@ -37,10 +39,17 @@
     &:focus-visible {
       @include focus-ring();
     }
-  }
 
-  .month-header__step--placeholder {
-    visibility: hidden;
-    pointer-events: none;
+    // Data edge: control stays in place, dimmed and non-interactive.
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.35;
+      cursor: default;
+
+      &:hover {
+        background-color: $bg-raised;
+        border-color: $border-subtle;
+      }
+    }
   }
 }

@@ -172,11 +172,12 @@ describe("review wizard", () => {
     expect(await screen.findByText("Sync with your party")).toBeInTheDocument();
 
     // Accepted entry is visible in the month view; rejected one is absent.
-    // (Entry rows render as one "Category - Description" text node.)
+    // (An entry row renders its category and description as separate
+    // nodes, so a term that is both — "Groceries" — matches more than once.)
     await user.click(screen.getByRole("link", { name: "Home" }));
     await user.click(await screen.findByText("Expenses"));
     expect(await screen.findByText(/Cinema/)).toBeInTheDocument();
-    expect(screen.getByText(/Groceries/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Groceries/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Taxi/)).not.toBeInTheDocument();
 
     // The accepted bucket shows up too.

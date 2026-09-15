@@ -1,5 +1,7 @@
-// Sync/account state (RFC §1): a new slice, deliberately separate from the
-// dormant userManager (which targets the defunct expenses-manager-api).
+// Sync/account state (docs/multi-user-sync/RFC.md §1): a new slice,
+// deliberately separate from the dormant userManager (which targets the
+// defunct expenses-manager-api). AC tags below are in
+// docs/multi-user-sync/PRD.md.
 import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
@@ -12,8 +14,8 @@ import {
 } from "./actions";
 
 // The diffed items and the version of the exact download they came from
-// (RFC §4.3): the wizard consumes THIS set — it never re-downloads, so
-// decisions always bind to what the user was shown.
+// (RFC §4.3 step 4): the wizard consumes THIS set — it never re-downloads,
+// so decisions always bind to what the user was shown.
 export interface PendingReview {
   items: IncomingItem[];
   baseVersion: string;
@@ -28,11 +30,13 @@ export interface SyncManagerState {
   party: Party | null;
   // False until the first /me refresh resolves, so screens can tell
   // "no party" apart from "not loaded yet".
-  partyLoaded: boolean;
+  partyStatusResolved: boolean;
   // Incoming changes staged for /sync-review; null when nothing pending.
+  // Nothing is ever applied unreviewed.
   pendingReview: PendingReview | null;
   // A blocked/canceled rejection discovered mid-review, carried back for
-  // the Data Management card's banner (DESIGN 4.3.4 → 4.2).
+  // the Data Management card's banner (docs/multi-user-sync/DESIGN.md
+  // §4.3.4 → §4.2).
   declined: DeclinedReason | null;
 }
 
@@ -52,7 +56,7 @@ interface SyncAction {
 const getDefaultState = (): SyncManagerState => ({
   session: getSession(),
   party: null,
-  partyLoaded: false,
+  partyStatusResolved: false,
   pendingReview: null,
   declined: null,
 });
@@ -66,12 +70,13 @@ export const reducer = (
     case SYNC_SESSION_SET:
       return { ...currentState, session: action.payload?.session || null };
     case SYNC_SESSION_CLEARED:
-      // Logging out (or a dead token) also drops the cached party.
+      // Logging out (or a dead token) also drops the cached party — and any
+      // review that was pending for it.
       return {
         ...currentState,
         session: null,
         party: null,
-        partyLoaded: false,
+        partyStatusResolved: false,
         pendingReview: null,
         declined: null,
       };
@@ -79,7 +84,7 @@ export const reducer = (
       return {
         ...currentState,
         party: action.payload?.party || null,
-        partyLoaded: true,
+        partyStatusResolved: true,
       };
     case SYNC_PENDING_REVIEW_SET:
       return {

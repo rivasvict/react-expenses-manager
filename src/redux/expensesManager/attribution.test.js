@@ -3,7 +3,8 @@ import LocalStorage from "../../services/storageSelector/LocalStorage";
 import { setSession, clearSession } from "../../services/session";
 
 /**
- * Attribution (AC-1.6, RFC §2.3): items created while logged in are stamped
+ * Attribution (AC-1.6 in docs/multi-user-sync/PRD.md,
+ * docs/multi-user-sync/RFC.md §2.3): items created while logged in are stamped
  * with `addedBy` at the action-creator layer; logged out, the field is
  * absent entirely. Tested at the unit level because nothing renders the
  * stamp until the review wizard PR.

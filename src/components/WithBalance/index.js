@@ -3,6 +3,7 @@ import {
   getBalance,
   getBuckets,
   getCategories,
+  getEntryFilters,
 } from "../../redux/expensesManager/actionCreators";
 import { useEffect } from "react";
 
@@ -15,6 +16,7 @@ const WithBalance = ({
   onGetBuckets,
   buckets,
   onGetCategories,
+  onGetEntryFilters,
 }) => {
   useEffect(() => {
     /** Get/set the balance from redux */
@@ -23,6 +25,8 @@ const WithBalance = ({
     onGetBuckets({ buckets });
     /** Get/set the user's standalone categories from redux (issue #100) */
     onGetCategories();
+    /** Hydrate the persisted entry-list filters & sorting from redux */
+    onGetEntryFilters();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return children;
@@ -32,6 +36,7 @@ const mapActionToProps = (dispatch) => ({
   onGetBalance: () => dispatch(getBalance()),
   onGetBuckets: ({ buckets }) => dispatch(getBuckets({ buckets })),
   onGetCategories: () => dispatch(getCategories()),
+  onGetEntryFilters: () => dispatch(getEntryFilters()),
 });
 
 const mapStateToProps = (state) => ({

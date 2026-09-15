@@ -1,3 +1,11 @@
+/**
+ * TODO:
+ * Unit coverage here is partial — the `addedBy` attribution stamping is
+ * covered by ./attribution.test.js, but the rest of the action creators
+ * (balance loading, entry add/edit/remove, backup restore, buckets, fixed
+ * entries) have no direct unit tests. Tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
 import {
   getCurrentEmptyMonth,
   getGroupedFilledEntriesByDate,
@@ -10,6 +18,7 @@ import {
   parseBackupEnvelope,
 } from "../../helpers/backupHelper/backupHelper";
 import { getAddedBy } from "../../services/session";
+import { getDefaultEntryFilters } from "../../helpers/entriesHelper/filterSortHelper";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
@@ -27,6 +36,9 @@ export const GET_CATEGORIES = "GET_CATEGORIES";
 export const GET_FIXED_ENTRIES = "GET_FIXED_ENTRIES";
 export const SET_FIXED_ENTRY = "SET_FIXED_ENTRY";
 export const RESTORE_BACKUP = "RESTORE_BACKUP";
+export const SET_ENTRY_FILTERS = "SET_ENTRY_FILTERS";
+export const CLEAR_ENTRY_FILTERS = "CLEAR_ENTRY_FILTERS";
+export const GET_ENTRY_FILTERS = "GET_ENTRY_FILTERS";
 
 // TODO: AS THIS IS A COMMON ACTION, IT SHOULD
 // LIVE IN ITS OWN FILE
@@ -93,9 +105,10 @@ const GetBalance =
     };
   };
 
-// Attribution (AC-1.6, RFC §2.3): newly created items are stamped with the
-// logged-in account at the action-creator layer; storage stays a dumb store.
-// Logged out → no field at all.
+// Attribution (AC-1.6 in docs/multi-user-sync/PRD.md, docs/multi-user-sync/
+// RFC.md §2.3): newly created items are stamped with the logged-in account at
+// the action-creator layer; storage stays a dumb store. Logged out → no field
+// at all.
 const withAddedBy = (item) => {
   const addedBy = getAddedBy();
   return addedBy ? { ...item, addedBy } : item;
@@ -140,7 +153,7 @@ const EditEntry =
         const fixedEntries = await storage.getFixedEntries();
         const entries = getGroupedFilledEntriesByDate()(
           newBalance,
-          fixedEntries
+          fixedEntries,
         );
         dispatch({ type: EDIT_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
@@ -160,7 +173,7 @@ const RemoveEntry =
         const fixedEntries = await storage.getFixedEntries();
         const entries = getGroupedFilledEntriesByDate()(
           newBalance,
-          fixedEntries
+          fixedEntries,
         );
         dispatch({ type: REMOVE_ENTRY, payload: { entries } });
         dispatch(setAppLoading(false));
@@ -204,7 +217,7 @@ const RestoreBackup =
         await storage.importData(data);
         const entries = getGroupedFilledEntriesByDate()(
           data.balance,
-          data.fixedEntries
+          data.fixedEntries,
         );
         dispatch({
           type: RESTORE_BACKUP,
@@ -267,7 +280,10 @@ const EditBucket =
       try {
         dispatch(setAppLoading(true));
         const [bucketName, limit] = Object.entries(bucket)[0];
-        const fromYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+        const fromYearMonth = toYearMonth(
+          selectedDate.year,
+          selectedDate.month,
+        );
         const response = await storage.editBucket({
           bucketName,
           limit,
@@ -366,6 +382,59 @@ const GetBucket =
     };
   };
 
+// Filters & sorting for the entry lists (search, scope, category, sort key).
+// The three creators keep Redux and storage in sync so the filtered view
+// survives month navigation (Redux) and reloads (localStorage). No app-loading
+// flash: these are instant, purely-local updates.
+
+// Shallow-merges a partial ({ search: "cof" }, { sortKey: "amount" }, ...)
+// into `entryFilters`, then persists the merged object.
+const SetEntryFilters =
+  ({ storage }) =>
+  (partialFilters) => {
+    return async (dispatch, getState) => {
+      try {
+        dispatch({ type: SET_ENTRY_FILTERS, payload: partialFilters });
+        await storage.setEntryFilters({
+          entryFilters: getState().expensesManager.entryFilters,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+// Resets every filter AND the sort key back to the defaults (per the design:
+// "Clear" also restores the default Date sort), and persists the reset.
+const ClearEntryFilters =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        dispatch({ type: CLEAR_ENTRY_FILTERS });
+        await storage.setEntryFilters({
+          entryFilters: getDefaultEntryFilters(),
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
+// Hydrates the persisted filters on app start (dispatched from WithBalance).
+const GetEntryFilters =
+  ({ storage }) =>
+  () => {
+    return async (dispatch) => {
+      try {
+        const entryFilters = await storage.getEntryFilters();
+        dispatch({ type: GET_ENTRY_FILTERS, payload: { entryFilters } });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
+
 const GetFixedEntries =
   ({ storage }) =>
   () => {
@@ -456,6 +525,9 @@ export const ActionCreators = ({ storage }) => {
     getBucket: GetBucket({ storage }),
     addCategory: AddCategory({ storage }),
     getCategories: GetCategories({ storage }),
+    setEntryFilters: SetEntryFilters({ storage }),
+    clearEntryFilters: ClearEntryFilters({ storage }),
+    getEntryFilters: GetEntryFilters({ storage }),
     getFixedEntries: GetFixedEntries({ storage }),
     addFixedEntry: AddFixedEntry({ storage }),
     editFixedEntry: EditFixedEntry({ storage }),

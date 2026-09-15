@@ -1,7 +1,16 @@
-// Tiny reader/writer for the sync session (RFC §2.2): localStorage key
-// "sync.session" present ⇔ logged in (AC-1.3/1.4). Kept as a standalone
-// service so the expensesManager action creators can stamp `addedBy`
-// without importing anything from the sync UI or Redux slice.
+/**
+ * TODO:
+ * This module has no colocated unit tests — its behaviour is currently only
+ * asserted end-to-end via src/integrationTests/accounts.test.tsx and
+ * src/redux/expensesManager/attribution.test.js. Direct coverage for the
+ * expiry decode, the malformed-payload paths and `getAddedBy` is tracked in:
+ * https://github.com/rivasvict/react-expenses-manager/issues/160
+ */
+// Tiny reader/writer for the sync session (docs/multi-user-sync/RFC.md §2.2):
+// localStorage key "sync.session" present ⇔ logged in (AC-1.3/1.4, defined in
+// docs/multi-user-sync/PRD.md). Kept as a standalone service so the
+// expensesManager action creators can stamp `addedBy` without importing
+// anything from the sync UI or Redux slice.
 import { SyncUser } from "./syncApi/contract";
 
 export const SESSION_STORAGE_KEY = "sync.session";

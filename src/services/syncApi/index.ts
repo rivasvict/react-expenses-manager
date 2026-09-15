@@ -1,6 +1,17 @@
-// Typed HTTP client for the sync backend (RFC §3). All requests are JSON;
-// failures are surfaced as SyncApiError with the server's error code, or
-// NETWORK_ERROR when the server is unreachable.
+// Typed HTTP client for the sync backend (docs/multi-user-sync/RFC.md §3).
+// All requests are JSON; failures are surfaced as SyncApiError with the
+// server's error code, or NETWORK_ERROR when the server is unreachable.
+//
+// TODO:
+// The colocated index.test.ts covers signup/login/getMe, blockMember,
+// cancelParty and the generic failure handling, but not every party call
+// this file gained along the way: createParty, createInvitation and
+// joinParty have no direct tests, and the setOnUnauthorized 401 hook
+// (clearing the session on an UNAUTHORIZED response) is only exercised
+// end-to-end. They are currently asserted through
+// src/integrationTests/party.test.tsx and partyJoin.test.tsx. Direct coverage
+// is tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/160
 import { config } from "../../config";
 import { clearSession } from "../session";
 import {
@@ -120,6 +131,9 @@ export const joinParty = ({
     token,
   });
 
+// RFC §3 endpoint 7. The member id travels in the path, so it is encoded:
+// ids are opaque server-issued strings and must not be able to alter the
+// route.
 export const blockMember = ({
   token,
   userId,
@@ -132,6 +146,7 @@ export const blockMember = ({
     { method: "POST", body: {}, token }
   );
 
+// RFC §3 endpoint 8.
 export const cancelParty = ({
   token,
 }: {
@@ -143,6 +158,8 @@ export const cancelParty = ({
     token,
   });
 
+// RFC §3 endpoint 9. A 404 NO_BACKUP here is the EC-1 signal, not a
+// failure — the caller decides what to do with it.
 export const getBackup = ({
   token,
 }: {
@@ -150,6 +167,9 @@ export const getBackup = ({
 }): Promise<BackupDownloadResponse> =>
   request<BackupDownloadResponse>("/api/party/backup", { token });
 
+// RFC §3 endpoint 10. `baseVersion: null` is the create-only first sync;
+// otherwise it is the version the caller downloaded, and the server answers
+// 409 VERSION_CONFLICT when that is no longer current.
 export const putBackup = ({
   token,
   baseVersion,

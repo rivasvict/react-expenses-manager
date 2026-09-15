@@ -21,20 +21,26 @@ import { formatRelativeTime } from "../../../../helpers/date";
 interface SyncCardProps {
   session: SyncSession | null;
   party: Party | null;
-  partyLoaded: boolean;
+  partyStatusResolved: boolean;
   declined: DeclinedReason | null;
   onRefreshMe: () => Promise<boolean>;
   onSync: () => Promise<SyncOutcome>;
   onClearDeclined: () => void;
 }
 
-// DESIGN §4.2 banner copy, keyed by outcome/error.
+// Banner copy keyed by outcome/error (docs/multi-user-sync/DESIGN.md §4.2).
+// AC/EC tags in this file are in docs/multi-user-sync/PRD.md.
 const COPY = {
   upToDate: "You're up to date.",
   firstSync:
     "This is the first sync for your party. Your data is now the starting point — future syncs will compare against it.",
   connectionFailed:
     "Couldn't reach your party. Check your connection and try again.",
+  // A party member on a newer release uploaded a backup whose schema this
+  // build cannot read. Distinct from a network failure: the user can act
+  // on it. Negotiating schema versions is tracked in issue #170.
+  unsupportedSchemaVersion:
+    "This device's app version is too old to read your party's data. Update the app and sync again.",
   declinedBlocked:
     "This sync was declined: you've been removed from your party by its organizer. Nothing on this device was changed.",
   declinedCanceled:
@@ -48,7 +54,7 @@ const COPY = {
 const getCaption = (
   session: SyncSession | null,
   party: Party | null,
-  partyLoaded: boolean,
+  partyStatusResolved: boolean,
   meCheckFailed: boolean
 ): { enabled: boolean; caption: string } => {
   if (!session)
@@ -56,7 +62,7 @@ const getCaption = (
       enabled: false,
       caption: "Sign in and join a party to sync your entries across devices.",
     };
-  if (!partyLoaded && !party)
+  if (!partyStatusResolved && !party)
     return {
       enabled: false,
       caption: meCheckFailed
@@ -92,12 +98,14 @@ const getCaption = (
 /**
  * The "Sync with your party" card on Data Management (DESIGN §4.1–4.2).
  * Sync is a manual, explicit action (AC-3.1): the only network calls to
- * the backup endpoints happen inside the button's click handler.
+ * the backup endpoints happen inside the button's click handler. The
+ * no-wizard outcomes render here; incoming changes hand off to
+ * /sync-review.
  */
 const SyncCard = ({
   session,
   party,
-  partyLoaded,
+  partyStatusResolved,
   declined,
   onRefreshMe,
   onSync,
@@ -119,7 +127,7 @@ const SyncCard = ({
     });
   }, [session, onRefreshMe]);
 
-  // A blocked/canceled rejection discovered mid-review (DESIGN 4.3.4)
+  // A blocked/canceled rejection discovered mid-review (DESIGN §4.3.4)
   // lands here as the same §4.2 banner a direct sync would have shown.
   useEffect(() => {
     if (!declined) return;
@@ -132,7 +140,7 @@ const SyncCard = ({
   const { enabled, caption } = getCaption(
     session,
     party,
-    partyLoaded,
+    partyStatusResolved,
     meCheckFailed
   );
 
@@ -163,6 +171,10 @@ const SyncCard = ({
           setAlert(COPY.conflict);
         } else if (syncError.code === SYNC_ERROR_CODES.NETWORK_ERROR) {
           setAlert(COPY.connectionFailed);
+        } else if (
+          syncError.code === SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION
+        ) {
+          setAlert(COPY.unsupportedSchemaVersion);
         } else {
           setAlert(syncError.message || COPY.connectionFailed);
         }
@@ -214,7 +226,7 @@ const SyncCard = ({
 const mapStateToProps = (state: any) => ({
   session: state.syncManager.session,
   party: state.syncManager.party,
-  partyLoaded: state.syncManager.partyLoaded,
+  partyStatusResolved: state.syncManager.partyStatusResolved,
   declined: state.syncManager.declined,
 });
 

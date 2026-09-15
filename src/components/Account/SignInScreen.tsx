@@ -15,8 +15,10 @@ import {
   SyncApiError,
 } from "../../services/syncApi/contract";
 
-// Same fields/validation as the dormant SignIn.js (DESIGN §2.2), wrapped in
-// the in-app MainContentContainer instead of NoSessionContainer.
+// Same fields/validation as the dormant SignIn.js
+// (docs/multi-user-sync/DESIGN.md §2.2), wrapped in the in-app
+// MainContentContainer instead of NoSessionContainer. AC tags below are
+// defined in docs/multi-user-sync/PRD.md.
 const buildUserModel = () =>
   FormModel({
     email: "",

@@ -5,6 +5,7 @@ const {
   getCategoryValidationError,
   getUnbudgetedCategories,
   getBucketValidationError,
+  getBucketAllowanceValidationError,
 } = require("./entriesHelper");
 
 describe("category/bucket helpers (issue #100)", () => {
@@ -136,6 +137,29 @@ describe("category/bucket helpers (issue #100)", () => {
       expect(
         getBucketValidationError({ categoryName: "Gym", buckets: { Food: 200 } })
       ).toBeNull();
+    });
+  });
+
+  describe("getBucketAllowanceValidationError", () => {
+    it("rejects a negative allowance", () => {
+      expect(getBucketAllowanceValidationError("-100")).toMatch(/greater than zero/i);
+      expect(getBucketAllowanceValidationError(-50)).toMatch(/greater than zero/i);
+      expect(getBucketAllowanceValidationError("-0.01")).toMatch(/greater than zero/i);
+    });
+
+    it("rejects a zero allowance", () => {
+      expect(getBucketAllowanceValidationError("0")).toMatch(/greater than zero/i);
+      expect(getBucketAllowanceValidationError(0)).toMatch(/greater than zero/i);
+    });
+
+    it("rejects a non-numeric allowance", () => {
+      expect(getBucketAllowanceValidationError("abc")).toMatch(/valid number/i);
+      expect(getBucketAllowanceValidationError("")).toMatch(/valid number/i);
+    });
+
+    it("accepts positive allowances", () => {
+      expect(getBucketAllowanceValidationError(200)).toBeNull();
+      expect(getBucketAllowanceValidationError("199.99")).toBeNull();
     });
   });
 });

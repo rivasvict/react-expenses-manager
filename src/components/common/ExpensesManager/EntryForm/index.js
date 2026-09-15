@@ -96,7 +96,9 @@ class EntryForm extends Component {
                 ></InputText>
               </Form.Group>
               <Form.Group className="vertical-standard-space">
-                <Form.Label htmlFor="entry-category">Category</Form.Label>
+                <Form.Label htmlFor="entry-category" id="entry-category-label">
+                  Category
+                </Form.Label>
                 <CategorySelector
                   id="entry-category"
                   name="categories"

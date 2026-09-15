@@ -18,8 +18,12 @@ import {
   GET_FIXED_ENTRIES,
   SET_FIXED_ENTRY,
   RESTORE_BACKUP,
+  SET_ENTRY_FILTERS,
+  CLEAR_ENTRY_FILTERS,
+  GET_ENTRY_FILTERS,
 } from "./actions";
 import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntriesHelper";
+import { getDefaultEntryFilters } from "../../helpers/entriesHelper/filterSortHelper";
 
 const staticInitialState = {
   entries: {},
@@ -33,6 +37,11 @@ const staticInitialState = {
   // Fixed (recurring) incomes/expenses per category, time-aware so edits and
   // removals propagate from a month forward (issue #103). Empty by default.
   fixedEntries: getEmptyFixedEntries(),
+  // Filters & sorting for the entry lists (search, scope, category, sort key).
+  // One shared state so the toolbar, the filter sheet and (later) both
+  // /summary lists can never diverge. Persisted to localStorage by the
+  // entry-filters action creators.
+  entryFilters: getDefaultEntryFilters(),
 };
 
 // selectedDate must be evaluated lazily (inside the reducer, not at module-load
@@ -177,6 +186,15 @@ export const reducer = (state, action) => {
         ...state,
         unbudgetedCategories: payload.unbudgetedCategories,
       };
+    case SET_ENTRY_FILTERS:
+      return {
+        ...state,
+        entryFilters: { ...state.entryFilters, ...payload },
+      };
+    case CLEAR_ENTRY_FILTERS:
+      return { ...state, entryFilters: getDefaultEntryFilters() };
+    case GET_ENTRY_FILTERS:
+      return { ...state, entryFilters: payload.entryFilters };
     case GET_FIXED_ENTRIES:
     case SET_FIXED_ENTRY:
       return {
