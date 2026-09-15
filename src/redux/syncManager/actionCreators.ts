@@ -9,8 +9,9 @@
 // are currently only asserted end-to-end via
 // src/integrationTests/accounts.test.tsx, party.test.tsx, partyJoin.test.tsx
 // and partyManagement.test.tsx. Worth covering directly: session persistence
-// on sign in/up, logOut clearing it, the deliberately swallowed refreshMe
-// failure, the SYNC_PARTY_SET dispatches, and the "Not signed in" guards.
+// on sign in/up, logOut clearing it, refreshMe reporting a failure through
+// its boolean result rather than throwing, the SYNC_PARTY_SET dispatches,
+// and the "Not signed in" guards.
 // Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/160
 import { Dispatch } from "redux";
@@ -61,18 +62,20 @@ export const logOut =
 
 // Refreshes the party from GET /me (RFC §2.2: membership is never cached
 // as authoritative). A dead token is handled centrally by syncApi (session
-// cleared + store notified), so it is swallowed here; other failures leave
-// the previous party state alone.
+// cleared + store notified); other failures leave the previous party state
+// alone. Returns whether the refresh succeeded, so screens can render an
+// honest "couldn't check" state instead of waiting forever.
 export const refreshMe =
   () =>
-  async (dispatch: Dispatch): Promise<void> => {
+  async (dispatch: Dispatch): Promise<boolean> => {
     const session = getSession();
-    if (!session) return;
+    if (!session) return false;
     try {
       const { party } = await syncApi.getMe({ token: session.token });
       setParty(dispatch, party);
+      return true;
     } catch (error) {
-      // Intentionally quiet: screens render from the last known state.
+      return false;
     }
   };
 

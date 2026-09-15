@@ -233,7 +233,7 @@ describe("no-wizard sync paths", () => {
     expect(server.getUploadedBackups()).toEqual([]);
   });
 
-  it("incoming changes route to the review placeholder; cancel changes nothing", async () => {
+  it("incoming changes route to the review wizard; cancel changes nothing", async () => {
     const [seeded] = seedEntries([groceries]);
     const session = setupReadyParty();
     // Tom added an entry remotely that Jane doesn't have.
@@ -256,11 +256,11 @@ describe("no-wizard sync paths", () => {
 
     await clickSync(user);
 
-    // Routed to the placeholder review screen (nothing applied unreviewed).
+    // Routed to the review wizard (nothing applied unreviewed). This
+    // assertion moved from the earlier placeholder copy to the wizard's
+    // progress text — the safe-abandonment invariants below are unchanged.
     expect(await screen.findByText("Review changes")).toBeInTheDocument();
-    expect(
-      screen.getByText(/1 incoming change to review/)
-    ).toBeInTheDocument();
+    expect(screen.getByText("Item 1 of 1")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Cancel review" }));
     expect(confirmSpy).toHaveBeenCalledWith(

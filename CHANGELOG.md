@@ -5,6 +5,61 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.11.1] - 2026-09-15
+
+### Fixed
+
+- Review wizard, Modify form: "Save & accept" now requires a valid date and
+  a numeric amount. Clearing the Date field used to stage `NaN`, which was
+  written locally and uploaded to the whole party as `date: null` — the
+  entry then vanished from the dashboard; clearing Amount saved an empty
+  amount, or silently turned a bucket's monthly allowance into `0`
+- Review wizard, Modify form: saving no longer rewrites an entry's
+  timestamp to local midnight when the date was not actually changed, which
+  re-synced the entry to every other member as a change nobody made
+- Review wizard: a brand-new fixed entry or bucket is now presented as ONE
+  card carrying its resolved current state, with the decision applying to
+  its whole history (`docs/multi-user-sync/RFC.md` §4.1). It used to be one
+  card per history state, so a definition could be accepted in part,
+  leaving a history no member ever had. An edit to a definition this device
+  already has is still its own card
+- Review wizard: leaving mid-review through the app navigation now asks the
+  same confirmation as the "Cancel review" button instead of silently
+  discarding the staged decisions (AC-3.11)
+- Review wizard, Modify form: the Category combobox now has an accessible
+  name (its label was missing the id `CategorySearchSelect` points at), and
+  an incoming item filed under a category this device does not have shows
+  that category instead of reading as "Select a category"
+
+## [1.11.0] - 2026-09-15
+
+### Added
+
+- Review wizard (multi-user sync): incoming changes are now reviewed one
+  item per screen at `/sync-review` (`docs/multi-user-sync/DESIGN.md` §4.3,
+  AC-3.4 in `docs/multi-user-sync/PRD.md`) — kind badge, amount /
+  description / category / date (or the fixed-entry and bucket
+  equivalents) and attribution ("Added by {name}", or "Added anonymously"
+  for legacy items) — with Accept, Modify (an inline edit before accepting;
+  the edited value is what gets merged and uploaded, EC-5) and Reject, each
+  with an item-specific accessible name. This replaces the minimal
+  "Review changes" placeholder from 1.10.0
+- Accept all / Reject all shortcuts acting on the remaining unreviewed
+  items behind a confirmation (AC-3.5)
+- Decisions are staged in memory only (`docs/multi-user-sync/RFC.md` §4.3
+  steps 4–6): nothing on this device changes until the final upload
+  succeeds, so canceling or navigating away mid-review is always safe and
+  the next sync re-presents everything still outstanding
+- On upload success the merged data is applied locally, rejected items are
+  permanently remembered so they are never re-prompted (a re-edited version
+  still is; AC-3.9/EC-4), and "Last synced" updates. A version conflict
+  mid-review discards the staged decisions and offers "Sync again" (EC-2);
+  a network failure keeps them with a Retry (AC-3.11/EC-3); being blocked
+  (or the party canceled) mid-review returns to Data Management with the
+  matching declined banner (EC-9)
+- Sync card: a failed party check now says "Couldn't check your party"
+  instead of showing "Checking your party…" forever
+
 ## [1.10.1] - 2026-09-13
 
 ### Fixed
