@@ -2,10 +2,11 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route } from "react-router-dom";
+import { Link, MemoryRouter, Route } from "react-router-dom";
 import { setupStore } from "../../redux/store";
 import { SYNC_PENDING_REVIEW_SET } from "../../redux/syncManager/actions";
 import { PendingReview } from "../../redux/syncManager/reducer";
+import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
   clearPendingReview,
   completeReview,
@@ -76,7 +77,36 @@ const tomsSalary = {
   },
 };
 
-const stagedReview = (items = [tomsCinema, tomsSalary]): PendingReview => ({
+// A fixed entry this device has never seen, as it arrives: every history
+// state of the definition (RFC §4.1).
+const netflixState = (from: string, amount: string) => ({
+  key: `fixed:f1:${from}`,
+  hash: `hash-f1-${from}`,
+  kind: "fixed" as const,
+  isChange: false,
+  isNewDefinition: true,
+  fixed: {
+    id: "f1",
+    type: "expense",
+    state: {
+      from,
+      amount,
+      description: "Netflix",
+      categories_path: ",fun,",
+      addedBy: { id: "user-2", name: "Tom" },
+    },
+  },
+});
+
+const netflixHistory = [
+  netflixState("2026-01", "9"),
+  netflixState("2026-03", "11"),
+  netflixState("2026-05", "13"),
+];
+
+const stagedReview = (
+  items: IncomingItem[] = [tomsCinema, tomsSalary]
+): PendingReview => ({
   items,
   baseVersion: "3",
 });
@@ -90,8 +120,16 @@ const renderReview = (pendingReview: PendingReview | null) => {
   const user = userEvent.setup();
   render(
     <Provider store={store}>
-      <MemoryRouter initialEntries={["/sync-review"]}>
+      <MemoryRouter
+        initialEntries={["/sync-review"]}
+        // What BrowserRouter uses by default; memory history has none.
+        getUserConfirmation={(message, callback) =>
+          callback(window.confirm(message))
+        }
+      >
         <SyncReview />
+        {/* Stands in for the Dashboard nav bar the wizard renders inside. */}
+        <Link to="/dashboard">Home</Link>
         <Route
           path="*"
           render={({ location }) => (
@@ -201,6 +239,87 @@ describe("walking the items", () => {
   });
 });
 
+describe("a brand-new fixed entry / bucket (RFC §4.1)", () => {
+  it("is one card showing its current state, not one card per history state", () => {
+    renderReview(stagedReview(netflixHistory));
+
+    expect(screen.getByText("Item 1 of 1")).toBeInTheDocument();
+    expect(screen.getByText("$13.00")).toBeInTheDocument();
+    expect(screen.getByText("From 2026-05")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "New here — your decision covers its full history (3 changes)."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("applies one Accept to every one of its states", async () => {
+    const { user } = renderReview(stagedReview(netflixHistory));
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Accept $13.00 fixed expense added by tom",
+      })
+    );
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+
+    await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
+    expect(lastCompletion().acceptedItems).toEqual(netflixHistory);
+    expect(lastCompletion().rejectedItems).toEqual([]);
+    // One decision, counted once.
+    expect(screen.queryByText("Item 2 of 3")).not.toBeInTheDocument();
+  });
+
+  it("applies one Reject to every one of its states", async () => {
+    const { user } = renderReview(stagedReview(netflixHistory));
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Reject $13.00 fixed expense added by tom",
+      })
+    );
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+
+    await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
+    expect(lastCompletion().acceptedItems).toEqual([]);
+    expect(lastCompletion().rejectedItems).toEqual(
+      netflixHistory.map((item) => ({ key: item.key, hash: item.hash }))
+    );
+  });
+
+  it("stages a modification on the current state and the rest untouched", async () => {
+    const { user } = renderReview(stagedReview(netflixHistory));
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Modify $13.00 fixed expense added by tom",
+      })
+    );
+    const amount = screen.getByLabelText("Amount");
+    await user.clear(amount);
+    await user.type(amount, "15");
+    await user.click(screen.getByRole("button", { name: "Save & accept" }));
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+
+    await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
+    expect(
+      lastCompletion().acceptedItems.map((item: any) => item.fixed.state.amount)
+    ).toEqual(["9", "11", "15"]);
+  });
+
+  it("keeps an edit to a definition this device already has as its own card", () => {
+    const edits = netflixHistory
+      .slice(1)
+      .map((item) => ({ ...item, isNewDefinition: false }));
+    renderReview(stagedReview(edits));
+
+    expect(screen.getByText("Item 1 of 2")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/your decision covers its full history/)
+    ).not.toBeInTheDocument();
+  });
+});
+
 describe("Modify (DESIGN §4.3.2, EC-5)", () => {
   it("stages the edited values as an accepted, modified item", async () => {
     const { user } = renderReview(stagedReview([tomsCinema]));
@@ -220,6 +339,66 @@ describe("Modify (DESIGN §4.3.2, EC-5)", () => {
 
     await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
     expect(lastCompletion().acceptedItems[0].entry.amount).toBe("50");
+  });
+
+  it("keeps the original time of day when the date field was not touched", async () => {
+    const { user } = renderReview(stagedReview([tomsCinema]));
+
+    await user.click(
+      screen.getByRole("button", { name: "Modify $42.10 expense added by tom" })
+    );
+    const amount = screen.getByLabelText("Amount");
+    await user.clear(amount);
+    await user.type(amount, "50");
+    await user.click(screen.getByRole("button", { name: "Save & accept" }));
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+
+    await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
+    // Not silently rewritten to local midnight, which would re-sync to
+    // every member as a change the user never made.
+    expect(lastCompletion().acceptedItems[0].entry.date).toBe(
+      tomsCinema.entry.date
+    );
+  });
+
+  it("refuses to save an empty date", async () => {
+    const { user } = renderReview(stagedReview([tomsCinema]));
+
+    await user.click(
+      screen.getByRole("button", { name: "Modify $42.10 expense added by tom" })
+    );
+    await user.clear(screen.getByLabelText("Date"));
+
+    expect(screen.getByText("Enter a date.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save & accept" })).toBeDisabled();
+  });
+
+  it("refuses to save an empty or non-numeric amount", async () => {
+    const { user } = renderReview(stagedReview([tomsCinema]));
+
+    await user.click(
+      screen.getByRole("button", { name: "Modify $42.10 expense added by tom" })
+    );
+    const amount = screen.getByLabelText("Amount");
+    await user.clear(amount);
+
+    expect(screen.getByText("Enter a number.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save & accept" })).toBeDisabled();
+
+    await user.type(amount, "12");
+    expect(
+      screen.getByRole("button", { name: "Save & accept" })
+    ).not.toBeDisabled();
+  });
+
+  it("names the Category combobox for assistive tech", async () => {
+    const { user } = renderReview(stagedReview([tomsCinema]));
+
+    await user.click(
+      screen.getByRole("button", { name: "Modify $42.10 expense added by tom" })
+    );
+
+    expect(screen.getByRole("combobox", { name: "Category" })).toBeInTheDocument();
   });
 
   it("Cancel returns to the read-only card without recording a decision", async () => {
@@ -349,5 +528,54 @@ describe("Cancel review", () => {
     expect(clearPendingReviewMock).toHaveBeenCalledTimes(1);
     expect(completeReviewMock).not.toHaveBeenCalled();
     expect(screen.getByTestId("location")).toHaveTextContent("/data-management");
+  });
+
+  it("asks only once — the route guard lets the wizard's own exit through", async () => {
+    const { user } = renderReview(stagedReview());
+    await user.click(
+      screen.getByRole("button", { name: "Accept $42.10 expense added by tom" })
+    );
+
+    await user.click(screen.getByRole("button", { name: "Cancel review" }));
+
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("leaving through the app nav (AC-3.11)", () => {
+  it("asks the same question as Cancel review before discarding decisions", async () => {
+    const { user } = renderReview(stagedReview());
+    await user.click(
+      screen.getByRole("button", { name: "Accept $42.10 expense added by tom" })
+    );
+
+    await user.click(screen.getByRole("link", { name: "Home" }));
+
+    expect(confirmSpy).toHaveBeenCalledWith(
+      "Stop reviewing? None of your choices in this session will be saved. You can sync again anytime."
+    );
+    expect(screen.getByTestId("location")).toHaveTextContent("/dashboard");
+  });
+
+  it("stays on the wizard with the decisions intact when declined", async () => {
+    confirmSpy.mockReturnValue(false);
+    const { user } = renderReview(stagedReview());
+    await user.click(
+      screen.getByRole("button", { name: "Accept $42.10 expense added by tom" })
+    );
+
+    await user.click(screen.getByRole("link", { name: "Home" }));
+
+    expect(screen.getByTestId("location")).toHaveTextContent("/sync-review");
+    expect(screen.getByText("Item 2 of 2")).toBeInTheDocument();
+  });
+
+  it("does not ask when nothing has been decided yet", async () => {
+    const { user } = renderReview(stagedReview());
+
+    await user.click(screen.getByRole("link", { name: "Home" }));
+
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(screen.getByTestId("location")).toHaveTextContent("/dashboard");
   });
 });

@@ -37,7 +37,15 @@ export async function renderApp(
   await act(async () => {
     result = render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[initialRoute]}>
+        {/* createMemoryHistory has no getUserConfirmation of its own, so
+            without this a <Prompt> route guard would silently allow every
+            navigation here while BrowserRouter confirms in the real app. */}
+        <MemoryRouter
+          initialEntries={[initialRoute]}
+          getUserConfirmation={(message, callback) =>
+            callback(window.confirm(message))
+          }
+        >
           <WithBalance>
             <WithDataDisclaimer>
               {/** @ts-ignore */}

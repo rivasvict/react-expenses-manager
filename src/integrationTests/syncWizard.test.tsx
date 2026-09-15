@@ -244,3 +244,201 @@ describe("review wizard", () => {
     expect(screen.queryByText(/Cinema$/)).not.toBeInTheDocument();
   });
 });
+
+/**
+ * RFC §4.1: "A brand-new fixed entry / bucket arrives as its full set of
+ * states but is presented as one wizard card (its resolved current state);
+ * its decision applies to all its pending states." Only a definition this
+ * device has never seen groups — a new state on one it already has stays
+ * its own card.
+ */
+describe("a brand-new definition's history (RFC §4.1)", () => {
+  const netflix = {
+    id: "tom-netflix",
+    type: "expense",
+    history: [
+      {
+        from: "2026-01",
+        amount: "9",
+        description: "Netflix",
+        categories_path: ",eating out,",
+        addedBy: tomStamp,
+      },
+      {
+        from: "2026-03",
+        amount: "11",
+        description: "Netflix",
+        categories_path: ",eating out,",
+        addedBy: tomStamp,
+      },
+      {
+        from: "2026-05",
+        amount: "13",
+        description: "Netflix",
+        categories_path: ",eating out,",
+        addedBy: tomStamp,
+      },
+    ],
+  };
+
+  const seedNetflixParty = (fixedEntries: any[] = [netflix]) => {
+    const session = setupReadyParty();
+    server.seedRemoteBackup(remoteEnvelope({ fixedEntries }) as any);
+    return session;
+  };
+
+  it("is one card carrying the resolved current state, and one Accept applies every state", async () => {
+    const session = seedNetflixParty();
+    const { user } = await renderApp("/data-management", { session });
+
+    await startSync(user);
+
+    // One card for the whole definition — not one per history state.
+    expect(await screen.findByText("Item 1 of 1")).toBeInTheDocument();
+    expect(screen.getByText("Fixed Expense")).toBeInTheDocument();
+    expect(screen.getByText("$13.00")).toBeInTheDocument();
+    expect(screen.getByText("From 2026-05")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "New here — your decision covers its full history (3 changes)."
+      )
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^Accept \$13\.00/ }));
+    expect(
+      await screen.findByText("1 accepted · 0 modified · 0 rejected")
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+    await user.click(await screen.findByRole("button", { name: "Done" }));
+
+    // The current month resolves to the latest state…
+    await user.click(screen.getByRole("link", { name: "Home" }));
+    await user.click(await screen.findByRole("link", { name: /fixed entries/i }));
+    expect(await screen.findByText(/Netflix/)).toBeInTheDocument();
+    expect(screen.getAllByText("$13.00").length).toBeGreaterThan(0);
+
+    // …and the states before it came across with it, so past months still
+    // report what the rest of the party reports.
+    const [upload] = server.getUploadedBackups();
+    expect(
+      upload.envelope.data.fixedEntries[0].history.map(
+        (state: any) => state.from
+      )
+    ).toEqual(["2026-01", "2026-03", "2026-05"]);
+  });
+
+  it("one Reject drops the whole definition, leaving no partial history", async () => {
+    const session = seedNetflixParty();
+    const { user } = await renderApp("/data-management", { session });
+
+    await startSync(user);
+    expect(await screen.findByText("Item 1 of 1")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /^Reject \$13\.00/ }));
+    await user.click(
+      await screen.findByRole("button", { name: "Upload & finish" })
+    );
+    await user.click(await screen.findByRole("button", { name: "Done" }));
+
+    await user.click(screen.getByRole("link", { name: "Home" }));
+    await user.click(await screen.findByRole("link", { name: /fixed entries/i }));
+    expect(screen.queryByText(/Netflix/)).not.toBeInTheDocument();
+  });
+
+  it("an edit to a definition this device already has stays its own card", async () => {
+    // The device already holds the first state, so the two later ones are
+    // edits — reviewed one by one, as before.
+    const session = seedNetflixParty();
+    server.seedRemoteBackup(remoteEnvelope({ fixedEntries: [netflix] }) as any);
+    const { user } = await renderApp("/data-management", { session });
+
+    await startSync(user);
+    await user.click(
+      await screen.findByRole("button", { name: /^Accept \$13\.00/ })
+    );
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+    await user.click(await screen.findByRole("button", { name: "Done" }));
+
+    // Tom raises it again: a single new state on a definition this device
+    // now has.
+    server.seedRemoteBackup(
+      remoteEnvelope({
+        fixedEntries: [
+          {
+            ...netflix,
+            history: [
+              ...netflix.history,
+              {
+                from: "2026-06",
+                amount: "15",
+                description: "Netflix",
+                categories_path: ",eating out,",
+                addedBy: tomStamp,
+              },
+            ],
+          },
+        ],
+      }) as any
+    );
+    await startSync(user);
+
+    expect(await screen.findByText("Item 1 of 1")).toBeInTheDocument();
+    expect(screen.getByText("$15.00")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/your decision covers its full history/)
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe("leaving the wizard through the app nav (AC-3.11)", () => {
+  it("asks before discarding staged decisions, and keeps them when declined", async () => {
+    const [seeded] = seedEntries([groceries]);
+    const session = setupReadyParty();
+    server.seedRemoteBackup(
+      remoteEnvelope({
+        balance: [
+          seeded,
+          {
+            id: "tom-entry",
+            date: ts(2026, MAY, 10),
+            amount: "42.1",
+            description: "Cinema",
+            type: "expense",
+            categories_path: ",eating out,",
+            addedBy: tomStamp,
+          },
+          {
+            id: "tom-taxi",
+            date: ts(2026, MAY, 11),
+            amount: "18",
+            description: "Taxi",
+            type: "expense",
+            categories_path: ",eating out,",
+            addedBy: tomStamp,
+          },
+        ],
+      }) as any
+    );
+    const { user } = await renderApp("/data-management", { session });
+
+    await startSync(user);
+    await user.click(
+      await screen.findByRole("button", { name: /^Accept \$42\.10/ })
+    );
+    expect(await screen.findByText("Item 2 of 2")).toBeInTheDocument();
+
+    // Declining the confirmation keeps the user on the wizard, mid-review.
+    confirmSpy.mockReturnValueOnce(false);
+    await user.click(screen.getByRole("link", { name: "Home" }));
+
+    expect(confirmSpy).toHaveBeenLastCalledWith(
+      "Stop reviewing? None of your choices in this session will be saved. You can sync again anytime."
+    );
+    expect(await screen.findByText("Item 2 of 2")).toBeInTheDocument();
+
+    // Accepting it leaves — and nothing was written, so a fresh sync offers
+    // both items again.
+    await user.click(screen.getByRole("link", { name: "Home" }));
+    expect(await screen.findByText(/Add Expenses/i)).toBeInTheDocument();
+    expect(server.getUploadedBackups()).toHaveLength(0);
+  });
+});

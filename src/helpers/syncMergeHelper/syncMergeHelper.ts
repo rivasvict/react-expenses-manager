@@ -28,6 +28,24 @@ export interface IncomingItem extends SyncItem {
   // True when the local snapshot has the same itemKey with different
   // content — an edit by another member, not a brand-new item.
   isChange: boolean;
+  // True for a fixed entry / bucket this device has never seen at all —
+  // not merely a new history state on a definition it already has. RFC
+  // §4.1: such a definition "arrives as its full set of states but is
+  // presented as one wizard card". Always false for entries.
+  isNewDefinition?: boolean;
+}
+
+// One review card's worth of incoming items: a single item for entries and
+// for edits to a definition this device already has, or every history state
+// of a brand-new fixed entry / bucket (RFC §4.1).
+export interface ReviewGroup {
+  // Stable identity for staging a decision: the definition key for a
+  // grouped brand-new definition, otherwise the item's own key.
+  key: string;
+  // The state shown on the card — the definition's resolved current state.
+  item: IncomingItem;
+  // Every state the card's decision applies to (always includes `item`).
+  items: IncomingItem[];
 }
 
 // Rejection memory (AC-3.9/EC-4): content hashes rejected per itemKey.
@@ -117,6 +135,29 @@ const itemHashByKey = (data: BackupData): Map<string, string> => {
   return map;
 };
 
+// `fixed:{id}` / `bucket:{lowercased name}` — the definition a history
+// state belongs to. Entries stand alone, so they have none.
+export const definitionKeyOf = (item: SyncItem): string | null => {
+  if (item.kind === "fixed" && item.fixed) return `fixed:${item.fixed.id}`;
+  if (item.kind === "bucket" && item.bucket)
+    return `bucket:${item.bucket.name.toLowerCase()}`;
+  return null;
+};
+
+// The definitions a snapshot holds, read from the raw data rather than from
+// extractItems, so a legacy plain-number bucket (no history to sync) still
+// counts as a definition this device already has.
+const definitionKeys = (data: BackupData): Set<string> => {
+  const keys = new Set<string>();
+  (data.fixedEntries || []).forEach((definition: any) =>
+    keys.add(`fixed:${definition.id}`)
+  );
+  Object.keys(data.buckets || {}).forEach((name) =>
+    keys.add(`bucket:${name.toLowerCase()}`)
+  );
+  return keys;
+};
+
 // The diff, on download (RFC §4.2). Additive-only: a remote backup lacking
 // a local item never deletes anything locally.
 export const diffSnapshots = ({
@@ -129,14 +170,76 @@ export const diffSnapshots = ({
   rejections?: Rejections;
 }): IncomingItem[] => {
   const local = itemHashByKey(localData);
+  const localDefinitions = definitionKeys(localData);
   const incoming: IncomingItem[] = [];
   extractItems(remoteData).forEach((item) => {
     if (local.get(item.key) === item.hash) return; // already applied / own
     if ((rejections[item.key] || []).indexOf(item.hash) !== -1) return; // EC-4
-    incoming.push({ ...item, isChange: local.has(item.key) });
+    const definitionKey = definitionKeyOf(item);
+    incoming.push({
+      ...item,
+      isChange: local.has(item.key),
+      isNewDefinition:
+        definitionKey !== null && !localDefinitions.has(definitionKey),
+    });
   });
   return incoming;
 };
+
+// `from` orders a definition's history; "0000-00" (the beginning) sorts
+// first, so the resolved current state is simply the largest one.
+const isLaterState = (item: IncomingItem, other: IncomingItem): boolean => {
+  const from = (candidate: IncomingItem) =>
+    (candidate.fixed || candidate.bucket)?.state?.from || "";
+  return from(item) > from(other);
+};
+
+/**
+ * Turns the diffed items into the wizard's cards (RFC §4.1). Every state of
+ * a BRAND-NEW fixed entry / bucket collapses into one group carrying its
+ * resolved current state, so one accept/reject decision applies to the whole
+ * definition and no member can end up with a history that never existed. An
+ * edit to a definition this device already has stays its own card, as does
+ * every entry. Input order is preserved (a group takes its first state's
+ * position).
+ */
+export const groupIncomingItems = (items: IncomingItem[]): ReviewGroup[] => {
+  const groups: ReviewGroup[] = [];
+  const byDefinition = new Map<string, ReviewGroup>();
+
+  items.forEach((incoming) => {
+    const definitionKey = incoming.isNewDefinition
+      ? definitionKeyOf(incoming)
+      : null;
+    if (definitionKey === null) {
+      groups.push({ key: incoming.key, item: incoming, items: [incoming] });
+      return;
+    }
+    const group = byDefinition.get(definitionKey);
+    if (!group) {
+      const created = { key: definitionKey, item: incoming, items: [incoming] };
+      byDefinition.set(definitionKey, created);
+      groups.push(created);
+      return;
+    }
+    group.items.push(incoming);
+    if (isLaterState(incoming, group.item)) group.item = incoming;
+  });
+
+  return groups;
+};
+
+// The items a decision on `group` applies to, with the card's own state
+// replaced by `stagedItem` when the user modified it (EC-5).
+export const groupItemsWith = (
+  group: ReviewGroup,
+  stagedItem?: IncomingItem
+): IncomingItem[] =>
+  stagedItem
+    ? group.items.map((item) =>
+        item.key === group.item.key ? stagedItem : item
+      )
+    : group.items;
 
 // Two snapshots hold the same content when their syncable units match
 // exactly (order-insensitive) and their category lists are equal as sets.
