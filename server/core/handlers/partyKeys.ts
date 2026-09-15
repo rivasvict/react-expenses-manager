@@ -19,3 +19,10 @@ export const partyKey = (partyId: string): string => `parties/${partyId}`;
 // what the CAS on the party record protects.
 export const invitationPointerKey = (lookupHash: string): string =>
   `invitations/${lookupHash}`;
+
+// The party's backup object (RFC §2.1) — its own versioned key, next to but
+// separate from the party document: the two are written under independent
+// compare-and-swaps, so a member uploading a backup never races the
+// organizer blocking a member, and block/cancel never touch the backup.
+export const backupKey = (partyId: string): string =>
+  `parties/${partyId}.backup`;

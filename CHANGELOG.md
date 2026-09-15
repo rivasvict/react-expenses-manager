@@ -5,6 +5,51 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.10.1] - 2026-09-13
+
+### Fixed
+
+- Sync: a party backup written against a backup schema version this build
+  does not know is no longer reported as "Couldn't reach your party. Check
+  your connection and try again." The sync flow now re-throws
+  `parseBackupEnvelope`'s refusal as the new `UNSUPPORTED_SCHEMA_VERSION`
+  contract code (`docs/multi-user-sync/RFC.md` §3), and the sync card shows
+  a banner naming the real cause — the device's app version is behind the
+  rest of the party's — so the user can act on it. Negotiating the schema
+  version end to end (server-side validation, migrate-forward policy)
+  remains tracked in issue #170
+
+## [1.10.0] - 2026-09-12
+
+### Added
+
+- Sync engine (multi-user sync): a manual "Sync with party" card on Data
+  Management — never automatic (AC-3.1, `docs/multi-user-sync/PRD.md`) —
+  that downloads the party backup, diffs it against local data and handles
+  every no-review path end to end (`docs/multi-user-sync/RFC.md` §4.3):
+  the first sync (no remote backup yet) uploads local data as the party's
+  starting point with a distinct confirmation, identical states show
+  "You're up to date.", and local-only additions upload silently; a single
+  version conflict restarts transparently
+- Explanatory captions under the sync button for every disabled state
+  (logged out, no party, blocked, canceled) plus a "Last synced" caption
+  (`docs/multi-user-sync/DESIGN.md` §4.1); download failures, stale
+  blocked/canceled rejections and repeated version conflicts each get their
+  own alert, leaving local data untouched (AC-3.11)
+- Incoming changes route to a minimal "Review changes" screen offering only
+  Cancel review — nothing is ever applied unreviewed; the item-by-item
+  review wizard arrives in a later release
+- Client merge engine (`syncMergeHelper`, `docs/multi-user-sync/RFC.md`
+  §4.1–4.2): canonical hashing, item identity, additive-only diff with
+  permanent per-item rejection memory persisted in `sync.state` (RFC §2.2),
+  and merge application incl. fixed-entry tombstones and case-insensitive
+  bucket keys
+- Server: real backup download and upload (`docs/multi-user-sync/RFC.md`
+  §3, endpoints 9–10) — the upload is a baseVersion compare-and-swap,
+  create-only for the first sync and `409 VERSION_CONFLICT` on a stale
+  version; the placeholder `501 NOT_IMPLEMENTED` answer is gone
+- Existing Download/Restore/Clear-all cards are untouched (AC-3.7)
+
 ## [1.9.1] - 2026-09-12
 
 ### Fixed

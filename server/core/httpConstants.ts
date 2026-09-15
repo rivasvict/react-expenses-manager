@@ -17,7 +17,6 @@ export const HTTP_STATUS = {
   GONE: 410,
   PAYLOAD_TOO_LARGE: 413,
   INTERNAL_SERVER_ERROR: 500,
-  NOT_IMPLEMENTED: 501,
 } as const;
 
 export type HttpStatus = (typeof HTTP_STATUS)[keyof typeof HTTP_STATUS];
@@ -50,11 +49,13 @@ export const ERROR_CODES = {
   // Raised when a compare-and-swap on the party record loses its retry to a
   // concurrent update; the caller is expected to retry the whole request.
   CONFLICT: "CONFLICT",
+  // PUT /api/party/backup whose `baseVersion` no longer matches the stored
+  // backup (EC-2, RFC §3 endpoint 10) — including a create-only upload
+  // (`baseVersion: null`) when a backup already exists. Distinct from
+  // CONFLICT: there is no retry to exhaust, the client must download again.
+  VERSION_CONFLICT: "VERSION_CONFLICT",
   PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
   INTERNAL_ERROR: "INTERNAL_ERROR",
-  // Temporary scaffolding, not part of RFC §3: PUT /api/party/backup answers
-  // with it until the sync engine lands in a later PR. Remove it then.
-  NOT_IMPLEMENTED: "NOT_IMPLEMENTED",
 } as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];

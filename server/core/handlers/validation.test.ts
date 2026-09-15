@@ -1,7 +1,21 @@
 // Unit tests for the request-field guards (./validation.ts).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isEmail, isNonEmptyString, requestFields } from "./validation";
+import {
+  isEmail,
+  isNonEmptyString,
+  isRecord,
+  requestFields,
+} from "./validation";
+
+test("isRecord accepts objects and arrays but no other JSON value", () => {
+  assert.equal(isRecord({}), true);
+  assert.equal(isRecord({ data: 1 }), true);
+  assert.equal(isRecord([]), true);
+
+  for (const value of [undefined, null, 0, 42, "text", true])
+    assert.equal(isRecord(value), false, `expected false for ${JSON.stringify(value)}`);
+});
 
 test("requestFields hands back the body's own fields when it is an object", () => {
   const body = { email: "jane@example.com", password: 42 };

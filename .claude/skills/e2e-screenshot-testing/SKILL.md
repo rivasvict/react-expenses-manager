@@ -20,12 +20,42 @@ it diverged from the repo's main branch.
 ```bash
 BASE_BRANCH=$(git remote show origin 2>/dev/null | sed -n '/HEAD branch/s/.*: //p')
 BASE_BRANCH=${BASE_BRANCH:-master}
-MERGE_BASE=$(git merge-base HEAD "origin/$BASE_BRANCH" 2>/dev/null || git merge-base HEAD "$BASE_BRANCH")
+git fetch origin "$BASE_BRANCH"
+MERGE_BASE=$(git merge-base HEAD "origin/$BASE_BRANCH")
 git diff --name-only --diff-filter=AM "$MERGE_BASE"...HEAD -- src/integrationTests
 ```
 
+**Always fetch the base branch from origin first** (`git fetch origin
+"$BASE_BRANCH"`) and diff against `origin/$BASE_BRANCH`, never a possibly
+stale local `master`/main branch ref. A stale local base branch makes files
+that were already merged upstream (via another PR) look like they belong
+to the current branch, inflating the scope with cases that don't belong to
+it. Confirm the base branch's local ref is updated too (e.g.
+`git fetch origin "$BASE_BRANCH":"$BASE_BRANCH"` if safe to fast-forward,
+or just rely on `origin/$BASE_BRANCH` throughout) before computing the
+diff.
+
 If that list is empty, ask the user which test(s) to target rather than
 guessing.
+
+## Get user approval before running
+
+Before starting the app or spawning the subagent: read each target test
+file, enumerate every distinct state/scenario it asserts, and present the
+user a concise list of the cases you intend to capture (grouped by test
+file). Ask them to confirm this matches what actually changed on the
+branch, or tell you to add/drop cases. Only proceed to standing up the app
+and spawning the subagent after they approve the list.
+
+## Sample data fixture
+
+`src/integrationTests/fixtures/expenses-backup.sample.json` holds a
+ready-made set of expense/income entries. Use it, when a scenario in scope
+for this run actually needs existing/non-empty data to look realistic,
+instead of hand-typing entries in the browser — seed it via the same API
+path used for other test data (e.g. restore/import it against the running
+app or sync server). Only reach for it if the approved case list has such
+a scenario; don't seed it by default.
 
 ## Delegate to a subagent
 
@@ -35,11 +65,23 @@ the main conversation.
 
 - Spawn with `Agent` (not `fork` — this needs a clean slate, not the parent's
   history).
-- Prefer the **cheapest capable model**: start with `haiku`. If the Haiku
-  agent reports it is stuck (can't get a reliable selector, keeps hitting
-  the same login race, genuinely ambiguous scenario), re-spawn the same task
-  with `sonnet` instead of trying to debug it from the parent — don't spend
-  parent-context effort steering a stuck cheap model.
+- **Evaluate model capability before picking, don't default to the cheapest
+  tier blind.** Before spawning, look at what the approved case list
+  actually demands, on this specific run — don't assume any fixed sequence
+  of steps is required regardless of what the tests cover. As a rough
+  guide, cases needing multi-step API sequencing across several dependent
+  calls, fixture-data seeding, persona-switching across tabs, or recovering
+  from ambiguous DOM state require sustained multi-step judgment, not just
+  single-shot tool calls (e.g., a case list involving chaining several
+  setup calls together to reach a state, is a heavier case than one that's
+  just "sign in, load a page, screenshot it"). If most of the approved
+  cases skew toward the heavier end, spawn directly on a capable model
+  (`sonnet`) — do not start on `haiku` "to save cost" when the case list
+  already tells you it will get stuck. Reserve `haiku` for genuinely
+  mechanical runs with no real state seeding. This kind of case has been
+  tried on this codebase before and Haiku gave up on the seeding-heavy
+  cases each time — treat that as evidence, not a one-off, when judging
+  future case lists here.
 - Give the subagent the full protocol below verbatim plus the concrete diff
   scope (file list) you computed, since a fresh agent has no memory of this
   session.
@@ -74,6 +116,27 @@ check, don't assume:
    Do not fall back to static/inline-HTML mockups or skip the screenshots —
    either the browser tooling works or the user is told what to enable.
 
+## No git-tracked changes
+
+Running this task must **not** result in any changes tracked by git. All
+work output stays in `src/.e2e-screenshots/` (which is gitignored).
+
+If temporary tools, scripts, or helpers are needed during the run (e.g., a
+Playwright script to drive screenshots, an API helper, or test data), they
+must live inside the run's screenshot directory in a `tools/` subdirectory:
+
+```
+src/.e2e-screenshots/<branch-name>/tools/
+  screenshot-driver.ts
+  api-seeder.ts
+  <other temp utilities>
+```
+
+These are cleanup-optional scratch files, not repo changes. Do not edit any
+files under `src/` or elsewhere in the repo (except the gitignored
+screenshot folder). If an edge case requires a test file change to proceed,
+stop and escalate to the parent rather than making the change yourself.
+
 ## Standing up the app
 
 Check both before doing anything else:
@@ -93,6 +156,32 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4000/api/me || echo do
   began, leave it running when you finish — it may be the user's own dev
   session. Kill your own backgrounded processes only after screenshots are
   captured and the report is written (success or failure).
+
+## Temporary code edits for extreme cases (race conditions only)
+
+In rare cases where a scenario is physically impossible to reproduce live
+without timing changes (e.g., a race condition between two overlapping API
+calls, or a millisecond-precision window that cannot be widened via API
+calls alone), **temporary, minor edits to the codebase are allowed**:
+
+- Add a brief delay (e.g., `await new Promise(r => setTimeout(r, N))`)
+- Add console.log markers for debugging
+- Any other minimal instrumentation strictly needed to widen the timing
+  window or create the condition
+
+**Strict rules:**
+1. Only use this when the live app + its real backend have **no other way**
+   to reach that state — this is a last resort, not a shortcut.
+2. **Revert completely** before finishing. Every edit must be undone: `git
+   checkout` the file(s), verify with `git diff` and `git status` that
+   nothing remains.
+3. **Report it in the final report.** Name which file(s) were edited, what
+   change was made, why it was necessary, and confirm it was fully reverted
+   (showing the `git diff`/`git status` proof that nothing remains).
+
+This technique is only for bridging unbridgeable timing gaps, not for
+bypassing hard-to-reach states that have a real API path (use the API path
+instead).
 
 ## Reproducing the test scenarios live
 
@@ -129,9 +218,74 @@ asserts (e.g. "dismissed confirm leaves X unchanged", "row shows Blocked",
    immediately following a page navigation can miss because the page
    hasn't settled yet. Read the input's `.value` back (via the browser's JS
    evaluation) after typing, or take a screenshot, before clicking submit.
-5. Capture one screenshot per asserted state, in the order the test file
-   presents them, right after the state is reached (not before, not several
-   actions later).
+5. **Capture one screenshot per asserted state on each screen involved.**
+   When a test asserts multiple things (e.g., "error alert appears" AND
+   "dashboard entry is still there"), capture screenshots of BOTH states,
+   not just the primary one. If a case narrates verifying something on a
+   secondary screen ("then re-checked X and it still shows Y"), that
+   verification must have a screenshot — no narrative-only verification
+   without visual proof. Capture in the order the test file presents them,
+   right after each state is reached (not before, not several actions later).
+
+## Every approved case must be captured — no silent downgrade
+
+Once the user has approved a case list, **capturing a screenshot for every
+case is a hard requirement, not a best-effort target.** "The test suite
+passes" is never a substitute for a screenshot and must never be reported
+as if it closes out a case — the whole point of this skill is a *visual*
+proof the automated suite cannot provide on its own.
+
+Every distinct assertion in a case must have visual proof. If a case
+narrates verifying something on a second or third screen (e.g.,
+"dashboard was then re-checked and the entry still renders"), that claim
+needs its own screenshot — do not skip it just because the primary
+assertion (the error alert) was already captured. "Proven by the test
+suite" is never an acceptable substitute for a screenshot, including
+secondary-screen assertions.
+
+If a case seems hard to reproduce live (state seeding, injected server
+errors, a multi-step flow), that is expected — work through it via the API
+seeding approach above rather than concluding it "requires the fake test
+server" or "requires database access." Whatever a test file's fake-server
+helper does to reach a state, the real server it's faking almost always
+supports the same operation for real — e.g. a race/conflict a test injects
+via the fake server can usually be reproduced with two real overlapping API
+calls instead of something only a mock can produce. Check what the fake
+helper actually does before deciding a state is unreachable live.
+
+**The fake test server is not off-limits, but it is a last resort, not a
+shortcut.** Using it to seed or drive a state for the live walkthrough is
+only acceptable when the live app plus its real backend genuinely has no
+way to reach that state (e.g. a fault the real server structurally cannot
+be made to produce). It must never be reached for merely because seeding
+the state via real API calls is more steps or more effort — that is exactly
+the case the previous paragraph exists to rule out. If you do fall back to
+it, say so explicitly in `CASES.md` next to that case, with the reason the
+live path was not possible.
+
+If, after real attempts, a specific case truly cannot be reproduced against
+the live app (rather than merely being effortful), the subagent must **stop
+and escalate to the parent** rather than write it into `CASES.md` as "not
+captured" and move on. Report exactly which case, what was tried, and why
+it's blocked, so the parent can decide whether to hand the same run to a
+more capable model or adjust scope — a finished run with unexplained gaps
+quietly marked "proven by tests only" is a failed run, not a partial
+success.
+
+## Suspected bugs block the case, not the run
+
+If a case cannot be captured because the live app appears to behave
+incorrectly — not a selector/automation problem, but the app doing
+something the test/spec says it shouldn't (wrong copy, wrong state, an
+error where none is expected, a control that should be disabled but isn't,
+etc.) — do not silently work around it, do not "fix" it yourself, and do
+not mark the case as captured against the buggy behavior. Stop on that
+case, capture whatever evidence you have (screenshot, console/network
+output, the exact steps that produced it), and report it back to the
+parent as a suspected bug rather than a blocked case. Wait for instructions
+on whether to fix it before continuing — do not decide unilaterally to
+patch the app mid-run just to get a screenshot. Other, independent cases in
+the same run may continue while awaiting that decision.
 
 ## Also run the real test suite
 
@@ -144,30 +298,59 @@ npm test -- --testPathPattern="<name-fragment>" --watchAll=false
 
 ## Where screenshots go
 
-Save every screenshot under:
+One flat folder **per branch** — never per test file, per feature, or
+nested subdirectories:
 
 ```
-src/.e2e-screenshots/<feature-purpose>/
+src/.e2e-screenshots/<branch-name>/
 ```
 
-`<feature-purpose>` is a descriptive, dashed, **at most 5 words** slug for
-what the tests cover (e.g. `party-block-and-cancel`, `bucket-limits`,
-`csv-import-export`) — not the test file's literal name. Name each file so
-its place in the scenario order and what it proves are both obvious, e.g.:
+`<branch-name>` is the current git branch name with `/` replaced by `-`
+(e.g. `sync-stack/5-sync-engine` → `sync-stack-5-sync-engine`). All
+screenshots for the run live directly inside this one folder — no
+per-test-file or per-feature subdirectories.
+
+**Filename format:** `[case_number]-[description].jpg` for the primary
+assertion of each case. For cases requiring multiple screenshots (when one
+case asserts states across multiple screens), add a sub-index suffix:
+`[case_number]_[n]-[description].jpg` where `n` increments (1, 2, 3…) for
+each additional screen within the same case. This makes it instantly clear
+which screenshots belong together and why each screen matters.
 
 ```
-src/.e2e-screenshots/party-block-and-cancel/
-  01-no-party-yet.jpg
-  02-party-created-organizer-alone.jpg
+src/.e2e-screenshots/sync-stack-5-sync-engine/
+  01-accounts-logged-out.jpg
+  02-accounts-signup-form.jpg
+  03-party-created-organizer-alone.jpg
   ...
-  06-block-confirmed-row-shows-blocked.jpg
+  10-download-failure-alert.jpg
+  10_1-download-failure-dashboard-unchanged.jpg
+  11-blocked-after-load-alert.jpg
+  11_1-blocked-after-load-card-disabled.jpg
+  12-partyManagement-block-confirmed-row-shows-blocked.jpg
+CASES.md
 ```
+
+**Isolate runs:** before capturing anything, delete and recreate this
+branch's folder (`rm -rf src/.e2e-screenshots/<branch-name>` then
+`mkdir -p`) so a re-run never mixes stale screenshots from a previous
+attempt with the current one.
+
+**`CASES.md`:** alongside the screenshots (same folder, not a
+subdirectory), write a plain list of every test case covered in this run —
+one line per case, grouped by source test file, each naming the screenshot
+file(s) that prove it. For cases with multiple screenshots (e.g., case 10
+with both `10-alert.jpg` and `10_1-dashboard.jpg`), list them together on
+the same line so their relationship is clear. This is the same list the user
+approved before the run started; update it to reflect what was actually
+captured (including any scenario marked as not reproducible, and why).
 
 This directory is gitignored (`/src/.e2e-screenshots`) — it is scratch
 proof for the user to review, not a repo artifact. **Never delete it
-yourself** once written; it stays until the user explicitly asks for it to
-be removed (in this session or a later one). Do not clean it up as part of
-"finishing" the task — only the servers you started get torn down.
+yourself** once written (other than the pre-run cleanup of the same
+branch's folder above); it stays until the user explicitly asks for it to
+be removed. Do not clean it up as part of "finishing" the task — only the
+servers you started get torn down.
 
 ## Final report
 
@@ -175,10 +358,18 @@ Report back (from the subagent, then relayed by the parent to the user):
 
 - The list of test files covered and the scope (diff range) used.
 - Whether `npm test` passed for those files.
-- The screenshot directory path and a short list mapping each file to the
-  scenario it proves.
-- Any scenario that could **not** be reproduced live (e.g. a test that
-  relies on injecting a synthetic server error only the fake test server
-  can produce) — name it and say why, rather than silently skipping it.
+- The absolute screenshot directory path, given as a plain path the user
+  can copy-paste straight into their file explorer (no markdown link
+  wrapping, no backticks that would need stripping).
+- The full list of test cases covered, i.e. the contents of `CASES.md` —
+  every approved case must appear with a captured screenshot (see "Every
+  approved case must be captured" above). A report listing cases as "not
+  captured, proven by test suite only" is not a completed run; if that
+  happened, say so explicitly as a failure/escalation, not as a finished
+  deliverable.
 - Which servers (if any) you started and then stopped, vs. ones that were
   already running and left alone.
+- Any suspected bug hit along the way (see "Suspected bugs block the case,
+  not the run" above), called out on its own — not folded into the case
+  list — with the evidence gathered and awaiting the user's decision on
+  whether to fix it.

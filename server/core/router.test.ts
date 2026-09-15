@@ -275,14 +275,17 @@ test("the cancel and backup routes are wired to their own handlers", async () =>
   assert.equal(download.status, HTTP_STATUS.NOT_FOUND);
   assert.equal(errorCode(download), ERROR_CODES.NO_BACKUP);
 
+  // An empty envelope fails putBackup's own shape check — a message no other
+  // handler produces.
   const upload = await app.handle({
     method: "PUT",
     path: "/api/party/backup",
     headers: organizer.headers,
     body: { baseVersion: null, envelope: {} },
   });
-  assert.equal(upload.status, HTTP_STATUS.NOT_IMPLEMENTED);
-  assert.equal(errorCode(upload), ERROR_CODES.NOT_IMPLEMENTED);
+  assert.equal(upload.status, HTTP_STATUS.BAD_REQUEST);
+  assert.equal(errorCode(upload), ERROR_CODES.VALIDATION_ERROR);
+  assert.equal(errorMessage(upload), "A valid backup envelope is required.");
 
   const canceled = (await app.handle({
     method: "POST",

@@ -1,5 +1,13 @@
 import { config } from "../../config";
-import { blockMember, cancelParty, getMe, login, signup } from "./index";
+import {
+  blockMember,
+  cancelParty,
+  getBackup,
+  getMe,
+  login,
+  putBackup,
+  signup,
+} from "./index";
 import { SYNC_ERROR_CODES, SyncApiError, isSyncApiError } from "./contract";
 
 /**
@@ -178,6 +186,94 @@ describe("syncApi", () => {
       expect(options.method).toBe("POST");
       expect(options.headers.Authorization).toBe("Bearer tok");
       expect(JSON.parse(options.body)).toEqual({});
+    });
+  });
+
+  describe("backup", () => {
+    const envelope = {
+      app: "react-expenses-manager",
+      schemaVersion: 1,
+      exportedAt: "2026-05-15T12:00:00.000Z",
+      data: { balance: [], buckets: {}, categories: [], fixedEntries: [] },
+    };
+
+    it("getBackup GETs the backup path with a bearer token and no body", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ version: "3", envelope }));
+
+      await expect(getBackup({ token: "tok" })).resolves.toEqual({
+        version: "3",
+        envelope,
+      });
+
+      const [url, options] = fetchMock.mock.calls[0];
+      expect(url).toBe(`${HOST}/api/party/backup`);
+      expect(options.method).toBe("GET");
+      expect(options.headers.Authorization).toBe("Bearer tok");
+      expect(options.body).toBeUndefined();
+    });
+
+    it("getBackup surfaces NO_BACKUP as a SyncApiError for the caller to interpret (EC-1)", async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse(
+          {
+            error: {
+              code: SYNC_ERROR_CODES.NO_BACKUP,
+              message: "No backup has been uploaded yet.",
+            },
+          },
+          { ok: false, status: 404 }
+        )
+      );
+
+      const error = await catchError(() => getBackup({ token: "tok" }));
+
+      expect(error.code).toBe(SYNC_ERROR_CODES.NO_BACKUP);
+      expect(error.status).toBe(404);
+    });
+
+    it("putBackup PUTs baseVersion and envelope as JSON with a bearer token", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ version: "4" }));
+
+      await expect(
+        putBackup({ token: "tok", baseVersion: "3", envelope })
+      ).resolves.toEqual({ version: "4" });
+
+      const [url, options] = fetchMock.mock.calls[0];
+      expect(url).toBe(`${HOST}/api/party/backup`);
+      expect(options.method).toBe("PUT");
+      expect(options.headers.Authorization).toBe("Bearer tok");
+      expect(JSON.parse(options.body)).toEqual({ baseVersion: "3", envelope });
+    });
+
+    it("putBackup sends a literal null baseVersion for the create-only first sync", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ version: "1" }));
+
+      await putBackup({ token: "tok", baseVersion: null, envelope });
+
+      // `null` must survive serialization — an omitted field would be
+      // rejected by the server rather than read as "create only".
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body).baseVersion).toBeNull();
+    });
+
+    it("putBackup surfaces VERSION_CONFLICT with its 409 status (EC-2)", async () => {
+      fetchMock.mockResolvedValue(
+        jsonResponse(
+          {
+            error: {
+              code: SYNC_ERROR_CODES.VERSION_CONFLICT,
+              message: "The party backup changed since your download.",
+            },
+          },
+          { ok: false, status: 409 }
+        )
+      );
+
+      const error = await catchError(() =>
+        putBackup({ token: "tok", baseVersion: "1", envelope })
+      );
+
+      expect(error.code).toBe(SYNC_ERROR_CODES.VERSION_CONFLICT);
+      expect(error.status).toBe(409);
     });
   });
 

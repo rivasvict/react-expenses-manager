@@ -20,6 +20,29 @@ const getTimestampFromMonthAndYear = ({ month, year }) =>
 const getYearMonthKey = ({ year, month }) =>
   `${year}-${String(month + 1).padStart(2, "0")}`;
 
+// Short human-relative rendering for the sync card's "Last synced: …"
+// caption (docs/multi-user-sync/DESIGN.md §4.1). Coarse on purpose — a
+// muted caption, not a clock.
+//
+// TODO:
+// This module has no test file. formatRelativeTime is only exercised
+// end-to-end through src/integrationTests/syncNoWizard.test.tsx ("Last
+// synced: just now"); the minute/hour/day thresholds and the calendar-date
+// fallback have no direct coverage, nor do the older helpers above.
+// Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/160
+const formatRelativeTime = (timestampMs, nowMs = Date.now()) => {
+  const elapsedMs = Math.max(0, nowMs - timestampMs);
+  const minutes = Math.floor(elapsedMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return days === 1 ? "1 day ago" : `${days} days ago`;
+  return dayjs(timestampMs).format("MMM D, YYYY");
+};
+
 export {
   getCurrentYear,
   getCurrentMonth,
@@ -27,4 +50,5 @@ export {
   getCurrentTimestamp,
   getTimestampFromMonthAndYear,
   getYearMonthKey,
+  formatRelativeTime,
 };

@@ -62,6 +62,25 @@ export interface InvitationPointer {
   partyId: string;
 }
 
+// The uploaded backup as the client built it (docs/multi-user-sync/RFC.md
+// §2.3, the single-file backup envelope). The server keeps it opaque apart
+// from the app id and the presence of `data` — every merge decision is the
+// client's — so only the two fields it checks are named here.
+export interface BackupEnvelope {
+  app: string;
+  data: Record<string, unknown>;
+  [field: string]: unknown;
+}
+
+// The persisted party backup, stored under its own versioned key (see
+// ./handlers/partyKeys.ts). `uploadedBy`/`uploadedAt` are server-side
+// bookkeeping; the client only ever gets `envelope` back.
+export interface BackupRecord {
+  uploadedBy: string;
+  uploadedAt: number;
+  envelope: BackupEnvelope;
+}
+
 // --- Wire shapes ----------------------------------------------------------
 
 // The subset of the user record that is safe to return over the wire.
@@ -108,11 +127,25 @@ export interface InvitationBody {
   code: string;
 }
 
+// GET /api/party/backup (RFC §3, endpoint 9): the stored envelope plus the
+// version the client must hand back as `baseVersion` on its next upload.
+export interface BackupBody {
+  version: string;
+  envelope: BackupEnvelope;
+}
+
+// PUT /api/party/backup (RFC §3, endpoint 10): the version just written.
+export interface BackupVersionBody {
+  version: string;
+}
+
 export type ResponseBody =
   | SessionBody
   | MeBody
   | PartyBody
   | InvitationBody
+  | BackupBody
+  | BackupVersionBody
   | ErrorBody;
 
 // Mirrors node:http's IncomingHttpHeaders so the http adapter can pass its

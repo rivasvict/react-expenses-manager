@@ -78,7 +78,7 @@ export const createHandlers = ({
     }),
     blockMember: createBlockMemberHandler({ authenticate, mutateParty }),
     cancelParty: createCancelPartyHandler({ authenticate, mutateParty }),
-    getBackup: createGetBackupHandler({ requirePartyAccess }),
-    putBackup: createPutBackupHandler({ requirePartyAccess }),
+    getBackup: createGetBackupHandler({ storage, requirePartyAccess }),
+    putBackup: createPutBackupHandler({ storage, requirePartyAccess, now }),
   };
 };
