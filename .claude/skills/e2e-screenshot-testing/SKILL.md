@@ -157,6 +157,32 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4000/api/me || echo do
   session. Kill your own backgrounded processes only after screenshots are
   captured and the report is written (success or failure).
 
+## Temporary code edits for extreme cases (race conditions only)
+
+In rare cases where a scenario is physically impossible to reproduce live
+without timing changes (e.g., a race condition between two overlapping API
+calls, or a millisecond-precision window that cannot be widened via API
+calls alone), **temporary, minor edits to the codebase are allowed**:
+
+- Add a brief delay (e.g., `await new Promise(r => setTimeout(r, N))`)
+- Add console.log markers for debugging
+- Any other minimal instrumentation strictly needed to widen the timing
+  window or create the condition
+
+**Strict rules:**
+1. Only use this when the live app + its real backend have **no other way**
+   to reach that state — this is a last resort, not a shortcut.
+2. **Revert completely** before finishing. Every edit must be undone: `git
+   checkout` the file(s), verify with `git diff` and `git status` that
+   nothing remains.
+3. **Report it in the final report.** Name which file(s) were edited, what
+   change was made, why it was necessary, and confirm it was fully reverted
+   (showing the `git diff`/`git status` proof that nothing remains).
+
+This technique is only for bridging unbridgeable timing gaps, not for
+bypassing hard-to-reach states that have a real API path (use the API path
+instead).
+
 ## Reproducing the test scenarios live
 
 Read each target `*.test.tsx` file and enumerate every distinct state it
