@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button, Form } from "react-bootstrap";
 import {
@@ -82,11 +82,33 @@ const ModifyForm = ({
 
   const entryType =
     item.kind === "entry" ? item.entry.type : item.fixed?.type || "expense";
-  const categoryOptions = getEntryCategoryOption(
-    entryType,
-    buckets,
-    unbudgetedCategories
-  );
+  // The options are this device's categories, so an incoming item filed
+  // under a category this device does not have would read as "Select a
+  // category" while its real one sat untouched in the data. Its own
+  // category is offered as an extra option, spelled exactly as stored, so
+  // the reviewer sees what they are deciding on and saving without
+  // touching the field keeps the value byte for byte.
+  const ownCategory = useMemo(() => {
+    const path = source.categories_path || "";
+    const segments = path.split(",").filter((segment) => segment.trim() !== "");
+    return segments.length ? { path, name: segments.join(", ") } : null;
+  }, [source.categories_path]);
+
+  const categoryOptions = useMemo(() => {
+    const options =
+      getEntryCategoryOption(entryType, buckets, unbudgetedCategories) || [];
+    if (!ownCategory) return options;
+    // CategorySelector wraps an option's value as `,{value},`, so the extra
+    // option is only representable for the canonical `,category,` format.
+    const ownValue = ownCategory.path.replace(/^,/, "").replace(/,$/, "");
+    if (`,${ownValue},` !== ownCategory.path) return options;
+    const isKnown = options.some(
+      (option: any) => `,${option.value},` === ownCategory.path
+    );
+    return isKnown
+      ? options
+      : [...options, { name: ownCategory.name, value: ownValue }];
+  }, [entryType, buckets, unbudgetedCategories, ownCategory]);
 
   const handleSave = (event: React.FormEvent) => {
     event.preventDefault();

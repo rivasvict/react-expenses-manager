@@ -401,6 +401,32 @@ describe("Modify (DESIGN §4.3.2, EC-5)", () => {
     expect(screen.getByRole("combobox", { name: "Category" })).toBeInTheDocument();
   });
 
+  it("shows a category this device does not have, and keeps it byte for byte", async () => {
+    const foreign = {
+      ...tomsCinema,
+      entry: { ...tomsCinema.entry, categories_path: ",Pets," },
+    };
+    const { user } = renderReview(stagedReview([foreign]));
+
+    await user.click(
+      screen.getByRole("button", { name: "Modify $42.10 expense added by tom" })
+    );
+
+    // Not "Select a category", which would hide the real value behind a
+    // blank field one click away from being replaced.
+    expect(screen.getByRole("combobox", { name: "Category" })).toHaveTextContent(
+      "Pets"
+    );
+
+    await user.click(screen.getByRole("button", { name: "Save & accept" }));
+    await user.click(screen.getByRole("button", { name: "Upload & finish" }));
+
+    await waitFor(() => expect(completeReviewMock).toHaveBeenCalledTimes(1));
+    expect(lastCompletion().acceptedItems[0].entry.categories_path).toBe(
+      ",Pets,"
+    );
+  });
+
   it("Cancel returns to the read-only card without recording a decision", async () => {
     const { user } = renderReview(stagedReview([tomsCinema]));
 

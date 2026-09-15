@@ -27,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   same confirmation as the "Cancel review" button instead of silently
   discarding the staged decisions (AC-3.11)
 - Review wizard, Modify form: the Category combobox now has an accessible
-  name (its label was missing the id `CategorySearchSelect` points at)
+  name (its label was missing the id `CategorySearchSelect` points at), and
+  an incoming item filed under a category this device does not have shows
+  that category instead of reading as "Select a category"
 
 ## [1.11.0] - 2026-09-15
 
