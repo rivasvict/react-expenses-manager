@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.11.1] - 2026-09-15
+
+### Fixed
+
+- Review wizard, Modify form: "Save & accept" now requires a valid date and
+  a numeric amount. Clearing the Date field used to stage `NaN`, which was
+  written locally and uploaded to the whole party as `date: null` — the
+  entry then vanished from the dashboard; clearing Amount saved an empty
+  amount, or silently turned a bucket's monthly allowance into `0`
+- Review wizard, Modify form: saving no longer rewrites an entry's
+  timestamp to local midnight when the date was not actually changed, which
+  re-synced the entry to every other member as a change nobody made
+- Review wizard: a brand-new fixed entry or bucket is now presented as ONE
+  card carrying its resolved current state, with the decision applying to
+  its whole history (`docs/multi-user-sync/RFC.md` §4.1). It used to be one
+  card per history state, so a definition could be accepted in part,
+  leaving a history no member ever had. An edit to a definition this device
+  already has is still its own card
+- Review wizard: leaving mid-review through the app navigation now asks the
+  same confirmation as the "Cancel review" button instead of silently
+  discarding the staged decisions (AC-3.11)
+- Review wizard, Modify form: the Category combobox now has an accessible
+  name (its label was missing the id `CategorySearchSelect` points at)
+
 ## [1.11.0] - 2026-09-15
 
 ### Added
