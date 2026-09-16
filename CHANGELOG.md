@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.11.2] - 2026-09-16
+
+### Fixed
+
+- Review wizard: the production build (`CI=true npm run build`, which treats
+  ESLint warnings as errors) failed on a `react-hooks/exhaustive-deps`
+  warning in `SyncReview`. The incoming items were read into a local
+  `const items = pendingReview ? pendingReview.items : []`, so with no
+  pending review a brand-new empty array was allocated on every render and
+  the `useMemo` that groups them into review cards recomputed every time.
+  The fallback now lives inside the memo callback, which depends on the
+  stable `pendingReview` instead
+
 ## [1.11.1] - 2026-09-15
 
 ### Fixed

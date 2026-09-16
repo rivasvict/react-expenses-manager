@@ -31,7 +31,8 @@ import "./styles.scss";
 interface Decision {
   action: "accept" | "reject";
   // Every item the card's decision covers — one for an entry or an edit, a
-  // brand-new definition's whole history for a grouped card (RFC §4.1).
+  // brand-new definition's whole history for a grouped card
+  // (docs/multi-user-sync/RFC.md §4.1).
   // For accepted cards these may carry modified values (EC-5); for
   // rejections they stay the originals, whose hashes feed the memory.
   items: IncomingItem[];
@@ -83,10 +84,15 @@ const SyncReview = ({
   // below does not ask a second time on top of the flow's own confirm.
   const isLeavingDeliberately = useRef(false);
 
-  const items = pendingReview ? pendingReview.items : [];
   // RFC §4.1: a brand-new fixed entry / bucket is ONE card covering all of
   // its history states; everything else is one card per item.
-  const groups = useMemo(() => groupIncomingItems(items), [items]);
+  // The empty-list fallback lives inside the callback so the
+  // memo depends on the stable `pendingReview` rather than on an array that
+  // would be freshly allocated — and so recompute — on every render.
+  const groups = useMemo(
+    () => groupIncomingItems(pendingReview ? pendingReview.items : []),
+    [pendingReview]
+  );
   const remaining = groups.filter((group) => !decisions[group.key]);
   const currentGroup = remaining[0];
   const reviewedCount = groups.length - remaining.length;
