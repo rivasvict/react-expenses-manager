@@ -226,6 +226,22 @@ asserts (e.g. "dismissed confirm leaves X unchanged", "row shows Blocked",
    verification must have a screenshot — no narrative-only verification
    without visual proof. Capture in the order the test file presents them,
    right after each state is reached (not before, not several actions later).
+6. **Capture the precondition, not just the outcome.** An end-state
+   screenshot alone doesn't prove the test's action caused the change — it
+   only proves the app ended up in that state. Before performing the
+   action a case asserts on, take a screenshot of the state as it exists
+   immediately beforehand (e.g. the row before it's blocked, the list
+   before the item is deleted, the form before submission, the balance
+   before the entry is added). This applies whenever the case's assertion
+   is about a *change* (something appeared, disappeared, updated, got
+   blocked/unblocked, etc.) — a case whose assertion is about a state that
+   isn't the result of an in-test action (e.g. "signed-out user sees the
+   login form") doesn't need a separate precondition shot, since the first
+   screenshot already establishes the initial condition. Where a
+   precondition shot applies, name it with a `_0` suffix so it sorts
+   before the outcome: `[case_number]_0-[description]-before.jpg`, then
+   `[case_number]-[description].jpg` for the outcome, and further `_1`,
+   `_2`… for any additional post-action screens as before.
 
 ## Every approved case must be captured — no silent downgrade
 
@@ -312,10 +328,12 @@ per-test-file or per-feature subdirectories.
 
 **Filename format:** `[case_number]-[description].jpg` for the primary
 assertion of each case. For cases requiring multiple screenshots (when one
-case asserts states across multiple screens), add a sub-index suffix:
-`[case_number]_[n]-[description].jpg` where `n` increments (1, 2, 3…) for
-each additional screen within the same case. This makes it instantly clear
-which screenshots belong together and why each screen matters.
+case asserts states across multiple screens, or needs a precondition shot
+per point 6 above), add a sub-index suffix:
+`[case_number]_[n]-[description].jpg` where `n` is `0` for the precondition
+(when captured) and increments (1, 2, 3…) for each additional screen after
+the primary outcome. This makes it instantly clear which screenshots
+belong together, in what order, and why each screen matters.
 
 ```
 src/.e2e-screenshots/sync-stack-5-sync-engine/
@@ -323,10 +341,13 @@ src/.e2e-screenshots/sync-stack-5-sync-engine/
   02-accounts-signup-form.jpg
   03-party-created-organizer-alone.jpg
   ...
+  10_0-download-failure-dashboard-before.jpg
   10-download-failure-alert.jpg
   10_1-download-failure-dashboard-unchanged.jpg
+  11_0-blocked-after-load-card-before.jpg
   11-blocked-after-load-alert.jpg
   11_1-blocked-after-load-card-disabled.jpg
+  12_0-partyManagement-row-before-block.jpg
   12-partyManagement-block-confirmed-row-shows-blocked.jpg
 CASES.md
 ```
