@@ -1,5 +1,6 @@
-import { reducer, SyncManagerState } from "./reducer";
+import { reducer, PendingReview, SyncManagerState } from "./reducer";
 import {
+  SYNC_DECLINED_SET,
   SYNC_PARTY_SET,
   SYNC_PENDING_REVIEW_SET,
   SYNC_SESSION_CLEARED,
@@ -63,7 +64,21 @@ const loggedOut = (): SyncManagerState => ({
   session: null,
   party: null,
   partyStatusResolved: false,
-  pendingReviewCount: null,
+  pendingReview: null,
+  declined: null,
+});
+
+// A staged review as the sync thunk leaves it (RFC §4.3 step 4): the diffed
+// items plus the version of the exact download they came from.
+const stagedReview = (itemCount = 1): PendingReview => ({
+  baseVersion: "3",
+  items: Array.from({ length: itemCount }, (_, index) => ({
+    key: `entry:e${index + 1}`,
+    hash: `hash-${index + 1}`,
+    kind: "entry",
+    isChange: false,
+    entry: { id: `e${index + 1}`, amount: "10", type: "expense" },
+  })),
 });
 
 const loggedIn = (
@@ -215,52 +230,96 @@ describe("syncManager reducer", () => {
 
     it("drops a pending review along with the session", () => {
       const state = reducer(
-        loggedIn(jane, { party: janesParty, partyStatusResolved: true, pendingReviewCount: 3 }),
+        loggedIn(jane, {
+          party: janesParty,
+          partyStatusResolved: true,
+          pendingReview: stagedReview(3),
+        }),
         { type: SYNC_SESSION_CLEARED }
       );
 
       // A review belongs to the party it was downloaded from; whoever signs
-      // in next must not inherit its count.
-      expect(state.pendingReviewCount).toBeNull();
+      // in next must not inherit its items.
+      expect(state.pendingReview).toBeNull();
+    });
+
+    it("drops a mid-review declined reason along with the session", () => {
+      const state = reducer(
+        loggedIn(jane, { party: janesParty, partyStatusResolved: true, declined: "blocked" }),
+        { type: SYNC_SESSION_CLEARED }
+      );
+
+      expect(state.declined).toBeNull();
     });
   });
 
   describe("SYNC_PENDING_REVIEW_SET", () => {
-    it("stores the incoming-change count for the review screen", () => {
+    it("stages the diffed items and their baseVersion for the review wizard", () => {
+      const review = stagedReview(2);
       const state = reducer(loggedIn(jane, { party: janesParty }), {
         type: SYNC_PENDING_REVIEW_SET,
-        payload: { pendingReviewCount: 2 },
+        payload: { pendingReview: review },
       });
 
-      expect(state.pendingReviewCount).toBe(2);
+      expect(state.pendingReview).toEqual(review);
     });
 
-    it("clears the count when the payload carries null (review abandoned)", () => {
-      const state = reducer(loggedIn(jane, { pendingReviewCount: 2 }), {
+    it("clears the review when the payload carries null (review abandoned)", () => {
+      const state = reducer(loggedIn(jane, { pendingReview: stagedReview(2) }), {
         type: SYNC_PENDING_REVIEW_SET,
-        payload: { pendingReviewCount: null },
+        payload: { pendingReview: null },
       });
 
-      expect(state.pendingReviewCount).toBeNull();
+      expect(state.pendingReview).toBeNull();
     });
 
-    it("treats a missing count as no pending review", () => {
-      const state = reducer(loggedIn(jane, { pendingReviewCount: 2 }), {
+    it("treats a missing review as no pending review", () => {
+      const state = reducer(loggedIn(jane, { pendingReview: stagedReview(2) }), {
         type: SYNC_PENDING_REVIEW_SET,
       });
 
-      expect(state.pendingReviewCount).toBeNull();
+      expect(state.pendingReview).toBeNull();
     });
 
     it("leaves the session and party alone", () => {
       const state = reducer(
         loggedIn(jane, { party: janesParty, partyStatusResolved: true }),
-        { type: SYNC_PENDING_REVIEW_SET, payload: { pendingReviewCount: 1 } }
+        { type: SYNC_PENDING_REVIEW_SET, payload: { pendingReview: stagedReview() } }
       );
 
       expect(state.session).toEqual(jane);
       expect(state.party).toEqual(janesParty);
       expect(state.partyStatusResolved).toBe(true);
+    });
+  });
+
+  describe("SYNC_DECLINED_SET", () => {
+    it("records why an upload was declined mid-review, for the sync card's banner", () => {
+      const state = reducer(loggedIn(jane, { party: janesParty }), {
+        type: SYNC_DECLINED_SET,
+        payload: { declined: "canceled" },
+      });
+
+      expect(state.declined).toBe("canceled");
+    });
+
+    it("clears the reason once the banner has been shown", () => {
+      const state = reducer(loggedIn(jane, { declined: "blocked" }), {
+        type: SYNC_DECLINED_SET,
+        payload: { declined: null },
+      });
+
+      expect(state.declined).toBeNull();
+    });
+
+    it("leaves the staged review alone", () => {
+      const review = stagedReview();
+      const state = reducer(loggedIn(jane, { pendingReview: review }), {
+        type: SYNC_DECLINED_SET,
+        payload: { declined: "blocked" },
+      });
+
+      expect(state.pendingReview).toEqual(review);
     });
   });
 

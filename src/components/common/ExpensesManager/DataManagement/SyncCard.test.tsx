@@ -4,7 +4,11 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route } from "react-router-dom";
 import { setupStore } from "../../../../redux/store";
-import { SYNC_PARTY_SET } from "../../../../redux/syncManager/actions";
+import {
+  SYNC_DECLINED_SET,
+  SYNC_PARTY_SET,
+} from "../../../../redux/syncManager/actions";
+import { DeclinedReason } from "../../../../redux/syncManager/reducer";
 import { refreshMe } from "../../../../redux/syncManager/actionCreators";
 import { syncWithParty } from "../../../../redux/syncManager/syncThunk";
 import { setSession, SyncSession } from "../../../../services/session";
@@ -50,6 +54,8 @@ const janesParty: Party = {
 
 // With redux-thunk a returned function is invoked and its promise handed
 // back to the component.
+const meCheckResolvesWith = (succeeded: boolean) =>
+  refreshMeMock.mockReturnValue(() => Promise.resolve(succeeded));
 const syncResolvesWith = (outcome: unknown) =>
   syncWithPartyMock.mockReturnValue(() => Promise.resolve(outcome));
 const syncRejectsWith = (error: unknown) =>
@@ -61,13 +67,17 @@ interface RenderOptions {
   session?: SyncSession;
   // `undefined` leaves the party unresolved (no /me answer yet).
   party?: Party | null;
+  // A blocked/canceled rejection the review wizard carried back.
+  declined?: DeclinedReason;
 }
 
-const renderCard = ({ session, party }: RenderOptions = {}) => {
+const renderCard = ({ session, party, declined }: RenderOptions = {}) => {
   if (session) setSession(session);
   const store = setupStore();
   if (party !== undefined)
     store.dispatch({ type: SYNC_PARTY_SET, payload: { party } });
+  if (declined)
+    store.dispatch({ type: SYNC_DECLINED_SET, payload: { declined } });
   const user = userEvent.setup();
   render(
     <Provider store={store}>
@@ -93,7 +103,7 @@ const clickSync = (user: ReturnType<typeof userEvent.setup>) =>
 beforeEach(() => {
   window.localStorage.clear();
   refreshMeMock.mockReset();
-  refreshMeMock.mockReturnValue({ type: "REFRESH_ME_MOCK" });
+  meCheckResolvesWith(true);
   syncWithPartyMock.mockReset();
 });
 
@@ -120,6 +130,31 @@ describe("gating captions", () => {
     renderCard({ session: jane });
 
     expect(refreshMeMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("a failed party check says so instead of checking forever", async () => {
+    meCheckResolvesWith(false);
+
+    renderCard({ session: jane });
+
+    expect(
+      await screen.findByText(
+        "Couldn't check your party. It will retry when you reopen this screen."
+      )
+    ).toBeInTheDocument();
+    expect(syncButton()).toBeDisabled();
+  });
+
+  it("a failed check does not override a party the store already knows", async () => {
+    meCheckResolvesWith(false);
+
+    renderCard({ session: jane, party: janesParty });
+
+    expect(screen.getByText("Never synced yet")).toBeInTheDocument();
+    await waitFor(() => expect(refreshMeMock).toHaveBeenCalled());
+    expect(
+      screen.queryByText(/Couldn't check your party/)
+    ).not.toBeInTheDocument();
   });
 
   it("signed in without a party: disabled with the create/join caption", () => {
@@ -217,6 +252,39 @@ describe("outcomes", () => {
     await waitFor(() =>
       expect(screen.getByTestId("location")).toHaveTextContent("/sync-review")
     );
+  });
+});
+
+describe("declined mid-review (docs/multi-user-sync/DESIGN.md §4.3.4)", () => {
+  it("shows the blocked banner the wizard carried back", async () => {
+    renderCard({ session: jane, party: janesParty, declined: "blocked" });
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "This sync was declined: you've been removed from your party by its organizer. Nothing on this device was changed."
+    );
+  });
+
+  it("shows the canceled banner the wizard carried back", async () => {
+    renderCard({ session: jane, party: janesParty, declined: "canceled" });
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "This sync was declined: your party was canceled. Nothing on this device was changed."
+    );
+  });
+
+  it("a new sync attempt clears the carried-back banner", async () => {
+    syncResolvesWith({ type: "up-to-date" });
+    const { user } = renderCard({
+      session: jane,
+      party: janesParty,
+      declined: "blocked",
+    });
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+
+    await clickSync(user);
+
+    expect(await screen.findByText("You're up to date.")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 });
 

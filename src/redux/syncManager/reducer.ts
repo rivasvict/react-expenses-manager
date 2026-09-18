@@ -4,12 +4,24 @@
 // docs/multi-user-sync/PRD.md.
 import { getSession, SyncSession } from "../../services/session";
 import { Party } from "../../services/syncApi/contract";
+import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import {
+  SYNC_DECLINED_SET,
   SYNC_PARTY_SET,
   SYNC_PENDING_REVIEW_SET,
   SYNC_SESSION_CLEARED,
   SYNC_SESSION_SET,
 } from "./actions";
+
+// The diffed items and the version of the exact download they came from
+// (RFC §4.3 step 4): the wizard consumes THIS set — it never re-downloads,
+// so decisions always bind to what the user was shown.
+export interface PendingReview {
+  items: IncomingItem[];
+  baseVersion: string;
+}
+
+export type DeclinedReason = "blocked" | "canceled";
 
 export interface SyncManagerState {
   session: SyncSession | null;
@@ -19,10 +31,13 @@ export interface SyncManagerState {
   // False until the first /me refresh resolves, so screens can tell
   // "no party" apart from "not loaded yet".
   partyStatusResolved: boolean;
-  // Incoming-change count for the /sync-review screen (RFC §4.3 step 4);
-  // null when no review is pending. The full staged item set arrives with
-  // the review wizard in a later PR — nothing is ever applied unreviewed.
-  pendingReviewCount: number | null;
+  // Incoming changes staged for /sync-review; null when nothing pending.
+  // Nothing is ever applied unreviewed.
+  pendingReview: PendingReview | null;
+  // A blocked/canceled rejection discovered mid-review, carried back for
+  // the Data Management card's banner (docs/multi-user-sync/DESIGN.md
+  // §4.3.4 → §4.2).
+  declined: DeclinedReason | null;
 }
 
 interface SyncAction {
@@ -30,7 +45,8 @@ interface SyncAction {
   payload?: {
     session?: SyncSession;
     party?: Party | null;
-    pendingReviewCount?: number | null;
+    pendingReview?: PendingReview | null;
+    declined?: DeclinedReason | null;
   };
 }
 
@@ -41,7 +57,8 @@ const getDefaultState = (): SyncManagerState => ({
   session: getSession(),
   party: null,
   partyStatusResolved: false,
-  pendingReviewCount: null,
+  pendingReview: null,
+  declined: null,
 });
 
 export const reducer = (
@@ -60,7 +77,8 @@ export const reducer = (
         session: null,
         party: null,
         partyStatusResolved: false,
-        pendingReviewCount: null,
+        pendingReview: null,
+        declined: null,
       };
     case SYNC_PARTY_SET:
       return {
@@ -71,8 +89,10 @@ export const reducer = (
     case SYNC_PENDING_REVIEW_SET:
       return {
         ...currentState,
-        pendingReviewCount: action.payload?.pendingReviewCount ?? null,
+        pendingReview: action.payload?.pendingReview ?? null,
       };
+    case SYNC_DECLINED_SET:
+      return { ...currentState, declined: action.payload?.declined ?? null };
     default:
       return currentState;
   }

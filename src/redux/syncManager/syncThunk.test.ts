@@ -10,16 +10,25 @@ import {
   SYNC_ERROR_CODES,
   createSyncApiError,
 } from "../../services/syncApi/contract";
-import { contentHash } from "../../helpers/syncMergeHelper/syncMergeHelper";
+import {
+  contentHash,
+  IncomingItem,
+} from "../../helpers/syncMergeHelper/syncMergeHelper";
+import { RESTORE_BACKUP } from "../expensesManager/actions";
 import { SYNC_PENDING_REVIEW_SET } from "./actions";
-import { clearPendingReview, syncWithParty } from "./syncThunk";
+import {
+  clearPendingReview,
+  completeReview,
+  syncWithParty,
+} from "./syncThunk";
 
 /**
- * Unit tests for the no-wizard sync flow (docs/multi-user-sync/RFC.md §4.3).
- * The HTTP client and the local snapshot are mocked, so these pin the
- * decision logic: which outcome each download/diff combination produces,
- * exactly what is uploaded with which baseVersion, and that sync.state is
- * written only when an upload succeeded (AC-3.11, docs/multi-user-sync/PRD.md).
+ * Unit tests for the sync flow (docs/multi-user-sync/RFC.md §4.3). The HTTP
+ * client and the local snapshot are mocked, so these pin the decision logic:
+ * which outcome each download/diff combination produces, exactly what is
+ * uploaded with which baseVersion, what a completed review commits, and
+ * that sync.state and local data are written only when an upload succeeded
+ * (AC-3.11, docs/multi-user-sync/PRD.md).
  */
 
 jest.mock("../../services/syncApi", () => ({
@@ -30,8 +39,10 @@ jest.mock("../../services/syncApi", () => ({
 // The thunk builds its storage at module load, before this file's
 // top-level code runs, so the stub must reach the mock lazily (per call).
 const mockExportData = jest.fn();
+const mockImportData = jest.fn();
 jest.mock("../../services/storageSelector", () => () => () => ({
   exportData: () => mockExportData(),
+  importData: (data: unknown) => mockImportData(data),
 }));
 
 const getBackupMock = syncApi.getBackup as unknown as jest.Mock;
@@ -114,6 +125,8 @@ beforeEach(() => {
   putBackupMock.mockReset();
   mockExportData.mockReset();
   mockExportData.mockResolvedValue(snapshot([groceries]));
+  mockImportData.mockReset();
+  mockImportData.mockResolvedValue(undefined);
   setSession(jane);
 });
 
@@ -203,9 +216,16 @@ describe("syncWithParty", () => {
       type: "review",
       incomingCount: 1,
     });
+    // The wizard reviews exactly this download: the diffed items plus the
+    // version they came from, so the later upload can CAS against it.
     expect(dispatch).toHaveBeenCalledWith({
       type: SYNC_PENDING_REVIEW_SET,
-      payload: { pendingReviewCount: 1 },
+      payload: {
+        pendingReview: {
+          baseVersion: "3",
+          items: [expect.objectContaining({ key: "entry:e2", kind: "entry" })],
+        },
+      },
     });
     expect(putBackupMock).not.toHaveBeenCalled();
     // Nothing is applied or remembered until the review completes.
@@ -358,15 +378,129 @@ describe("syncWithParty", () => {
   });
 });
 
+describe("completeReview (RFC §4.3 steps 5–6)", () => {
+  const incomingCinema: IncomingItem = {
+    key: "entry:e2",
+    hash: contentHash({ ...cinema, id: undefined }),
+    kind: "entry",
+    isChange: false,
+    entry: cinema,
+  };
+
+  const runReview = (
+    {
+      acceptedItems = [] as IncomingItem[],
+      rejectedItems = [] as { key: string; hash: string }[],
+    } = {},
+    party: Party | null = janesParty
+  ) => {
+    const dispatch = jest.fn();
+    const getState = () => ({ syncManager: { party } });
+    return {
+      dispatch,
+      result: completeReview({ acceptedItems, rejectedItems, baseVersion: "3" })(
+        dispatch,
+        getState
+      ),
+    };
+  };
+
+  it("uploads local data plus the accepted items under the review's baseVersion", async () => {
+    putBackupMock.mockResolvedValue({ version: "4" });
+
+    await runReview({ acceptedItems: [incomingCinema] }).result;
+
+    const upload = putBackupMock.mock.calls[0][0];
+    expect(upload.baseVersion).toBe("3");
+    expect(upload.envelope.data).toEqual(snapshot([groceries, cinema]));
+  });
+
+  it("on 200 commits: local data, rejection memory, sync.state and the Redux tree", async () => {
+    putBackupMock.mockResolvedValue({ version: "4" });
+    const rejected = { key: "entry:e3", hash: "rejected-hash" };
+
+    const { dispatch, result } = runReview({
+      acceptedItems: [incomingCinema],
+      rejectedItems: [rejected],
+    });
+    await result;
+
+    expect(mockImportData).toHaveBeenCalledWith(snapshot([groceries, cinema]));
+    const state = getSyncState(janesParty.id);
+    expect(state.lastSyncedVersion).toBe("4");
+    expect(state.rejections).toEqual({ [rejected.key]: [rejected.hash] });
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: RESTORE_BACKUP })
+    );
+    expect(dispatch).toHaveBeenCalledWith({
+      type: SYNC_PENDING_REVIEW_SET,
+      payload: { pendingReview: null },
+    });
+  });
+
+  it("does not duplicate an already-remembered rejection hash", async () => {
+    putBackupMock.mockResolvedValue({ version: "4" });
+    setSyncState({
+      partyId: janesParty.id,
+      lastSyncedVersion: "3",
+      lastSyncedAt: 1,
+      rejections: { "entry:e3": ["rejected-hash"] },
+    });
+
+    await runReview({
+      rejectedItems: [{ key: "entry:e3", hash: "rejected-hash" }],
+    }).result;
+
+    expect(getSyncState(janesParty.id).rejections).toEqual({
+      "entry:e3": ["rejected-hash"],
+    });
+  });
+
+  it("re-reads local data at commit time so entries added mid-review survive", async () => {
+    putBackupMock.mockResolvedValue({ version: "4" });
+    const addedMidReview = { ...groceries, id: "e9", description: "Coffee" };
+    mockExportData.mockResolvedValue(snapshot([groceries, addedMidReview]));
+
+    await runReview({ acceptedItems: [incomingCinema] }).result;
+
+    expect(putBackupMock.mock.calls[0][0].envelope.data).toEqual(
+      snapshot([groceries, addedMidReview, cinema])
+    );
+  });
+
+  it("a failed upload re-throws and writes nothing (AC-3.11)", async () => {
+    putBackupMock.mockRejectedValue(versionConflict());
+
+    const { dispatch, result } = runReview({
+      acceptedItems: [incomingCinema],
+      rejectedItems: [{ key: "entry:e3", hash: "rejected-hash" }],
+    });
+
+    await expect(result).rejects.toMatchObject({
+      code: SYNC_ERROR_CODES.VERSION_CONFLICT,
+    });
+    expect(mockImportData).not.toHaveBeenCalled();
+    expect(storedSyncState()).toBeNull();
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  it("refuses to run without a party", async () => {
+    await expect(runReview({}, null).result).rejects.toThrow(
+      "Sync requires a party"
+    );
+    expect(putBackupMock).not.toHaveBeenCalled();
+  });
+});
+
 describe("clearPendingReview", () => {
-  it("dispatches a null pending-review count", () => {
+  it("dispatches a null pending review", () => {
     const dispatch = jest.fn();
 
     clearPendingReview()(dispatch);
 
     expect(dispatch).toHaveBeenCalledWith({
       type: SYNC_PENDING_REVIEW_SET,
-      payload: { pendingReviewCount: null },
+      payload: { pendingReview: null },
     });
   });
 });

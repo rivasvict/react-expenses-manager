@@ -4,6 +4,8 @@ import {
   contentHash,
   diffSnapshots,
   extractItems,
+  groupIncomingItems,
+  groupItemsWith,
   snapshotsContentEqual,
 } from "./syncMergeHelper";
 import { BackupData } from "../../services/syncApi/contract";
@@ -80,6 +82,121 @@ describe("extractItems (RFC §4.1 identity)", () => {
     const [a] = extractItems({ ...emptyData(), balance: [entry("e1")] });
     const [b] = extractItems({ ...emptyData(), balance: [entry("e2")] });
     expect(a.hash).toEqual(b.hash); // same content, different id
+  });
+});
+
+describe("grouping a brand-new definition into one card (RFC §4.1)", () => {
+  const netflix = (history: any[]) => ({
+    id: "f1",
+    type: "expense",
+    history,
+  });
+  const netflixHistory = [
+    { from: "2026-01", amount: "9", description: "Netflix" },
+    { from: "2026-03", amount: "11", description: "Netflix" },
+    { from: "2026-05", amount: "13", description: "Netflix" },
+  ];
+
+  it("flags the states of a definition the device does not have at all", () => {
+    const incoming = diffSnapshots({
+      localData: emptyData(),
+      remoteData: { ...emptyData(), fixedEntries: [netflix(netflixHistory)] },
+    });
+
+    expect(incoming.map((item) => item.isNewDefinition)).toEqual([
+      true,
+      true,
+      true,
+    ]);
+  });
+
+  it("does not flag a new state on a definition the device already has", () => {
+    const incoming = diffSnapshots({
+      localData: {
+        ...emptyData(),
+        fixedEntries: [netflix([netflixHistory[0]])],
+      },
+      remoteData: { ...emptyData(), fixedEntries: [netflix(netflixHistory)] },
+    });
+
+    expect(incoming.map((item) => [item.key, item.isNewDefinition])).toEqual([
+      ["fixed:f1:2026-03", false],
+      ["fixed:f1:2026-05", false],
+    ]);
+  });
+
+  it("does not flag a bucket the device has in the legacy plain-number shape", () => {
+    const incoming = diffSnapshots({
+      localData: { ...emptyData(), buckets: { Groceries: 200 } as any },
+      remoteData: {
+        ...emptyData(),
+        buckets: { groceries: [{ from: "0000-00", limit: 200 }] },
+      },
+    });
+
+    expect(incoming[0].isNewDefinition).toBe(false);
+  });
+
+  it("collapses a new definition's whole history into one card carrying its current state", () => {
+    const incoming = diffSnapshots({
+      localData: emptyData(),
+      remoteData: {
+        ...emptyData(),
+        balance: [entry("e1")],
+        fixedEntries: [netflix(netflixHistory)],
+      },
+    });
+
+    const groups = groupIncomingItems(incoming);
+
+    expect(groups).toHaveLength(2);
+    expect(groups[0].key).toEqual("entry:e1");
+    expect(groups[1].key).toEqual("fixed:f1");
+    // The resolved current state is what the card shows…
+    expect(groups[1].item.key).toEqual("fixed:f1:2026-05");
+    // …while the decision covers every pending state.
+    expect(groups[1].items.map((item) => item.key)).toEqual([
+      "fixed:f1:2026-01",
+      "fixed:f1:2026-03",
+      "fixed:f1:2026-05",
+    ]);
+  });
+
+  it("keeps edits to an existing definition as their own cards", () => {
+    const incoming = diffSnapshots({
+      localData: {
+        ...emptyData(),
+        fixedEntries: [netflix([netflixHistory[0]])],
+      },
+      remoteData: { ...emptyData(), fixedEntries: [netflix(netflixHistory)] },
+    });
+
+    expect(groupIncomingItems(incoming).map((group) => group.key)).toEqual([
+      "fixed:f1:2026-03",
+      "fixed:f1:2026-05",
+    ]);
+  });
+
+  it("a modified card replaces only the state it showed", () => {
+    const incoming = diffSnapshots({
+      localData: emptyData(),
+      remoteData: { ...emptyData(), fixedEntries: [netflix(netflixHistory)] },
+    });
+    const [group] = groupIncomingItems(incoming);
+    const edited = {
+      ...group.item,
+      fixed: {
+        ...group.item.fixed!,
+        state: { ...group.item.fixed!.state, amount: "20" },
+      },
+    };
+
+    expect(
+      groupItemsWith(group, edited).map((item) => item.fixed!.state.amount)
+    ).toEqual(["9", "11", "20"]);
+    expect(groupItemsWith(group).map((item) => item.fixed!.state.amount)).toEqual(
+      ["9", "11", "13"]
+    );
   });
 });
 
