@@ -5,6 +5,31 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.12.0] - 2026-09-19
+
+### Added
+
+- `docs/deployment/tailscale-sync.md`: step-by-step guide for serving the
+  sync backend to family devices over Tailscale (a `*.ts.net` HTTPS
+  origin), with no CORS configuration and no manual certificate trust
+  step needed on each device.
+
+### Changed
+
+- `server/index.ts` now binds to `127.0.0.1` by default instead of all
+  interfaces, since a reverse proxy (`tailscale serve`) is expected to sit
+  in front of it. Override with the `HOST` env var (e.g. `HOST=0.0.0.0`)
+  for LAN-reachable local dev.
+- `server/index.ts` refuses to start with `NODE_ENV=production` unless
+  `TOKEN_SECRET` and `ENCRYPTION_KEY` are set, instead of silently falling
+  back to dev-only default secrets.
+
+### Fixed
+
+- `server/README.md` described `getBackup.ts`/`putBackup.ts` as
+  placeholders; they are fully implemented, including version-based
+  conflict handling and the `EC-1`/`EC-2` cases from the PRD.
+
 ## [1.11.2] - 2026-09-16
 
 ### Fixed
