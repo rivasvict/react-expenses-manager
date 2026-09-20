@@ -5,6 +5,28 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.13.2] - 2026-09-20
+
+### Fixed
+
+- `docs/deployment/tailscale-sync.md`, step 5 (`tailscale serve` setup),
+  corrected against a live deployment run:
+  - `tailscale serve` requires root to change the serve config; documented
+    both the per-call `sudo` and the one-time
+    `sudo tailscale set --operator=$USER` alternative.
+  - The static-file target must be an absolute path — a relative path like
+    `build/` is parsed as a proxy target instead of a directory and fails
+    with `must include a scheme`. Documented `$(pwd)/build` and the
+    `${pwd}` (lowercase, not a real variable) pitfall.
+  - The `/api` proxy target must include the `/api` path itself
+    (`http://127.0.0.1:4000/api`), since `tailscale serve` strips the
+    `--set-path` mount prefix before forwarding but the sync server's own
+    routes are registered under `/api/...` — a bare `127.0.0.1:4000`
+    target made every request 404 at the server. Added a `curl` sanity
+    check to confirm the path is reaching the right route.
+  - Removed the stale "offline shell precaching not yet implemented" note
+    — that shipped in 1.13.0/1.13.1.
+
 ## [1.13.1] - 2026-09-20
 
 ### Fixed
