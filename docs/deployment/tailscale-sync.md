@@ -88,9 +88,23 @@ mixed-content issues (both are HTTPS), and the existing
    ```bash
    sudo tailscale set --operator=$USER   # once, so you don't need sudo below
    tailscale serve --bg --set-path=/ "$(pwd)/build"
-   tailscale serve --bg --set-path=/api 127.0.0.1:4000
+   tailscale serve --bg --set-path=/api http://127.0.0.1:4000/api
    tailscale serve status   # confirm both routes are registered
    ```
+   The `/api` proxy target must include the `/api` path itself
+   (`http://127.0.0.1:4000/api`, not just `127.0.0.1:4000`) — `tailscale
+   serve` strips the `--set-path` mount prefix before forwarding, and the
+   sync server's own routes are registered under `/api/...` (see
+   `server/core/router.ts`), so a bare `127.0.0.1:4000` target makes every
+   request 404 at the server (it arrives as `/auth/signup` instead of
+   `/api/auth/signup`). Sanity check with:
+   ```bash
+   curl -i -X POST https://<machine-name>.<tailnet-name>.ts.net/api/auth/signup \
+     -H "Content-Type: application/json" -d '{}'
+   ```
+   A `400 VALIDATION_ERROR` response means the path reached the right
+   route; a `404 NOT_FOUND` means the prefix is still being stripped.
+
    This provisions/renews the Let's Encrypt cert automatically for
    `<machine-name>.<tailnet-name>.ts.net`.
 
