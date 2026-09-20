@@ -109,8 +109,10 @@ CRA's jest deliberately does not scan `server/` (it only looks under
   `writeJsonVersioned` pair parties are mutated through
 - `core/handlers/` — one module per endpoint (`signup.ts`, `login.ts`,
   `me.ts`, `createParty.ts`, `createInvitation.ts`, `joinParty.ts`,
-  `blockMember.ts`, `cancelParty.ts`, and the `getBackup.ts`/`putBackup.ts`
-  placeholders) plus the collaborators they share (session minting,
+  `blockMember.ts`, `cancelParty.ts`, and `getBackup.ts`/`putBackup.ts`,
+  which implement version-based conflict handling and the `EC-1`/`EC-2`
+  cases from `docs/multi-user-sync/PRD.md`, gated through
+  `requirePartyAccess`) plus the collaborators they share (session minting,
   response shaping, storage keys, party mutation/CAS retry, party access —
   the blocked/canceled gate — and field guards); `core/handlers.ts` is just
   the wiring that builds the set

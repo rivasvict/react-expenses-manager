@@ -12,12 +12,31 @@ import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
 import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
 
 const PORT = Number(process.env.PORT) || 4000;
+// Defaults to loopback only: a reverse proxy (e.g. `tailscale serve`) is
+// expected to sit in front of this server. Set HOST=0.0.0.0 explicitly to
+// bind all interfaces for local-network dev workflows.
+const HOST = process.env.HOST || "127.0.0.1";
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 // Dev-only default secrets; override in any real deployment (RFC §6). Left
 // unset, ENCRYPTION_KEY falls back to the core's own dev default, so a
 // local run works with no environment at all.
 const TOKEN_SECRET = process.env.TOKEN_SECRET || "dev-token-secret";
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+
+if (process.env.NODE_ENV === "production") {
+  const missing = [
+    !process.env.TOKEN_SECRET && "TOKEN_SECRET",
+    !process.env.ENCRYPTION_KEY && "ENCRYPTION_KEY",
+  ].filter(Boolean);
+  if (missing.length > 0) {
+    console.error(
+      `Refusing to start with NODE_ENV=production and dev-default secret(s) unset: ${missing.join(
+        ", "
+      )}. Set real random values (e.g. \`openssl rand -hex 32\`).`
+    );
+    process.exit(1);
+  }
+}
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
 // This file runs compiled, from server/dist/, so the data directory is one
@@ -123,7 +142,7 @@ if (require.main === module) {
       }),
     })
   );
-  server.listen(PORT, () => {
-    console.log(`Sync server listening on http://localhost:${PORT}`);
+  server.listen(PORT, HOST, () => {
+    console.log(`Sync server listening on http://${HOST}:${PORT}`);
   });
 }
