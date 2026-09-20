@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.13.3] - 2026-09-20
+
+### Fixed
+
+- `npm install` silently skipped all `devDependencies` (`@testing-library/*`,
+  `@iconify-icons/codicon`, etc.) whenever `NODE_ENV=production` was set in
+  the shell environment, producing `Module not found` / `Cannot find module`
+  errors across the app and test suite with no indication of the actual
+  cause. Added `.npmrc` with `production=false` so `npm install` always
+  installs devDependencies regardless of `NODE_ENV`.
+
 ## [1.13.2] - 2026-09-20
 
 ### Fixed
