@@ -5,6 +5,47 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.13.1] - 2026-09-20
+
+### Fixed
+
+- Netlify build failure on the offline-precaching `postbuild` step
+  (`workbox generateSW workbox-config.js`), introduced in 1.13.0. CI/Netlify
+  run Node 16.13.1 (pinned in `.nvmrc`), but `workbox-cli@7.4.1` and
+  `workbox-build@7.4.1` declare `"engines": { "node": ">=20.0.0" }` and pull
+  in an ESM-only `update-notifier`, which crashes under `require()` on
+  Node 16 with `ERR_REQUIRE_ESM`. `react-scripts build` itself always
+  succeeded; only the postbuild step failed. Downgraded `workbox-cli` and
+  `workbox-window` to the `6.6.0` line (`engines: { node: ">=10.0.0" }`,
+  fully CJS dependency tree, including `update-notifier@4.x`), which keeps
+  the same `Workbox`/`generateSW` APIs used by `src/serviceWorker.js` and
+  `workbox-config.js` unchanged. Verified the `postbuild` step runs cleanly
+  and produces a `service-worker.js` that precaches the static app shell and
+  routes `/api/*` `NetworkOnly` (never precached, never served stale).
+
+## [1.13.0] - 2026-09-20
+
+### Added
+
+- Offline app-shell precaching via a Workbox-generated service worker
+  (`workbox-config.js`, wired through a `postbuild` script run after
+  `react-scripts build`). The built app can now be opened with zero
+  network connectivity once it has loaded at least once, taking advantage
+  of the secure-context (`*.ts.net` HTTPS) origin from the Tailscale
+  deployment. `/api/*` traffic (the sync backend, `src/services/syncApi`)
+  is explicitly routed `NetworkOnly` and is never precached or served
+  stale.
+- `workbox-cli` and `workbox-window` dependencies for generating and
+  registering the service worker.
+
+### Changed
+
+- `src/serviceWorker.js` rewritten to register the workbox-generated
+  `service-worker.js` (production builds only) instead of the old CRA-3
+  boilerplate, which targeted a service worker CRA5 no longer generates.
+- `src/index.tsx` now calls `serviceWorker.register()` instead of
+  `serviceWorker.unregister()`.
+
 ## [1.12.0] - 2026-09-19
 
 ### Added
