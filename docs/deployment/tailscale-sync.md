@@ -80,11 +80,39 @@ mixed-content issues (both are HTTPS), and the existing
    reachable directly over the LAN.
 
 5. **Serve the app and proxy the API through Tailscale** (exact `serve`
-   syntax may vary by installed version — check `tailscale serve --help`):
+   syntax may vary by installed version — check `tailscale serve --help`).
+   `tailscale serve` requires root to change the serve config — either
+   prefix every call with `sudo`, or run the one-time operator setup so
+   you don't have to:
    ```bash
-   tailscale serve --bg --set-path=/ /path/to/build
-   tailscale serve --bg --set-path=/api 127.0.0.1:4000
+   sudo tailscale set --operator=$USER   # once
    ```
+   The static-file target **must be an absolute path** — a relative path
+   like `build/` gets parsed as a proxy target instead of a directory and
+   fails with `must include a scheme`. `$(pwd)/build` (or `"$PWD/build"`)
+   is the reliable way to get one; note `pwd` is a *command*, so
+   `${pwd}` (lowercase, no parens) silently expands to nothing rather than
+   erroring:
+   ```bash
+   tailscale serve --bg --set-path=/ "$(pwd)/build"
+   tailscale serve --bg --set-path=/api http://127.0.0.1:4000/api
+   tailscale serve status   # confirm both routes are registered
+   ```
+   The `/api` proxy target must include the `/api` path itself
+   (`http://127.0.0.1:4000/api`, not just `127.0.0.1:4000`) —
+   `tailscale serve` strips the `--set-path` mount prefix before
+   forwarding, but the sync server's own routes are registered under
+   `/api/...` (see `server/core/router.ts`), so a bare `127.0.0.1:4000`
+   target makes every request 404 at the server (it arrives as
+   `/auth/signup` instead of `/api/auth/signup`). Sanity check with:
+   ```bash
+   curl -i -X POST https://<machine-name>.<tailnet-name>.ts.net/api/auth/signup \
+     -H "Content-Type: application/json" -d '{}'
+   ```
+   A `400 VALIDATION_ERROR` response means the path reached the right
+   route; a `404 NOT_FOUND` means the prefix is still being stripped —
+   double-check the proxy target includes `/api`.
+
    This provisions/renews the Let's Encrypt cert automatically for
    `<machine-name>.<tailnet-name>.ts.net`.
 
@@ -102,18 +130,14 @@ mixed-content issues (both are HTTPS), and the existing
    - Join on home Wi-Fi with both phones, confirm sync between them.
    - Switch one phone to cellular only (leave the home network),
      confirm the app is still reachable via Tailscale.
-   - Turn off networking entirely (airplane mode) and confirm entries
-     already loaded remain usable locally (offline shell caching is a
-     separate, not-yet-implemented task — see "Open items" below).
+   - Turn off networking entirely (airplane mode) and confirm the app
+     shell still opens from the service worker's precache, with entries
+     already loaded remaining usable locally.
    - Reconnect and confirm the "Sync with party" Retry flow picks the
      staged decision set back up (`docs/multi-user-sync/DESIGN.md`).
 
 ## Open items / not yet decided
 
-- Offline shell precaching (a `workbox-cli` postbuild step against the CRA
-  `build/` output, with `/api/*` marked `NetworkOnly`) is a separate,
-  pre-existing task not covered by this change — `src/index.tsx` still
-  calls `serviceWorker.unregister()`.
 - Whether each family member gets their own Tailscale account or shares
   one across devices — affects free-tier device/user accounting.
 - No rate limiting on the auth endpoints (signup/login) — acceptable for a
