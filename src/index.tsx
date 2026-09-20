@@ -15,4 +15,4 @@ const container: Element | DocumentFragment = document.getElementById(
 const root = createRoot(container);
 root.render(<App reduxStore={reduxStore} />);
 
-serviceWorker.unregister();
+serviceWorker.register();
