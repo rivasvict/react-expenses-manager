@@ -80,10 +80,16 @@ mixed-content issues (both are HTTPS), and the existing
    reachable directly over the LAN.
 
 5. **Serve the app and proxy the API through Tailscale** (exact `serve`
-   syntax may vary by installed version — check `tailscale serve --help`):
+   syntax may vary by installed version — check `tailscale serve --help`).
+   `tailscale serve` requires root to change the serve config, and the
+   static-file target **must be an absolute path** — a relative path like
+   `build/` gets parsed as a proxy target instead of a directory, and
+   fails with `must include a scheme`:
    ```bash
-   tailscale serve --bg --set-path=/ /path/to/build
+   sudo tailscale set --operator=$USER   # once, so you don't need sudo below
+   tailscale serve --bg --set-path=/ "$(pwd)/build"
    tailscale serve --bg --set-path=/api 127.0.0.1:4000
+   tailscale serve status   # confirm both routes are registered
    ```
    This provisions/renews the Let's Encrypt cert automatically for
    `<machine-name>.<tailnet-name>.ts.net`.
