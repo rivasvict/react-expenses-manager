@@ -49,6 +49,23 @@ mixed-content issues (both are HTTPS), and the existing
   `TOKEN_SECRET` and `ENCRYPTION_KEY` are set, so it can't silently run on
   dev-only default secrets in a real deployment.
 
+## Automated deploy
+
+`deploy.sh` at the repo root performs steps 3–5 below in one go: it asks
+which revision to deploy, stops any running `tailscale serve` config and
+sync server, builds the app and the server, starts the server detached
+with logs, republishes `/` and `/api`, verifies the result, and prints the
+app URL plus the command to attach to the logs.
+
+```bash
+./deploy.sh
+# or, to pin the origin explicitly:
+SERVER_URL=https://expenses.<your-tailnet-name>.ts.net ./deploy.sh
+```
+
+Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
+The steps below remain the reference for what the script does.
+
 ## Step-by-step setup: Linux Mint box + 2 iPhones
 
 1. **Install Tailscale on the Linux box.**

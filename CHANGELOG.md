@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.14.0] - 2026-09-21
+
+### Added
+
+- `deploy.sh` at the repo root: one command that deploys the frontend and
+  the sync server behind Tailscale, following
+  `docs/deployment/tailscale-sync.md`. It prompts for the revision to
+  deploy (latest `master`, a given branch/commit, or — by default — the
+  current checkout with no fetch), stops any running `tailscale serve`
+  config and sync server first, builds the CRA bundle and the server under
+  the root `.nvmrc`, runs the server under `server/.nvmrc` detached in tmux
+  (falling back to `nohup`) with logs, publishes `/` and `/api` through
+  `tailscale serve`, and verifies the deployment before printing the app
+  URL and the command to attach to the server logs. The tailnet origin
+  comes from `SERVER_URL`, derived from `tailscale status` when unset.
+  Deployment secrets (`TOKEN_SECRET`, `ENCRYPTION_KEY`) are generated once
+  into the gitignored `.deploy/` directory and reused across deploys, so
+  redeploying does not invalidate sessions or stored invitations.
+
 ## [1.13.3] - 2026-09-21
 
 ### Fixed
