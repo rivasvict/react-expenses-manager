@@ -70,6 +70,16 @@ the script validates them and refuses to start without them. Changing the
 serve config needs root, so the script calls `sudo tailscale serve` — expect
 a password prompt.
 
+To stop everything `deploy.sh` started (without redeploying), run `stop.sh`
+at the repo root — it resets the `tailscale serve` config and stops the
+sync server (tmux session, or its nohup'd process). `deploy.sh` sources the
+same script for the stop it does before every redeploy, so there is one
+place that knows how to tear the setup down.
+
+```bash
+./stop.sh
+```
+
 Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
 The steps below remain the reference for what the script does.
 

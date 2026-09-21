@@ -170,31 +170,12 @@ resolve_server_url() {
 
 # --- stop whatever is already running ---------------------------------------
 
-stop_running_services() {
-  info "Stopping any running tailscale serve config and sync server…"
-
-  sudo tailscale serve reset >/dev/null 2>&1 ||
-    warn "Could not reset the tailscale serve config — continuing anyway."
-
-  if command -v tmux >/dev/null 2>&1 && tmux has-session -t "$TMUX_SESSION" 2>/dev/null; then
-    tmux kill-session -t "$TMUX_SESSION"
-  fi
-
-  if [ -f "$PID_FILE" ]; then
-    local pid
-    pid="$(cat "$PID_FILE")"
-    if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-      kill "$pid" 2>/dev/null || true
-    fi
-    rm -f "$PID_FILE"
-  fi
-
-  # Anything else still holding the port would make the new server exit with
-  # EADDRINUSE, so clear it out too.
-  if command -v fuser >/dev/null 2>&1; then
-    fuser -k "${SYNC_PORT}/tcp" >/dev/null 2>&1 || true
-  fi
-}
+# stop.sh defines stop_running_services() and is sourced rather than
+# duplicated so there is one place that knows how to tear the setup down —
+# it also works as a standalone command to stop everything without
+# redeploying.
+# shellcheck source=stop.sh
+. "$REPO_DIR/stop.sh"
 
 # --- build ------------------------------------------------------------------
 
@@ -298,7 +279,7 @@ print_summary() {
   printf '  Deployed revision  %s (%s)\n' \
     "$(git -C "$REPO_DIR" rev-parse --short HEAD)" \
     "$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)"
-  printf '\n'
+  printf '\n  To stop everything this deployed:\n\n    %s/stop.sh\n\n' "$REPO_DIR"
 }
 
 main() {
