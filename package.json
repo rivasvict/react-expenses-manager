@@ -1,8 +1,9 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "private": true,
   "dependencies": {
+    "@iconify-icons/codicon": "^1.1.26",
     "@iconify/react": "^1.1.4",
     "@reduxjs/toolkit": "^1.8.5",
     "@types/jest": "^29.1.1",
@@ -67,7 +68,6 @@
     ]
   },
   "devDependencies": {
-    "@iconify-icons/codicon": "^1.1.26",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^14.3.1",
     "@testing-library/user-event": "^14.6.1",

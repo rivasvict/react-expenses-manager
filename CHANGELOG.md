@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.13.3] - 2026-09-21
+
+### Fixed
+
+- `@iconify-icons/codicon` was listed under `devDependencies`, but it's
+  imported directly by shipped UI components (`ShareField.tsx`,
+  `AccountChip`, `EntryListToolbar.tsx`, `FilterSheet.tsx`,
+  `NavigavleMonthHeader.tsx`, `Icons.js`, and others) — not just test files.
+  A production install that omits devDependencies (`npm ci --omit=dev`, a
+  shell with `NODE_ENV=production` set before `npm install`, etc.) would
+  silently drop it and fail to build with `Module not found` errors that
+  gave no hint the cause was a manifest miscategorization. Moved it to
+  `dependencies`, where `@testing-library/*` correctly stays in
+  `devDependencies` since it's only used from test files.
+
 ## [1.13.2] - 2026-09-20
 
 ### Fixed
