@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.15.0] - 2026-09-21
+
+### Added
+
+- `stop.sh` at the repo root: a standalone, copyable command that stops
+  everything `deploy.sh` deployed — resets the `tailscale serve` config and
+  stops the sync server (tmux session, or its nohup'd process). `deploy.sh`
+  now sources it instead of duplicating the stop logic, and prints the
+  command in its summary at the end of a deploy.
+
 ## [1.14.1] - 2026-09-21
 
 ### Fixed
