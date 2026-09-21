@@ -55,7 +55,7 @@ mixed-content issues (both are HTTPS), and the existing
 which revision to deploy, stops any running `tailscale serve` config and
 sync server, builds the app and the server, starts the server detached
 with logs, republishes `/` and `/api`, verifies the result, and prints the
-app URL plus the command to attach to the logs.
+app URL plus the commands to read the logs and to stop everything again.
 
 ```bash
 export TOKEN_SECRET=...      # the deployment secrets, not newly generated:
@@ -69,6 +69,31 @@ SERVER_URL=https://<server-name>.<tailnet-name>.ts.net ./deploy.sh
 the script validates them and refuses to start without them. Changing the
 serve config needs root, so the script calls `sudo tailscale serve` — expect
 a password prompt.
+
+`SERVER_URL`, when set, has to be this machine's MagicDNS name (the one
+`tailscale status` reports). `tailscale serve` publishes there and holds a
+certificate only for that name, so a different host — a shortened
+`https://expenses.<machine>.ts.net`, say — simply does not resolve, and the
+deploy fails at the verification step. Leave `SERVER_URL` unset to let the
+script read the right name from `tailscale status`; set it only to override
+a name the script derives wrongly. The script warns when the two disagree.
+
+### Reading the logs and stopping the servers
+
+The sync server runs detached, so its output goes to a tmux session
+(`expenses-sync`) and to `.deploy/sync-server.log`:
+
+```bash
+./deploy.sh --logs   # attach to the tmux session, or tail the log file
+./deploy.sh --stop   # stop the sync server and take down `tailscale serve`
+```
+
+`--stop` is the inverse of a deploy: it resets the `tailscale serve` config
+(so `/` and `/api` stop being published on the tailnet), kills the tmux
+session and the detached server process, and frees the sync port. It keeps
+`.deploy/sync-server.log` around so a crash can still be read afterwards.
+A normal `./deploy.sh` run does the same teardown before rebuilding, so
+there is no need to stop first when redeploying.
 
 Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
 The steps below remain the reference for what the script does.

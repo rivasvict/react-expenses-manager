@@ -5,6 +5,34 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.15.0] - 2026-09-21
+
+### Added
+
+- `./deploy.sh --logs`: attaches to the running sync server's output — the
+  `expenses-sync` tmux session when tmux is installed, otherwise `tail -f`
+  on `.deploy/sync-server.log`. The deploy now also prints that command as
+  soon as the server starts, and in the failures that come after it, rather
+  than only in the final summary that a failed deploy never reaches.
+- `./deploy.sh --stop`: stops everything a deploy started — resets the
+  `tailscale serve` config, kills the tmux session and the detached server
+  process, and frees the sync port — leaving the log file in place.
+  `--help` lists the commands.
+
+### Fixed
+
+- `deploy.sh` no longer reports a nonsensical `Unexpected HTTP 000000` when
+  the deployed origin cannot be reached. `curl` already writes `000` for a
+  request that got no response, and the script echoed a second `000` on
+  that same failure, so the concatenated status missed the `000` case and
+  fell through to the catch-all. The unreachable-origin message now
+  explains what to check, including whether `SERVER_URL` matches this
+  machine's MagicDNS name.
+- `deploy.sh` warns up front when `SERVER_URL` is not this machine's
+  MagicDNS name. `tailscale serve` publishes on that name and holds a
+  certificate only for it, so any other host fails the deploy's
+  verification step after a full build.
+
 ## [1.14.1] - 2026-09-21
 
 ### Fixed

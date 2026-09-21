@@ -9,7 +9,11 @@
 #   4. start the sync server (detached, with logs)
 #   5. publish / and /api through `tailscale serve`
 #
-# Usage:  ./deploy.sh          (run it from the Linux box that is on the tailnet)
+# Usage (run these from the Linux box that is on the tailnet):
+#
+#   ./deploy.sh          build and (re)start everything
+#   ./deploy.sh --logs   attach to the running sync server's logs
+#   ./deploy.sh --stop   stop everything this script started
 #
 # Environment:
 #   TOKEN_SECRET     required — token signing secret for the sync server.
@@ -35,6 +39,17 @@ warn() { printf '\033[1;33mwarning:\033[0m %s\n' "$*" >&2; }
 die() {
   printf '\033[1;31merror:\033[0m %s\n' "$*" >&2
   exit 1
+}
+
+usage() {
+  cat <<USAGE
+Usage: ./deploy.sh [command]
+
+  (no command)   Build and (re)start the frontend and the sync server.
+  --logs         Attach to the running sync server's logs.
+  --stop         Stop the sync server and take down the tailscale serve config.
+  --help         Show this message.
+USAGE
 }
 
 # --- validation -------------------------------------------------------------
@@ -145,17 +160,32 @@ select_revision() {
 
 # --- tailnet origin ---------------------------------------------------------
 
+# `tailscale status --json` puts this machine's Self block first, so the first
+# DNSName in the output is ours — read it with grep/sed rather than taking on a
+# jq dependency. Prints nothing when it cannot be determined.
+magic_dns_name() {
+  local dns_name
+  dns_name="$(tailscale status --json 2>/dev/null | grep -m1 '"DNSName"' |
+    sed -E 's/.*"DNSName":[[:space:]]*"([^"]+)".*/\1/')"
+  printf '%s' "${dns_name%.}"
+}
+
 resolve_server_url() {
+  local dns_name
+  # A probe that fails must not abort the deploy under `set -e` — an unknown
+  # name only costs the extra hint below.
+  dns_name="$(magic_dns_name)" || dns_name=""
+
   if [ -n "${SERVER_URL:-}" ]; then
     info "Using SERVER_URL from the environment: $SERVER_URL"
+    # tailscale only terminates TLS for this machine's MagicDNS name, so any
+    # other host either does not resolve or is served by something else —
+    # either way the verification below would fail with an unhelpful 000.
+    if [ -n "$dns_name" ] && [ "$SERVER_URL" != "https://$dns_name" ] &&
+      [ "$SERVER_URL" != "https://$dns_name/" ]; then
+      warn "SERVER_URL ($SERVER_URL) is not this machine's MagicDNS name (https://$dns_name). \`tailscale serve\` publishes on the MagicDNS name and only has a certificate for it, so the app will not be reachable at SERVER_URL. Unset SERVER_URL to use https://$dns_name."
+    fi
   else
-    # `tailscale status --json` puts this machine's Self block first, so the
-    # first DNSName in the output is ours — read it with grep/sed rather than
-    # taking on a jq dependency.
-    local dns_name
-    dns_name="$(tailscale status --json | grep -m1 '"DNSName"' |
-      sed -E 's/.*"DNSName":[[:space:]]*"([^"]+)".*/\1/')"
-    dns_name="${dns_name%.}"
     [ -n "$dns_name" ] ||
       die "Could not determine this machine's MagicDNS name. Set SERVER_URL explicitly, e.g. SERVER_URL=https://<server-name>.<tailnet-name>.ts.net ./deploy.sh"
     SERVER_URL="https://$dns_name"
@@ -194,6 +224,46 @@ stop_running_services() {
   if command -v fuser >/dev/null 2>&1; then
     fuser -k "${SYNC_PORT}/tcp" >/dev/null 2>&1 || true
   fi
+}
+
+# The log file is the one place both the tmux and the nohup paths write to, so
+# it works as a hint no matter which one started the server.
+log_hint() {
+  printf 'Attach to the sync server logs with: %s\n  (or read %s directly)' \
+    "$0 --logs" "$LOG_FILE"
+}
+
+attach_to_logs() {
+  if command -v tmux >/dev/null 2>&1 && tmux has-session -t "$TMUX_SESSION" 2>/dev/null; then
+    info "Attaching to the \`$TMUX_SESSION\` tmux session — detach with Ctrl-b d."
+    exec tmux attach -t "$TMUX_SESSION"
+  fi
+
+  [ -f "$LOG_FILE" ] ||
+    die "No sync server logs found at $LOG_FILE. Has ./deploy.sh been run on this machine?"
+
+  info "No tmux session is running — following $LOG_FILE instead (Ctrl-C to stop)."
+  exec tail -f "$LOG_FILE"
+}
+
+stop_everything() {
+  # Stopping the local server is worth doing even on a machine where the
+  # tailnet side is already gone, so a missing tailscale is a warning here
+  # rather than the hard requirement it is for a deploy.
+  if command -v tailscale >/dev/null 2>&1; then
+    require_command sudo "Install sudo, or run this script as root."
+    info "Taking down the tailscale serve config needs root — sudo will ask for your password."
+  else
+    warn "\`tailscale\` was not found in PATH — stopping the local sync server only."
+  fi
+
+  stop_running_services
+
+  printf '\n\033[1;32mEverything this script started is stopped.\033[0m\n\n'
+  printf '  The app and API are no longer published on the tailnet.\n'
+  printf '  The sync server on 127.0.0.1:%s is no longer running.\n' "$SYNC_PORT"
+  printf '  Logs from the last run are kept at %s\n' "$LOG_FILE"
+  printf '\n  Bring it all back up with: %s\n\n' "$0"
 }
 
 # --- build ------------------------------------------------------------------
@@ -261,7 +331,9 @@ wait_for_sync_server() {
     sleep 1
   done
 
-  die "The sync server did not start within 60s. Last log lines:
+  die "The sync server did not start within 60s. $(log_hint)
+
+Last log lines:
 $(tail -n 20 "$LOG_FILE" 2>/dev/null)"
 }
 
@@ -277,15 +349,24 @@ publish_through_tailscale() {
 
 verify_deployment() {
   info "Verifying $SERVER_URL/api/auth/signup routes to the sync server…"
-  local status
+  local status expected_host
+  expected_host="$(magic_dns_name)" || expected_host=""
+  [ -z "$expected_host" ] || expected_host=" (https://$expected_host)"
+
+  # curl already writes `000` for a request that never got a response, so the
+  # failure path must not echo a second one — that produced a nonsense
+  # "HTTP 000000" that fell through to the catch-all instead of the 000 case.
   status="$(curl -s -o /dev/null -w '%{http_code}' -X POST \
-    "$SERVER_URL/api/auth/signup" -H "Content-Type: application/json" -d '{}' || echo 000)"
+    "$SERVER_URL/api/auth/signup" -H "Content-Type: application/json" -d '{}' || true)"
+  status="${status:-000}"
 
   case "$status" in
   400) : ;; # VALIDATION_ERROR — the request reached the right route
   404) die "$SERVER_URL/api/auth/signup returned 404: the /api proxy target is losing the /api prefix." ;;
-  000) die "Could not reach $SERVER_URL. Check \`sudo tailscale serve status\` and that HTTPS certificates are enabled in the admin console." ;;
-  *) die "Unexpected HTTP $status from $SERVER_URL/api/auth/signup. Last log lines:
+  000) die "Nothing answered at $SERVER_URL — the host did not resolve, or the connection was refused. \`tailscale serve\` publishes on this machine's MagicDNS name$expected_host, so check that SERVER_URL matches it, that \`sudo tailscale serve status\` lists / and /api, and that HTTPS certificates are enabled in the admin console." ;;
+  *) die "Unexpected HTTP $status from $SERVER_URL/api/auth/signup. $(log_hint)
+
+Last log lines:
 $(tail -n 20 "$LOG_FILE" 2>/dev/null)" ;;
   esac
 }
@@ -293,18 +374,17 @@ $(tail -n 20 "$LOG_FILE" 2>/dev/null)" ;;
 print_summary() {
   printf '\n\033[1;32mDeployment complete.\033[0m\n\n'
   printf '  App URL            %s\n' "$SERVER_URL"
-  printf '  Sync server logs   %s\n' "$ATTACH_COMMAND"
+  printf '  Sync server logs   %s\n' "$0 --logs"
+  printf '                     (directly: %s)\n' "$ATTACH_COMMAND"
   printf '  Log file           %s\n' "$LOG_FILE"
+  printf '  Stop everything    %s\n' "$0 --stop"
   printf '  Deployed revision  %s (%s)\n' \
     "$(git -C "$REPO_DIR" rev-parse --short HEAD)" \
     "$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)"
   printf '\n'
 }
 
-main() {
-  cd "$REPO_DIR"
-  mkdir -p "$DEPLOY_DIR"
-
+deploy() {
   # Secrets first: failing on a missing env var should not cost a sudo prompt.
   check_secrets
   check_prerequisites
@@ -324,11 +404,28 @@ main() {
   export PORT="$SYNC_PORT"
   export CORS_ORIGIN="$SERVER_URL"
   run_with_node_from "$REPO_DIR/server" start_sync_server
+  info "$(log_hint)"
   wait_for_sync_server
 
   publish_through_tailscale
   verify_deployment
   print_summary
+}
+
+main() {
+  cd "$REPO_DIR"
+  mkdir -p "$DEPLOY_DIR"
+
+  case "${1:-}" in
+  "") deploy ;;
+  --logs | logs) attach_to_logs ;;
+  --stop | stop) stop_everything ;;
+  --help | -h | help) usage ;;
+  *)
+    usage >&2
+    die "Unknown argument: $1"
+    ;;
+  esac
 }
 
 main "$@"
