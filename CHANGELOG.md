@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.14.1] - 2026-09-21
+
+### Fixed
+
+- `deploy.sh` now calls `sudo tailscale serve` unconditionally instead of
+  probing `tailscale serve status` to decide whether `sudo` is needed.
+  Reading the serve config succeeds without root while *changing* it does
+  not, so the probe passed and the deploy then failed at the first
+  `--set-path` call with a permissions error.
+
 ## [1.14.0] - 2026-09-21
 
 ### Added

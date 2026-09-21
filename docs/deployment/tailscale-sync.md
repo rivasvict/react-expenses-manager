@@ -67,8 +67,8 @@ SERVER_URL=https://<server-name>.<tailnet-name>.ts.net ./deploy.sh
 
 `TOKEN_SECRET` and `ENCRYPTION_KEY` must already be in the environment —
 the script validates them and refuses to start without them. Changing the
-serve config needs root: the script uses `tailscale serve` directly when
-the operator is set, and otherwise falls back to `sudo`, which prompts.
+serve config needs root, so the script calls `sudo tailscale serve` — expect
+a password prompt.
 
 Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
 The steps below remain the reference for what the script does.

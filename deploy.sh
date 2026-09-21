@@ -28,10 +28,6 @@ readonly PID_FILE="$DEPLOY_DIR/sync-server.pid"
 readonly TMUX_SESSION="expenses-sync"
 readonly SYNC_PORT="${PORT:-4000}"
 
-# `tailscale serve` needs root to change the serve config. Filled in by
-# check_prerequisites with either `tailscale` or `sudo tailscale`.
-TAILSCALE_SERVE_CMD=()
-
 # --- output helpers ---------------------------------------------------------
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
@@ -58,19 +54,10 @@ check_prerequisites() {
   tailscale status >/dev/null 2>&1 ||
     die "This machine is not connected to a tailnet. Run \`sudo tailscale up\` first."
 
-  # Root is needed to change the serve config, unless the operator has been
-  # set once (`sudo tailscale set --operator=$USER`). Fall back to sudo, which
-  # prompts for a password on each call.
-  if tailscale serve status >/dev/null 2>&1; then
-    TAILSCALE_SERVE_CMD=(tailscale serve)
-  else
-    require_command sudo \
-      "Either install sudo or run this once: tailscale set --operator=\$USER"
-    info "Changing the tailscale serve config needs root — sudo will ask for your password."
-    TAILSCALE_SERVE_CMD=(sudo tailscale serve)
-    "${TAILSCALE_SERVE_CMD[@]}" status >/dev/null ||
-      die "Cannot read the tailscale serve config, even with sudo."
-  fi
+  # Changing the serve config always needs root — reading its status can
+  # succeed without it, so a status probe is not a usable capability check.
+  require_command sudo "Install sudo, or run this script as root."
+  info "Changing the tailscale serve config needs root — sudo will ask for your password."
 }
 
 # The sync server refuses to start under NODE_ENV=production without these
@@ -186,7 +173,7 @@ resolve_server_url() {
 stop_running_services() {
   info "Stopping any running tailscale serve config and sync server…"
 
-  "${TAILSCALE_SERVE_CMD[@]}" reset >/dev/null 2>&1 ||
+  sudo tailscale serve reset >/dev/null 2>&1 ||
     warn "Could not reset the tailscale serve config — continuing anyway."
 
   if command -v tmux >/dev/null 2>&1 && tmux has-session -t "$TMUX_SESSION" 2>/dev/null; then
@@ -282,9 +269,9 @@ publish_through_tailscale() {
   info "Publishing the app and API through tailscale serve…"
   # The static target must be an absolute path, and the /api proxy target must
   # keep the /api prefix (docs/deployment/tailscale-sync.md, step 5).
-  "${TAILSCALE_SERVE_CMD[@]}" --bg --set-path=/ "$REPO_DIR/build" ||
+  sudo tailscale serve --bg --set-path=/ "$REPO_DIR/build" ||
     die "\`tailscale serve\` could not publish $REPO_DIR/build."
-  "${TAILSCALE_SERVE_CMD[@]}" --bg --set-path=/api "http://127.0.0.1:$SYNC_PORT/api" ||
+  sudo tailscale serve --bg --set-path=/api "http://127.0.0.1:$SYNC_PORT/api" ||
     die "\`tailscale serve\` could not publish the /api proxy."
 }
 
@@ -297,7 +284,7 @@ verify_deployment() {
   case "$status" in
   400) : ;; # VALIDATION_ERROR — the request reached the right route
   404) die "$SERVER_URL/api/auth/signup returned 404: the /api proxy target is losing the /api prefix." ;;
-  000) die "Could not reach $SERVER_URL. Check \`tailscale serve status\` and that HTTPS certificates are enabled in the admin console." ;;
+  000) die "Could not reach $SERVER_URL. Check \`sudo tailscale serve status\` and that HTTPS certificates are enabled in the admin console." ;;
   *) die "Unexpected HTTP $status from $SERVER_URL/api/auth/signup. Last log lines:
 $(tail -n 20 "$LOG_FILE" 2>/dev/null)" ;;
   esac
