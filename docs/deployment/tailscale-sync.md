@@ -49,6 +49,30 @@ mixed-content issues (both are HTTPS), and the existing
   `TOKEN_SECRET` and `ENCRYPTION_KEY` are set, so it can't silently run on
   dev-only default secrets in a real deployment.
 
+## Automated deploy
+
+`deploy.sh` at the repo root performs steps 3–5 below in one go: it asks
+which revision to deploy, stops any running `tailscale serve` config and
+sync server, builds the app and the server, starts the server detached
+with logs, republishes `/` and `/api`, verifies the result, and prints the
+app URL plus the command to attach to the logs.
+
+```bash
+export TOKEN_SECRET=...      # the deployment secrets, not newly generated:
+export ENCRYPTION_KEY=...    # rotating them invalidates sessions/invitations
+./deploy.sh
+# or, to pin the origin explicitly rather than deriving it from tailscale:
+SERVER_URL=https://<server-name>.<tailnet-name>.ts.net ./deploy.sh
+```
+
+`TOKEN_SECRET` and `ENCRYPTION_KEY` must already be in the environment —
+the script validates them and refuses to start without them. Changing the
+serve config needs root: the script uses `tailscale serve` directly when
+the operator is set, and otherwise falls back to `sudo`, which prompts.
+
+Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
+The steps below remain the reference for what the script does.
+
 ## Step-by-step setup: Linux Mint box + 2 iPhones
 
 1. **Install Tailscale on the Linux box.**
@@ -63,10 +87,10 @@ mixed-content issues (both are HTTPS), and the existing
    DNS, enable "HTTPS Certificates".
 
 3. **Build the frontend** with the sync API host set to the tailnet
-   origin (pick a machine name when running `tailscale up`, e.g.
-   `expenses`; find your tailnet name with `tailscale status`):
+   origin (`<server-name>` is the machine name picked when running
+   `tailscale up`; find it and your tailnet name with `tailscale status`):
    ```bash
-   REACT_APP_SYNC_API_HOST=https://expenses.<your-tailnet-name>.ts.net npm run build
+   REACT_APP_SYNC_API_HOST=https://<server-name>.<tailnet-name>.ts.net npm run build
    ```
 
 4. **Set real secrets and start the sync server:**
@@ -106,7 +130,7 @@ mixed-content issues (both are HTTPS), and the existing
    target makes every request 404 at the server (it arrives as
    `/auth/signup` instead of `/api/auth/signup`). Sanity check with:
    ```bash
-   curl -i -X POST https://<machine-name>.<tailnet-name>.ts.net/api/auth/signup \
+   curl -i -X POST https://<server-name>.<tailnet-name>.ts.net/api/auth/signup \
      -H "Content-Type: application/json" -d '{}'
    ```
    A `400 VALIDATION_ERROR` response means the path reached the right
@@ -114,7 +138,7 @@ mixed-content issues (both are HTTPS), and the existing
    double-check the proxy target includes `/api`.
 
    This provisions/renews the Let's Encrypt cert automatically for
-   `<machine-name>.<tailnet-name>.ts.net`.
+   `<server-name>.<tailnet-name>.ts.net`.
 
 6. **Install the Tailscale app on both family iPhones** (App Store), and
    sign into the same tailnet — either with the same account, or by
@@ -123,7 +147,7 @@ mixed-content issues (both are HTTPS), and the existing
    accounting on the free tier.
 
 7. **Open the app on each iPhone.** In Safari, visit
-   `https://<machine-name>.<tailnet-name>.ts.net`. It should load over a
+   `https://<server-name>.<tailnet-name>.ts.net`. It should load over a
    trusted HTTPS certificate with no manual trust step.
 
 8. **Test the flows:**
