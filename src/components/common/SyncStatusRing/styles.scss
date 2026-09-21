@@ -1,0 +1,35 @@
+@import '../../../variables.scss';
+
+// A ring, not a filled dot: the app bar already carries two filled circles
+// (the brand mark and the account chip), so an open ring reads as a status
+// light rather than a third control. Sized to sit beside the account chip
+// without competing with it.
+.sync-status-ring {
+  flex: 0 0 auto;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: 2px solid $text-muted;
+  // The halo is what makes the ring feel lit rather than drawn. It is part
+  // of the same transition as the border so a status change fades instead of
+  // snapping.
+  box-shadow: 0 0 0 3px transparent;
+  transition: border-color $transition-quick, box-shadow $transition-quick;
+}
+
+.sync-status-ring--online {
+  border-color: $income;
+  box-shadow: 0 0 0 3px $income-soft;
+}
+
+.sync-status-ring--offline {
+  border-color: $danger;
+  box-shadow: 0 0 0 3px $danger-soft;
+}
+
+// Before the first probe answers: dimmer than either verdict, so "we don't
+// know yet" never reads as "something is wrong".
+.sync-status-ring--unknown {
+  border-color: $border-strong;
+  box-shadow: none;
+}

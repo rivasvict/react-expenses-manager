@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import GlyphIcon from "./GlyphIcon";
 import BrandMark from "./BrandMark";
 import AccountChip from "./AccountChip";
+import SyncStatusRing from "./SyncStatusRing";
 /**
  * TODO:
  * Reinstate the log-out action
@@ -71,7 +72,10 @@ const Header = ({ session }) => (
          */}
         {/* <Button block type='submit' variant='secondary' onClick={onLogOut}>Sign out</Button> */}
       </nav>
-      <AccountChip session={session} />
+      <div className="app-header__account">
+        <SyncStatusRing />
+        <AccountChip session={session} />
+      </div>
     </div>
   </header>
 );

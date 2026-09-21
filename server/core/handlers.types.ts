@@ -139,6 +139,12 @@ export interface BackupVersionBody {
   version: string;
 }
 
+// GET /api/health: the liveness probe's only answer. Reaching it at all is
+// the signal; the body exists so the response is still valid JSON.
+export interface HealthBody {
+  status: "ok";
+}
+
 export type ResponseBody =
   | SessionBody
   | MeBody
@@ -146,6 +152,7 @@ export type ResponseBody =
   | InvitationBody
   | BackupBody
   | BackupVersionBody
+  | HealthBody
   | ErrorBody;
 
 // Mirrors node:http's IncomingHttpHeaders so the http adapter can pass its
@@ -187,6 +194,7 @@ export interface Handlers {
   cancelParty: Handler;
   getBackup: Handler;
   putBackup: Handler;
+  health: Handler;
 }
 
 export interface CreateHandlersOptions {

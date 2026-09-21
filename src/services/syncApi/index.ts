@@ -32,6 +32,11 @@ import {
 // so the UI degrades to logged-out instead of looping on failed requests.
 let onUnauthorized: (() => void) | null = null;
 
+// How long a health probe waits before it counts as unreachable. Short on
+// purpose: the answer is only ever "can we reach the server right now", and
+// a slow answer is not a useful one.
+const HEALTH_TIMEOUT_MS = 5000;
+
 export const setOnUnauthorized = (handler: (() => void) | null): void => {
   onUnauthorized = handler;
 };
@@ -184,3 +189,40 @@ export const putBackup = ({
     body: { baseVersion, envelope },
     token,
   });
+
+// GET /api/health — the liveness probe behind the app bar's status ring.
+// Deliberately outside `request`: it answers a boolean rather than throwing,
+// because "the server is down" is this call's ordinary result, not an error
+// anyone should have to catch. It sends no token and reads no body, so it
+// stays cheap enough to poll.
+//
+// `timeoutMs` bounds a hung connection — without it a request that never
+// settles would leave the ring stuck on its last answer indefinitely. The
+// caller may also pass its own `signal` (e.g. to drop an in-flight check when
+// the component unmounts).
+export const checkHealth = async ({
+  timeoutMs = HEALTH_TIMEOUT_MS,
+  signal,
+}: { timeoutMs?: number; signal?: AbortSignal } = {}): Promise<boolean> => {
+  // jsdom and older browsers can leave `fetch` undefined; an environment
+  // with no fetch is simply one where the server cannot be reached.
+  if (typeof fetch !== "function") return false;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const abortOnCallerSignal = () => controller.abort();
+  signal?.addEventListener("abort", abortOnCallerSignal);
+
+  try {
+    const response = await fetch(
+      `${config.REACT_APP_SYNC_API_HOST}/api/health`,
+      { method: "GET", signal: controller.signal }
+    );
+    return response.ok;
+  } catch (error) {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener("abort", abortOnCallerSignal);
+  }
+};

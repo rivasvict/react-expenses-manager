@@ -29,6 +29,14 @@
     }
   }
 
+  // Keeps the sync-server ring tucked against the account chip, so the two
+  // read as one "your session" cluster at the end of the bar.
+  .app-header__account {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .app-header__name {
     font-weight: 700;
     font-size: 1.02rem;
