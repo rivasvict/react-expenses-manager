@@ -20,9 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `tailscale serve`, and verifies the deployment before printing the app
   URL and the command to attach to the server logs. The tailnet origin
   comes from `SERVER_URL`, derived from `tailscale status` when unset.
-  Deployment secrets (`TOKEN_SECRET`, `ENCRYPTION_KEY`) are generated once
-  into the gitignored `.deploy/` directory and reused across deploys, so
-  redeploying does not invalidate sessions or stored invitations.
+  `TOKEN_SECRET` and `ENCRYPTION_KEY` are read from the environment and
+  validated up front — never generated, since rotating them would
+  invalidate issued session tokens and stored invitation records. Changing
+  the `tailscale serve` config falls back to `sudo` when the Tailscale
+  operator is not set.
 
 ## [1.13.3] - 2026-09-21
 

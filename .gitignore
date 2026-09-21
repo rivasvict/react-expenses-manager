@@ -33,5 +33,5 @@ yarn-error.log*
 /src/.e2e-screenshots
 # subagent git worktrees (Agent tool isolation: "worktree")
 /.claude/worktrees
-# deployment state (secrets, logs, pid) written by deploy.sh
+# deployment state (logs, pid) written by deploy.sh
 /.deploy

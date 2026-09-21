@@ -12,9 +12,12 @@
 # Usage:  ./deploy.sh          (run it from the Linux box that is on the tailnet)
 #
 # Environment:
-#   SERVER_URL  tailnet origin, e.g. https://expenses.tailnet-name.ts.net.
-#               Derived from `tailscale status` when unset.
-#   PORT        loopback port for the sync server (default 4000).
+#   TOKEN_SECRET     required — token signing secret for the sync server.
+#   ENCRYPTION_KEY   required — invitation-record encryption key.
+#   SERVER_URL       tailnet origin, e.g.
+#                    https://<server-name>.<tailnet-name>.ts.net. Derived from
+#                    `tailscale status` when unset.
+#   PORT             loopback port for the sync server (default 4000).
 
 set -euo pipefail
 
@@ -22,9 +25,12 @@ readonly REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DEPLOY_DIR="$REPO_DIR/.deploy"
 readonly LOG_FILE="$DEPLOY_DIR/sync-server.log"
 readonly PID_FILE="$DEPLOY_DIR/sync-server.pid"
-readonly SECRETS_FILE="$DEPLOY_DIR/secrets.env"
 readonly TMUX_SESSION="expenses-sync"
 readonly SYNC_PORT="${PORT:-4000}"
+
+# `tailscale serve` needs root to change the serve config. Filled in by
+# check_prerequisites with either `tailscale` or `sudo tailscale`.
+TAILSCALE_SERVE_CMD=()
 
 # --- output helpers ---------------------------------------------------------
 
@@ -46,16 +52,38 @@ check_prerequisites() {
   require_command git "Install git and re-run."
   require_command npm "Install Node.js (via nvm) and re-run."
   require_command curl "Install curl and re-run."
-  require_command openssl "Install openssl and re-run (needed to generate secrets)."
   require_command tailscale \
     "Install it with: curl -fsSL https://tailscale.com/install.sh | sh"
 
   tailscale status >/dev/null 2>&1 ||
     die "This machine is not connected to a tailnet. Run \`sudo tailscale up\` first."
 
-  # `tailscale serve` needs root unless the operator has been set once.
-  tailscale serve status >/dev/null 2>&1 ||
-    die "Cannot read the tailscale serve config as $USER. Run this once: sudo tailscale set --operator=\$USER"
+  # Root is needed to change the serve config, unless the operator has been
+  # set once (`sudo tailscale set --operator=$USER`). Fall back to sudo, which
+  # prompts for a password on each call.
+  if tailscale serve status >/dev/null 2>&1; then
+    TAILSCALE_SERVE_CMD=(tailscale serve)
+  else
+    require_command sudo \
+      "Either install sudo or run this once: tailscale set --operator=\$USER"
+    info "Changing the tailscale serve config needs root — sudo will ask for your password."
+    TAILSCALE_SERVE_CMD=(sudo tailscale serve)
+    "${TAILSCALE_SERVE_CMD[@]}" status >/dev/null ||
+      die "Cannot read the tailscale serve config, even with sudo."
+  fi
+}
+
+# The sync server refuses to start under NODE_ENV=production without these
+# (server/index.ts), so fail here with a clearer message than a dead process.
+check_secrets() {
+  local missing=()
+  [ -n "${TOKEN_SECRET:-}" ] || missing+=("TOKEN_SECRET")
+  [ -n "${ENCRYPTION_KEY:-}" ] || missing+=("ENCRYPTION_KEY")
+
+  [ ${#missing[@]} -eq 0 ] ||
+    die "Missing required environment variable(s): ${missing[*]}. Export them (from wherever you keep the deployment secrets) before running this script — do not generate new ones, since rotating TOKEN_SECRET invalidates every issued session token and rotating ENCRYPTION_KEY makes stored invitation records undecryptable."
+
+  export TOKEN_SECRET ENCRYPTION_KEY
 }
 
 # nvm is a shell function, so it has to be sourced rather than found in PATH.
@@ -142,7 +170,7 @@ resolve_server_url() {
       sed -E 's/.*"DNSName":[[:space:]]*"([^"]+)".*/\1/')"
     dns_name="${dns_name%.}"
     [ -n "$dns_name" ] ||
-      die "Could not determine this machine's MagicDNS name. Set SERVER_URL explicitly, e.g. SERVER_URL=https://expenses.your-tailnet.ts.net ./deploy.sh"
+      die "Could not determine this machine's MagicDNS name. Set SERVER_URL explicitly, e.g. SERVER_URL=https://<server-name>.<tailnet-name>.ts.net ./deploy.sh"
     SERVER_URL="https://$dns_name"
     info "Derived the tailnet origin from tailscale: $SERVER_URL"
   fi
@@ -158,7 +186,7 @@ resolve_server_url() {
 stop_running_services() {
   info "Stopping any running tailscale serve config and sync server…"
 
-  tailscale serve reset >/dev/null 2>&1 ||
+  "${TAILSCALE_SERVE_CMD[@]}" reset >/dev/null 2>&1 ||
     warn "Could not reset the tailscale serve config — continuing anyway."
 
   if command -v tmux >/dev/null 2>&1 && tmux has-session -t "$TMUX_SESSION" 2>/dev/null; then
@@ -179,29 +207,6 @@ stop_running_services() {
   if command -v fuser >/dev/null 2>&1; then
     fuser -k "${SYNC_PORT}/tcp" >/dev/null 2>&1 || true
   fi
-}
-
-# --- secrets ----------------------------------------------------------------
-
-# Secrets must survive redeploys: rotating TOKEN_SECRET invalidates every
-# issued session token, and rotating ENCRYPTION_KEY makes stored invitation
-# records undecryptable. Generate once, reuse afterwards.
-load_or_create_secrets() {
-  if [ ! -f "$SECRETS_FILE" ]; then
-    info "Generating deployment secrets in $SECRETS_FILE (kept out of git)…"
-    umask 077
-    {
-      echo "TOKEN_SECRET=$(openssl rand -hex 32)"
-      echo "ENCRYPTION_KEY=$(openssl rand -hex 32)"
-    } >"$SECRETS_FILE"
-  fi
-  chmod 600 "$SECRETS_FILE"
-  # shellcheck disable=SC1090
-  . "$SECRETS_FILE"
-
-  [ -n "${TOKEN_SECRET:-}" ] && [ -n "${ENCRYPTION_KEY:-}" ] ||
-    die "$SECRETS_FILE is missing TOKEN_SECRET or ENCRYPTION_KEY. Delete the file to have it regenerated."
-  export TOKEN_SECRET ENCRYPTION_KEY
 }
 
 # --- build ------------------------------------------------------------------
@@ -277,9 +282,9 @@ publish_through_tailscale() {
   info "Publishing the app and API through tailscale serve…"
   # The static target must be an absolute path, and the /api proxy target must
   # keep the /api prefix (docs/deployment/tailscale-sync.md, step 5).
-  tailscale serve --bg --set-path=/ "$REPO_DIR/build" ||
+  "${TAILSCALE_SERVE_CMD[@]}" --bg --set-path=/ "$REPO_DIR/build" ||
     die "\`tailscale serve\` could not publish $REPO_DIR/build."
-  tailscale serve --bg --set-path=/api "http://127.0.0.1:$SYNC_PORT/api" ||
+  "${TAILSCALE_SERVE_CMD[@]}" --bg --set-path=/api "http://127.0.0.1:$SYNC_PORT/api" ||
     die "\`tailscale serve\` could not publish the /api proxy."
 }
 
@@ -313,12 +318,13 @@ main() {
   cd "$REPO_DIR"
   mkdir -p "$DEPLOY_DIR"
 
+  # Secrets first: failing on a missing env var should not cost a sudo prompt.
+  check_secrets
   check_prerequisites
   load_nvm
   select_revision
   resolve_server_url
   stop_running_services
-  load_or_create_secrets
 
   # Builds run under the repo-root .nvmrc; the server process runs under
   # server/.nvmrc (server/README.md explains why the two differ).
