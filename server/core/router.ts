@@ -85,6 +85,7 @@ export const createApp = ({
     { method: "POST", path: "/api/party/cancel", handler: handlers.cancelParty },
     { method: "GET", path: "/api/party/backup", handler: handlers.getBackup },
     { method: "PUT", path: "/api/party/backup", handler: handlers.putBackup },
+    { method: "GET", path: "/api/health", handler: handlers.health },
   ];
 
   // request: { method, path, headers, body } → { status, body }. The first

@@ -24,6 +24,7 @@ import { createBlockMemberHandler } from "./handlers/blockMember";
 import { createCancelPartyHandler } from "./handlers/cancelParty";
 import { createGetBackupHandler } from "./handlers/getBackup";
 import { createPutBackupHandler } from "./handlers/putBackup";
+import { createHealthHandler } from "./handlers/health";
 
 // Dev-only fallback, matching the one server/index.ts uses for the token
 // secret: any string works locally because it is stretched into a key. A real
@@ -80,5 +81,6 @@ export const createHandlers = ({
     cancelParty: createCancelPartyHandler({ authenticate, mutateParty }),
     getBackup: createGetBackupHandler({ storage, requirePartyAccess }),
     putBackup: createPutBackupHandler({ storage, requirePartyAccess, now }),
+    health: createHealthHandler(),
   };
 };

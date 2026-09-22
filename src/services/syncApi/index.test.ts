@@ -2,6 +2,7 @@ import { config } from "../../config";
 import {
   blockMember,
   cancelParty,
+  checkHealth,
   getBackup,
   getMe,
   login,
@@ -324,6 +325,70 @@ describe("syncApi", () => {
       expect(error.message).toBe(
         "Couldn't reach the sync server. Please try again."
       );
+    });
+  });
+
+  describe("checkHealth", () => {
+    it("GETs the probe with no token and reports the server as reachable", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({ status: "ok" }));
+
+      await expect(checkHealth()).resolves.toBe(true);
+
+      const [url, options] = fetchMock.mock.calls[0];
+      expect(url).toBe(`${HOST}/api/health`);
+      expect(options.method).toBe("GET");
+      expect(options.headers).toBeUndefined();
+    });
+
+    it("answers false instead of throwing when the server is unreachable", async () => {
+      // A down server is this call's ordinary outcome, not an exception —
+      // the ring polling it must never need a try/catch.
+      fetchMock.mockRejectedValue(new TypeError("Failed to fetch"));
+
+      await expect(checkHealth()).resolves.toBe(false);
+    });
+
+    it("answers false when the server responds but not with success", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({}, { ok: false, status: 502 }));
+
+      await expect(checkHealth()).resolves.toBe(false);
+    });
+
+    it("gives up on a request that never settles", async () => {
+      jest.useFakeTimers();
+      // A connection that hangs open: without the timeout the caller would
+      // wait on this forever and keep showing a stale status.
+      fetchMock.mockImplementation(
+        (_url: string, { signal }: { signal: AbortSignal }) =>
+          new Promise((_resolve, reject) => {
+            signal.addEventListener("abort", () =>
+              reject(new DOMException("Aborted", "AbortError"))
+            );
+          })
+      );
+
+      const probe = checkHealth({ timeoutMs: 1000 });
+      jest.advanceTimersByTime(1000);
+
+      await expect(probe).resolves.toBe(false);
+      jest.useRealTimers();
+    });
+
+    it("stops waiting when the caller aborts", async () => {
+      const controller = new AbortController();
+      fetchMock.mockImplementation(
+        (_url: string, { signal }: { signal: AbortSignal }) =>
+          new Promise((_resolve, reject) => {
+            signal.addEventListener("abort", () =>
+              reject(new DOMException("Aborted", "AbortError"))
+            );
+          })
+      );
+
+      const probe = checkHealth({ signal: controller.signal });
+      controller.abort();
+
+      await expect(probe).resolves.toBe(false);
     });
   });
 });

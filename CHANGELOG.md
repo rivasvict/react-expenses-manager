@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.16.0] - 2026-09-21
+
+### Added
+
+- A sync-server status ring in the app bar, beside the account chip: green
+  while the server answers, red when it cannot be reached, and a neutral
+  grey until the first answer arrives, so a cold start never flashes red at
+  a server that turns out to be up. It polls a new unauthenticated
+  `GET /api/health` endpoint once a minute and does nothing at all while the
+  tab is hidden or the browser reports no connection, re-probing the moment
+  either comes back. Probes are bounded by a five-second timeout, never
+  overlap, and nothing in the app waits on the result.
+
 ## [1.15.0] - 2026-09-21
 
 ### Added

@@ -396,3 +396,15 @@ test("each app instance gets isolated storage", async () => {
   });
   assert.equal(onSecond.status, HTTP_STATUS.CREATED);
 });
+
+test("the health route answers an unauthenticated GET", async () => {
+  // The probe has to work with no session at all, or a client could never
+  // tell "signed out" apart from "server down".
+  const response = await makeApp().handle({
+    method: "GET",
+    path: "/api/health",
+  });
+
+  assert.equal(response.status, HTTP_STATUS.OK);
+  assert.deepEqual(response.body, { status: "ok" });
+});

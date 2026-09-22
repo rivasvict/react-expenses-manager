@@ -275,6 +275,13 @@ export const installFakeSyncServer = (): FakeSyncServer => {
     body: any,
     headers: Record<string, string>
   ): Response => {
+    // The app bar's status ring probes this on mount and once a minute
+    // after (src/components/common/SyncStatusRing). It is unauthenticated
+    // and stateless, exactly as on the real server.
+    if (method === "GET" && path === "/api/health") {
+      return jsonResponse(200, { status: "ok" });
+    }
+
     if (method === "POST" && path === "/api/auth/signup") {
       const { email, password, firstName, lastName } = body || {};
       if (!email || !password || !firstName || !lastName)
