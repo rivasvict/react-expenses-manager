@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -12,6 +15,7 @@ import {
   getBucketAllowanceValidationError,
   getUnbudgetedCategories,
 } from "../../../../helpers/entriesHelper/entriesHelper";
+import { Trans, useTranslation } from "../../../../i18n";
 
 const BUCKETS_ROUTE = "/buckets";
 
@@ -22,6 +26,8 @@ const BUCKETS_ROUTE = "/buckets";
  * bucket yet, since a category needs to exist before it can get one.
  */
 const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const categoriesWithoutBucket = getUnbudgetedCategories({
     buckets,
     unbudgetedCategories,
@@ -35,13 +41,19 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const categoryError = getBucketValidationError({ categoryName, buckets });
+    const categoryError = getBucketValidationError(
+      { categoryName, buckets },
+      translator
+    );
     if (categoryError) {
       setError(categoryError);
       return;
     }
 
-    const allowanceError = getBucketAllowanceValidationError(allowance);
+    const allowanceError = getBucketAllowanceValidationError(
+      allowance,
+      translator
+    );
     if (allowanceError) {
       setError(allowanceError);
       return;
@@ -54,16 +66,24 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
       goToBuckets();
     } catch (submitError) {
       // The storage layer rejects duplicates/invalid names; surface the reason.
-      setError(submitError.message || "The bucket could not be created");
+      setError(submitError.message || t("addBucket.createFailed"));
     }
   };
 
   return (
-    <MainContentContainer className="add-bucket" pageTitle="Buckets">
-      <ContentTileSection>Add new bucket</ContentTileSection>
+    <MainContentContainer
+      className="add-bucket"
+      pageTitle={t("addBucket.pageTitle")}
+    >
+      <ContentTileSection>{t("buckets.addNew")}</ContentTileSection>
       {categoriesWithoutBucket.length === 0 ? (
         <p className="add-bucket-no-categories">
-          Every category already has a bucket. <Link to="/add-category">Add a new category</Link> first.
+          <Trans
+            i18nKey="addBucket.noCategories"
+            components={{
+              link: (label) => <Link to="/add-category">{label}</Link>,
+            }}
+          />
         </p>
       ) : (
       <FormContent
@@ -74,17 +94,14 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
               <Col xs={12} className="top-content">
                 <Form.Group>
                   <Form.Label htmlFor="categoryName" id="categoryName-label">
-                    Category
+                    {t("entryForm.category")}
                   </Form.Label>
-                  <p className="field-hint">
-                    Pick one of your existing categories to give it a monthly
-                    spending limit.
-                  </p>
+                  <p className="field-hint">{t("addBucket.categoryHint")}</p>
                   <CategorySearchSelect
                     id="categoryName"
                     name="categoryName"
                     value={categoryName}
-                    emptyOptionLabel="Select a category"
+                    emptyOptionLabel={t("entryForm.selectCategory")}
                     options={categoriesWithoutBucket.map((category) => ({
                       value: category,
                       label: category,
@@ -97,13 +114,13 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
                 </Form.Group>
                 <Form.Group className="vertical-standard-space">
                   <Form.Label htmlFor="bucket-allowance">
-                    Monthly allowance
+                    {t("bucketForm.monthlyAllowance")}
                   </Form.Label>
                   <InputNumber
                     type="number"
                     id="bucket-allowance"
                     name="allowance"
-                    placeholder="Insert bucket allowance"
+                    placeholder={t("addBucket.allowancePlaceholder")}
                     value={allowance}
                     onChange={(event) => {
                       setAllowance(event.currentTarget.value);
@@ -126,14 +143,14 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
                   type="submit"
                   className="vertical-standard-space"
                 >
-                  Submit
+                  {t("common.submit")}
                 </FormButton>
                 <Button
                   variant="secondary"
                   className="vertical-standard-space"
                   onClick={goToBuckets}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
               </Col>
             </Row>

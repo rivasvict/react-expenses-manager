@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -18,7 +21,6 @@ import {
 } from "../../../../../helpers/entriesHelper/filterSortHelper";
 import { MainContentContainer } from "../../../MainContentContainer";
 import ContentTileSection from "../../../ContentTitleSection";
-import { capitalize } from "lodash";
 import "./styles.scss";
 import SummaryWithChart from "../../../SummaryWithChart";
 import EntryListToolbar from "../../EntryListControls/EntryListToolbar";
@@ -28,6 +30,7 @@ import ListSectionHeader from "../../EntryListControls/ListSectionHeader";
 import FilterEmptyState from "../../EntryListControls/FilterEmptyState";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
+import { withTranslation } from "../../../../../i18n";
 
 class EntrySummaryWithFilter extends Component {
   state = { isFilterSheetOpen: false };
@@ -56,7 +59,7 @@ class EntrySummaryWithFilter extends Component {
   handleCancel = () => this.goBack();
 
   render() {
-    const { entryFilters } = this.props;
+    const { entryFilters, t, plural, language } = this.props;
     const categoryOptions = getEntryCategoryOption(
       this.props.entryType,
       this.props.buckets,
@@ -82,7 +85,10 @@ class EntrySummaryWithFilter extends Component {
       entryFilters.sortKey
     );
     const totalSum = getSumFromEntries({ entries: visibleEntries });
-    const descriptors = getActiveFilterDescriptors({ entryFilters });
+    const descriptors = getActiveFilterDescriptors({
+      entryFilters,
+      translator: { t, plural, language },
+    });
     const isFiltered = descriptors.length > 0;
     const activeFilterCount = descriptors.filter(
       (descriptor) => descriptor.key !== "search"
@@ -90,14 +96,14 @@ class EntrySummaryWithFilter extends Component {
     return (
       <MainContentContainer
         className="entry-summary-with-filter"
-        pageTitle="Monthly report"
+        pageTitle={t("entriesReport.pageTitle")}
       >
         <Container className="top-content" fluid>
           {!isFiltered && (
             <ContentTileSection
-              title="Summary"
+              title={t("common.summary")}
               className={`tile-tone--${this.props.entryType}`}
-              label={`${capitalize(entryTypePlural)} total`}
+              label={t(`entriesReport.total.${entryTypePlural}`)}
               value={formatNumberForDisplay(totalSum)}
             />
           )}
@@ -127,7 +133,7 @@ class EntrySummaryWithFilter extends Component {
             <FilteredBanner
               descriptors={descriptors}
               counts={{ shown: visibleEntries.length, total: monthEntries.length }}
-              totalLabel="Filtered total"
+              totalLabel={t("filteredBanner.total")}
               totalValue={formatNumberForDisplay(totalSum)}
               tone={this.props.entryType}
               onRemoveFilter={this.handleRemoveFilter}
@@ -145,8 +151,8 @@ class EntrySummaryWithFilter extends Component {
                 <ListSectionHeader
                   label={
                     isFiltered
-                      ? `Matching ${entryTypePlural}`
-                      : capitalize(entryTypePlural)
+                      ? t(`entriesReport.matching.${entryTypePlural}`)
+                      : t(`common.${entryTypePlural}`)
                   }
                   count={visibleEntries.length}
                   tone={this.props.entryType}
@@ -163,7 +169,7 @@ class EntrySummaryWithFilter extends Component {
                 variant="secondary"
                 onClick={this.handleCancel}
               >
-                Go Back
+                {t("common.goBack")}
               </Button>
             </Col>
           </Row>
@@ -188,4 +194,4 @@ const mapActionsToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withRouter(EntrySummaryWithFilter));
+)(withRouter(withTranslation(EntrySummaryWithFilter)));

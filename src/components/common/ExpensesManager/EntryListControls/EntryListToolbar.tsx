@@ -1,10 +1,17 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import searchIcon from "@iconify-icons/codicon/search";
 import checkIcon from "@iconify-icons/codicon/check";
 import filterIcon from "@iconify-icons/codicon/filter";
 import sortIcon from "@iconify-icons/codicon/arrow-swap";
-import { EntryFilters, SortKey } from "../../../../helpers/entriesHelper/filterSortHelper";
+import {
+  EntryFilters,
+  SortKey,
+} from "../../../../helpers/entriesHelper/filterSortHelper";
+import { TranslationKey, useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
 type EntryListToolbarProps = {
@@ -22,26 +29,30 @@ type EntryListToolbarProps = {
 type SortOption = {
   key: SortKey;
   /** Bolded current-key label on the collapsed button ("Sort: Date"). */
-  buttonLabel: string;
+  buttonLabelKey: TranslationKey;
   /** Full option wording inside the popover menu. */
-  menuLabel: string;
-  subtitle?: string;
+  menuLabelKey: TranslationKey;
+  subtitleKey?: TranslationKey;
   isDefault?: boolean;
 };
 
 const SORT_OPTIONS: SortOption[] = [
   {
     key: "date",
-    buttonLabel: "Date",
-    menuLabel: "Date — newest first",
+    buttonLabelKey: "sort.date",
+    menuLabelKey: "sort.dateNewestFirst",
     isDefault: true,
   },
-  { key: "amount", buttonLabel: "Amount", menuLabel: "Amount — highest first" },
+  {
+    key: "amount",
+    buttonLabelKey: "sort.amount",
+    menuLabelKey: "sort.amountHighestFirst",
+  },
   {
     key: "name",
-    buttonLabel: "Name",
-    menuLabel: "Name — A → Z",
-    subtitle: "then by description",
+    buttonLabelKey: "sort.name",
+    menuLabelKey: "sort.nameAToZ",
+    subtitleKey: "sort.thenByDescription",
   },
 ];
 
@@ -60,6 +71,7 @@ const EntryListToolbar = ({
   onOpenFilters,
   filtersButtonRef,
 }: EntryListToolbarProps) => {
+  const { t } = useTranslation();
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
   const sortRootRef = useRef<HTMLDivElement>(null);
@@ -143,8 +155,8 @@ const EntryListToolbar = ({
         <input
           type="text"
           className="entry-list-toolbar__search-input"
-          placeholder="Search entries"
-          aria-label="Search entries"
+          placeholder={t("toolbar.searchPlaceholder")}
+          aria-label={t("toolbar.searchEntries")}
           value={entryFilters.search}
           onChange={(event) =>
             onFiltersChange({ search: event.currentTarget.value })
@@ -156,7 +168,7 @@ const EntryListToolbar = ({
           type="button"
           ref={sortButtonRef}
           className="entry-list-toolbar__sort-button"
-          aria-label="Sort entries"
+          aria-label={t("toolbar.sortEntries")}
           aria-haspopup="menu"
           aria-expanded={isSortMenuOpen}
           onClick={() =>
@@ -166,18 +178,20 @@ const EntryListToolbar = ({
           <span className="entry-list-toolbar__sort-icon" aria-hidden="true">
             <Icon icon={sortIcon} />
           </span>
-          Sort:{" "}
+          {t("toolbar.sortPrefix")}{" "}
           <strong className="entry-list-toolbar__sort-current">
-            {selectedOption.buttonLabel}
+            {t(selectedOption.buttonLabelKey)}
           </strong>
         </button>
         {isSortMenuOpen && (
           <div
             className="entry-list-toolbar__sort-menu"
             role="menu"
-            aria-label="Sort by"
+            aria-label={t("sort.sortBy")}
           >
-            <div className="entry-list-toolbar__sort-menu-header">Sort by</div>
+            <div className="entry-list-toolbar__sort-menu-header">
+              {t("sort.sortBy")}
+            </div>
             {SORT_OPTIONS.map((option, optionIndex) => {
               const isSelected = option.key === entryFilters.sortKey;
               return (
@@ -199,16 +213,16 @@ const EntryListToolbar = ({
                 >
                   <span className="entry-list-toolbar__sort-option-text">
                     <span className="entry-list-toolbar__sort-option-label">
-                      {option.menuLabel}
+                      {t(option.menuLabelKey)}
                       {option.isDefault && (
                         <span className="entry-list-toolbar__sort-option-tag">
-                          Default
+                          {t("sort.default")}
                         </span>
                       )}
                     </span>
-                    {option.subtitle && (
+                    {option.subtitleKey && (
                       <span className="entry-list-toolbar__sort-option-subtitle">
-                        {option.subtitle}
+                        {t(option.subtitleKey)}
                       </span>
                     )}
                   </span>
@@ -230,12 +244,14 @@ const EntryListToolbar = ({
         type="button"
         ref={filtersButtonRef}
         className={`entry-list-toolbar__filters-button${
-          isFilterSheetOpen ? " entry-list-toolbar__filters-button--engaged" : ""
+          isFilterSheetOpen
+            ? " entry-list-toolbar__filters-button--engaged"
+            : ""
         }`}
         aria-label={
           activeFilterCount
-            ? `Open filters (${activeFilterCount} active)`
-            : "Open filters"
+            ? t("toolbar.openFiltersActive", { count: activeFilterCount })
+            : t("toolbar.openFilters")
         }
         aria-expanded={isFilterSheetOpen}
         onClick={onOpenFilters}
@@ -243,9 +259,12 @@ const EntryListToolbar = ({
         <span className="entry-list-toolbar__filters-icon" aria-hidden="true">
           <Icon icon={filterIcon} />
         </span>
-        Filters
+        {t("toolbar.filters")}
         {activeFilterCount > 0 && (
-          <span className="entry-list-toolbar__filters-badge" aria-hidden="true">
+          <span
+            className="entry-list-toolbar__filters-badge"
+            aria-hidden="true"
+          >
             {activeFilterCount}
           </span>
         )}

@@ -1,13 +1,14 @@
 import React from "react";
 import { useSyncServerStatus } from "./useSyncServerStatus";
+import { useTranslation } from "../../../i18n";
 import "./styles.scss";
 
 // One entry per status, so the class, the label and the tooltip can never
 // drift apart from each other.
-const STATUS_LABELS = {
-  unknown: "Sync server: checking…",
-  online: "Sync server: online",
-  offline: "Sync server: offline",
+const STATUS_LABEL_KEYS = {
+  unknown: "syncStatus.unknown",
+  online: "syncStatus.online",
+  offline: "syncStatus.offline",
 } as const;
 
 /**
@@ -18,8 +19,9 @@ const STATUS_LABELS = {
  * app waits on it.
  */
 const SyncStatusRing = () => {
+  const { t } = useTranslation();
   const status = useSyncServerStatus();
-  const label = STATUS_LABELS[status];
+  const label = t(STATUS_LABEL_KEYS[status]);
   return (
     <span
       className={`sync-status-ring sync-status-ring--${status}`}

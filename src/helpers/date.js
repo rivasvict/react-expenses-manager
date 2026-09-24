@@ -1,12 +1,19 @@
 import dayjs from "dayjs";
+import "dayjs/locale/es";
+import { upperFirst } from "lodash";
+import { DEFAULT_LANGUAGE, defaultTranslator } from "../i18n";
 const toMiliseconds = (seconds) => seconds * 1000;
 
 const getCurrentYear = () => dayjs().get("year");
 
 const getCurrentMonth = () => dayjs().get("month");
 
-const getMonthNameDisplay = (monthNumber) =>
-  dayjs().month(monthNumber).format("MMMM");
+// Month names come from dayjs's own locale data; the locale is applied per
+// call (never globally), so no other date formatting changes with the UI
+// language. Spanish month names are lowercase mid-sentence, but every caller
+// shows them as a title, hence upperFirst.
+const getMonthNameDisplay = (monthNumber, language = DEFAULT_LANGUAGE) =>
+  upperFirst(dayjs().month(monthNumber).locale(language).format("MMMM"));
 
 const getCurrentTimestamp = () => toMiliseconds(dayjs().unix());
 
@@ -31,16 +38,20 @@ const getYearMonthKey = ({ year, month }) =>
 // fallback have no direct coverage, nor do the older helpers above.
 // Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/160
-const formatRelativeTime = (timestampMs, nowMs = Date.now()) => {
+const formatRelativeTime = (
+  timestampMs,
+  nowMs = Date.now(),
+  { t, plural, language } = defaultTranslator
+) => {
   const elapsedMs = Math.max(0, nowMs - timestampMs);
   const minutes = Math.floor(elapsedMs / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  if (minutes < 1) return t("time.justNow");
+  if (minutes < 60) return plural("time.minutesAgo", minutes);
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  if (hours < 24) return plural("time.hoursAgo", hours);
   const days = Math.floor(hours / 24);
-  if (days < 30) return days === 1 ? "1 day ago" : `${days} days ago`;
-  return dayjs(timestampMs).format("MMM D, YYYY");
+  if (days < 30) return plural("time.daysAgo", days);
+  return dayjs(timestampMs).locale(language).format(t("time.dateFormat"));
 };
 
 export {

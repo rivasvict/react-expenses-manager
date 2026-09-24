@@ -15,11 +15,12 @@ import {
   SYNC_ERROR_CODES,
   SyncApiError,
 } from "../../services/syncApi/contract";
+import { getSyncErrorMessage, Translator, useTranslation } from "../../i18n";
 
 // Same fields and validation rules as the dormant SignUp.js
 // (docs/multi-user-sync/DESIGN.md §2.2); only the JSX wrapper differs (in-app
 // MainContentContainer, not the NoSessionContainer full-page takeover).
-const buildUserModel = () =>
+const buildUserModel = ({ t }: Translator) =>
   FormModel({
     firstName: "",
     lastName: "",
@@ -29,28 +30,28 @@ const buildUserModel = () =>
   })
     .addBuiltInValidationToField({
       fieldName: "firstName",
-      validation: { name: "required", message: "First name is required" },
+      validation: { name: "required", message: t("auth.firstNameRequired") },
     })
     .addBuiltInValidationToField({
       fieldName: "lastName",
-      validation: { name: "required", message: "Last name is required" },
+      validation: { name: "required", message: t("auth.lastNameRequired") },
     })
     .addBuiltInValidationToField({
       fieldName: "email",
-      validation: { name: "required", message: "Email is required" },
+      validation: { name: "required", message: t("auth.emailRequired") },
     })
     .addBuiltInValidationToField({
       fieldName: "password",
-      validation: { name: "required", message: "Password is required" },
+      validation: { name: "required", message: t("auth.passwordRequired") },
     })
     .addBuiltInValidationsToField({
       fieldName: "password-retype",
       validations: [
-        { name: "required", message: "Password is required" },
+        { name: "required", message: t("auth.passwordRequired") },
         {
           name: "match",
           comparatorFieldName: "password",
-          message: "Password fields should match",
+          message: t("auth.passwordsMustMatch"),
         },
       ],
     })
@@ -62,8 +63,10 @@ const handleChange = ({ event, dispatchFormStateChange }: any) => {
 };
 
 const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> }) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
-  const [userModel] = useState(buildUserModel);
+  const [userModel] = useState(() => buildUserModel(translator));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<SyncApiError | null>(null);
 
@@ -86,7 +89,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
   };
 
   return (
-    <MainContentContainer pageTitle="Sign up">
+    <MainContentContainer pageTitle={t("account.signUp")}>
       <FormValidation
         formModel={userModel}
         className="app-form"
@@ -97,7 +100,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputText
                   name="firstName"
-                  placeholder="First Name"
+                  placeholder={t("auth.firstName")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -108,7 +111,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputText
                   name="lastName"
-                  placeholder="Last Name"
+                  placeholder={t("auth.lastName")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -119,7 +122,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputText
                   name="email"
-                  placeholder="Email"
+                  placeholder={t("auth.email")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -130,7 +133,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputPassword
                   name="password"
-                  placeholder="Password"
+                  placeholder={t("auth.password")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -141,7 +144,7 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputPassword
                   name="password-retype"
-                  placeholder="Retype Password"
+                  placeholder={t("auth.retypePassword")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -155,11 +158,11 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               >
                 {error.code === SYNC_ERROR_CODES.EMAIL_TAKEN ? (
                   <React.Fragment>
-                    An account with this email already exists. Try signing in
-                    instead. <Link to="/sign-in">Sign in</Link>
+                    {t("signUp.emailTaken")}{" "}
+                    <Link to="/sign-in">{t("account.signIn")}</Link>
                   </React.Fragment>
                 ) : (
-                  error.message || "Could not sign up. Please try again."
+                  getSyncErrorMessage(error, translator, "signUp.failed")
                 )}
               </p>
             )}
@@ -171,14 +174,14 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
               }
               disabled={!formState.isModelValid || isLoading}
             >
-              {isLoading ? "Signing up…" : "Sign up"}
+              {isLoading ? t("signUp.submitting") : t("account.signUp")}
             </FormButton>
             <FormButton
               variant="secondary"
               className="vertical-standard-space"
               onClick={handleCancel}
             >
-              Cancel
+              {t("common.cancel")}
             </FormButton>
           </React.Fragment>
         )}

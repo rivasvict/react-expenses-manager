@@ -1,7 +1,9 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { Component } from "react";
 import ContentTileSection from "../../../ContentTitleSection";
 import { FormSelect } from "../../../Forms";
-import { capitalize } from "lodash";
 import { MainContentContainer } from "../../../MainContentContainer";
 import EntriesSummary from "../EntriesSummary";
 import {
@@ -38,6 +40,7 @@ import {
   setEntryFilters,
 } from "../../../../../redux/expensesManager/actionCreators";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import { withTranslation } from "../../../../../i18n";
 
 /**
  * TODO: Turn this into a functional component
@@ -126,10 +129,11 @@ class Summary extends Component {
   // header with its per-list total; otherwise the built-in headers stay.
   getFilteredEntries = (datedEntries, isFiltered) => {
     const { filter } = this.state;
+    const { t } = this.props;
     const listHeaders = {
       incomes: isFiltered ? (
         <ListSectionHeader
-          label="Matching incomes"
+          label={t("entriesReport.matching.incomes")}
           tone={ENTRY_TYPES_SINGULAR.INCOME}
           totalText={formatNumberForDisplay(
             getSumFromEntries({
@@ -140,7 +144,7 @@ class Summary extends Component {
       ) : undefined,
       expenses: isFiltered ? (
         <ListSectionHeader
-          label="Matching expenses"
+          label={t("entriesReport.matching.expenses")}
           tone={ENTRY_TYPES_SINGULAR.EXPENSE}
           totalText={formatNumberForDisplay(
             getSumFromEntries({
@@ -154,7 +158,7 @@ class Summary extends Component {
       incomes: !!filter ? (
         <SummaryWithChart
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.INCOMES]}
-          name={capitalize(ENTRY_TYPES_PLURAL.INCOMES)}
+          name={ENTRY_TYPES_PLURAL.INCOMES}
           showChart={!!filter}
           entryType={ENTRY_TYPES_SINGULAR.INCOME}
           listHeader={listHeaders.incomes}
@@ -173,7 +177,7 @@ class Summary extends Component {
       expenses: !!filter ? (
         <SummaryWithChart
           entries={datedEntries?.[ENTRY_TYPES_PLURAL.EXPENSES]}
-          name={capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
+          name={ENTRY_TYPES_PLURAL.EXPENSES}
           showChart={!!filter}
           entryType={ENTRY_TYPES_SINGULAR.EXPENSE}
           listHeader={listHeaders.expenses}
@@ -183,7 +187,7 @@ class Summary extends Component {
           {listHeaders.expenses}
           <EntriesSummary
             entries={datedEntries?.[ENTRY_TYPES_PLURAL.EXPENSES]}
-            name={capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
+            name={ENTRY_TYPES_PLURAL.EXPENSES}
             entryType={ENTRY_TYPES_SINGULAR.EXPENSE}
             hideHeader={isFiltered}
           />
@@ -240,12 +244,15 @@ class Summary extends Component {
   handleCancel = () => this.goBack();
 
   render() {
-    const { entryFilters } = this.props;
+    const { entryFilters, t, plural, language } = this.props;
     // Derive the month's entries once per render; every figure below shares
     // the filtered/sorted view of them.
     const datedEntries = this.getDatedEntries();
     const filteredDatedEntries = this.getFilteredDatedEntries(datedEntries);
-    const descriptors = getActiveFilterDescriptors({ entryFilters });
+    const descriptors = getActiveFilterDescriptors({
+      entryFilters,
+      translator: { t, plural, language },
+    });
     const isFiltered = descriptors.length > 0;
     const activeFilterCount = descriptors.filter(
       (descriptor) => descriptor.key !== "search"
@@ -302,14 +309,19 @@ class Summary extends Component {
     return (
       <MainContentContainer
         className="summary-container"
-        pageTitle="Monthly Summary"
+        pageTitle={t("summary.pageTitle")}
       >
         <Container fluid className="top-content">
           {!isFiltered && (
             <ContentTileSection
-              title="Summary"
+              title={t("common.summary")}
               className={toneClass}
-              label={`${capitalize(getMonthNameDisplay(this.props.selectedDate.month))} total`}
+              label={t("summary.monthTotal", {
+                month: getMonthNameDisplay(
+                  this.props.selectedDate.month,
+                  language
+                ),
+              })}
               value={selectedEntriesSum}
             />
           )}
@@ -333,7 +345,7 @@ class Summary extends Component {
             onClose={this.closeFilterSheet}
           />
           <label className="form-label" htmlFor="summary-entry-type">
-            Show
+            {t("summary.show")}
           </label>
           <FormSelect
             id="summary-entry-type"
@@ -342,22 +354,22 @@ class Summary extends Component {
             onChange={this.handleChange}
             className="select-entry-type"
           >
-            <option value="">All incomes and expenses</option>
+            <option value="">{t("summary.showAll")}</option>
             <option value={ENTRY_TYPES_PLURAL.INCOMES}>
-              {capitalize(ENTRY_TYPES_PLURAL.INCOMES)}
+              {t("common.incomes")}
             </option>
             <option value={ENTRY_TYPES_PLURAL.EXPENSES}>
-              {capitalize(ENTRY_TYPES_PLURAL.EXPENSES)}
+              {t("common.expenses")}
             </option>
           </FormSelect>
           {/* Per the approved mock the banner sits BETWEEN the toolbar/panel
               and the matching rows; the toolbar stays on top while filtered. */}
           {isFiltered && (
             <FilteredBanner
-              title="Filtered view · both lists"
+              title={t("summary.filteredTitle")}
               descriptors={descriptors}
               counts={{ shown: shownCount, total: totalCount }}
-              totalLabel="Filtered total · net"
+              totalLabel={t("summary.filteredTotal")}
               totalValue={netDisplayValue}
               tone={netTone}
               onRemoveFilter={this.handleRemoveFilter}
@@ -385,7 +397,7 @@ class Summary extends Component {
                 variant="secondary"
                 onClick={this.handleCancel}
               >
-                Go Back
+                {t("common.goBack")}
               </Button>
             </Col>
           </Row>
@@ -409,4 +421,4 @@ const mapActionsToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withRouter(Summary));
+)(withRouter(withTranslation(Summary)));

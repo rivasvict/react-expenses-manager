@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { Component } from "react";
 import CategorySelector from "../CategorySelector";
 import { getEntryCategoryOption } from "../../../../helpers/entriesHelper/entriesHelper";
@@ -5,9 +8,9 @@ import { getEntryCategoryOption } from "../../../../helpers/entriesHelper/entrie
 import { Button, Form, Col, Row } from "react-bootstrap";
 import "./styles.scss";
 import { FormButton, FormContent, InputNumber, InputText } from "../../Forms";
-import { capitalize } from "lodash";
 import ContentTileSection from "../../ContentTitleSection";
 import { MainContentContainer } from "../../MainContentContainer";
+import { withTranslation } from "../../../../i18n";
 
 // TODO: Change this to a function component instead of a class component
 class EntryForm extends Component {
@@ -40,7 +43,8 @@ class EntryForm extends Component {
   };
 
   render() {
-    const entryNameForDisplay = capitalize(this.state.type);
+    const { t } = this.props;
+    const entryType = this.state.type;
     // Pass the user's buckets and standalone categories so newly created
     // expense categories become selectable here, whether or not they have a
     // bucket (spending limit) yet (issue #100).
@@ -49,13 +53,12 @@ class EntryForm extends Component {
       this.props.buckets,
       this.props.unbudgetedCategories
     );
-    const operationTitle = this.props.operationTitle
-      ? `${this.props.operationTitle} `
-      : "";
-    const title = `${operationTitle}${entryNameForDisplay}`;
+    // `operation` is "add" | "edit"; the full phrase is one key per
+    // combination so each language can order and inflect it naturally.
+    const title = t(`entryForm.heading.${this.props.operation}.${entryType}`);
 
     return (
-      <MainContentContainer pageTitle={`${entryNameForDisplay} entry`}>
+      <MainContentContainer pageTitle={t(`entryForm.pageTitle.${entryType}`)}>
         <ContentTileSection className={`entry-form-heading entry-form-heading--${this.state.type}`}>
           {title}
         </ContentTileSection>
@@ -72,32 +75,37 @@ class EntryForm extends Component {
           <Row className="top-container container-fluid">
             <Col xs={12} className="top-content">
               <Form.Group>
-                <Form.Label htmlFor="entry-amount">Amount</Form.Label>
+                <Form.Label htmlFor="entry-amount">
+                  {t("entryForm.amount")}
+                </Form.Label>
                 <InputNumber
                   type="number"
                   id="entry-amount"
                   name="amount"
-                  placeholder={`Insert ${capitalize(this.state.type)} amount`}
+                  placeholder={t(`entryForm.amountPlaceholder.${entryType}`)}
                   value={this.state.amount}
                   onChange={this.handleInputChange}
                 ></InputNumber>
               </Form.Group>
               <Form.Group className="vertical-standard-space">
                 <Form.Label htmlFor="entry-description">
-                  Description <span className="optional-hint">(optional)</span>
+                  {t("entryForm.description")}{" "}
+                  <span className="optional-hint">
+                    {t("entryForm.optional")}
+                  </span>
                 </Form.Label>
                 <InputText
                   type="text"
                   id="entry-description"
                   name="description"
-                  placeholder="Description"
+                  placeholder={t("entryForm.description")}
                   value={this.state.description}
                   onChange={this.handleInputChange}
                 ></InputText>
               </Form.Group>
               <Form.Group className="vertical-standard-space">
                 <Form.Label htmlFor="entry-category" id="entry-category-label">
-                  Category
+                  {t("entryForm.category")}
                 </Form.Label>
                 <CategorySelector
                   id="entry-category"
@@ -105,13 +113,13 @@ class EntryForm extends Component {
                   value={this.state.categories_path}
                   handleChange={this.setCategory}
                   categoryOptions={categoryOptions}
-                  emptyOptionLabel="Select a category"
+                  emptyOptionLabel={t("entryForm.selectCategory")}
                 />
               </Form.Group>
               {this.props.allowRecurring && (
                 <Form.Group className="vertical-standard-space recurring-toggle-row d-flex justify-content-between align-items-center">
                   <Form.Label className="mb-0" htmlFor="entry-recurring-switch">
-                    Recurring (applies every month)
+                    {t("entryForm.recurring")}
                   </Form.Label>
                   <Form.Check
                     type="switch"
@@ -134,14 +142,14 @@ class EntryForm extends Component {
                 type="submit"
                 className="vertical-standard-space"
               >
-                Submit
+                {t("common.submit")}
               </FormButton>
               <Button
                 variant="secondary"
                 className="vertical-standard-space"
                 onClick={() => this.props.onCancel()}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               {this.props.handleEntryRemoval && (
                 <Button
@@ -151,7 +159,7 @@ class EntryForm extends Component {
                     this.props.handleEntryRemoval({ entryId: this.state.id })
                   }
                 >
-                  Remove entry
+                  {t("entryForm.remove")}
                 </Button>
               )}
             </Col>
@@ -162,4 +170,4 @@ class EntryForm extends Component {
   }
 }
 
-export default EntryForm;
+export default withTranslation(EntryForm);

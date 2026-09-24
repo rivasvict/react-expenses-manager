@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import "./styles.scss";
 import { Icon } from "@iconify/react";
@@ -7,6 +10,7 @@ import ScreenTitle from "../ScreenTitle";
 import { getMonthNameDisplay } from "../../../helpers/date";
 import { setSelectedDate } from "../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
+import { useTranslation } from "../../../i18n";
 import {
   doesAdjacentDateExist,
   handleDateSelectionPointers,
@@ -17,6 +21,7 @@ const NavigableMonthHeader = ({
   selectedDate,
   onSelectedDateChange,
 }) => {
+  const { t, language } = useTranslation();
   const canGo = (dateAdjacencyType) =>
     doesAdjacentDateExist({ dateAdjacencyType, selectedDate, entries });
 
@@ -40,7 +45,7 @@ const NavigableMonthHeader = ({
       <button
         type="button"
         className="month-header__step"
-        aria-label="Previous month"
+        aria-label={t("monthHeader.previous")}
         onClick={() => go("prev")}
         disabled={!canGoPrev}
         aria-disabled={!canGoPrev}
@@ -48,12 +53,12 @@ const NavigableMonthHeader = ({
         <Icon icon={chevronLeft} aria-hidden="true" />
       </button>
       <ScreenTitle
-        screenTitle={`${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`}
+        screenTitle={`${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`}
       />
       <button
         type="button"
         className="month-header__step"
-        aria-label="Next month"
+        aria-label={t("monthHeader.next")}
         onClick={() => go("next")}
         disabled={!canGoNext}
         aria-disabled={!canGoNext}

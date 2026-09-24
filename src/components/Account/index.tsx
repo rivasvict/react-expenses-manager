@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
@@ -7,6 +10,7 @@ import ContentTileSection from "../common/ContentTitleSection";
 import { logOut } from "../../redux/syncManager/actionCreators";
 import { getInitials } from "../../helpers/general";
 import { SyncSession } from "../../services/session";
+import { useTranslation } from "../../i18n";
 import "./styles.scss";
 
 interface AccountProps {
@@ -21,6 +25,7 @@ interface AccountProps {
  * announces a transient status line (AC-1.4, docs/multi-user-sync/PRD.md).
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
+  const { t } = useTranslation();
   const [justSignedOut, setJustSignedOut] = useState(false);
 
   const handleLogOut = () => {
@@ -29,7 +34,10 @@ const Account = ({ session, onLogOut }: AccountProps) => {
   };
 
   return (
-    <MainContentContainer className="account-screen" pageTitle="Account">
+    <MainContentContainer
+      className="account-screen"
+      pageTitle={t("account.pageTitle")}
+    >
       {session ? (
         <div className="account-card">
           <div className="account-card__identity">
@@ -45,40 +53,39 @@ const Account = ({ session, onLogOut }: AccountProps) => {
           </div>
           {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
               from the account. */}
-          <ContentTileSection title="Party" to="/party">
-            Party
+          <ContentTileSection title={t("party.pageTitle")} to="/party">
+            {t("party.pageTitle")}
           </ContentTileSection>
           <Button
             variant="secondary"
             className="full-width"
             onClick={handleLogOut}
           >
-            Log out
+            {t("account.logOut")}
           </Button>
         </div>
       ) : (
         <div className="account-card">
           {justSignedOut && (
             <p role="status" className="account-card__status">
-              Signed out. Your data stays on this device.
+              {t("account.signedOut")}
             </p>
           )}
           <p className="account-card__description">
-            Sign in to sync your entries across devices with your party.
+            {t("account.description")}
           </p>
           <ButtonLikeLink
             className="btn-primary"
             to="/sign-in"
-            buttonTitle="Sign in"
+            buttonTitle={t("account.signIn")}
           />
           <ButtonLikeLink
             className="btn-secondary"
             to="/sign-up"
-            buttonTitle="Sign up"
+            buttonTitle={t("account.signUp")}
           />
           <p className="account-card__reassurance text-secondary">
-            Everything still works without an account — this is only needed
-            for syncing with a party.
+            {t("account.reassurance")}
           </p>
         </div>
       )}
