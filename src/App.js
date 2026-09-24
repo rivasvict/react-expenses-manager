@@ -11,6 +11,7 @@ import { Provider, connect } from "react-redux";
 import { setUser } from "./redux/userManager/actionCreators";
 import WithBalance from "./components/WithBalance";
 import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
+import { LanguageProvider } from "./i18n";
 
 const mapStateToProps = (state) => ({ user: state.userManager.user });
 
@@ -48,11 +49,13 @@ const Routes = connect(
 function App({ reduxStore }) {
   return (
     <Provider store={reduxStore}>
-      <Router>
-        <Switch>
-          <Routes />
-        </Switch>
-      </Router>
+      <LanguageProvider>
+        <Router>
+          <Switch>
+            <Routes />
+          </Switch>
+        </Router>
+      </LanguageProvider>
     </Provider>
   );
 }

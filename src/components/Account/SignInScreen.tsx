@@ -14,23 +14,24 @@ import {
   SYNC_ERROR_CODES,
   SyncApiError,
 } from "../../services/syncApi/contract";
+import { getSyncErrorMessage, Translator, useTranslation } from "../../i18n";
 
 // Same fields/validation as the dormant SignIn.js
 // (docs/multi-user-sync/DESIGN.md §2.2), wrapped in the in-app
 // MainContentContainer instead of NoSessionContainer. AC tags below are
 // defined in docs/multi-user-sync/PRD.md.
-const buildUserModel = () =>
+const buildUserModel = ({ t }: Translator) =>
   FormModel({
     email: "",
     password: "",
   })
     .addBuiltInValidationToField({
       fieldName: "email",
-      validation: { name: "required", message: "Email is required" },
+      validation: { name: "required", message: t("auth.emailRequired") },
     })
     .addBuiltInValidationToField({
       fieldName: "password",
-      validation: { name: "required", message: "Password is required" },
+      validation: { name: "required", message: t("auth.passwordRequired") },
     })
     .setModelInitialValidityState(false);
 
@@ -40,8 +41,10 @@ const handleChange = ({ event, dispatchFormStateChange }: any) => {
 };
 
 const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> }) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
-  const [userModel] = useState(buildUserModel);
+  const [userModel] = useState(() => buildUserModel(translator));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<SyncApiError | null>(null);
 
@@ -64,7 +67,7 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
   };
 
   return (
-    <MainContentContainer pageTitle="Sign in">
+    <MainContentContainer pageTitle={t("account.signIn")}>
       <FormValidation
         formModel={userModel}
         className="app-form"
@@ -75,7 +78,7 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputText
                   name="email"
-                  placeholder="Email"
+                  placeholder={t("auth.email")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -86,7 +89,7 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
               <ValidateField>
                 <InputPassword
                   name="password"
-                  placeholder="Password"
+                  placeholder={t("auth.password")}
                   onChange={(event: any) =>
                     handleChange({ event, dispatchFormStateChange })
                   }
@@ -101,8 +104,8 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
                 {/* AC-1.5: deliberately generic — never says which field
                     was wrong. */}
                 {error.code === SYNC_ERROR_CODES.INVALID_CREDENTIALS
-                  ? "Email or password is incorrect."
-                  : error.message || "Could not sign in. Please try again."}
+                  ? t("signIn.invalidCredentials")
+                  : getSyncErrorMessage(error, translator, "signIn.failed")}
               </p>
             )}
             <FormButton
@@ -113,14 +116,14 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
               }
               disabled={!formState.isModelValid || isLoading}
             >
-              {isLoading ? "Signing in…" : "Sign in"}
+              {isLoading ? t("signIn.submitting") : t("account.signIn")}
             </FormButton>
             <FormButton
               variant="secondary"
               className="vertical-standard-space"
               onClick={handleCancel}
             >
-              Cancel
+              {t("common.cancel")}
             </FormButton>
           </React.Fragment>
         )}

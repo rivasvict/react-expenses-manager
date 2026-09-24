@@ -1,5 +1,9 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { Button } from "react-bootstrap";
+import { useTranslation } from "../../i18n";
 
 interface WizardProgressProps {
   reviewedCount: number;
@@ -19,23 +23,29 @@ const WizardProgress = ({
   total,
   onAcceptAll,
   onRejectAll,
-}: WizardProgressProps) => (
-  <div className="wizard-progress">
-    <div className="wizard-progress__bar-row">
-      <progress value={reviewedCount} max={total} />
-      <span aria-live="polite" className="wizard-progress__count">
-        Item {Math.min(reviewedCount + 1, total)} of {total}
-      </span>
+}: WizardProgressProps) => {
+  const { t } = useTranslation();
+  return (
+    <div className="wizard-progress">
+      <div className="wizard-progress__bar-row">
+        <progress value={reviewedCount} max={total} />
+        <span aria-live="polite" className="wizard-progress__count">
+          {t("syncReview.progress", {
+            current: Math.min(reviewedCount + 1, total),
+            total,
+          })}
+        </span>
+      </div>
+      <div className="wizard-progress__bulk">
+        <Button variant="secondary" onClick={onAcceptAll}>
+          {t("syncReview.acceptAll")}
+        </Button>
+        <Button variant="secondary" onClick={onRejectAll}>
+          {t("syncReview.rejectAll")}
+        </Button>
+      </div>
     </div>
-    <div className="wizard-progress__bulk">
-      <Button variant="secondary" onClick={onAcceptAll}>
-        Accept all
-      </Button>
-      <Button variant="secondary" onClick={onRejectAll}>
-        Reject all
-      </Button>
-    </div>
-  </div>
-);
+  );
+};
 
 export default WizardProgress;

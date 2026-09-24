@@ -1,4 +1,5 @@
 import { capitalize } from "lodash";
+import { defaultTranslator, Translator } from "../../i18n/translator";
 
 /**
  * Pure filtering/sorting logic for the entry lists (/expenses, /incomes and,
@@ -117,12 +118,15 @@ export const sortEntries = <T extends FilterableEntry>(
 /**
  * One `{ key, label }` descriptor per active (non-default) filter. Drives the
  * removable chips in the filtered banner and the Filters-button badge count
- * (which counts the descriptors whose key is not "search").
+ * (which counts the descriptors whose key is not "search"). Labels are in the
+ * translator's language (English when none is given).
  */
 export const getActiveFilterDescriptors = ({
   entryFilters,
+  translator: { t } = defaultTranslator,
 }: {
   entryFilters: EntryFilters;
+  translator?: Translator;
 }): FilterDescriptor[] => {
   const descriptors: FilterDescriptor[] = [];
 
@@ -132,11 +136,16 @@ export const getActiveFilterDescriptors = ({
   if (entryFilters.category.length) {
     descriptors.push({
       key: "category",
-      label: `Category: ${capitalize(getCategorySegment(entryFilters.category))}`,
+      label: t("filters.categoryChip", {
+        category: capitalize(getCategorySegment(entryFilters.category)),
+      }),
     });
   }
   if (entryFilters.searchScope === "description") {
-    descriptors.push({ key: "searchScope", label: "Description only" });
+    descriptors.push({
+      key: "searchScope",
+      label: t("filterSheet.scopeDescription"),
+    });
   }
 
   return descriptors;

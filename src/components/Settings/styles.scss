@@ -1,0 +1,114 @@
+@import '../../variables.scss';
+
+.settings {
+  // The card sits at the top and Go Back at the bottom, like Data Management.
+  .settings__content {
+    flex: 1 1 auto;
+
+    .row {
+      margin-top: $vertical-standard-margin;
+    }
+  }
+
+  // Same card as the Data Management sections, so settings read as part of
+  // the same family of "about this device" screens.
+  .settings-section {
+    @include card();
+    padding: 1rem 1.1rem 1.1rem;
+
+    fieldset {
+      min-width: 0;
+    }
+
+    &__title {
+      float: none;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: $text-primary;
+    }
+
+    &__description {
+      color: $text-secondary;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 0.9rem;
+    }
+  }
+
+  // Selectable rows mirroring the filter sheet's sort options: a raised row,
+  // the gold-soft wash plus a check on the current choice.
+  .settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .settings-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.65rem 0.85rem;
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    color: $text-primary;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-within {
+      @include focus-ring();
+    }
+
+    &--selected,
+    &--selected:hover {
+      background-color: $accent-soft;
+      border-color: rgba($accent, 0.28);
+    }
+  }
+
+  .settings-option__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .settings-option__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .settings-option__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .settings-option__hint {
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  .settings-option__check {
+    display: flex;
+    align-items: center;
+    color: $accent;
+    font-size: 1.1rem;
+  }
+
+  .bottom-content .btn {
+    width: 100%;
+  }
+}

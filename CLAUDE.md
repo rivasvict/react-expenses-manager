@@ -49,6 +49,7 @@ Node version is pinned in `.nvmrc`.
 - `/data-management` — CSV import/export
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
+- `/settings` — Settings (device preferences such as the UI language; reached from the gear chip in the app bar)
 
 **Authentication:** `AuthenticatedApp` is currently commented out in `src/App.js`. The app runs without auth, using `WithBalance` to load entries directly.
 
@@ -57,6 +58,10 @@ Node version is pinned in `.nvmrc`.
 **Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`.
 
 ## Key patterns
+
+- **Every piece of UI text is translated.** The app ships in English (default) and Spanish (`src/i18n/`). Whenever you add or change text the user can see or hear — JSX text, `placeholder`, `aria-label`, `title`, `alt`, page titles, button labels, `window.confirm` messages, validation/error messages, chart labels — add a key to `src/i18n/translations/en.ts` **and** its Spanish text to `src/i18n/translations/es.ts`, then render it with `t("key")` from `useTranslation()` (or `withTranslation(Component)` for class components). Never hardcode an English string in a component. `es.ts` is typed against `en.ts`, so `npm run typecheck` fails on a missing key, and `src/i18n/translations/translations.test.ts` fails on a dropped `{{placeholder}}`. See the conventions at the top of `en.ts`: `{{name}}` placeholders, `_one`/`_other` plural pairs via `plural(key, count)`, `<link>…</link>` spans via `<Trans>`, and short `nav.*` labels (the mobile tab bar is narrow). Pure helpers that produce text take an optional `Translator` defaulting to English (`defaultTranslator`), e.g. `getBucketAllowanceValidationError(value, translator)`.
+- **User data is never translated.** Category and bucket names, descriptions and amounts are shown exactly as stored; the language preference lives only in `localStorage` (`settings.language`, see `src/i18n/languagePreference.ts`) and never touches the entries model, the backup format or the sync server. Sync-server error text is mapped by error code with `getSyncErrorMessage` (the server's own English wording is kept in English).
+- Integration tests run in English by default; to exercise Spanish, pick it on `/settings` (see `src/integrationTests/languageSettings.test.tsx`).
 
 - Components connect to Redux via `connect()` (class-style HOC pattern, not hooks)
 - Action creators are injected via `mapActionToProps` — components never import storage directly

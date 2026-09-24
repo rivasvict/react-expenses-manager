@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import copyIcon from "@iconify-icons/codicon/copy";
 import eyeIcon from "@iconify-icons/codicon/eye";
 import eyeClosedIcon from "@iconify-icons/codicon/eye-closed";
+import { useTranslation } from "../../i18n";
 
 interface ShareFieldProps {
   label: string;
@@ -32,42 +33,48 @@ const ShareField = ({
   onCopy,
   revealed,
   onToggleReveal,
-}: ShareFieldProps) => (
-  <div className="share-field">
-    <span className="share-field__label">{label}</span>
-    <input
-      className="share-field__value"
-      type={masked && !revealed ? "password" : "text"}
-      value={value}
-      readOnly
-      aria-label={label}
-    />
-    {masked && onToggleReveal && (
+}: ShareFieldProps) => {
+  const { t } = useTranslation();
+  const lowercaseLabel = label.toLowerCase();
+  return (
+    <div className="share-field">
+      <span className="share-field__label">{label}</span>
+      <input
+        className="share-field__value"
+        type={masked && !revealed ? "password" : "text"}
+        value={value}
+        readOnly
+        aria-label={label}
+      />
+      {masked && onToggleReveal && (
+        <Button
+          variant="secondary"
+          className="share-field__icon-button"
+          aria-label={
+            revealed
+              ? t("shareField.hide", { label: lowercaseLabel })
+              : t("shareField.show", { label: lowercaseLabel })
+          }
+          onClick={onToggleReveal}
+        >
+          <Icon icon={revealed ? eyeClosedIcon : eyeIcon} aria-hidden="true" />
+        </Button>
+      )}
       <Button
         variant="secondary"
         className="share-field__icon-button"
-        aria-label={
-          revealed ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`
-        }
-        onClick={onToggleReveal}
+        aria-label={t("shareField.copy", { label: lowercaseLabel })}
+        onClick={onCopy}
       >
-        <Icon icon={revealed ? eyeClosedIcon : eyeIcon} aria-hidden="true" />
+        <Icon icon={copyIcon} aria-hidden="true" />
       </Button>
-    )}
-    <Button
-      variant="secondary"
-      className="share-field__icon-button"
-      aria-label={`Copy ${label.toLowerCase()}`}
-      onClick={onCopy}
-    >
-      <Icon icon={copyIcon} aria-hidden="true" />
-    </Button>
-    {/* Rendered empty rather than conditionally: a live region has to be in
+      {/* Rendered empty rather than conditionally: a live region has to be in
         the document before it changes, or the update may not be announced. */}
-    <span className="share-field__copied" role="status" aria-live="polite">
-      {copied ? "Copied" : ""}
-    </span>
-  </div>
-);
+      <span className="share-field__copied" role="status" aria-live="polite">
+        {copied ? t("shareField.copied") : ""}
+      </span>
+    </div>
+  );
+};
 
 export default ShareField;

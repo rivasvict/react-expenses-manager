@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -5,6 +8,7 @@ import { Col, Container, ListGroup, Row, Button } from "react-bootstrap";
 import { MainContentContainer } from "../../MainContentContainer";
 import ContentTileSection from "../../ContentTitleSection";
 import { getExpenseCategoryNames } from "../../../../helpers/entriesHelper/entriesHelper";
+import { useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
 /**
@@ -14,13 +18,17 @@ import "./styles.scss";
  * the categories that do not have one yet (see AddBucket).
  */
 const Categories = ({ buckets, unbudgetedCategories, history }) => {
+  const { t } = useTranslation();
   const categoryNames = getExpenseCategoryNames(buckets, unbudgetedCategories);
   const handleGoBack = () => history.goBack();
 
   return (
-    <MainContentContainer className="categories-container" pageTitle="Categories">
-      <ContentTileSection title="Categories">
-        Every expense category, with or without a bucket
+    <MainContentContainer
+      className="categories-container"
+      pageTitle={t("categories.pageTitle")}
+    >
+      <ContentTileSection title={t("categories.pageTitle")}>
+        {t("categories.subtitle")}
       </ContentTileSection>
       <ListGroup className="categories-list">
         {categoryNames.map((categoryName) => {
@@ -35,7 +43,10 @@ const Categories = ({ buckets, unbudgetedCategories, history }) => {
             >
               {categoryName}
               {!hasBucket && (
-                <span className="category-no-bucket text-muted"> (no bucket)</span>
+                <span className="category-no-bucket text-muted">
+                  {" "}
+                  {t("categories.noBucket")}
+                </span>
               )}
             </ListGroup.Item>
           );
@@ -48,7 +59,7 @@ const Categories = ({ buckets, unbudgetedCategories, history }) => {
               to="/add-category"
               className="btn btn-primary btn-block add-category-link"
             >
-              Add new category
+              {t("categories.addNew")}
             </Link>
           </Col>
         </Row>
@@ -60,7 +71,7 @@ const Categories = ({ buckets, unbudgetedCategories, history }) => {
               onClick={handleGoBack}
               className="cancel"
             >
-              Go Back
+              {t("common.goBack")}
             </Button>
           </Col>
         </Row>

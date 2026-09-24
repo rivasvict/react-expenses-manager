@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { PartyMember } from "../../services/syncApi/contract";
+import { useTranslation } from "../../i18n";
 
 interface MemberRowProps {
   member: PartyMember;
@@ -19,30 +20,40 @@ interface MemberRowProps {
  * Block button (organizer view, AC-2.9), a muted "Blocked" label, or nothing.
  * There is no un-block affordance: out of scope by design.
  */
-const MemberRow = ({ member, isSelf, isOrganizer, onBlock }: MemberRowProps) => (
-  <li className="member-row">
-    <div className="member-row__identity">
-      <span className="member-row__name">
-        {member.firstName} {member.lastName}
-        {isSelf && <span className="member-row__you"> (you)</span>}
-      </span>
-      <span className="member-row__email">{member.email}</span>
-    </div>
-    {isOrganizer && <span className="member-row__badge">Organizer</span>}
-    {!isOrganizer && member.blocked && (
-      <span className="member-row__blocked">Blocked</span>
-    )}
-    {!isOrganizer && !member.blocked && onBlock && (
-      <Button
-        variant="secondary"
-        className="member-row__block"
-        aria-label={`Block ${member.firstName} ${member.lastName}`}
-        onClick={onBlock}
-      >
-        Block
-      </Button>
-    )}
-  </li>
-);
+const MemberRow = ({ member, isSelf, isOrganizer, onBlock }: MemberRowProps) => {
+  const { t } = useTranslation();
+  return (
+    <li className="member-row">
+      <div className="member-row__identity">
+        <span className="member-row__name">
+          {member.firstName} {member.lastName}
+          {isSelf && (
+            <span className="member-row__you"> {t("memberRow.you")}</span>
+          )}
+        </span>
+        <span className="member-row__email">{member.email}</span>
+      </div>
+      {isOrganizer && (
+        <span className="member-row__badge">{t("party.organizer")}</span>
+      )}
+      {!isOrganizer && member.blocked && (
+        <span className="member-row__blocked">{t("memberRow.blocked")}</span>
+      )}
+      {!isOrganizer && !member.blocked && onBlock && (
+        <Button
+          variant="secondary"
+          className="member-row__block"
+          aria-label={t("memberRow.blockLabel", {
+            firstName: member.firstName,
+            lastName: member.lastName,
+          })}
+          onClick={onBlock}
+        >
+          {t("memberRow.block")}
+        </Button>
+      )}
+    </li>
+  );
+};
 
 export default MemberRow;

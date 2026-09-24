@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import {
   formatNumberForDisplay,
@@ -7,6 +10,7 @@ import { Col } from "react-bootstrap";
 import "./Results.scss";
 import { IconMoneyIn, IconMoneyOut } from "./common/Icons";
 import RowLink from "./common/RowLink";
+import { useTranslation } from "../i18n";
 
 function TotalItem({
   name,
@@ -36,6 +40,7 @@ function TotalItem({
 }
 
 function Results({ entries, baseUrl = "" }) {
+  const { t } = useTranslation();
   const incomesName = "incomes";
   const expensesName = "expenses";
   const incomesSum = getSum({ entryType: incomesName, entries });
@@ -46,14 +51,14 @@ function Results({ entries, baseUrl = "" }) {
   return (
     <React.Fragment>
       <TotalItem
-        name="Incomes"
+        name={t("common.incomes")}
         amount={incomesSum}
         url={incomesUrl}
         Icon={IconMoneyIn}
         variant="income"
       />
       <TotalItem
-        name="Expenses"
+        name={t("common.expenses")}
         amount={expensesSum}
         url={expensesUrl}
         Icon={IconMoneyOut}

@@ -4,6 +4,7 @@ import {
   getDefaultEntryFilters,
   sortEntries,
 } from "./filterSortHelper";
+import { createTranslator } from "../../i18n/translator";
 
 const entry = (overrides: Record<string, unknown> = {}) => ({
   amount: "10",
@@ -221,5 +222,24 @@ describe("filterSortHelper - getActiveFilterDescriptors", () => {
         entryFilters: { ...getDefaultEntryFilters(), search: "   " },
       })
     ).toEqual([]);
+  });
+
+  it("labels the chips in the translator's language", () => {
+    expect(
+      getActiveFilterDescriptors({
+        entryFilters: {
+          search: "cof",
+          searchScope: "description",
+          category: ",food,",
+          sortKey: "amount",
+        },
+        translator: createTranslator("es"),
+      })
+    ).toEqual([
+      { key: "search", label: '"cof"' },
+      // The category name is user data and stays as stored.
+      { key: "category", label: "Categoría: Food" },
+      { key: "searchScope", label: "Solo descripción" },
+    ]);
   });
 });

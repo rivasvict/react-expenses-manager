@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 /**
  * Single-file backup & restore (issue #109).
  *
@@ -23,6 +26,12 @@ const buildBackupEnvelope = ({ balance, buckets, categories, fixedEntries }) => 
   },
 });
 
+// The English message stays on the error as before; `translationKey` and
+// `translationParams` let the UI show the same reason in the user's language
+// (see src/i18n/).
+const backupError = (message, translationKey, translationParams = {}) =>
+  Object.assign(new Error(message), { translationKey, translationParams });
+
 // Parses and validates a backup file's raw text into the `data` object ready
 // for `storage.importData`. Throws a descriptive error for anything that is
 // not a genuine backup of this app, before anything gets written to storage.
@@ -31,19 +40,27 @@ const parseBackupEnvelope = (text) => {
   try {
     envelope = JSON.parse(text);
   } catch (parseError) {
-    throw new Error(
-      "This file is not a valid backup: it could not be read as JSON"
+    throw backupError(
+      "This file is not a valid backup: it could not be read as JSON",
+      "backup.notJson"
     );
   }
 
   if (!envelope || typeof envelope !== "object") {
-    throw new Error("This file is not a valid backup");
+    throw backupError("This file is not a valid backup", "backup.invalid");
   }
   if (envelope.app !== BACKUP_APP_ID) {
-    throw new Error("This file is not a valid backup for this app");
+    throw backupError(
+      "This file is not a valid backup for this app",
+      "backup.otherApp"
+    );
   }
   if (envelope.schemaVersion !== BACKUP_SCHEMA_VERSION) {
-    throw new Error(`Unsupported backup version: ${envelope.schemaVersion}`);
+    throw backupError(
+      `Unsupported backup version: ${envelope.schemaVersion}`,
+      "backup.unsupportedVersion",
+      { version: String(envelope.schemaVersion) }
+    );
   }
 
   const data =

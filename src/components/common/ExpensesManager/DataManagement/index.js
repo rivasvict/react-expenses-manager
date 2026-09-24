@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useState } from "react";
 import {
   clearAllData,
@@ -11,6 +14,7 @@ import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
 import { FileButton } from "./components";
 import SyncCard from "./SyncCard";
+import { useTranslation } from "../../../../i18n";
 
 import "./styles.scss";
 
@@ -25,6 +29,7 @@ const DataManagement = ({
   onClearAllData,
   history,
 }) => {
+  const { t, language, setLanguage } = useTranslation();
   const [restoreError, setRestoreError] = useState(null);
 
   const goBack = () => {
@@ -56,17 +61,24 @@ const DataManagement = ({
       // deterministic regardless of how long the restore took.
       history.push("/");
     } catch (error) {
-      setRestoreError(error.message || "The backup could not be restored");
+      // Backup validation errors carry a translation key; anything else
+      // (e.g. a storage failure) falls back to its own message.
+      setRestoreError(
+        error.translationKey
+          ? t(error.translationKey, error.translationParams)
+          : error.message || t("dataManagement.restoreFailed")
+      );
     }
   };
 
-  const handleClearAllData = () => {
+  const handleClearAllData = async () => {
     // Guard the irreversible wipe behind an explicit confirmation.
-    const confirmed = window.confirm(
-      "This permanently deletes every entry, bucket and category stored on this device. Are you sure?"
-    );
+    const confirmed = window.confirm(t("dataManagement.clearConfirm"));
     if (!confirmed) return;
-    onClearAllData();
+    await onClearAllData();
+    // The wipe clears localStorage wholesale; the UI language is a device
+    // setting rather than tracked data, so write it back.
+    setLanguage(language);
     goBack();
   };
 
@@ -75,20 +87,20 @@ const DataManagement = ({
   return (
     <MainContentContainer
       className="data-management"
-      pageTitle="Data Management"
+      pageTitle={t("nav.dataManagement")}
     >
       <Container className="buttons-container" fluid>
         <Container className="top-content" fluid>
           <Row>
             <Col className="data-section">
-              <h2 className="data-section__title">Keep your data safe</h2>
+              <h2 className="data-section__title">
+                {t("dataManagement.backupTitle")}
+              </h2>
               <p className="data-section__description">
-                Everything you track lives only in this browser. Download a
-                backup file regularly so you can restore it here or on another
-                device.
+                {t("dataManagement.backupDescription")}
               </p>
               <Button type="submit" variant="primary" onClick={handleBackup}>
-                Download Backup
+                {t("dataManagement.download")}
               </Button>
               <FileButton
                 type="submit"
@@ -96,7 +108,7 @@ const DataManagement = ({
                 onClick={handleRestoreBackup}
                 className="vertical-standard-space"
               >
-                Restore Backup
+                {t("dataManagement.restore")}
               </FileButton>
               {restoreError && (
                 <p
@@ -117,17 +129,18 @@ const DataManagement = ({
           </Row>
           <Row>
             <Col className="data-section data-section--danger">
-              <h2 className="data-section__title">Danger zone</h2>
+              <h2 className="data-section__title">
+                {t("dataManagement.dangerTitle")}
+              </h2>
               <p className="data-section__description">
-                Remove every entry, bucket and category from this device. This
-                cannot be undone.
+                {t("dataManagement.dangerDescription")}
               </p>
               <Button
                 type="submit"
                 variant="danger"
                 onClick={handleClearAllData}
               >
-                Clear all data
+                {t("dataManagement.clearAll")}
               </Button>
             </Col>
           </Row>
@@ -136,7 +149,7 @@ const DataManagement = ({
           <Row>
             <Col>
               <Button type="submit" variant="secondary" onClick={handleCancel}>
-                Go Back
+                {t("common.goBack")}
               </Button>
             </Col>
           </Row>
