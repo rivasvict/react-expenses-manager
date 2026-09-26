@@ -9,20 +9,21 @@ import {
   SYNC_ERROR_CODES,
   SyncApiError,
 } from "../../services/syncApi/contract";
+import {
+  getSyncErrorMessage,
+  TranslationKey,
+  useTranslation,
+} from "../../i18n";
 import "./styles.scss";
 
 // Invitation-specific error copy, never technical
 // (docs/multi-user-sync/DESIGN.md §3.5): each of these is something the
 // invitee can act on, which a raw error code is not.
-const JOIN_ERROR_COPY: { [code: string]: string } = {
-  [SYNC_ERROR_CODES.INVITATION_WRONG_PASSWORD]:
-    "That password doesn't match this invitation. Double-check it with whoever invited you and try again.",
-  [SYNC_ERROR_CODES.INVITATION_USED]:
-    "This invitation has already been used. Ask the organizer to send you a new one.",
-  [SYNC_ERROR_CODES.ALREADY_IN_PARTY]:
-    "You already belong to a party. Refresh to see it.",
-  [SYNC_ERROR_CODES.INVITATION_NOT_FOUND]:
-    "That invitation code doesn't exist. Double-check it with whoever invited you.",
+const JOIN_ERROR_COPY: { [code: string]: TranslationKey } = {
+  [SYNC_ERROR_CODES.INVITATION_WRONG_PASSWORD]: "join.wrongPassword",
+  [SYNC_ERROR_CODES.INVITATION_USED]: "join.invitationUsed",
+  [SYNC_ERROR_CODES.ALREADY_IN_PARTY]: "join.alreadyInParty",
+  [SYNC_ERROR_CODES.INVITATION_NOT_FOUND]: "join.invitationNotFound",
 };
 
 interface JoinScreenProps {
@@ -36,6 +37,8 @@ interface JoinScreenProps {
  * password does not consume the invitation server-side (EC-7).
  */
 const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
@@ -56,16 +59,13 @@ const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
   };
 
   return (
-    <MainContentContainer className="party-screen" pageTitle="Join a party">
+    <MainContentContainer className="party-screen" pageTitle={t("party.join")}>
       <Form className="party-card" onSubmit={handleSubmit}>
-        <p className="party-card__description">
-          Enter the invitation code and password the organizer shared with
-          you.
-        </p>
+        <p className="party-card__description">{t("join.description")}</p>
         <Form.Group>
           <InputText
             name="code"
-            placeholder="Invitation code"
+            placeholder={t("join.codePlaceholder")}
             value={code}
             onChange={(event: any) => setCode(event.currentTarget.value)}
           />
@@ -73,7 +73,7 @@ const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
         <Form.Group>
           <InputPassword
             name="password"
-            placeholder="Password"
+            placeholder={t("auth.password")}
             value={password}
             onChange={(event: any) => setPassword(event.currentTarget.value)}
           />
@@ -83,9 +83,9 @@ const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
             className="restore-backup-error text-danger vertical-standard-space"
             role="alert"
           >
-            {JOIN_ERROR_COPY[error.code] ||
-              error.message ||
-              "Could not join the party. Please try again."}
+            {JOIN_ERROR_COPY[error.code]
+              ? t(JOIN_ERROR_COPY[error.code])
+              : getSyncErrorMessage(error, translator, "join.failed")}
           </p>
         )}
         <FormButton
@@ -93,7 +93,7 @@ const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
           type="submit"
           disabled={code.trim() === "" || password.trim() === "" || isLoading}
         >
-          {isLoading ? "Joining…" : "Join"}
+          {isLoading ? t("join.joining") : t("join.submit")}
         </FormButton>
         <FormButton
           variant="secondary"
@@ -103,7 +103,7 @@ const JoinScreen = ({ onJoinParty }: JoinScreenProps) => {
             history.push("/party");
           }}
         >
-          Cancel
+          {t("common.cancel")}
         </FormButton>
       </Form>
     </MainContentContainer>

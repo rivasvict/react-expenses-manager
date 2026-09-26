@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import closeIcon from "@iconify-icons/codicon/close";
@@ -7,6 +10,7 @@ import {
   SearchScope,
   SortKey,
 } from "../../../../helpers/entriesHelper/filterSortHelper";
+import { TranslationKey, useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
 type CategoryOption = { name: string; value: string };
@@ -17,22 +21,22 @@ type FilterSheetProps = {
   resultCount: number;
   entryFilters: EntryFilters;
   categoryOptions: CategoryOption[];
-  /** "expenses" | "incomes" — feeds the category empty-option label. */
-  name: string;
+  /** "expenses" | "incomes" | "entries" — feeds the category empty-option label. */
+  name: "expenses" | "incomes" | "entries";
   onFiltersChange: (partialFilters: Partial<EntryFilters>) => void;
   onClearAll: () => void;
   onClose: () => void;
 };
 
-const SCOPE_OPTIONS: Array<{ value: SearchScope; label: string }> = [
-  { value: "all", label: "All text" },
-  { value: "description", label: "Description only" },
+const SCOPE_OPTIONS: Array<{ value: SearchScope; labelKey: TranslationKey }> = [
+  { value: "all", labelKey: "filterSheet.scopeAll" },
+  { value: "description", labelKey: "filterSheet.scopeDescription" },
 ];
 
-const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
-  { value: "date", label: "Date — newest first" },
-  { value: "amount", label: "Amount — highest first" },
-  { value: "name", label: "Name — A → Z" },
+const SORT_OPTIONS: Array<{ value: SortKey; labelKey: TranslationKey }> = [
+  { value: "date", labelKey: "sort.dateNewestFirst" },
+  { value: "amount", labelKey: "sort.amountHighestFirst" },
+  { value: "name", labelKey: "sort.nameAToZ" },
 ];
 
 /**
@@ -52,6 +56,7 @@ const FilterSheet = ({
   onClearAll,
   onClose,
 }: FilterSheetProps) => {
+  const { t, plural } = useTranslation();
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -90,12 +95,12 @@ const FilterSheet = ({
             tabIndex={-1}
             ref={headingRef}
           >
-            Filters &amp; sort
+            {t("filterSheet.heading")}
           </h2>
           <button
             type="button"
             className="filter-sheet__close"
-            aria-label="Close filters"
+            aria-label={t("filterSheet.close")}
             onClick={onClose}
           >
             <Icon icon={closeIcon} aria-hidden="true" />
@@ -105,13 +110,13 @@ const FilterSheet = ({
         <div className="filter-sheet__body">
           <div className="filter-sheet__field">
             <label className="form-label" htmlFor="filter-sheet-search">
-              Search
+              {t("filterSheet.search")}
             </label>
             <input
               id="filter-sheet-search"
               type="text"
               className="filter-sheet__search-input"
-              placeholder="Search entries"
+              placeholder={t("toolbar.searchEntries")}
               value={entryFilters.search}
               onChange={(event) =>
                 onFiltersChange({ search: event.currentTarget.value })
@@ -120,7 +125,7 @@ const FilterSheet = ({
           </div>
 
           <fieldset className="filter-sheet__field filter-sheet__fieldset">
-            <legend className="form-label">Search in</legend>
+            <legend className="form-label">{t("filterSheet.searchIn")}</legend>
             <div className="filter-sheet__segments">
               {SCOPE_OPTIONS.map((option) => (
                 <label
@@ -141,14 +146,11 @@ const FilterSheet = ({
                       onFiltersChange({ searchScope: option.value })
                     }
                   />
-                  {option.label}
+                  {t(option.labelKey)}
                 </label>
               ))}
             </div>
-            <p className="filter-sheet__hint">
-              "All text" matches category + description. Switch to "Description
-              only" to scope the search to what you typed on the entry.
-            </p>
+            <p className="filter-sheet__hint">{t("filterSheet.scopeHint")}</p>
           </fieldset>
 
           <div className="filter-sheet__field">
@@ -157,7 +159,7 @@ const FilterSheet = ({
               htmlFor="sheet-category-filter"
               id="sheet-category-filter-label"
             >
-              Filter by category
+              {t("filterSheet.filterByCategory")}
             </label>
             <CategorySelector
               id="sheet-category-filter"
@@ -167,15 +169,17 @@ const FilterSheet = ({
                 currentTarget: { value: string };
               }) => onFiltersChange({ category: event.currentTarget.value })}
               categoryOptions={categoryOptions}
-              emptyOptionLabel={`All ${name}`}
+              emptyOptionLabel={t(`filterSheet.all.${name}`)}
               className="filter-sheet__category-select"
             />
           </div>
 
           <fieldset className="filter-sheet__field filter-sheet__fieldset">
             <legend className="form-label">
-              Sort by
-              <span className="filter-sheet__legend-note">same as toolbar</span>
+              {t("sort.sortBy")}
+              <span className="filter-sheet__legend-note">
+                {t("filterSheet.sameAsToolbar")}
+              </span>
             </legend>
             <div className="filter-sheet__sort-options">
               {SORT_OPTIONS.map((option) => (
@@ -195,7 +199,7 @@ const FilterSheet = ({
                     checked={entryFilters.sortKey === option.value}
                     onChange={() => onFiltersChange({ sortKey: option.value })}
                   />
-                  {option.label}
+                  {t(option.labelKey)}
                 </label>
               ))}
             </div>
@@ -208,14 +212,14 @@ const FilterSheet = ({
             className="btn btn-secondary filter-sheet__clear-all"
             onClick={onClearAll}
           >
-            Clear all
+            {t("filterSheet.clearAll")}
           </button>
           <button
             type="button"
             className="btn btn-primary filter-sheet__show-results"
             onClick={onClose}
           >
-            {`Show ${resultCount} result${resultCount === 1 ? "" : "s"}`}
+            {plural("filterSheet.showResults", resultCount)}
           </button>
         </div>
       </div>

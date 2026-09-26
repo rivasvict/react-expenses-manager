@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import ButtonLikeLink from "../common/ButtonLikeLink";
+import { useTranslation } from "../../i18n";
 
 interface NoPartyViewProps {
   onCreateClick: () => void;
@@ -19,42 +20,51 @@ interface NoPartyViewProps {
  * blocked and canceled states (§3.6) reuse this layout with a status line on
  * top — both leave the user free to create or join elsewhere.
  */
-const NoPartyView = ({ onCreateClick, error, statusLine }: NoPartyViewProps) => (
-  <React.Fragment>
-    {statusLine && (
-      <p className="party-card__status" role="status">
-        {statusLine}
-      </p>
-    )}
-    <div className="party-card">
-      <h2 className="party-card__title">Create a party</h2>
-      <p className="party-card__description">
-        Start a party to sync entries with family members.
-      </p>
-      {error && (
-        <p
-          className="restore-backup-error text-danger vertical-standard-space"
-          role="alert"
-        >
-          {error}
+const NoPartyView = ({
+  onCreateClick,
+  error,
+  statusLine,
+}: NoPartyViewProps) => {
+  const { t } = useTranslation();
+  return (
+    <React.Fragment>
+      {statusLine && (
+        <p className="party-card__status" role="status">
+          {statusLine}
         </p>
       )}
-      <Button variant="primary" className="full-width" onClick={onCreateClick}>
-        Create a party
-      </Button>
-    </div>
-    <div className="party-card">
-      <h2 className="party-card__title">Join a party</h2>
-      <p className="party-card__description">
-        Have an invitation code? Join the party that invited you.
-      </p>
-      <ButtonLikeLink
-        className="btn-secondary"
-        to="/party/join"
-        buttonTitle="Join a party"
-      />
-    </div>
-  </React.Fragment>
-);
+      <div className="party-card">
+        <h2 className="party-card__title">{t("party.create")}</h2>
+        <p className="party-card__description">
+          {t("party.createDescription")}
+        </p>
+        {error && (
+          <p
+            className="restore-backup-error text-danger vertical-standard-space"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+        <Button
+          variant="primary"
+          className="full-width"
+          onClick={onCreateClick}
+        >
+          {t("party.create")}
+        </Button>
+      </div>
+      <div className="party-card">
+        <h2 className="party-card__title">{t("party.join")}</h2>
+        <p className="party-card__description">{t("party.joinDescription")}</p>
+        <ButtonLikeLink
+          className="btn-secondary"
+          to="/party/join"
+          buttonTitle={t("party.join")}
+        />
+      </div>
+    </React.Fragment>
+  );
+};
 
 export default NoPartyView;

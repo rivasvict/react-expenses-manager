@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -14,10 +17,13 @@ import {
   getBucketAllowanceValidationError,
   toYearMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper";
+import { useTranslation } from "../../../../i18n";
 
 const ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
 
 const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const params = useParams();
   const { bucketName } = params;
   const [bucket, setBucket] = useState<{ name: string; value: number | "" }>({ name: "", value: 0 });
@@ -48,7 +54,7 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
   return (
     <MainContentContainer
       className="edit-bucket"
-      pageTitle={`Edit bucket: ${bucket?.name}`}
+      pageTitle={t("editBucket.pageTitle", { name: bucket?.name })}
     >
       {/** @ts-ignore: React bootstrap's typing issue */}
       <FormContent
@@ -56,7 +62,10 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
           onSubmit: (event) => {
             event.preventDefault();
 
-            const allowanceError = getBucketAllowanceValidationError(bucket.value);
+            const allowanceError = getBucketAllowanceValidationError(
+              bucket.value,
+              translator
+            );
             if (allowanceError) {
               setError(allowanceError);
               return;
@@ -75,17 +84,14 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
                 <Col xs={12} className="top-content">
                   <Form.Group>
                     <Form.Label htmlFor="bucket-amount">
-                      Monthly allowance
+                      {t("bucketForm.monthlyAllowance")}
                     </Form.Label>
-                    <p className="field-hint">
-                      Changes apply from the month you are viewing onward;
-                      earlier months keep their previous limit.
-                    </p>
+                    <p className="field-hint">{t("editBucket.hint")}</p>
                     <InputNumber
                       type="number"
                       id="bucket-amount"
                       name="amount"
-                      placeholder={`Insert bucket amount`}
+                      placeholder={t("bucketForm.amountPlaceholder")}
                       value={bucket?.value}
                       onChange={(event) => {
                         const value = event?.currentTarget?.value;
@@ -118,14 +124,14 @@ const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
                     type="submit"
                     className="vertical-standard-space"
                   >
-                    Submit
+                    {t("common.submit")}
                   </FormButton>
                   <Button
                     variant="secondary"
                     className="vertical-standard-space"
                     onClick={history.goBack}
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </Col>
               </Row>

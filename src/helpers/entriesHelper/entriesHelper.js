@@ -4,6 +4,7 @@ import { calculateTotal } from "../general";
 import { ENTRY_TYPES_SINGULAR } from "../../constants";
 import { capitalize } from "lodash";
 import { materializeFixedEntries } from "../fixedEntriesHelper/fixedEntriesHelper";
+import { defaultTranslator } from "../../i18n/translator";
 
 function getSumFromEntries({ entries, absolute = false }) {
   const entriesForSum = entries.map((entry) => {
@@ -212,13 +213,17 @@ function getEntryCategoryOption(entryType, buckets = {}, unbudgetedCategories = 
  * @param {string} params.name - The proposed category name.
  * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
  * @param {Array<string>} [params.unbudgetedCategories=[]] - Existing categories without a bucket yet.
+ * @param {Object} [translator] - Picks the message's language (English by default).
  * @returns {string|null} An error message, or null when the name is valid.
  */
-function getCategoryValidationError({ name, buckets = {}, unbudgetedCategories = [] }) {
+function getCategoryValidationError(
+  { name, buckets = {}, unbudgetedCategories = [] },
+  { t } = defaultTranslator
+) {
   const trimmedName = (name || "").trim();
 
   if (!trimmedName) {
-    return "Category name cannot be empty";
+    return t("validation.categoryNameEmpty");
   }
 
   const alreadyExists = getExpenseCategoryNames(buckets, unbudgetedCategories).some(
@@ -226,7 +231,7 @@ function getCategoryValidationError({ name, buckets = {}, unbudgetedCategories =
   );
 
   if (alreadyExists) {
-    return `A category for "${trimmedName}" already exists`;
+    return t("validation.categoryExists", { name: trimmedName });
   }
 
   return null;
@@ -259,13 +264,17 @@ function getUnbudgetedCategories({ buckets = {}, unbudgetedCategories = [] }) {
  * @param {Object} params
  * @param {string} params.categoryName - The selected category name.
  * @param {Object} [params.buckets={}] - Existing `{ [bucketName]: allowance }`.
+ * @param {Object} [translator] - Picks the message's language (English by default).
  * @returns {string|null} An error message, or null when the selection is valid.
  */
-function getBucketValidationError({ categoryName, buckets = {} }) {
+function getBucketValidationError(
+  { categoryName, buckets = {} },
+  { t } = defaultTranslator
+) {
   const trimmedName = (categoryName || "").trim();
 
   if (!trimmedName) {
-    return "Please select a category";
+    return t("validation.selectCategory");
   }
 
   const alreadyExists = Object.keys(buckets || {}).some(
@@ -273,7 +282,7 @@ function getBucketValidationError({ categoryName, buckets = {} }) {
   );
 
   if (alreadyExists) {
-    return `A bucket for "${trimmedName}" already exists`;
+    return t("validation.bucketExists", { name: trimmedName });
   }
 
   return null;
@@ -288,17 +297,21 @@ const BUCKET_ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
  * breaks the carry-on percentage calculation, which divides by it).
  *
  * @param {string|number} allowance - The raw allowance value from the form.
+ * @param {Object} [translator] - Picks the message's language (English by default).
  * @returns {string|null} An error message, or null when the allowance is valid.
  */
-function getBucketAllowanceValidationError(allowance) {
+function getBucketAllowanceValidationError(
+  allowance,
+  { t } = defaultTranslator
+) {
   const trimmedAllowance = String(allowance ?? "").trim();
 
   if (!BUCKET_ALLOWANCE_MATCHER.test(trimmedAllowance)) {
-    return "Allowance must be a valid number";
+    return t("validation.allowanceInvalid");
   }
 
   if (parseFloat(trimmedAllowance) <= 0) {
-    return "Allowance must be greater than zero";
+    return t("validation.allowancePositive");
   }
 
   return null;

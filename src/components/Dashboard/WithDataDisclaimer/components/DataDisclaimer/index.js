@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Modal } from "react-bootstrap";
 /**
@@ -5,8 +8,10 @@ import { Button, Col, Container, Form, Modal } from "react-bootstrap";
  * https://github.com/rivasvict/react-expenses-manager/issues/66
  */
 import { BOOLEAN_ENUM } from "../../../../../constants";
+import { useTranslation } from "../../../../../i18n";
 
 const DataDisclaimerModal = ({ show, onHide }) => {
+  const { t } = useTranslation();
   const [everShowDataDisclaimer, setEverSHowDataDisclaimer] = useState(
     BOOLEAN_ENUM.TRUE
   );
@@ -21,18 +26,15 @@ const DataDisclaimerModal = ({ show, onHide }) => {
 
   return (
     <Modal show={show} onHide={onHideHandler} centered>
-      <Modal.Header>Your data stays on this device</Modal.Header>
+      <Modal.Header>{t("dataDisclaimer.title")}</Modal.Header>
       <Modal.Body>
-        This app is intended for product validation purposes. Nothing you put
-        here is stored anywhere other than this very device, and your data
-        lives for as long as the browser's data does not get cleared. You can
-        download a backup at any time from Data Management.
+        {t("dataDisclaimer.body")}
         <Form.Check type="checkbox" id="data-disclaimer-checkbox">
           <Form.Check.Input
             type="checkbox"
             onClick={changeEverShowDataDisclaimer}
           />
-          <Form.Check.Label>{`Don't show this message again`}</Form.Check.Label>
+          <Form.Check.Label>{t("dataDisclaimer.dontShowAgain")}</Form.Check.Label>
         </Form.Check>
       </Modal.Body>
       <Modal.Footer>
@@ -43,7 +45,7 @@ const DataDisclaimerModal = ({ show, onHide }) => {
               variant="primary"
               className="full-width"
             >
-              Got it
+              {t("dataDisclaimer.confirm")}
             </Button>
           </Col>
         </Container>

@@ -1,6 +1,10 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { Button } from "react-bootstrap";
 import { FormButton } from "../common/Forms";
+import { useTranslation } from "../../i18n";
 
 export type UploadState = "idle" | "uploading" | "network-failed" | "conflict";
 
@@ -29,22 +33,25 @@ const WizardSummary = ({
   onSyncAgain,
   onCancelReview,
 }: WizardSummaryProps) => {
+  const { t } = useTranslation();
   const isUploading = uploadState === "uploading";
   return (
     <div className="wizard-summary">
-      <h2 className="wizard-summary__title">Review complete</h2>
+      <h2 className="wizard-summary__title">{t("syncReview.complete")}</h2>
       <p className="wizard-summary__counts">
-        {acceptedCount} accepted · {modifiedCount} modified · {rejectedCount}{" "}
-        rejected
+        {t("syncReview.counts", {
+          accepted: acceptedCount,
+          modified: modifiedCount,
+          rejected: rejectedCount,
+        })}
       </p>
-      {isUploading && <p role="status">Saving your changes…</p>}
+      {isUploading && <p role="status">{t("syncReview.saving")}</p>}
       {uploadState === "network-failed" && (
         <p
           role="alert"
           className="restore-backup-error text-danger vertical-standard-space"
         >
-          Couldn't save your changes to your party. Check your connection and
-          try again.
+          {t("syncReview.uploadFailed")}
         </p>
       )}
       {uploadState === "conflict" && (
@@ -52,14 +59,12 @@ const WizardSummary = ({
           role="alert"
           className="restore-backup-error text-danger vertical-standard-space"
         >
-          Your party synced new changes while you were reviewing. Sync again
-          to pick them up — you'll review everything fresh, including what
-          you just saw.
+          {t("syncReview.uploadConflict")}
         </p>
       )}
       {uploadState === "conflict" ? (
         <FormButton variant="primary" onClick={onSyncAgain}>
-          Sync again
+          {t("syncReview.syncAgain")}
         </FormButton>
       ) : (
         <FormButton
@@ -68,10 +73,10 @@ const WizardSummary = ({
           onClick={onUpload}
         >
           {isUploading
-            ? "Saving…"
+            ? t("syncReview.savingShort")
             : uploadState === "network-failed"
-              ? "Retry"
-              : "Upload & finish"}
+              ? t("syncReview.retry")
+              : t("syncReview.uploadAndFinish")}
         </FormButton>
       )}
       <Button
@@ -80,7 +85,7 @@ const WizardSummary = ({
         disabled={isUploading}
         onClick={onCancelReview}
       >
-        Cancel review
+        {t("syncReview.cancelReview")}
       </Button>
     </div>
   );

@@ -12,7 +12,6 @@ import {
   addFixedEntry,
 } from "../../../../redux/expensesManager/actionCreators";
 
-const ADD_NEW = "Add new";
 
 const getActionFromEntryType = ({ entryType, actions }) => {
   const entryTypeToActionDictionary = {
@@ -79,7 +78,7 @@ const AddEntry = ({
       selectedDate={selectedDate}
       handleSubmit={handleSubmit}
       onCancel={navigateBack}
-      operationTitle={ADD_NEW}
+      operation="add"
       allowRecurring={true}
       recurring={Boolean(location?.state?.recurring)}
       buckets={buckets}

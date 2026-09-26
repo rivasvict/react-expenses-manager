@@ -7,6 +7,7 @@ import { IconMoneyIn, IconMoneyOut } from "../../Icons";
 import GlyphIcon from "../../GlyphIcon";
 import "./EntriesSummary.scss";
 import RowLink from "../../RowLink";
+import { useTranslation } from "../../../../i18n";
 
 function GetEntriesList({ entries, entryType }) {
   // Fallback glyph for categories with no icon mapping (user-created ones):
@@ -58,14 +59,17 @@ function GetEntriesList({ entries, entryType }) {
 
 // `hideHeader` lets a screen that renders its own list section header (the
 // filters/sort UX on /expenses & /incomes) suppress the built-in one.
-function EntriesSummary({ entries, name, entryType, total, hideHeader }) {
+// The header names the list by its entry type ("Incomes" / "Expenses"); the
+// `name` callers pass is the same plural, just not translated.
+function EntriesSummary({ entries, entryType, total, hideHeader }) {
+  const { t } = useTranslation();
   const entriesList = GetEntriesList({ entries, entryType });
   return (
     <Container className={`entries-summary entries-summary--${entryType}`}>
       {!hideHeader && (
         <Row className="entries-summary-header">
           <Col xs={total === undefined ? 12 : 8} className="item-type">
-            {capitalize(name)}
+            {t(entryType === "income" ? "common.incomes" : "common.expenses")}
           </Col>
           {total !== undefined && (
             <Col xs={4} className="item-total">
@@ -78,7 +82,7 @@ function EntriesSummary({ entries, name, entryType, total, hideHeader }) {
         entriesList
       ) : (
         <p className="entries-summary-empty">
-          Nothing here yet for this month.
+          {t("entriesSummary.empty")}
         </p>
       )}
     </Container>

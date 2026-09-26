@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -8,6 +11,7 @@ import { NavigableMonthHeader } from "../../NavigableMonthHeader/index";
 import EntriesSummary from "../Summaries/EntriesSummary";
 import { getMonthNameDisplay } from "../../../../helpers/date";
 import { ENTRY_TYPES_PLURAL } from "../../../../constants";
+import { useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
 const getFixedOfType = (monthEntries, plural) =>
@@ -24,6 +28,7 @@ const sumAmounts = (entries) =>
  * Add Income / Add Expense forms via the "Recurring" toggle.
  */
 const FixedEntries = ({ entries, selectedDate, history }) => {
+  const { t, language } = useTranslation();
   const monthEntries = entries?.[selectedDate.year]?.[selectedDate.month] || {
     incomes: [],
     expenses: [],
@@ -34,16 +39,16 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
     ENTRY_TYPES_PLURAL.EXPENSES
   );
   const hasAny = fixedIncomes.length > 0 || fixedExpenses.length > 0;
-  const monthLabel = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;
+  const monthLabel = `${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`;
 
   return (
     <MainContentContainer
       className="fixed-entries-container"
-      pageTitle="Fixed entries"
+      pageTitle={t("fixedEntries.pageTitle")}
     >
       <NavigableMonthHeader />
-      <ContentTileSection title="Fixed entries">
-        {`Recurring incomes and expenses applying to ${monthLabel}`}
+      <ContentTileSection title={t("fixedEntries.pageTitle")}>
+        {t("fixedEntries.subtitle", { month: monthLabel })}
       </ContentTileSection>
 
       {hasAny ? (
@@ -67,8 +72,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
         </>
       ) : (
         <p className="fixed-entries-empty text-muted">
-          No recurring entries apply to this month yet. Add one from Add Income
-          or Add Expense and switch on “Recurring”.
+          {t("fixedEntries.empty")}
         </p>
       )}
 
@@ -79,7 +83,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               to={{ pathname: "/add-income", state: { recurring: true } }}
               className="btn btn-primary btn-block add-fixed-income-link"
             >
-              Add Income
+              {t("fixedEntries.addIncome")}
             </Link>
           </Col>
         </Row>
@@ -89,7 +93,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               to={{ pathname: "/add-expense", state: { recurring: true } }}
               className="btn btn-secondary btn-block add-fixed-expense-link"
             >
-              Add Expense
+              {t("fixedEntries.addExpense")}
             </Link>
           </Col>
         </Row>
@@ -101,7 +105,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
               onClick={() => history.goBack()}
               className="cancel btn-block w-100"
             >
-              Go Back
+              {t("common.goBack")}
             </Button>
           </Col>
         </Row>

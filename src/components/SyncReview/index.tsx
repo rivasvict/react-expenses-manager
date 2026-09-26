@@ -26,6 +26,7 @@ import {
   SYNC_ERROR_CODES,
   isSyncApiError,
 } from "../../services/syncApi/contract";
+import { useTranslation } from "../../i18n";
 import "./styles.scss";
 
 interface Decision {
@@ -39,8 +40,6 @@ interface Decision {
   modified: boolean;
 }
 
-export const LEAVE_REVIEW_CONFIRMATION =
-  "Stop reviewing? None of your choices in this session will be saved. You can sync again anytime.";
 
 interface SyncReviewProps {
   pendingReview: PendingReview | null;
@@ -75,6 +74,8 @@ const SyncReview = ({
   onRefreshMe,
   onSetDeclined,
 }: SyncReviewProps) => {
+  const { t } = useTranslation();
+  const leaveReviewConfirmation = t("syncReview.leaveConfirm");
   const history = useHistory();
   const [decisions, setDecisions] = useState<{ [key: string]: Decision }>({});
   const [uploadState, setUploadState] = useState<UploadState>("idle");
@@ -163,7 +164,7 @@ const SyncReview = ({
   };
 
   const handleCancelReview = () => {
-    const confirmed = window.confirm(LEAVE_REVIEW_CONFIRMATION);
+    const confirmed = window.confirm(leaveReviewConfirmation);
     if (!confirmed) return;
     onClearPendingReview();
     leaveFor("/data-management");
@@ -248,7 +249,7 @@ const SyncReview = ({
     <Prompt
       when={hasStagedDecisions && !isDone && uploadState !== "uploading"}
       message={() =>
-        isLeavingDeliberately.current ? true : LEAVE_REVIEW_CONFIRMATION
+        isLeavingDeliberately.current ? true : leaveReviewConfirmation
       }
     />
   );
@@ -256,16 +257,19 @@ const SyncReview = ({
   // Success screen (DESIGN 4.3.4): explicit Done, no auto-redirect.
   if (isDone) {
     return (
-      <MainContentContainer className="sync-review" pageTitle="Review changes">
+      <MainContentContainer
+        className="sync-review"
+        pageTitle={t("syncReview.pageTitle")}
+      >
         <div className="sync-review__card" ref={cardRef} tabIndex={-1}>
           <p role="status" className="sync-review__success">
-            Synced! Your party is up to date.
+            {t("syncReview.success")}
           </p>
           <FormButton
             variant="primary"
             onClick={() => history.push("/data-management")}
           >
-            Done
+            {t("invite.done")}
           </FormButton>
         </div>
       </MainContentContainer>
@@ -275,16 +279,18 @@ const SyncReview = ({
   // Direct navigation with nothing staged (or after an abandonment).
   if (!pendingReview || groups.length === 0) {
     return (
-      <MainContentContainer className="sync-review" pageTitle="Review changes">
+      <MainContentContainer
+        className="sync-review"
+        pageTitle={t("syncReview.pageTitle")}
+      >
         <div className="sync-review__card">
           <p className="sync-review__description">
-            There's nothing to review right now. Sync with your party from
-            Data Management to check for changes.
+            {t("syncReview.nothingToReview")}
           </p>
           <ButtonLikeLink
             className="btn-secondary"
             to="/data-management"
-            buttonTitle="Go to Data Management"
+            buttonTitle={t("syncReview.goToDataManagement")}
           />
         </div>
       </MainContentContainer>
@@ -305,7 +311,10 @@ const SyncReview = ({
   ).length;
 
   return (
-    <MainContentContainer className="sync-review" pageTitle="Review changes">
+    <MainContentContainer
+      className="sync-review"
+      pageTitle={t("syncReview.pageTitle")}
+    >
       {routeGuard}
       {onSummary ? (
         <div ref={cardRef} tabIndex={-1}>

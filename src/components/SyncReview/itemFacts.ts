@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 // Pure display mapping from a diffed SyncItem to the review card's facts
 // (DESIGN 4.3.1): kind badge, money fields, attribution and the
 // item-specific accessible action labels.
@@ -5,6 +8,7 @@ import dayjs from "dayjs";
 import { SyncItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import { CURRENCY_SYMBOL } from "../../constants";
 import { AddedBy } from "../../services/session";
+import { defaultTranslator, Translator } from "../../i18n/translator";
 
 export interface ItemFacts {
   kindLabel: string;
@@ -32,39 +36,61 @@ const money = (value: any): string => {
   return `${CURRENCY_SYMBOL}${Number.isFinite(parsed) ? parsed.toFixed(2) : value}`;
 };
 
-const attributionText = (addedBy?: AddedBy): string =>
+const attributionText = (
+  addedBy: AddedBy | undefined,
+  { t }: Translator
+): string =>
   // AC-1.6/AC-3.4 — legacy/unattributed items show the anonymous fallback.
-  addedBy && addedBy.name ? `Added by ${addedBy.name}` : "Added anonymously";
+  addedBy && addedBy.name
+    ? t("syncReview.addedBy", { name: addedBy.name })
+    : t("syncReview.addedAnonymously");
 
-export const getItemFacts = (item: SyncItem): ItemFacts => {
+// Labels are in the translator's language (English when none is given).
+export const getItemFacts = (
+  item: SyncItem,
+  translator: Translator = defaultTranslator
+): ItemFacts => {
+  const { t, language } = translator;
   if (item.kind === "entry") {
     const entry = item.entry;
-    const kindLabel = entry.type === "income" ? "Income" : "Expense";
-    const attribution = attributionText(entry.addedBy);
+    const kindLabel =
+      entry.type === "income"
+        ? t("syncReview.kind.income")
+        : t("syncReview.kind.expense");
+    const attribution = attributionText(entry.addedBy, translator);
     return {
       kindLabel,
       tone: entry.type,
       amountText: money(entry.amount),
       description: entry.description,
       categories: prettyCategories(entry.categories_path),
-      dateText: dayjs(entry.date).format("MMM D, YYYY"),
+      dateText: dayjs(entry.date).locale(language).format(t("time.dateFormat")),
       attribution,
-      shortLabel: `${money(entry.amount)} ${kindLabel.toLowerCase()} ${attribution.toLowerCase()}`,
+      shortLabel: t("syncReview.shortLabel", {
+        amount: money(entry.amount),
+        kind: kindLabel.toLowerCase(),
+        attribution: attribution.toLowerCase(),
+      }),
     };
   }
 
   if (item.kind === "fixed" && item.fixed) {
     const state = item.fixed.state;
     const kindLabel =
-      item.fixed.type === "income" ? "Fixed Income" : "Fixed Expense";
-    const attribution = attributionText(state.addedBy);
+      item.fixed.type === "income"
+        ? t("syncReview.kind.fixedIncome")
+        : t("syncReview.kind.fixedExpense");
+    const attribution = attributionText(state.addedBy, translator);
     if (state.removed) {
       return {
         kindLabel,
         removed: true,
-        dateText: `Removed from ${state.from}`,
+        dateText: t("syncReview.removedFrom", { month: state.from }),
         attribution,
-        shortLabel: `${kindLabel.toLowerCase()} removal ${attribution.toLowerCase()}`,
+        shortLabel: t("syncReview.removalShortLabel", {
+          kind: kindLabel.toLowerCase(),
+          attribution: attribution.toLowerCase(),
+        }),
       };
     }
     return {
@@ -73,22 +99,31 @@ export const getItemFacts = (item: SyncItem): ItemFacts => {
       amountText: money(state.amount),
       description: state.description,
       categories: prettyCategories(state.categories_path),
-      dateText: `From ${state.from}`,
+      dateText: t("syncReview.from", { month: state.from }),
       attribution,
-      shortLabel: `${money(state.amount)} ${kindLabel.toLowerCase()} ${attribution.toLowerCase()}`,
+      shortLabel: t("syncReview.shortLabel", {
+        amount: money(state.amount),
+        kind: kindLabel.toLowerCase(),
+        attribution: attribution.toLowerCase(),
+      }),
     };
   }
 
   // bucket
   const state = item.bucket!.state;
-  const attribution = attributionText(state.addedBy);
+  const attribution = attributionText(state.addedBy, translator);
   return {
-    kindLabel: "Bucket",
+    kindLabel: t("syncReview.kind.bucket"),
     description: item.bucket!.name,
-    amountText: `${money(state.limit)} monthly allowance`,
+    amountText: t("syncReview.monthlyAllowance", { amount: money(state.limit) }),
     dateText:
-      state.from === "0000-00" ? "From the beginning" : `From ${state.from}`,
+      state.from === "0000-00"
+        ? t("syncReview.fromTheBeginning")
+        : t("syncReview.from", { month: state.from }),
     attribution,
-    shortLabel: `${item.bucket!.name} bucket ${attribution.toLowerCase()}`,
+    shortLabel: t("syncReview.bucketShortLabel", {
+      name: item.bucket!.name,
+      attribution: attribution.toLowerCase(),
+    }),
   };
 };

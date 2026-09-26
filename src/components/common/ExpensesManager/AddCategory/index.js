@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -7,6 +10,7 @@ import { FormButton, FormContent, InputText } from "../../Forms";
 import ContentTileSection from "../../ContentTitleSection";
 import { addCategory } from "../../../../redux/expensesManager/actionCreators";
 import { getCategoryValidationError } from "../../../../helpers/entriesHelper/entriesHelper";
+import { useTranslation } from "../../../../i18n";
 
 const CATEGORIES_ROUTE = "/categories";
 
@@ -17,6 +21,8 @@ const CATEGORIES_ROUTE = "/categories";
  * creating a bucket (see AddBucket).
  */
 const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
 
@@ -25,11 +31,10 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const nameError = getCategoryValidationError({
-      name,
-      buckets,
-      unbudgetedCategories,
-    });
+    const nameError = getCategoryValidationError(
+      { name, buckets, unbudgetedCategories },
+      translator
+    );
     if (nameError) {
       setError(nameError);
       return;
@@ -39,13 +44,16 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
       await onAddCategory({ category: name.trim() });
       goToCategories();
     } catch (submitError) {
-      setError(submitError.message || "The category could not be created");
+      setError(submitError.message || t("addCategory.createFailed"));
     }
   };
 
   return (
-    <MainContentContainer className="add-category" pageTitle="Categories">
-      <ContentTileSection>Add new category</ContentTileSection>
+    <MainContentContainer
+      className="add-category"
+      pageTitle={t("categories.pageTitle")}
+    >
+      <ContentTileSection>{t("categories.addNew")}</ContentTileSection>
       <FormContent
         formProps={{ onSubmit: handleSubmit, className: "app-form" }}
         render={() => (
@@ -53,16 +61,15 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
             <Row className="top-container container-fluid">
               <Col xs={12} className="top-content">
                 <Form.Group>
-                  <Form.Label htmlFor="category-name">Name</Form.Label>
-                  <p className="field-hint">
-                    Categories group your expenses. You can add a spending
-                    limit (bucket) to a category later.
-                  </p>
+                  <Form.Label htmlFor="category-name">
+                    {t("addCategory.name")}
+                  </Form.Label>
+                  <p className="field-hint">{t("addCategory.hint")}</p>
                   <InputText
                     type="text"
                     id="category-name"
                     name="name"
-                    placeholder="Category name"
+                    placeholder={t("addCategory.namePlaceholder")}
                     value={name}
                     onChange={(event) => {
                       setName(event.currentTarget.value);
@@ -85,14 +92,14 @@ const AddCategory = ({ buckets, unbudgetedCategories, onAddCategory, history }) 
                   type="submit"
                   className="vertical-standard-space"
                 >
-                  Submit
+                  {t("common.submit")}
                 </FormButton>
                 <Button
                   variant="secondary"
                   className="vertical-standard-space"
                   onClick={goToCategories}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
               </Col>
             </Row>

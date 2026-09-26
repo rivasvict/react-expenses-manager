@@ -27,6 +27,7 @@ import Party from "../Party";
 import InviteScreen from "../Party/InviteScreen";
 import JoinScreen from "../Party/JoinScreen";
 import SyncReview from "../SyncReview";
+import Settings from "../Settings";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -118,6 +119,9 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}sync-review`}>
               <SyncReview />
+            </Route>
+            <Route path={`${match.url}settings`}>
+              <Settings />
             </Route>
             {/** TODO: Work with a bucketId instead of a bucketName */}
             <Route path={`${match.url}edit-bucket/:bucketName`}>

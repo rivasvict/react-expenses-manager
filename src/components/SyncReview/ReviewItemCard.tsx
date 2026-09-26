@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button, Form } from "react-bootstrap";
@@ -10,6 +13,7 @@ import CategorySelector from "../common/ExpensesManager/CategorySelector";
 import { getEntryCategoryOption } from "../../helpers/entriesHelper/entriesHelper";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
 import { getItemFacts } from "./itemFacts";
+import { useTranslation } from "../../i18n";
 
 interface ReviewItemCardProps {
   item: IncomingItem;
@@ -39,6 +43,7 @@ const ModifyForm = ({
   onSave: (edited: IncomingItem) => void;
   onCancel: () => void;
 }) => {
+  const { t } = useTranslation();
   const source =
     item.kind === "entry"
       ? item.entry
@@ -152,7 +157,9 @@ const ModifyForm = ({
     <Form className="review-card__modify" onSubmit={handleSave}>
       <Form.Group>
         <Form.Label htmlFor="modify-amount">
-          {item.kind === "bucket" ? "Monthly allowance" : "Amount"}
+          {item.kind === "bucket"
+            ? t("bucketForm.monthlyAllowance")
+            : t("entryForm.amount")}
         </Form.Label>
         <InputNumber
           id="modify-amount"
@@ -162,14 +169,16 @@ const ModifyForm = ({
         />
         {!isAmountValid && (
           <Form.Text className="review-card__field-error" role="alert">
-            Enter a number.
+            {t("syncReview.enterNumber")}
           </Form.Text>
         )}
       </Form.Group>
       {item.kind !== "bucket" && (
         <React.Fragment>
           <Form.Group>
-            <Form.Label htmlFor="modify-description">Description</Form.Label>
+            <Form.Label htmlFor="modify-description">
+              {t("entryForm.description")}
+            </Form.Label>
             <InputText
               id="modify-description"
               name="description"
@@ -184,14 +193,14 @@ const ModifyForm = ({
                 aria-labelledby={`${id}-label`}, so the label needs the id
                 as well as htmlFor — same as EntryForm's. */}
             <Form.Label id="modify-category-label" htmlFor="modify-category">
-              Category
+              {t("entryForm.category")}
             </Form.Label>
             <CategorySelector
               id="modify-category"
               name="categories"
               value={categoriesPath}
               categoryOptions={categoryOptions}
-              emptyOptionLabel="Select a category"
+              emptyOptionLabel={t("entryForm.selectCategory")}
               handleChange={(event: any) =>
                 setCategoriesPath(event.currentTarget.value)
               }
@@ -201,7 +210,7 @@ const ModifyForm = ({
       )}
       {item.kind === "entry" && (
         <Form.Group>
-          <Form.Label htmlFor="modify-date">Date</Form.Label>
+          <Form.Label htmlFor="modify-date">{t("syncReview.date")}</Form.Label>
           <InputDate
             id="modify-date"
             name="date"
@@ -210,7 +219,7 @@ const ModifyForm = ({
           />
           {!isDateValid && (
             <Form.Text className="review-card__field-error" role="alert">
-              Enter a date.
+              {t("syncReview.enterDate")}
             </Form.Text>
           )}
         </Form.Group>
@@ -221,14 +230,14 @@ const ModifyForm = ({
         className="full-width"
         disabled={!canSave}
       >
-        Save & accept
+        {t("syncReview.saveAndAccept")}
       </Button>
       <Button
         variant="secondary"
         className="full-width vertical-standard-space"
         onClick={onCancel}
       >
-        Cancel
+        {t("common.cancel")}
       </Button>
     </Form>
   );
@@ -248,8 +257,10 @@ const ReviewItemCard = ({
   onReject,
   onCancelReview,
 }: ReviewItemCardProps) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const [isModifying, setIsModifying] = useState(false);
-  const facts = getItemFacts(item);
+  const facts = getItemFacts(item, translator);
 
   return (
     <div className="review-card">
@@ -292,33 +303,38 @@ const ReviewItemCard = ({
           )}
           {stateCount > 1 && (
             <p className="review-card__history text-secondary">
-              New here — your decision covers its full history ({stateCount}{" "}
-              changes).
+              {t("syncReview.fullHistory", { count: stateCount })}
             </p>
           )}
           <div className="review-card__actions">
             <Button
               variant="primary"
-              aria-label={`Accept ${facts.shortLabel}`}
+              aria-label={t("syncReview.acceptLabel", {
+                label: facts.shortLabel,
+              })}
               onClick={() => onAccept(item, false)}
             >
-              Accept
+              {t("syncReview.accept")}
             </Button>
             {!facts.removed && (
               <Button
                 variant="secondary"
-                aria-label={`Modify ${facts.shortLabel}`}
+                aria-label={t("syncReview.modifyLabel", {
+                  label: facts.shortLabel,
+                })}
                 onClick={() => setIsModifying(true)}
               >
-                Modify
+                {t("syncReview.modify")}
               </Button>
             )}
             <Button
               variant="danger"
-              aria-label={`Reject ${facts.shortLabel}`}
+              aria-label={t("syncReview.rejectLabel", {
+                label: facts.shortLabel,
+              })}
               onClick={onReject}
             >
-              Reject
+              {t("syncReview.reject")}
             </Button>
           </div>
           <button
@@ -326,7 +342,7 @@ const ReviewItemCard = ({
             className="review-card__cancel-link"
             onClick={onCancelReview}
           >
-            Cancel review
+            {t("syncReview.cancelReview")}
           </button>
         </React.Fragment>
       )}

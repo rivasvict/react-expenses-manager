@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { MainContentContainer } from "../../MainContentContainer";
 import { Bucket } from "./components/index";
@@ -14,9 +17,11 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { NavigableMonthHeader } from "../../NavigableMonthHeader/index";
 import emptyBucketsImage from "../../../../images/buckets-empty.png";
+import { useTranslation } from "../../../../i18n";
 
 const Buckets = ({ selectedDate, entries, history, buckets }) => {
-  const screenTitle = `${getMonthNameDisplay(selectedDate.month)} ${selectedDate.year}`;
+  const { t, language } = useTranslation();
+  const screenTitle = `${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`;
   const hasBuckets = Object.keys(buckets).length > 0;
 
   /**
@@ -68,14 +73,17 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
   return (
     <MainContentContainer
       className="buckets-container"
-      pageTitle="Monthly Buckets"
+      pageTitle={t("buckets.pageTitle")}
     >
       {hasBuckets ? (
         <>
           <NavigableMonthHeader />
           {/*@ts-expect-error temporarily ignore this typescript error */}
-          <ContentTileSection title="Summary">
-            {`${screenTitle} allocation: ${formatNumberForDisplay(totalBucketAllocation)}`}
+          <ContentTileSection title={t("common.summary")}>
+            {t("buckets.allocation", {
+              month: screenTitle,
+              amount: formatNumberForDisplay(totalBucketAllocation),
+            })}
           </ContentTileSection>
           {monthlyBuckets.map((bucket, index) => (
             <Bucket
@@ -96,12 +104,13 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
               <img
                 className="buckets-empty-state__image"
                 src={emptyBucketsImage}
-                alt="No buckets yet"
+                alt={t("buckets.emptyTitle")}
               />
-              <h2 className="buckets-empty-state__title">No buckets yet</h2>
+              <h2 className="buckets-empty-state__title">
+                {t("buckets.emptyTitle")}
+              </h2>
               <p className="buckets-empty-state__message">
-                You haven&apos;t added any buckets. Add your first bucket to
-                start tracking your monthly spending limits.
+                {t("buckets.emptyMessage")}
               </p>
             </Col>
           </Row>
@@ -114,7 +123,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
               to="/add-bucket"
               className="btn btn-primary btn-block add-bucket-link"
             >
-              Add new bucket
+              {t("buckets.addNew")}
             </Link>
           </Col>
         </Row>
@@ -126,7 +135,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
               onClick={handleGoBack}
               className="cancel"
             >
-              Go Back
+              {t("common.goBack")}
             </Button>
           </Col>
         </Row>

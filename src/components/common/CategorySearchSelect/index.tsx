@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "../../../i18n";
 import "./styles.scss";
 
 export type CategorySearchOption = {
@@ -25,7 +26,7 @@ type CategorySearchSelectProps = {
   /** Called with the committed raw value on selection. */
   onChange: (value: string) => void;
   className?: string;
-  /** Search input placeholder. */
+  /** Search input placeholder; defaults to the translated "Search categories…". */
   placeholder?: string;
 };
 
@@ -46,8 +47,9 @@ const CategorySearchSelect = ({
   emptyOptionLabel,
   onChange,
   className = "",
-  placeholder = "Search categories…",
+  placeholder,
 }: CategorySearchSelectProps) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -218,8 +220,8 @@ const CategorySearchSelect = ({
               ref={searchRef}
               type="text"
               className="form-control text category-search-select__search"
-              placeholder={placeholder}
-              aria-label="Search categories"
+              placeholder={placeholder ?? t("categorySelect.searchPlaceholder")}
+              aria-label={t("categorySelect.searchLabel")}
               aria-controls={`${id}-listbox`}
               aria-activedescendant={
                 filteredRows[highlightedIndex]
@@ -240,7 +242,7 @@ const CategorySearchSelect = ({
           >
             {filteredRows.length === 0 ? (
               <li className="category-search-select__empty-state">
-                No matching categories
+                {t("categorySelect.noMatches")}
               </li>
             ) : (
               filteredRows.map((row, index) => {

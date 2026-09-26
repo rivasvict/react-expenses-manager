@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.17.0] - 2026-09-24
+
+### Added
+
+- The app is now available in Spanish as well as English. A new Settings
+  screen (the gear chip beside the account chip in the app bar) lets you
+  pick the language; the change applies immediately, everywhere, without a
+  reload. English stays the default.
+- The choice is remembered on this device only, in `localStorage`
+  (`settings.language`), so it works the same with or without the sync
+  server, and it survives "Clear all data". Nothing about entries, buckets,
+  backups or the sync protocol changes; category and bucket names are shown
+  exactly as saved.
+- Month names, relative times ("hace 5 minutos"), validation messages,
+  backup-restore errors and sync-server errors follow the chosen language.
+  `<html lang>` follows it too, for screen readers.
+- `src/i18n/`: a small dependency-free translation layer (`LanguageProvider`,
+  `useTranslation`, `withTranslation`, `Trans`) with typed dictionaries —
+  a key missing from the Spanish file fails the type check.
+
 ## [1.16.0] - 2026-09-21
 
 ### Added

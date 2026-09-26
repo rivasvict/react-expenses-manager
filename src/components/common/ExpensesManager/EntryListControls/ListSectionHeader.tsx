@@ -1,4 +1,8 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
+import { useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
 type ListSectionHeaderProps = {
@@ -19,15 +23,16 @@ const ListSectionHeader = ({
   count,
   totalText,
   tone,
-}: ListSectionHeaderProps) => (
-  <div className={`list-section-header list-section-header--${tone}`}>
-    <span className="list-section-header__label">{label}</span>
-    <span className="list-section-header__count">
-      {totalText !== undefined
-        ? totalText
-        : `${count} ${count === 1 ? "entry" : "entries"}`}
-    </span>
-  </div>
-);
+}: ListSectionHeaderProps) => {
+  const { plural } = useTranslation();
+  return (
+    <div className={`list-section-header list-section-header--${tone}`}>
+      <span className="list-section-header__label">{label}</span>
+      <span className="list-section-header__count">
+        {totalText !== undefined ? totalText : plural("entries.count", count)}
+      </span>
+    </div>
+  );
+};
 
 export default ListSectionHeader;

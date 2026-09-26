@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import EntryForm from "../EntryForm";
 import {
@@ -13,8 +16,7 @@ import { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { getYearMonthKey } from "../../../../helpers/date";
 import { resolveFixedEntryState } from "../../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
-
-const EDIT = "Edit";
+import { useTranslation } from "../../../../i18n";
 
 // Materialized recurring entries carry a synthetic `fixed-<id>` id (issue #103).
 const FIXED_ID_PREFIX = "fixed-";
@@ -35,6 +37,7 @@ const EditEntry = ({
   onEditFixedEntry,
   onRemoveFixedEntry,
 }) => {
+  const { t } = useTranslation();
   const params = useParams();
   const { entryId } = params;
   const isFixed = isFixedEntryId(entryId);
@@ -132,14 +135,14 @@ const EditEntry = ({
       type={entryType}
       handleSubmit={handleSubmit}
       handleEntryRemoval={handleEntryRemoval}
-      operationTitle={EDIT}
+      operation="edit"
       onCancel={navigateBack}
       allowRecurring={true}
       buckets={buckets}
       unbudgetedCategories={unbudgetedCategories}
     />
   ) : (
-    <>Entry not found</>
+    <>{t("entryForm.notFound")}</>
   );
 };
 

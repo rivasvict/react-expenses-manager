@@ -6,6 +6,7 @@ import { MainContentContainer } from "../common/MainContentContainer";
 import { FormButton, InputPassword } from "../common/Forms";
 import ShareField from "./ShareField";
 import { generateInvitation } from "../../redux/syncManager/actionCreators";
+import { getSyncErrorMessage, useTranslation } from "../../i18n";
 import "./styles.scss";
 
 const COPIED_TIMEOUT_MS = 2000;
@@ -25,6 +26,8 @@ interface InviteScreenProps {
  * so leaving without copying it means generating a new one.
  */
 const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [code, setCode] = useState<string | null>(null);
@@ -42,7 +45,11 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
       setCode(await onGenerateInvitation({ password }));
     } catch (generateError) {
       setError(
-        (generateError as Error).message || "Could not create the invitation."
+        getSyncErrorMessage(
+          generateError as Error,
+          translator,
+          "invite.createFailed"
+        )
       );
     } finally {
       setIsLoading(false);
@@ -65,13 +72,15 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
   };
 
   return (
-    <MainContentContainer className="party-screen" pageTitle="Add a member">
+    <MainContentContainer
+      className="party-screen"
+      pageTitle={t("party.addMember")}
+    >
       {code === null ? (
         <Form className="party-card" onSubmit={handleGenerate}>
-          <h2 className="party-card__title">Set an invitation password</h2>
+          <h2 className="party-card__title">{t("invite.setPassword")}</h2>
           <p className="party-card__description">
-            The person you invite will need this password together with the
-            invitation code.
+            {t("invite.setPasswordDescription")}
           </p>
           {error && (
             <p
@@ -84,7 +93,7 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
           <Form.Group>
             <InputPassword
               name="invitationPassword"
-              placeholder="Invitation password"
+              placeholder={t("invite.passwordPlaceholder")}
               onChange={(event: any) => setPassword(event.currentTarget.value)}
             />
           </Form.Group>
@@ -93,7 +102,7 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
             type="submit"
             disabled={password.trim() === "" || isLoading}
           >
-            {isLoading ? "Generating…" : "Generate invitation"}
+            {isLoading ? t("invite.generating") : t("invite.generate")}
           </FormButton>
           <FormButton
             variant="secondary"
@@ -103,20 +112,20 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
               history.push("/party");
             }}
           >
-            Cancel
+            {t("common.cancel")}
           </FormButton>
         </Form>
       ) : (
         <div className="party-card">
-          <h2 className="party-card__title">Invitation ready</h2>
+          <h2 className="party-card__title">{t("invite.ready")}</h2>
           <ShareField
-            label="Code"
+            label={t("invite.code")}
             value={code}
             copied={copied === "code"}
             onCopy={() => handleCopy("code", code)}
           />
           <ShareField
-            label="Password"
+            label={t("auth.password")}
             value={password}
             masked
             revealed={revealed}
@@ -125,13 +134,13 @@ const InviteScreen = ({ onGenerateInvitation }: InviteScreenProps) => {
             onCopy={() => handleCopy("password", password)}
           />
           <p className="party-card__hint text-secondary">
-            Share the code and password over different channels.
+            {t("invite.shareHint")}
           </p>
           <FormButton
             variant="secondary"
             onClick={() => history.push("/party")}
           >
-            Done
+            {t("invite.done")}
           </FormButton>
         </div>
       )}

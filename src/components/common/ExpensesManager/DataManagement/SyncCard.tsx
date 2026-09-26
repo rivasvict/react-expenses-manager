@@ -14,9 +14,16 @@ import { getSyncState } from "../../../../services/syncState";
 import {
   Party,
   SYNC_ERROR_CODES,
+  SyncApiError,
   isSyncApiError,
 } from "../../../../services/syncApi/contract";
 import { formatRelativeTime } from "../../../../helpers/date";
+import {
+  getSyncErrorMessage,
+  TranslationKey,
+  Translator,
+  useTranslation,
+} from "../../../../i18n";
 
 interface SyncCardProps {
   session: SyncSession | null;
@@ -29,25 +36,24 @@ interface SyncCardProps {
 }
 
 // Banner copy keyed by outcome/error (docs/multi-user-sync/DESIGN.md §4.2).
-// AC/EC tags in this file are in docs/multi-user-sync/PRD.md.
+// AC/EC tags in this file are in docs/multi-user-sync/PRD.md. The text itself
+// lives in the translation dictionaries (src/i18n/translations/).
 const COPY = {
-  upToDate: "You're up to date.",
-  firstSync:
-    "This is the first sync for your party. Your data is now the starting point — future syncs will compare against it.",
-  connectionFailed:
-    "Couldn't reach your party. Check your connection and try again.",
+  upToDate: "syncCard.upToDate",
+  firstSync: "syncCard.firstSync",
+  connectionFailed: "syncCard.connectionFailed",
   // A party member on a newer release uploaded a backup whose schema this
   // build cannot read. Distinct from a network failure: the user can act
   // on it. Negotiating schema versions is tracked in issue #170.
-  unsupportedSchemaVersion:
-    "This device's app version is too old to read your party's data. Update the app and sync again.",
-  declinedBlocked:
-    "This sync was declined: you've been removed from your party by its organizer. Nothing on this device was changed.",
-  declinedCanceled:
-    "This sync was declined: your party was canceled. Nothing on this device was changed.",
-  conflict:
-    "Your party synced new changes while you were syncing. Sync again to pick them up.",
-};
+  unsupportedSchemaVersion: "syncCard.unsupportedSchemaVersion",
+  declinedBlocked: "syncCard.declinedBlocked",
+  declinedCanceled: "syncCard.declinedCanceled",
+  conflict: "syncCard.conflict",
+} as const;
+
+// Banners hold a key (or the raw error) rather than finished text, so the
+// wording is resolved in the current language at render time.
+type BannerMessage = { key: TranslationKey } | { error: SyncApiError };
 
 // The always-rendered explanatory caption under the button (AC-2.11:
 // disabled states are explained, never silently hidden). DESIGN §4.1.
@@ -55,43 +61,46 @@ const getCaption = (
   session: SyncSession | null,
   party: Party | null,
   partyStatusResolved: boolean,
-  meCheckFailed: boolean
+  meCheckFailed: boolean,
+  translator: Translator
 ): { enabled: boolean; caption: string } => {
+  const { t } = translator;
   if (!session)
     return {
       enabled: false,
-      caption: "Sign in and join a party to sync your entries across devices.",
+      caption: t("syncCard.captionSignedOut"),
     };
   if (!partyStatusResolved && !party)
     return {
       enabled: false,
       caption: meCheckFailed
-        ? "Couldn't check your party. It will retry when you reopen this screen."
-        : "Checking your party…",
+        ? t("syncCard.captionCheckFailed")
+        : t("syncCard.captionChecking"),
     };
   if (!party)
     return {
       enabled: false,
-      caption: "Create or join a party to start syncing.",
+      caption: t("syncCard.captionNoParty"),
     };
   if (party.youAreBlocked)
     return {
       enabled: false,
-      caption:
-        "You've been removed from your party by its organizer. Sync is unavailable.",
+      caption: t("syncCard.captionBlocked"),
     };
   if (party.canceled)
     return {
       enabled: false,
-      caption: "Your party was canceled. Create or join a new one to sync again.",
+      caption: t("syncCard.captionCanceled"),
     };
   const { lastSyncedAt } = getSyncState(party.id);
   return {
     enabled: true,
     caption:
       lastSyncedAt === null
-        ? "Never synced yet"
-        : `Last synced: ${formatRelativeTime(lastSyncedAt)}`,
+        ? t("syncCard.neverSynced")
+        : t("syncCard.lastSynced", {
+            when: formatRelativeTime(lastSyncedAt, Date.now(), translator),
+          }),
   };
 };
 
@@ -111,10 +120,12 @@ const SyncCard = ({
   onSync,
   onClearDeclined,
 }: SyncCardProps) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
   const [isSyncing, setIsSyncing] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
-  const [alert, setAlert] = useState<string | null>(null);
+  const [status, setStatus] = useState<TranslationKey | null>(null);
+  const [alert, setAlert] = useState<BannerMessage | null>(null);
   const [meCheckFailed, setMeCheckFailed] = useState(false);
 
   // Party state drives the gating captions; /me is refreshed on mount
@@ -131,9 +142,10 @@ const SyncCard = ({
   // lands here as the same §4.2 banner a direct sync would have shown.
   useEffect(() => {
     if (!declined) return;
-    setAlert(
-      declined === "blocked" ? COPY.declinedBlocked : COPY.declinedCanceled
-    );
+    setAlert({
+      key:
+        declined === "blocked" ? COPY.declinedBlocked : COPY.declinedCanceled,
+    });
     onClearDeclined();
   }, [declined, onClearDeclined]);
 
@@ -141,7 +153,8 @@ const SyncCard = ({
     session,
     party,
     partyStatusResolved,
-    meCheckFailed
+    meCheckFailed,
+    translator
   );
 
   const handleSync = async () => {
@@ -162,24 +175,24 @@ const SyncCard = ({
         if (syncError.code === SYNC_ERROR_CODES.BLOCKED) {
           // EC-9/stale state: distinct banner + card re-render into the
           // matching disabled state (via the /me refresh below).
-          setAlert(COPY.declinedBlocked);
+          setAlert({ key: COPY.declinedBlocked });
           onRefreshMe();
         } else if (syncError.code === SYNC_ERROR_CODES.PARTY_CANCELED) {
-          setAlert(COPY.declinedCanceled);
+          setAlert({ key: COPY.declinedCanceled });
           onRefreshMe();
         } else if (syncError.code === SYNC_ERROR_CODES.VERSION_CONFLICT) {
-          setAlert(COPY.conflict);
+          setAlert({ key: COPY.conflict });
         } else if (syncError.code === SYNC_ERROR_CODES.NETWORK_ERROR) {
-          setAlert(COPY.connectionFailed);
+          setAlert({ key: COPY.connectionFailed });
         } else if (
           syncError.code === SYNC_ERROR_CODES.UNSUPPORTED_SCHEMA_VERSION
         ) {
-          setAlert(COPY.unsupportedSchemaVersion);
+          setAlert({ key: COPY.unsupportedSchemaVersion });
         } else {
-          setAlert(syncError.message || COPY.connectionFailed);
+          setAlert({ error: syncError });
         }
       } else {
-        setAlert(COPY.connectionFailed);
+        setAlert({ key: COPY.connectionFailed });
       }
     } finally {
       setIsSyncing(false);
@@ -188,27 +201,25 @@ const SyncCard = ({
 
   return (
     <Col className="data-section" data-testid="sync-card">
-      <h2 className="data-section__title">Sync with your party</h2>
-      <p className="data-section__description">
-        Pull in what your family added, review it, then merge it in.
-      </p>
+      <h2 className="data-section__title">{t("syncCard.title")}</h2>
+      <p className="data-section__description">{t("syncCard.description")}</p>
       <Button
         type="submit"
         variant="primary"
         disabled={!enabled || isSyncing}
         onClick={handleSync}
       >
-        {isSyncing ? "Syncing…" : "Sync with party"}
+        {isSyncing ? t("syncCard.syncing") : t("syncCard.syncButton")}
       </Button>
       {/* role=status has implicit aria-live=polite — announces progress
           and success without interrupting (DESIGN §5). */}
-      {isSyncing && <p role="status">Syncing with your party…</p>}
+      {isSyncing && <p role="status">{t("syncCard.syncingStatus")}</p>}
       <p className="data-section__description text-secondary sync-caption">
         {caption}
       </p>
       {status && !isSyncing && (
         <p role="status" className="sync-status">
-          {status}
+          {t(status)}
         </p>
       )}
       {alert && !isSyncing && (
@@ -216,7 +227,13 @@ const SyncCard = ({
           role="alert"
           className="restore-backup-error text-danger vertical-standard-space"
         >
-          {alert}
+          {"key" in alert
+            ? t(alert.key)
+            : getSyncErrorMessage(
+                alert.error,
+                translator,
+                COPY.connectionFailed
+              )}
         </p>
       )}
     </Col>

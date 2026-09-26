@@ -7,6 +7,7 @@ const {
   getBucketValidationError,
   getBucketAllowanceValidationError,
 } = require("./entriesHelper");
+const { createTranslator } = require("../../i18n/translator");
 
 describe("category/bucket helpers (issue #100)", () => {
   describe("getExpenseCategoryNames", () => {
@@ -160,6 +161,40 @@ describe("category/bucket helpers (issue #100)", () => {
     it("accepts positive allowances", () => {
       expect(getBucketAllowanceValidationError(200)).toBeNull();
       expect(getBucketAllowanceValidationError("199.99")).toBeNull();
+    });
+  });
+
+  describe("validation messages in another language", () => {
+    const spanish = createTranslator("es");
+
+    it("words every message in the given translator's language", () => {
+      expect(
+        getCategoryValidationError(
+          { name: "", buckets: {}, unbudgetedCategories: [] },
+          spanish
+        )
+      ).toBe("El nombre de la categoría no puede estar vacío");
+      expect(
+        getCategoryValidationError(
+          { name: "food", buckets: {}, unbudgetedCategories: [] },
+          spanish
+        )
+      ).toBe("Ya existe una categoría «food»");
+      expect(getBucketValidationError({ categoryName: "" }, spanish)).toBe(
+        "Selecciona una categoría"
+      );
+      expect(
+        getBucketValidationError(
+          { categoryName: "Food", buckets: { Food: 10 } },
+          spanish
+        )
+      ).toBe("Ya existe un límite para «Food»");
+      expect(getBucketAllowanceValidationError("abc", spanish)).toBe(
+        "La asignación debe ser un número válido"
+      );
+      expect(getBucketAllowanceValidationError(0, spanish)).toBe(
+        "La asignación debe ser mayor que cero"
+      );
     });
   });
 });

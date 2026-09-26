@@ -17,6 +17,11 @@ import {
   Party as PartyShape,
   PartyMember,
 } from "../../services/syncApi/contract";
+import {
+  getSyncErrorMessage,
+  TranslationKey,
+  useTranslation,
+} from "../../i18n";
 import "./styles.scss";
 
 interface PartyProps {
@@ -32,10 +37,10 @@ interface PartyProps {
   onCancelParty: () => Promise<PartyShape>;
 }
 
-// Exact copy from docs/multi-user-sync/DESIGN.md §3.6.
-const BLOCKED_STATUS = "You've been removed from this party by its organizer.";
-const CANCELED_STATUS =
-  "Your party was canceled. Create or join a new one to sync again.";
+// Copy from docs/multi-user-sync/DESIGN.md §3.6 (wording in
+// src/i18n/translations/).
+const BLOCKED_STATUS = "party.blockedStatus";
+const CANCELED_STATUS = "syncCard.captionCanceled";
 
 /**
  * Party hub (docs/multi-user-sync/DESIGN.md §3): picks between the no-party,
@@ -58,6 +63,8 @@ const Party = ({
   onBlockMember,
   onCancelParty,
 }: PartyProps) => {
+  const translator = useTranslation();
+  const { t } = translator;
   const history = useHistory();
   const [error, setError] = useState<string | null>(null);
 
@@ -70,13 +77,15 @@ const Party = ({
   // likeliest reason for the failure.
   const runMembershipAction = async (
     action: () => Promise<unknown>,
-    fallbackMessage: string
+    fallbackKey: TranslationKey
   ) => {
     setError(null);
     try {
       await action();
     } catch (actionError) {
-      setError((actionError as Error).message || fallbackMessage);
+      setError(
+        getSyncErrorMessage(actionError as Error, translator, fallbackKey)
+      );
       onRefreshMe();
     }
   };
@@ -84,22 +93,23 @@ const Party = ({
   const handleCreateParty = () => {
     // Same confirm pattern as "Clear all data" (DESIGN §3.1; AC-2.1,
     // docs/multi-user-sync/PRD.md): creating a party is not undoable here.
-    const confirmed = window.confirm(
-      "Create a party? You'll become its organizer and can invite family members."
-    );
+    const confirmed = window.confirm(t("party.createConfirm"));
     if (!confirmed) return;
-    runMembershipAction(onCreateParty, "Could not create the party.");
+    runMembershipAction(onCreateParty, "party.createFailed");
   };
 
   // AC-2.9: the confirmation carries the consequences (DESIGN §3.2).
   const handleBlockClick = (member: PartyMember) => {
     const confirmed = window.confirm(
-      `Block ${member.firstName} ${member.lastName}? This cannot be undone. They'll immediately lose the ability to sync, and entries they've already contributed stay in the party's history.`
+      t("party.blockConfirm", {
+        firstName: member.firstName,
+        lastName: member.lastName,
+      })
     );
     if (!confirmed) return;
     runMembershipAction(
       () => onBlockMember({ userId: member.id }),
-      "Could not block the member."
+      "party.blockFailed"
     );
   };
 
@@ -107,23 +117,24 @@ const Party = ({
   const handleCancelClick = () => {
     if (!party) return;
     const confirmed = window.confirm(
-      `Cancel ${party.name}? This cannot be undone. No member will be able to sync afterward, and nobody's local data is deleted.`
+      t("party.cancelConfirm", { name: party.name })
     );
     if (!confirmed) return;
-    runMembershipAction(onCancelParty, "Could not cancel the party.");
+    runMembershipAction(onCancelParty, "party.cancelFailed");
   };
 
   return (
-    <MainContentContainer className="party-screen" pageTitle="Party">
+    <MainContentContainer
+      className="party-screen"
+      pageTitle={t("party.pageTitle")}
+    >
       {!session ? (
         <div className="party-card">
-          <p className="party-card__description">
-            Sign in to create or join a party.
-          </p>
+          <p className="party-card__description">{t("party.signInPrompt")}</p>
           <ButtonLikeLink
             className="btn-primary"
             to="/account"
-            buttonTitle="Go to Account"
+            buttonTitle={t("party.goToAccount")}
           />
         </div>
       ) : party && party.youAreBlocked ? (
@@ -133,13 +144,13 @@ const Party = ({
         <NoPartyView
           onCreateClick={handleCreateParty}
           error={error}
-          statusLine={BLOCKED_STATUS}
+          statusLine={t(BLOCKED_STATUS)}
         />
       ) : party && party.canceled ? (
         <NoPartyView
           onCreateClick={handleCreateParty}
           error={error}
-          statusLine={CANCELED_STATUS}
+          statusLine={t(CANCELED_STATUS)}
         />
       ) : party ? (
         <PartyDetailView
@@ -155,7 +166,7 @@ const Party = ({
         <NoPartyView onCreateClick={handleCreateParty} error={error} />
       ) : (
         <p className="party-card__hint text-secondary" role="status">
-          Loading your party…
+          {t("party.loading")}
         </p>
       )}
       <Button
@@ -163,7 +174,7 @@ const Party = ({
         className="full-width vertical-standard-space"
         onClick={() => history.goBack()}
       >
-        Go Back
+        {t("common.goBack")}
       </Button>
     </MainContentContainer>
   );

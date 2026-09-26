@@ -6,6 +6,7 @@ import {
   Party as PartyShape,
   PartyMember,
 } from "../../services/syncApi/contract";
+import { useTranslation } from "../../i18n";
 
 interface PartyDetailViewProps {
   party: PartyShape;
@@ -34,6 +35,7 @@ const PartyDetailView = ({
   onBlockClick,
   onCancelClick,
 }: PartyDetailViewProps) => {
+  const { t } = useTranslation();
   const isOrganizer = party.organizerId === selfId;
   const organizer = party.members.find(
     (member) => member.id === party.organizerId
@@ -43,7 +45,9 @@ const PartyDetailView = ({
     <div className="party-card">
       <div className="party-card__header">
         <h2 className="party-card__title">{party.name}</h2>
-        {isOrganizer && <span className="party-card__badge">Organizer</span>}
+        {isOrganizer && (
+          <span className="party-card__badge">{t("party.organizer")}</span>
+        )}
       </div>
       <ul className="party-card__members">
         {party.members.map((member) => (
@@ -71,7 +75,7 @@ const PartyDetailView = ({
       )}
       {isOrganizer && party.members.length === 1 && (
         <p className="party-card__hint text-secondary">
-          Invite family members to start syncing.
+          {t("party.inviteHint")}
         </p>
       )}
       {isOrganizer ? (
@@ -79,20 +83,21 @@ const PartyDetailView = ({
           <ButtonLikeLink
             className="btn-primary"
             to="/party/invite"
-            buttonTitle="Add a member"
+            buttonTitle={t("party.addMember")}
           />
           <Button
             variant="danger"
             className="full-width vertical-standard-space"
             onClick={onCancelClick}
           >
-            Cancel party
+            {t("party.cancel")}
           </Button>
         </React.Fragment>
       ) : (
         <p className="party-card__hint text-secondary">
-          Only {organizer ? organizer.firstName : "the organizer"}, the
-          organizer, can add or remove members.
+          {organizer
+            ? t("party.onlyOrganizerCanManage", { name: organizer.firstName })
+            : t("party.onlyTheOrganizerCanManage")}
         </p>
       )}
     </div>

@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import accountIcon from "@iconify-icons/codicon/account";
 import { getInitials } from "../../../helpers/general";
 import { SyncSession } from "../../../services/session";
+import { useTranslation } from "../../../i18n";
 import "./styles.scss";
 
 interface AccountChipProps {
@@ -17,10 +18,14 @@ interface AccountChipProps {
  * the tab bar's collapse.
  */
 const AccountChip = ({ session }: AccountChipProps) => {
+  const { t } = useTranslation();
   const user = session?.user;
   const accountLabel = user
-    ? `Account: ${user.firstName} ${user.lastName}`
-    : "Account";
+    ? t("accountChip.loggedIn", {
+        firstName: user.firstName,
+        lastName: user.lastName,
+      })
+    : t("accountChip.loggedOut");
   return (
     <Link
       to="/account"

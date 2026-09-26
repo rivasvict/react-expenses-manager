@@ -1,0 +1,26 @@
+@import '../../../variables.scss';
+
+// Same 44×44px hit area and surface as the account chip, so the two app-bar
+// icon-buttons read as one family.
+.settings-chip {
+  @include icon-chip(44px);
+  flex: 0 0 auto;
+  color: $text-secondary;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  transition: color $transition-quick, background-color $transition-quick;
+
+  &:hover {
+    color: $text-primary;
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  .settings-chip__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}

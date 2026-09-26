@@ -1,8 +1,12 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by the EN/ES translations change. Tracked in:
+// https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import "./styles.scss";
 import { formatNumberForDisplay } from "../../../../../../helpers/entriesHelper/entriesHelper";
 import RowLink from "../../../../RowLink";
+import { useTranslation } from "../../../../../../i18n";
 
 const Bucket = ({
   category,
@@ -12,6 +16,7 @@ const Bucket = ({
   remainder,
   consuptionPercentage,
 }) => {
+  const { t } = useTranslation();
   const colorClass =
     consuptionPercentage > 85
       ? "danger"
@@ -31,8 +36,8 @@ const Bucket = ({
   return (
     <RowLink
       to={`edit-bucket/${category.toLowerCase().replace(/\s/g, "-")}`}
-      title={`Edit ${category}`}
-      aria-label={`Edit ${category}`}
+      title={t("bucket.edit", { category })}
+      aria-label={t("bucket.edit", { category })}
       className="bucket-container"
       data-testid={testId}
     >
@@ -55,15 +60,20 @@ const Bucket = ({
         </Row>
         <Row className="bucket-figures">
           <Col data-testid={`${testId}-spending`}>
-            {`Spent: ${formatNumberForDisplay(spending)}`}
+            {t("bucket.spent", { amount: formatNumberForDisplay(spending) })}
           </Col>
           <Col className="rest" data-testid={`${testId}-remaining`}>
-            {`Remaining: ${formatNumberForDisplay(remainder)}`}
+            {t("bucket.remaining", {
+              amount: formatNumberForDisplay(remainder),
+            })}
           </Col>
         </Row>
         <Row className="bucket-carry-on">
           <Col xs={12} data-testid={`${testId}-carry-over`}>
-            {`Allowance ${formatNumberForDisplay(allowance)} + carried ${formatCarried(carryOver)}`}
+            {t("bucket.carryOver", {
+              allowance: formatNumberForDisplay(allowance),
+              carried: formatCarried(carryOver),
+            })}
           </Col>
         </Row>
       </Col>
