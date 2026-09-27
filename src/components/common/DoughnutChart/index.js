@@ -1,5 +1,10 @@
+// TODO: no unit tests cover this file yet — tracked in
+// https://github.com/rivasvict/react-expenses-manager/issues/189
 import { Chart } from "chart.js/auto";
 import { useEffect, useRef } from "react";
+import tokens from "../../../styles/tokens.json";
+
+const { chart, color } = tokens;
 
 /**
  * Categorical palette validated for the app's dark surface (#161b22) with the
@@ -9,35 +14,41 @@ import { useEffect, useRef } from "react";
  * (income green, warning amber, expense red), which sit at the tail for the
  * rare 5+ category chart; the surface-colored slice borders act as the
  * spacer that keeps adjacent slices distinguishable for color-vision
- * deficiencies. The SCSS twins of the semantic values live in
- * src/variables.scss ($chart-income/$chart-expense/$chart-warning).
+ * deficiencies. All values come from src/styles/tokens.json, which also
+ * generates their SCSS twins ($chart-*).
  */
 const CATEGORICAL_COLORS = [
-  "#3987e5", // blue
-  "#d95926", // orange
-  "#9085e9", // violet
-  "#d55181", // magenta
-  "#008300", // green
-  "#199e70", // aqua
-  "#c98500", // amber
-  "#e66767", // red
+  chart["chart-categorical-1"], // blue
+  chart["chart-categorical-2"], // orange
+  chart["chart-categorical-3"], // violet
+  chart["chart-categorical-4"], // magenta
+  chart["chart-categorical-5"], // green
+  chart["chart-categorical-6"], // aqua
+  chart["chart-categorical-7"], // amber
+  chart["chart-categorical-8"], // red
 ];
 
 /**
  * Semantic pair for income-vs-expense charts, shared by the dashboard
  * balance donut and the monthly summary donut.
  */
-export const INCOME_EXPENSE_COLORS = ["#199e70", "#e66767"];
+export const INCOME_EXPENSE_COLORS = [
+  chart["chart-income"],
+  chart["chart-expense"],
+];
 
 /**
  * Semantic pair for expense-vs-savings charts (e.g. the dashboard balance
  * donut), where expenses are shown in the warning/expense red and savings
  * reuses the income green to signal "kept" money.
  */
-export const EXPENSE_SAVINGS_COLORS = ["#e66767", "#199e70"];
+export const EXPENSE_SAVINGS_COLORS = [
+  chart["chart-expense"],
+  chart["chart-income"],
+];
 
-const SURFACE_COLOR = "#161b22";
-const LEGEND_TEXT_COLOR = "#9aa4b2";
+const SURFACE_COLOR = color["bg-surface"];
+const LEGEND_TEXT_COLOR = color["text-secondary"];
 
 // One color per slice; charts can have more slices than the palette (users
 // create unlimited categories), so wrap around rather than let Chart.js fall

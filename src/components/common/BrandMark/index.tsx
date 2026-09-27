@@ -1,4 +1,9 @@
+// TODO: no unit tests cover this file yet — tracked in
+// https://github.com/rivasvict/react-expenses-manager/issues/189
 import React from "react";
+import tokens from "../../../styles/tokens.json";
+
+const { color } = tokens;
 
 /**
  * The app's brand mark, redrawn from the original raster logo as a single
@@ -30,12 +35,15 @@ const BrandMark = ({ size = 40, className, title }: BrandMarkProps) => (
       width="45"
       height="45"
       rx="11"
-      fill="#161b22"
-      stroke="#f0b90b"
+      fill={color["bg-surface"]}
+      stroke={color.accent}
       strokeWidth="1.6"
     />
-    <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" fill="#f0b90b" />
-    <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" fill="#6b7686" />
+    <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" fill={color.accent} />
+    <path
+      d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z"
+      fill={color["brand-mark-shade"]}
+    />
   </svg>
 );
 

@@ -14,13 +14,15 @@ npm run build      # Production build
 npm run typecheck  # TypeScript type check (no emit)
 npm run lint       # Check linting
 npm run lint:fix   # Auto-fix lint issues
+npm run lint:styles   # Stylelint: design-token rules for SCSS
+npm run tokens:build  # Regenerate _tokens.scss / tokens.css from src/styles/tokens.json
 ```
 
 Node version is pinned in `.nvmrc`.
 
 ## Architecture
 
-**Stack:** React 18, Redux (with redux-thunk), React Router v5, React Bootstrap, SCSS modules, TypeScript (partial — most files are `.js`, newer files use `.tsx`/`.ts`).
+**Stack:** React 18, Redux (with redux-thunk), React Router v5, React Bootstrap, SCSS modules (design tokens in `src/styles/tokens.json`, see `docs/design-system/`), TypeScript (partial — most files are `.js`, newer files use `.tsx`/`.ts`).
 
 **State shape** (three Redux slices in `src/redux/`):
 - `expensesManager` — entries (nested by `year → month → {incomes, expenses}`), selected date, buckets
@@ -62,6 +64,7 @@ Node version is pinned in `.nvmrc`.
 - **Every piece of UI text is translated.** The app ships in English (default) and Spanish (`src/i18n/`). Whenever you add or change text the user can see or hear — JSX text, `placeholder`, `aria-label`, `title`, `alt`, page titles, button labels, `window.confirm` messages, validation/error messages, chart labels — add a key to `src/i18n/translations/en.ts` **and** its Spanish text to `src/i18n/translations/es.ts`, then render it with `t("key")` from `useTranslation()` (or `withTranslation(Component)` for class components). Never hardcode an English string in a component. `es.ts` is typed against `en.ts`, so `npm run typecheck` fails on a missing key, and `src/i18n/translations/translations.test.ts` fails on a dropped `{{placeholder}}`. See the conventions at the top of `en.ts`: `{{name}}` placeholders, `_one`/`_other` plural pairs via `plural(key, count)`, `<link>…</link>` spans via `<Trans>`, and short `nav.*` labels (the mobile tab bar is narrow). Pure helpers that produce text take an optional `Translator` defaulting to English (`defaultTranslator`), e.g. `getBucketAllowanceValidationError(value, translator)`.
 - **User data is never translated.** Category and bucket names, descriptions and amounts are shown exactly as stored; the language preference lives only in `localStorage` (`settings.language`, see `src/i18n/languagePreference.ts`) and never touches the entries model, the backup format or the sync server. Sync-server error text is mapped by error code with `getSyncErrorMessage` (the server's own English wording is kept in English).
 - Integration tests run in English by default; to exercise Spanish, pick it on `/settings` (see `src/integrationTests/languageSettings.test.tsx`).
+- **Every piece of UI follows the design system** (`docs/design-system/README.md`). Read it and `docs/design-system/components.md` before building or changing UI, and reuse the listed components and the mixins in `src/variables.scss` (`card`, `interactive-card`, `buttons`, `icon-chip`, `money-figures`, `focus-ring`) before writing new styles. Colors, radii, shadows and font stacks come only from `src/styles/tokens.json`: in SCSS use the generated variables (`$accent`, `$radius-card`, …, or derive one with `rgba($accent, 0.28)`), and in JS/TSX import `tokens.json`. Never write a literal hex, named, `rgb()` or `hsl()` color, a literal `border-radius` or a font stack anywhere else; `npm run lint:styles` and `npm run lint` fail CI on them. A value that is genuinely new is added to `tokens.json`, followed by `npm run tokens:build`, and the JSON and both generated files are committed together (`src/styles/tokenFormats.test.js` fails when they drift). A new shared component gets a row in `components.md` in the same PR.
 
 - Components connect to Redux via `connect()` (class-style HOC pattern, not hooks)
 - Action creators are injected via `mapActionToProps` — components never import storage directly

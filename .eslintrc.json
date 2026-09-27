@@ -1,4 +1,23 @@
 {
   "extends": ["react-app", "react-app/jest"],
-  "ignorePatterns": ["node_modules", "public", "static", "build", "server/dist"]
+  "ignorePatterns": ["node_modules", "public", "static", "build", "server/dist", "docs/design-system/reference"],
+  "overrides": [
+    {
+      "files": ["src/**/*.{js,jsx,ts,tsx}"],
+      "excludedFiles": ["src/styles/**"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Literal[value=/^\\s*(#[0-9a-fA-F]{3,8}|(rgb|hsl)a?\\()/]",
+            "message": "Use a design token from src/styles/tokens.json instead of a literal color (docs/design-system/README.md)."
+          },
+          {
+            "selector": "TemplateElement[value.raw=/(^|[\\s:(])(#[0-9a-fA-F]{3,8}\\b|(rgb|hsl)a?\\(\\s*\\d)/]",
+            "message": "Use a design token from src/styles/tokens.json instead of a literal color (docs/design-system/README.md)."
+          }
+        ]
+      }
+    }
+  ]
 }

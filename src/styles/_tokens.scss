@@ -1,0 +1,56 @@
+// GENERATED from src/styles/tokens.json by `npm run tokens:build` — do not edit.
+
+// color
+$bg-page: #0e1116;
+$bg-surface: #161b22;
+$bg-raised: #1e252f;
+$bg-raised-hover: #252d39;
+$border-subtle: rgba(255, 255, 255, 0.07);
+$border-strong: rgba(255, 255, 255, 0.14);
+$track: rgba(255, 255, 255, 0.09);
+$highlight: rgba(255, 255, 255, 0.05);
+$scrim: rgba(0, 0, 0, 0.5);
+$accent: #f0b90b;
+$accent-hover: #fcd535;
+$accent-soft: rgba(240, 185, 11, 0.12);
+$income: #34d399;
+$income-soft: rgba(52, 211, 153, 0.12);
+$expense: #fb7185;
+$expense-soft: rgba(251, 113, 133, 0.12);
+$danger: #f87171;
+$danger-soft: rgba(248, 113, 113, 0.14);
+$warning: #fbbf24;
+$text-primary: #f2f5f9;
+$text-secondary: #9aa4b2;
+$text-muted: #8b94a3;
+$text-on-accent: #1a1503;
+$text-validation: rgb(255, 159, 128);
+$brand-mark-shade: #6b7686;
+
+// chart
+$chart-income: #199e70;
+$chart-expense: #e66767;
+$chart-warning: #c98500;
+$chart-categorical-1: #3987e5;
+$chart-categorical-2: #d95926;
+$chart-categorical-3: #9085e9;
+$chart-categorical-4: #d55181;
+$chart-categorical-5: #008300;
+$chart-categorical-6: #199e70;
+$chart-categorical-7: #c98500;
+$chart-categorical-8: #e66767;
+
+// radius
+$radius-control: 0.65rem;
+$radius-card: 1rem;
+$radius-shell: 1.4rem;
+$radius-pill: 10px;
+$radius-round: 50%;
+
+// shadow
+$shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+$shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+// font
+$font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$font-mono: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;

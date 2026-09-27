@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.18.0] - 2026-09-27
+
+### Added
+
+- The design system now lives in the repo, in `docs/design-system/`: a README
+  covering the principles, foundations and rules, an inventory that maps each
+  component to its code, and the reference board exported from Claude Design.
+- `src/styles/tokens.json` is the single source of truth for every color,
+  radius, shadow and font stack. `npm run tokens:build` generates
+  `src/styles/_tokens.scss` (for the app's SCSS) and
+  `docs/design-system/tokens.css` (CSS custom properties for HTML mockups).
+  A unit test fails if either generated file is out of date.
+- Strict token enforcement in CI: a new Lint workflow runs ESLint and the new
+  `npm run lint:styles` (stylelint). Both reject literal colors, and
+  stylelint also rejects literal radii and font stacks, anywhere outside
+  `tokens.json`.
+
+### Changed
+
+- The remaining literal values in component styles, the doughnut chart
+  palette and the brand mark now read from the tokens. New tokens cover the
+  values that had no name yet: the progress-bar track, the sheet scrim, the
+  inset highlight, the validation text color, the brand mark's slate bar, the
+  pill and round radii, and the font stacks.
+- The Party screen's code field uses the app's monospace stack instead of the
+  browser's generic `monospace`.
+
+### Removed
+
+- The unused legacy SCSS aliases (`$color_dark_*`, `$color_clear_*`,
+  `$standard-radius`, `$standard-container-radius`).
+
 ## [1.17.0] - 2026-09-24
 
 ### Added

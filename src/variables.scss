@@ -1,62 +1,18 @@
 /*
-Design tokens for the app's dark "calm fintech" theme.
-The gold accent keeps the original brand direction
-(https://dribbble.com/shots/14865224-Fintech-Banking-Investing-App-UI-UX)
+Shared SCSS for the app's dark "calm fintech" theme
+(docs/design-system/README.md). The gold accent keeps the original brand
+direction (https://dribbble.com/shots/14865224-Fintech-Banking-Investing-App-UI-UX)
 over a deeper, lower-contrast neutral scale.
+
+The tokens themselves — palette, radii, shadows, font stacks — are generated
+from src/styles/tokens.json into src/styles/_tokens.scss. Change them there
+and run `npm run tokens:build`; this file only derives from them.
 */
+@import "./styles/tokens";
 
 // ---------------------------------------------------------------------------
-// Palette
+// Layout & rhythm
 // ---------------------------------------------------------------------------
-$bg-page: #0e1116; // page / behind everything
-$bg-surface: #161b22; // main work-area card
-$bg-raised: #1e252f; // cards, rows, inputs on top of the surface
-$bg-raised-hover: #252d39; // hover state for interactive rows
-$border-subtle: rgba(255, 255, 255, 0.07);
-$border-strong: rgba(255, 255, 255, 0.14);
-
-$accent: #f0b90b; // brand gold
-$accent-hover: #fcd535;
-$accent-soft: rgba(240, 185, 11, 0.12);
-
-$income: #34d399; // green for money coming in
-$income-soft: rgba(52, 211, 153, 0.12);
-$expense: #fb7185; // rose for money going out
-$expense-soft: rgba(251, 113, 133, 0.12);
-$danger: #f87171;
-$danger-soft: rgba(248, 113, 113, 0.14);
-$warning: #fbbf24;
-
-$text-primary: #f2f5f9;
-$text-secondary: #9aa4b2;
-$text-muted: #8b94a3; // ≥4.5:1 on $bg-raised — used for small print
-$text-on-accent: #1a1503; // dark text on gold buttons
-
-// Chart-grade semantic hues (validated for the dark surface with the dataviz
-// six-checks validator). The JS twin of these values lives in
-// src/components/common/DoughnutChart/index.js — keep both in sync.
-$chart-income: #199e70;
-$chart-expense: #e66767;
-$chart-warning: #c98500;
-
-// Legacy aliases (older stylesheets still import these names).
-$color_dark_1: $bg-page;
-$color_dark_2: $bg-surface;
-$color_dark_3: $text-secondary;
-$color_clear_1: $accent;
-$color_clear_2: $accent-hover;
-$color_clear_3: $text-primary;
-$color_clear_4: #f4fcf8;
-
-// ---------------------------------------------------------------------------
-// Shape, spacing & type
-// ---------------------------------------------------------------------------
-$radius-control: 0.65rem; // buttons, inputs
-$radius-card: 1rem; // cards, rows
-$radius-shell: 1.4rem; // the big work-area container
-$standard-radius: $radius-control; // legacy alias
-$standard-container-radius: $radius-shell $radius-shell 0.93rem 0.93rem; // legacy alias
-
 $vertical-standard-margin: 0.625rem;
 $section_header_vertical-margin: 1.1em;
 $h1-size-title: 1.15rem;
@@ -65,22 +21,20 @@ $shell-max-width: 40rem; // app column width on large screens
 $bottom-nav-height: 4.25rem; // reserved space for the mobile tab bar
 $nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
 
-$shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
-$shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
-
 // A whisper-faint gold wash anchored to the top of the page column. Painted
 // once on `body` at a fixed size so it never stretches with page height or
 // repaints on scroll — it warms the near-black ground without touching the
 // contrast of anything drawn on a surface above it.
 $glow-page: radial-gradient(
   90rem 40rem at 50% -6rem,
-  rgba(240, 185, 11, 0.05),
+  rgba($accent, 0.05),
   transparent 62%
 );
 
 // Chevron affordance shared by the native selects (global.scss) and the
 // searchable category dropdown's trigger (CategorySearchSelect) — single
-// source of truth so the two can never drift.
+// source of truth so the two can never drift. The fill is $text-secondary,
+// URL-encoded (%23 = #) because a data URI cannot reference a variable.
 $select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
 
 $transition-quick: 140ms ease;
@@ -144,7 +98,7 @@ $transition-quick: 140ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: $radius-round;
 }
 
 @mixin button-like-style {
@@ -210,7 +164,7 @@ $transition-quick: 140ms ease;
 
   .btn.btn-danger {
     background-color: transparent;
-    border-color: rgba(248, 113, 113, 0.5);
+    border-color: rgba($danger, 0.5);
     color: $danger;
 
     &:hover,
