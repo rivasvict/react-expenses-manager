@@ -93,6 +93,21 @@ const en = {
   "entryForm.remove": "Remove entry",
   "entryForm.notFound": "Entry not found",
 
+  // Calculator keypad on amount fields
+  "calculator.show": "Show calculator",
+  "calculator.hide": "Hide calculator",
+  "calculator.keypad": "Calculator keypad",
+  "calculator.calculation": "Calculation",
+  "calculator.plus": "Plus",
+  "calculator.minus": "Minus",
+  "calculator.multiply": "Multiply",
+  "calculator.divide": "Divide",
+  "calculator.equals": "Equals",
+  "calculator.decimalPoint": "Decimal point",
+  "calculator.clear": "Clear",
+  "calculator.backspace": "Delete last character",
+  "calculator.divisionByZero": "Can't divide by zero",
+
   // Searchable category dropdown
   "categorySelect.searchPlaceholder": "Search categories…",
   "categorySelect.searchLabel": "Search categories",

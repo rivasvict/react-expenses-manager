@@ -4,11 +4,8 @@
 import React, { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { Button, Form } from "react-bootstrap";
-import {
-  InputDate,
-  InputNumber,
-  InputText,
-} from "../common/Forms";
+import { InputDate, InputText } from "../common/Forms";
+import AmountInput from "../common/AmountInput";
 import CategorySelector from "../common/ExpensesManager/CategorySelector";
 import { getEntryCategoryOption } from "../../helpers/entriesHelper/entriesHelper";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
@@ -161,11 +158,11 @@ const ModifyForm = ({
             ? t("bucketForm.monthlyAllowance")
             : t("entryForm.amount")}
         </Form.Label>
-        <InputNumber
+        <AmountInput
           id="modify-amount"
           name="amount"
           value={amount}
-          onChange={(event: any) => setAmount(event.currentTarget.value)}
+          onValueChange={setAmount}
         />
         {!isAmountValid && (
           <Form.Text className="review-card__field-error" role="alert">

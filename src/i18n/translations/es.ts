@@ -93,6 +93,21 @@ const es: Translations = {
   "entryForm.remove": "Eliminar movimiento",
   "entryForm.notFound": "No se encontró el movimiento",
 
+  // Calculator keypad on amount fields
+  "calculator.show": "Mostrar calculadora",
+  "calculator.hide": "Ocultar calculadora",
+  "calculator.keypad": "Teclado de calculadora",
+  "calculator.calculation": "Cálculo",
+  "calculator.plus": "Más",
+  "calculator.minus": "Menos",
+  "calculator.multiply": "Multiplicar",
+  "calculator.divide": "Dividir",
+  "calculator.equals": "Igual",
+  "calculator.decimalPoint": "Punto decimal",
+  "calculator.clear": "Borrar todo",
+  "calculator.backspace": "Borrar último carácter",
+  "calculator.divisionByZero": "No se puede dividir entre cero",
+
   // Searchable category dropdown
   "categorySelect.searchPlaceholder": "Buscar categorías…",
   "categorySelect.searchLabel": "Buscar categorías",
