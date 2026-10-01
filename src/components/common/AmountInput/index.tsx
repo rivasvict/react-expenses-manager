@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Icon } from "@iconify/react";
-import calculatorIcon from "@iconify-icons/codicon/symbol-operator";
 import { InputNumber } from "../Forms";
 import CalculatorKeypad from "../CalculatorKeypad";
 import {
@@ -27,17 +25,16 @@ type AmountInputProps = {
   placeholder?: string;
   /** Receives the amount as a plain decimal string ("" when cleared). */
   onValueChange: (value: string) => void;
-  /** Whether the keypad starts open. */
-  defaultKeypadOpen?: boolean;
 };
 
 /**
- * The amount field of every entry form: a number input plus an on-screen
- * calculator keypad. Whatever the keypad computes is written straight into
- * the amount, so "12+8" leaves 20 in the field even without pressing "=",
- * and typing into the field (physical keyboard) restarts the calculation
- * from what was typed. While the keypad is open the phone's own keyboard is
- * suppressed (`inputMode="none"`), so the two never cover each other.
+ * The amount field of every entry form: a number input whose calculator
+ * keypad appears while the field has focus and disappears once focus leaves
+ * the field and the keypad. Whatever the keypad computes is written straight
+ * into the amount, so "12+8" leaves 20 in the field even without pressing
+ * "=", and typing into the field (physical keyboard) restarts the
+ * calculation from what was typed. The phone's own keyboard is suppressed
+ * (`inputMode="none"`) since the keypad takes its place.
  */
 const AmountInput = ({
   id,
@@ -45,10 +42,9 @@ const AmountInput = ({
   value,
   placeholder,
   onValueChange,
-  defaultKeypadOpen = false,
 }: AmountInputProps) => {
   const { t } = useTranslation();
-  const [isKeypadOpen, setIsKeypadOpen] = useState(defaultKeypadOpen);
+  const [isKeypadOpen, setIsKeypadOpen] = useState(false);
   const [expression, setExpression] = useState(() => toExpression(value));
   // After "=", the next digit starts a new number instead of extending the result.
   const [justEvaluated, setJustEvaluated] = useState(false);
@@ -85,63 +81,65 @@ const AmountInput = ({
     setJustEvaluated(false);
   };
 
-  const toggleKeypad = () => {
+  // `focus`/`blur` here are React's bubbling focusin/focusout, so they cover
+  // the input and every keypad key. Moving focus between them (Tab from the
+  // field into the keys) keeps the keypad open; leaving the group closes it.
+  const handleFocus = () => {
+    if (isKeypadOpen) return;
     // Opening picks up whatever is in the field now, typed or not.
-    if (!isKeypadOpen) setExpression(toExpression(value));
+    setExpression(toExpression(value));
     setError(undefined);
     setJustEvaluated(false);
-    setIsKeypadOpen((open) => !open);
+    setIsKeypadOpen(true);
   };
 
-  const toggleLabel = isKeypadOpen ? t("calculator.hide") : t("calculator.show");
+  const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    const next = event.relatedTarget as Node | null;
+    if (!next || !event.currentTarget.contains(next)) setIsKeypadOpen(false);
+  };
+
+  // Pressing a key must not take focus away from the field: some browsers
+  // (Safari) never focus a clicked button, so the blur would report no
+  // relatedTarget and close the keypad before the click lands. Cancelling
+  // mousedown's default action keeps focus where it is in every browser,
+  // touch included (taps dispatch mousedown too).
+  const keepFocus = (event: React.MouseEvent) => event.preventDefault();
 
   return (
-    <div className="amount-input">
-      <div className="amount-input__field">
-        <InputNumber
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          value={value ?? ""}
-          inputMode={isKeypadOpen ? "none" : "decimal"}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            const typed = event.currentTarget.value;
-            setExpression(toExpression(typed));
-            setError(undefined);
-            setJustEvaluated(false);
-            onValueChange(typed);
-          }}
-        />
-        <button
-          type="button"
-          className={`amount-input__toggle${
-            isKeypadOpen ? " amount-input__toggle--active" : ""
-          }`}
-          onClick={toggleKeypad}
-          aria-label={toggleLabel}
-          title={toggleLabel}
-          aria-expanded={isKeypadOpen}
-          aria-controls={keypadId}
-        >
-          <Icon icon={calculatorIcon} aria-hidden="true" />
-        </button>
-      </div>
+    <div className="amount-input" onFocus={handleFocus} onBlur={handleBlur}>
+      <InputNumber
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        value={value ?? ""}
+        inputMode="none"
+        aria-controls={keypadId}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          const typed = event.currentTarget.value;
+          setExpression(toExpression(typed));
+          setError(undefined);
+          setJustEvaluated(false);
+          onValueChange(typed);
+        }}
+      />
       {isKeypadOpen && (
-        <CalculatorKeypad
-          id={keypadId}
-          expression={expression}
-          preview={preview}
-          error={error}
-          onKey={handleKey}
-          onBackspace={() => {
-            updateExpression(removeLastKey(expression));
-            setJustEvaluated(false);
-          }}
-          onClear={() => {
-            updateExpression("");
-            setJustEvaluated(false);
-          }}
-        />
+        <div onMouseDown={keepFocus}>
+          <CalculatorKeypad
+            id={keypadId}
+            expression={expression}
+            preview={preview}
+            error={error}
+            onKey={handleKey}
+            onBackspace={() => {
+              updateExpression(removeLastKey(expression));
+              setJustEvaluated(false);
+            }}
+            onClear={() => {
+              updateExpression("");
+              setJustEvaluated(false);
+            }}
+          />
+        </div>
       )}
     </div>
   );

@@ -4,27 +4,32 @@ import userEvent from "@testing-library/user-event";
 import AmountInput from "./index";
 
 // Stateful harness mirroring how the entry forms own the amount.
-const ControlledAmount = ({
-  initialValue = "",
-  defaultKeypadOpen = true,
-}: {
-  initialValue?: string;
-  defaultKeypadOpen?: boolean;
-}) => {
+const ControlledAmount = ({ initialValue = "" }: { initialValue?: string }) => {
   const [value, setValue] = useState(initialValue);
   return (
-    <AmountInput
-      id="amount"
-      name="amount"
-      placeholder="Amount"
-      value={value}
-      onValueChange={setValue}
-      defaultKeypadOpen={defaultKeypadOpen}
-    />
+    <>
+      <AmountInput
+        id="amount"
+        name="amount"
+        placeholder="Amount"
+        value={value}
+        onValueChange={setValue}
+      />
+      <input aria-label="Next field" />
+    </>
   );
 };
 
 const amountField = () => screen.getByPlaceholderText("Amount");
+const keypad = () => screen.queryByRole("group", { name: "Calculator keypad" });
+
+// Every scenario starts the way a user does: by tapping the amount field.
+const renderFocused = async (initialValue?: string) => {
+  const user = userEvent.setup();
+  render(<ControlledAmount initialValue={initialValue} />);
+  await user.click(amountField());
+  return { user };
+};
 const press = async (user: ReturnType<typeof userEvent.setup>, names: string[]) => {
   for (const name of names) {
     await user.click(screen.getByRole("button", { name }));
@@ -33,8 +38,7 @@ const press = async (user: ReturnType<typeof userEvent.setup>, names: string[]) 
 
 describe("AmountInput", () => {
   it("writes digits pressed on the keypad into the amount", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await press(user, ["1", "2", "Decimal point", "5"]);
 
@@ -42,8 +46,7 @@ describe("AmountInput", () => {
   });
 
   it("keeps the amount at the calculation's result, even before =", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await press(user, ["1", "2", "Plus", "8"]);
     expect(amountField()).toHaveValue(20);
@@ -59,8 +62,7 @@ describe("AmountInput", () => {
   });
 
   it("starts a new number after = unless an operator continues the result", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await press(user, ["6", "Plus", "4", "Equals", "3"]);
     expect(amountField()).toHaveValue(3);
@@ -70,8 +72,7 @@ describe("AmountInput", () => {
   });
 
   it("continues from the amount already in the field", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount initialValue="100" />);
+    const { user } = await renderFocused("100");
 
     await press(user, ["Minus", "2", "5"]);
 
@@ -79,8 +80,7 @@ describe("AmountInput", () => {
   });
 
   it("supports backspace and clear", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await press(user, ["4", "5", "Delete last character"]);
     expect(amountField()).toHaveValue(4);
@@ -90,8 +90,7 @@ describe("AmountInput", () => {
   });
 
   it("refuses to divide by zero and keeps the last good amount", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await press(user, ["9", "Divide", "0"]);
     expect(amountField()).toHaveValue(9);
@@ -102,8 +101,7 @@ describe("AmountInput", () => {
   });
 
   it("restarts the calculation from what is typed into the field", async () => {
-    const user = userEvent.setup();
-    render(<ControlledAmount />);
+    const { user } = await renderFocused();
 
     await user.type(amountField(), "30");
     await press(user, ["Plus", "5"]);
@@ -111,23 +109,47 @@ describe("AmountInput", () => {
     expect(amountField()).toHaveValue(35);
   });
 
-  it("toggles the keypad and suppresses the phone keyboard while it is open", async () => {
+  it("shows the keypad only while the field or the keypad has focus", async () => {
     const user = userEvent.setup();
-    render(<ControlledAmount defaultKeypadOpen={false} />);
+    render(<ControlledAmount />);
 
-    const toggle = screen.getByRole("button", { name: "Show calculator" });
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("group")).not.toBeInTheDocument();
-    expect(amountField()).toHaveAttribute("inputmode", "decimal");
+    expect(keypad()).not.toBeInTheDocument();
 
-    await user.click(toggle);
-
-    expect(
-      screen.getByRole("button", { name: "Hide calculator" })
-    ).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("group", { name: "Calculator keypad" })
-    ).toBeInTheDocument();
+    await user.click(amountField());
+    expect(keypad()).toBeInTheDocument();
+    // The keypad replaces the phone keyboard.
     expect(amountField()).toHaveAttribute("inputmode", "none");
+
+    // Pressing keys keeps focus in the field, so the keypad stays.
+    await press(user, ["4", "Plus", "1"]);
+    expect(amountField()).toHaveFocus();
+    expect(keypad()).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText("Next field"));
+    expect(keypad()).not.toBeInTheDocument();
+    expect(amountField()).toHaveValue(5);
+  });
+
+  it("stays open while Tab moves focus from the field into the keys", async () => {
+    const { user } = await renderFocused();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Clear" })).toHaveFocus();
+    expect(keypad()).toBeInTheDocument();
+
+    // Leaving the keypad for the next field closes it.
+    await user.click(screen.getByLabelText("Next field"));
+    expect(keypad()).not.toBeInTheDocument();
+  });
+
+  it("restarts from the field's current amount each time it opens", async () => {
+    const { user } = await renderFocused("10");
+
+    await press(user, ["Plus", "5", "Equals"]);
+    await user.click(screen.getByLabelText("Next field"));
+    await user.click(amountField());
+    await press(user, ["Multiply", "2"]);
+
+    expect(amountField()).toHaveValue(30);
   });
 });

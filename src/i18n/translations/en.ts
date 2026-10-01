@@ -94,8 +94,6 @@ const en = {
   "entryForm.notFound": "Entry not found",
 
   // Calculator keypad on amount fields
-  "calculator.show": "Show calculator",
-  "calculator.hide": "Hide calculator",
   "calculator.keypad": "Calculator keypad",
   "calculator.calculation": "Calculation",
   "calculator.plus": "Plus",

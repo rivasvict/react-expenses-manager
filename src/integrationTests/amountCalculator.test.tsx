@@ -5,8 +5,9 @@ import { selectCategory } from "./helpers/categorySelect";
 
 /**
  * The calculator keypad under the amount field of the add/edit entry form:
- * a sum typed on the keypad becomes the saved amount, editing continues from
- * the stored amount, and the keypad can be hidden to use the phone keyboard.
+ * it appears when the field is tapped and goes away when focus leaves it, a
+ * sum typed on the keypad becomes the saved amount, and editing continues
+ * from the stored amount.
  */
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -32,9 +33,7 @@ describe("amount calculator keypad", () => {
     const { user } = await renderApp("/");
 
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
-    expect(
-      await screen.findByRole("group", { name: "Calculator keypad" })
-    ).toBeInTheDocument();
+    await user.click(await screen.findByPlaceholderText(/insert expense amount/i));
 
     // 12.5 + 7.5 × 2 = 27.5
     await pressKeys(user, [
@@ -58,6 +57,7 @@ describe("amount calculator keypad", () => {
     const { user } = await renderApp("/");
 
     await user.click(await screen.findByRole("link", { name: /add income/i }));
+    await user.click(await screen.findByPlaceholderText(/insert income amount/i));
     await pressKeys(user, ["1", "0", "0", "0"]);
     await user.type(screen.getByPlaceholderText(/description/i), "Pay");
     await selectCategory(user, "Salary");
@@ -67,9 +67,9 @@ describe("amount calculator keypad", () => {
     await user.click(await screen.findByText(/pay/i));
 
     // The keypad picks up the stored amount: 1000 − 250 = 750.
-    expect(
-      await screen.findByPlaceholderText(/insert income amount/i)
-    ).toHaveValue(1000);
+    const amountField = await screen.findByPlaceholderText(/insert income amount/i);
+    expect(amountField).toHaveValue(1000);
+    await user.click(amountField);
     await pressKeys(user, ["Minus", "2", "5", "0"]);
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
@@ -77,20 +77,28 @@ describe("amount calculator keypad", () => {
     expect(screen.queryByText("$1,000.00")).not.toBeInTheDocument();
   });
 
-  it("user can hide the keypad and type the amount instead", async () => {
+  it("the keypad appears while the amount field has focus and hides when it leaves", async () => {
     const { user } = await renderApp("/");
 
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
-    await user.click(
-      await screen.findByRole("button", { name: "Hide calculator" })
-    );
+    const amountField = await screen.findByPlaceholderText(/insert expense amount/i);
     expect(
       screen.queryByRole("group", { name: "Calculator keypad" })
     ).not.toBeInTheDocument();
 
-    await user.type(screen.getByPlaceholderText(/insert expense amount/i), "18");
-    await user.click(screen.getByRole("button", { name: "Show calculator" }));
-    await pressKeys(user, ["Plus", "2"]);
+    await user.click(amountField);
+    expect(
+      screen.getByRole("group", { name: "Calculator keypad" })
+    ).toBeInTheDocument();
+    await pressKeys(user, ["1", "8", "Plus", "2"]);
+
+    // Moving on to the description closes the keypad and keeps the total.
+    await user.click(screen.getByPlaceholderText(/description/i));
+    expect(
+      screen.queryByRole("group", { name: "Calculator keypad" })
+    ).not.toBeInTheDocument();
+    expect(amountField).toHaveValue(20);
+
     await selectCategory(user, "Food");
     await user.click(screen.getByRole("button", { name: /submit/i }));
 

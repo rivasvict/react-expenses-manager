@@ -89,7 +89,6 @@ class EntryForm extends Component {
                   placeholder={t(`entryForm.amountPlaceholder.${entryType}`)}
                   value={this.state.amount}
                   onValueChange={this.setAmount}
-                  defaultKeypadOpen
                 />
               </Form.Group>
               <Form.Group className="vertical-standard-space">

@@ -94,8 +94,6 @@ const es: Translations = {
   "entryForm.notFound": "No se encontró el movimiento",
 
   // Calculator keypad on amount fields
-  "calculator.show": "Mostrar calculadora",
-  "calculator.hide": "Ocultar calculadora",
   "calculator.keypad": "Teclado de calculadora",
   "calculator.calculation": "Cálculo",
   "calculator.plus": "Más",

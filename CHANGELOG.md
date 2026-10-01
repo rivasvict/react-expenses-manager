@@ -19,11 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `+` and `-`, floating-point noise is rounded away, and dividing by zero is
   refused with a message instead of changing the amount. The calculation is
   evaluated by a small parser (`src/helpers/calculatorHelper/`), never `eval`.
-- The keypad starts open on the add/edit entry form and closed on the sync
-  review card; the calculator button beside the field shows or hides it.
-  While it is open the phone's own keyboard is suppressed so the two never
-  stack; typing on a physical keyboard still works and restarts the
-  calculation from what was typed.
+- The keypad is hidden until the amount field is tapped or focused, and
+  hides again as soon as focus leaves the field (moving to the next field,
+  tapping elsewhere, tabbing past the keys). Pressing its keys keeps focus in
+  the field. It replaces the phone's own keyboard on that field; typing on a
+  physical keyboard still works and restarts the calculation from what was
+  typed.
 
 ## [1.17.0] - 2026-09-24
 
