@@ -213,7 +213,8 @@ describe("review wizard", () => {
     // Inline edit (DESIGN 4.3.2): change amount and description.
     const amountField = screen.getByLabelText("Amount");
     await user.clear(amountField);
-    await user.type(amountField, "55");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amountField, "55", { skipClick: true });
     const descriptionField = screen.getByLabelText("Description");
     await user.clear(descriptionField);
     await user.type(descriptionField, "Cinema night");
