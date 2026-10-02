@@ -1,0 +1,138 @@
+/*
+  Shared base for UI mockups (docs/ui-workflow.md). Load it AFTER tokens.css:
+
+    <link rel="stylesheet" href="…/design-system/tokens.css">
+    <link rel="stylesheet" href="…/design-system/mockup.css">
+
+  It reproduces the app shell and the shared components with the same values
+  as src/variables.scss, expressed only through the tokens in tokens.css, so a
+  mockup looks like the app without importing any of its code. Classes are
+  prefixed `mk-` so they are never mistaken for app classes.
+
+  Not covered: the app-bar navigation / bottom tab bar (identical on every
+  screen) and icons. Draw icons inline as SVG that paints with
+  style="fill: var(--token)".
+*/
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body.mk {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-feature-settings: "tnum";
+  -webkit-font-smoothing: antialiased;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
+  background-image: radial-gradient(
+    90rem 40rem at 50% -6rem,
+    color-mix(in srgb, var(--accent) 5%, transparent),
+    transparent 62%
+  );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* App bar: brand mark + name (the navigation is omitted, see above). */
+.mk-header {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mk-header__logo { width: 40px; height: 40px; display: block; }
+.mk-header__name { font-weight: 700; font-size: 1.02rem; letter-spacing: -0.01em; }
+
+/* The work-area card every screen lives in. */
+.mk-shell { max-width: 40rem; margin: 0 auto; padding: 0 0 1.875rem; }
+.mk-work-area {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-shell);
+  box-shadow: var(--shadow-card);
+  padding: 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mk-gap, 0.625rem);
+}
+
+/* Small uppercase page title shown above the content. */
+.mk-eyebrow {
+  margin: 0 0 0.25rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.mk-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Cards: $radius-card, raised surface, subtle border. */
+.mk-card {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 0.9rem 1rem;
+}
+
+/* Buttons: 3.1em tall, 0.65rem radius, one gold primary per screen. */
+.mk-btn {
+  width: 100%;
+  height: 3.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+.mk-btn--primary {
+  color: var(--text-on-accent);
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.mk-btn--secondary {
+  color: var(--text-primary);
+  background-color: transparent;
+  border-color: var(--border-strong);
+}
+.mk-btn--danger {
+  color: var(--danger);
+  background-color: transparent;
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+}
+
+/* Circular tinted icon chip beside money rows. */
+.mk-chip {
+  width: 1.9rem;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-round);
+}
+.mk-chip--income { color: var(--income); background-color: var(--income-soft); }
+.mk-chip--expense { color: var(--expense); background-color: var(--expense-soft); }
+
+/* Text roles. */
+.mk-text-secondary { color: var(--text-secondary); }
+.mk-text-muted { color: var(--text-muted); }
+.mk-text-income { color: var(--income); }
+.mk-text-expense { color: var(--expense); }
+.mk-center { text-align: center; }

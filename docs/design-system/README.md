@@ -13,6 +13,7 @@ before building or designing any UI.
 | [`src/styles/tokens.json`](../../src/styles/tokens.json) | **The single source of truth** for every color, radius, shadow and font stack. |
 | [`tokens.css`](tokens.css) | Generated: the tokens as CSS custom properties (`--accent`, `--radius-card`, …) for HTML mockups. |
 | [`src/styles/_tokens.scss`](../../src/styles/_tokens.scss) | Generated: the tokens as SCSS variables (`$accent`, `$radius-card`, …), pulled in by `src/variables.scss`. |
+| [`mockup.css`](mockup.css) | Shared base for UI mockups: the app shell, cards, buttons and text roles, built only from `tokens.css`. See [`../ui-workflow.md`](../ui-workflow.md). |
 | [`components.md`](components.md) | Inventory: each design-system component → the code that implements it. |
 | [`reference/design-system.dc.html`](reference/design-system.dc.html) | The visual reference board exported from Claude Design (snapshot — see below). |
 

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buckets — empty (EN)</title>
+  <link rel="stylesheet" href="../../../design-system/tokens.css">
+  <link rel="stylesheet" href="../../../design-system/mockup.css">
+  <style>
+    .empty { padding: 2rem 1rem 1rem; text-align: center; }
+    .empty__image { width: 100%; max-width: 240px; height: auto; margin-bottom: 1.5rem; border-radius: var(--radius-card); }
+    .empty__title { margin: 0 0 0.5rem; font-size: 1.2rem; font-weight: 700; }
+    .empty__message { max-width: 420px; margin: 0 auto; line-height: 1.5; color: var(--text-secondary); }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+      <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Monthly Buckets</h3>
+      <section class="empty">
+        <img class="empty__image" src="../../../../src/images/buckets-empty.png" alt="No buckets yet">
+        <h2 class="empty__title">No buckets yet</h2>
+        <p class="empty__message">You haven't added any buckets. Add your first bucket to start tracking your monthly spending limits.</p>
+      </section>
+      <a class="mk-btn mk-btn--primary" href="#">Add new bucket</a>
+      <button class="mk-btn mk-btn--secondary" type="button">Go back</button>
+    </div>
+  </main>
+</body>
+</html>

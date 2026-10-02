@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Option B — guided empty state</title>
+  <link rel="stylesheet" href="../../../../design-system/tokens.css">
+  <link rel="stylesheet" href="../../../../design-system/mockup.css">
+  <style>
+    .guide { padding: 1.5rem 0.5rem 0.5rem; text-align: center; }
+    .guide__chip { width: 4rem; height: 4rem; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--accent-soft); }
+    .guide__title { margin: 0 0 0.5rem; font-size: 1.2rem; font-weight: 700; }
+    .guide__message { max-width: 420px; margin: 0 auto 1.25rem; line-height: 1.5; color: var(--text-secondary); }
+    .steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.625rem; text-align: left; }
+    .steps li { display: flex; align-items: center; gap: 0.75rem; }
+    .steps__number { width: 1.9rem; height: 1.9rem; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-weight: 700; border-radius: var(--radius-round); color: var(--accent); background-color: var(--accent-soft); }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+      <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Monthly Buckets</h3>
+      <section class="guide">
+        <div class="guide__chip">
+          <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 8h14l-1.4 11.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8L5 8Z" style="fill: var(--accent)"/>
+            <ellipse cx="12" cy="8" rx="7" ry="2.4" style="fill: var(--accent-hover)"/>
+          </svg>
+        </div>
+        <h2 class="guide__title">Set your first spending limit</h2>
+        <p class="guide__message">A bucket caps what you spend in one category each month.</p>
+        <div class="mk-card">
+          <ol class="steps">
+            <li><span class="steps__number">1</span><span>Pick a category, like Groceries</span></li>
+            <li><span class="steps__number">2</span><span>Set a monthly limit</span></li>
+            <li><span class="steps__number">3</span><span>Watch the bar fill as you spend</span></li>
+          </ol>
+        </div>
+      </section>
+      <a class="mk-btn mk-btn--primary" href="#">Add new bucket</a>
+      <button class="mk-btn mk-btn--secondary" type="button">Go back</button>
+    </div>
+  </main>
+</body>
+</html>

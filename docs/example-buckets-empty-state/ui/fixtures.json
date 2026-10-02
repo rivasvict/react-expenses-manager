@@ -1,0 +1,26 @@
+{
+  "screens": {
+    "buckets-empty.default": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "settings.language": "en",
+        "buckets": "{}"
+      }
+    },
+    "buckets-empty.es": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "settings.language": "es",
+        "buckets": "{}"
+      }
+    }
+  }
+}

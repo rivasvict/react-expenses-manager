@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.20.0] - 2026-10-02
+
+### Added
+
+- A convention for designing a feature's UI before it is built, documented in
+  `docs/ui-workflow.md`. A feature keeps its designs in `docs/<feature>/ui/`:
+  a `decision.md` with a status (`exploring`, `approved`, `implemented`), the
+  alternatives under `options/`, and the final screens, one per screen and
+  state, under `approved/`. The approved screens are the visual spec an
+  implementing agent builds to.
+- `npm run gallery:build` scans every `ui/` folder and writes
+  `docs/ui-gallery.html`, a single page that shows each feature's options and
+  approved screens with a status filter and a phone/desktop switch. It refuses
+  to build, and lists every problem, when a package breaks the convention or a
+  mockup uses a literal color, skips `tokens.css` or loads an external
+  resource. A unit test fails if the committed gallery is stale.
+- `docs/design-system/mockup.css`, a shared base (app shell, cards, buttons,
+  text roles) for mockups, built only from the design tokens.
+- A worked example, `docs/example-buckets-empty-state/`: two options for the
+  Buckets empty state, the decision, English and Spanish approved screens, a
+  flow and fixtures. It is marked as an example and is not to be built.
+- `CLAUDE.md` now tells agents that an approved design is the binding visual
+  spec, and how to design inside `docs/<feature>/ui/`.
+
 ## [1.19.0] - 2026-10-02
 
 ### Added
