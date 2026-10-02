@@ -1,0 +1,7 @@
+@import '../../../variables.scss';
+
+.amount-input {
+  .form-control {
+    @include money-figures();
+  }
+}

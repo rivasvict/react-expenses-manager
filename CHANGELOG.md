@@ -5,6 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.18.0] - 2026-09-30
+
+### Added
+
+- A calculator keypad on the amount field of every entry form: adding and
+  editing incomes and expenses (fixed entries included), and the Modify form
+  of the sync review wizard. Keys follow a phone calculator (digits, `.`,
+  `+`, `-`, `*`, `/` and `=`), plus clear and backspace, with a display that
+  shows the calculation and its running result.
+- The amount always holds the result of what is typed on the keypad, so
+  `12.5+7.5` saves 20 even without pressing `=`. `*` and `/` bind before
+  `+` and `-`, floating-point noise is rounded away, and dividing by zero is
+  refused with a message instead of changing the amount. The calculation is
+  evaluated by a small parser (`src/helpers/calculatorHelper/`), never `eval`.
+- The keypad is hidden until the amount field is tapped or focused, and
+  hides again as soon as focus leaves the field (moving to the next field,
+  tapping elsewhere, tabbing past the keys) or when the already-focused field
+  is tapped again. Pressing its keys keeps focus in the field. It replaces the phone's own keyboard on that field; typing on a
+  physical keyboard still works and restarts the calculation from what was
+  typed.
+
 ## [1.17.0] - 2026-09-24
 
 ### Added

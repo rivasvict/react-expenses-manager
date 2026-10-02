@@ -72,7 +72,8 @@ describe("entry creation", () => {
 
     const amountInput = await screen.findByPlaceholderText(/insert.*amount/i);
     await user.clear(amountInput);
-    await user.type(amountInput, "75");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amountInput, "75", { skipClick: true });
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     expect(await screen.findByText("$75.00")).toBeInTheDocument();

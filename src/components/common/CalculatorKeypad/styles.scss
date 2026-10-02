@@ -1,0 +1,136 @@
+@import '../../../variables.scss';
+
+.calculator-keypad {
+  margin-top: 0.6rem;
+  padding: 0.6rem;
+  background-color: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-card;
+
+  .calculator-keypad__display {
+    display: flex;
+    align-items: stretch;
+    gap: 0.45rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .calculator-keypad__readout {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.3rem 0.8rem;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    @include money-figures();
+  }
+
+  .calculator-keypad__expression {
+    max-width: 100%;
+    text-align: right;
+    // Long calculations wrap instead of widening the page on phones.
+    overflow-wrap: anywhere;
+    color: $text-primary;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    &--empty {
+      color: $text-muted;
+    }
+  }
+
+  .calculator-keypad__preview {
+    color: $text-secondary;
+    font-size: 0.8rem;
+  }
+
+  .calculator-keypad__error {
+    margin: -0.2rem 0 0.55rem;
+    color: $danger;
+    font-size: 0.82rem;
+    text-align: right;
+  }
+
+  .calculator-keypad__action,
+  .calculator-keypad__key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-primary;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick,
+      transform $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  .calculator-keypad__action {
+    flex: 0 0 2.75rem;
+    color: $text-secondary;
+    font-weight: 600;
+
+    svg {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
+  }
+
+  .calculator-keypad__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .calculator-keypad__key {
+    // 44px minimum touch target on the narrowest phones.
+    height: clamp(2.75rem, 11vw, 3.25rem);
+    font-size: 1.3rem;
+    font-weight: 500;
+    @include money-figures();
+
+    &--operator {
+      color: $accent;
+      background-color: $accent-soft;
+      border-color: transparent;
+
+      &:hover {
+        background-color: rgba(240, 185, 11, 0.2);
+        border-color: transparent;
+      }
+    }
+
+    &--equals {
+      color: $text-on-accent;
+      background-color: $accent;
+      border-color: $accent;
+      font-weight: 700;
+
+      &:hover {
+        background-color: $accent-hover;
+        border-color: $accent-hover;
+      }
+    }
+  }
+}

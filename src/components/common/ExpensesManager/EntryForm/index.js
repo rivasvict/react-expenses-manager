@@ -7,7 +7,8 @@ import { getEntryCategoryOption } from "../../../../helpers/entriesHelper/entrie
 
 import { Button, Form, Col, Row } from "react-bootstrap";
 import "./styles.scss";
-import { FormButton, FormContent, InputNumber, InputText } from "../../Forms";
+import { FormButton, FormContent, InputText } from "../../Forms";
+import AmountInput from "../../AmountInput";
 import ContentTileSection from "../../ContentTitleSection";
 import { MainContentContainer } from "../../MainContentContainer";
 import { withTranslation } from "../../../../i18n";
@@ -30,6 +31,10 @@ class EntryForm extends Component {
     this.setState(() => {
       return { [name]: value };
     });
+  };
+
+  setAmount = (amount) => {
+    this.setState(() => ({ amount }));
   };
 
   toggleRecurring = (event) => {
@@ -78,14 +83,13 @@ class EntryForm extends Component {
                 <Form.Label htmlFor="entry-amount">
                   {t("entryForm.amount")}
                 </Form.Label>
-                <InputNumber
-                  type="number"
+                <AmountInput
                   id="entry-amount"
                   name="amount"
                   placeholder={t(`entryForm.amountPlaceholder.${entryType}`)}
                   value={this.state.amount}
-                  onChange={this.handleInputChange}
-                ></InputNumber>
+                  onValueChange={this.setAmount}
+                />
               </Form.Group>
               <Form.Group className="vertical-standard-space">
                 <Form.Label htmlFor="entry-description">

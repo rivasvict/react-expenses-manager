@@ -315,7 +315,8 @@ describe("fixed (recurring) entries reuse the regular entry flow (issue #103)", 
       /insert expense amount/i
     );
     await user.clear(amountInput);
-    await user.type(amountInput, "75");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amountInput, "75", { skipClick: true });
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // April now shows 75; March keeps the original 50 (forward-only edit).
@@ -446,7 +447,8 @@ describe("Fixed Entries totals (issue #113)", () => {
       /insert expense amount/i
     );
     await user.clear(amountInput);
-    await user.type(amountInput, "75");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amountInput, "75", { skipClick: true });
     await user.click(screen.getByRole("button", { name: /submit/i }));
 
     // April total: 200 + 75 = 275.

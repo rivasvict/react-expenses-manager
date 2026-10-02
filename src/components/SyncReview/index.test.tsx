@@ -297,7 +297,8 @@ describe("a brand-new fixed entry / bucket (RFC §4.1)", () => {
     );
     const amount = screen.getByLabelText("Amount");
     await user.clear(amount);
-    await user.type(amount, "15");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amount, "15", { skipClick: true });
     await user.click(screen.getByRole("button", { name: "Save & accept" }));
     await user.click(screen.getByRole("button", { name: "Upload & finish" }));
 
@@ -329,7 +330,8 @@ describe("Modify (DESIGN §4.3.2, EC-5)", () => {
     );
     const amount = screen.getByLabelText("Amount");
     await user.clear(amount);
-    await user.type(amount, "50");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amount, "50", { skipClick: true });
     await user.click(screen.getByRole("button", { name: "Save & accept" }));
 
     expect(
@@ -349,7 +351,8 @@ describe("Modify (DESIGN §4.3.2, EC-5)", () => {
     );
     const amount = screen.getByLabelText("Amount");
     await user.clear(amount);
-    await user.type(amount, "50");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amount, "50", { skipClick: true });
     await user.click(screen.getByRole("button", { name: "Save & accept" }));
     await user.click(screen.getByRole("button", { name: "Upload & finish" }));
 
@@ -385,7 +388,8 @@ describe("Modify (DESIGN §4.3.2, EC-5)", () => {
     expect(screen.getByText("Enter a number.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Save & accept" })).toBeDisabled();
 
-    await user.type(amount, "12");
+    // Still focused by clear(); clicking it again would close its keypad.
+    await user.type(amount, "12", { skipClick: true });
     expect(
       screen.getByRole("button", { name: "Save & accept" })
     ).not.toBeDisabled();
