@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { InputNumber } from "../Forms";
 import CalculatorKeypad from "../CalculatorKeypad";
+import SlideReveal from "../SlideReveal";
 import {
   CalculatorKey,
   appendKey,
@@ -29,8 +30,9 @@ type AmountInputProps = {
 
 /**
  * The amount field of every entry form: a number input whose calculator
- * keypad appears while the field has focus and disappears once focus leaves
- * the field and the keypad, or when the already-focused field is tapped again. Whatever the keypad computes is written straight
+ * keypad slides down while the field has focus and slides back up once focus
+ * leaves the field and the keypad, or when the already-focused field is tapped
+ * again. Whatever the keypad computes is written straight
  * into the amount, so "12+8" leaves 20 in the field even without pressing
  * "=", and typing into the field (physical keyboard) restarts the
  * calculation from what was typed. The phone's own keyboard is suppressed
@@ -134,7 +136,7 @@ const AmountInput = ({
           onValueChange(typed);
         }}
       />
-      {isKeypadOpen && (
+      <SlideReveal open={isKeypadOpen}>
         <div onMouseDown={keepFocus}>
           <CalculatorKeypad
             id={keypadId}
@@ -152,7 +154,7 @@ const AmountInput = ({
             }}
           />
         </div>
-      )}
+      </SlideReveal>
     </div>
   );
 };

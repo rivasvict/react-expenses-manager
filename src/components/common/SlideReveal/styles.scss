@@ -1,0 +1,57 @@
+@import '../../../variables.scss';
+
+// Grid-row collapse animates to the content's natural height, which a
+// max-height keyframe cannot do without guessing a number.
+@keyframes slide-reveal-down {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-reveal-up {
+  from {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+.slide-reveal {
+  display: grid;
+  grid-template-rows: 1fr;
+
+  &--open {
+    animation: slide-reveal-down $transition-slide both;
+  }
+
+  &--closing {
+    animation: slide-reveal-up $transition-slide both;
+    pointer-events: none;
+  }
+
+  .slide-reveal__content {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &--open,
+    &--closing {
+      animation: none;
+    }
+  }
+}

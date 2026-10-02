@@ -38,6 +38,8 @@ $glow-page: radial-gradient(
 $select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
 
 $transition-quick: 140ms ease;
+// Panels that slide open and shut (SlideReveal), slower than a hover change.
+$transition-slide: 220ms ease;
 
 // ---------------------------------------------------------------------------
 // Mixins
