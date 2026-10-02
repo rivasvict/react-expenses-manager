@@ -95,7 +95,7 @@ input[type="number"].form-control {
 }
 
 .validation-message {
-  color: rgb(255, 159, 128);
+  color: $text-validation;
 }
 
 .field-hint {

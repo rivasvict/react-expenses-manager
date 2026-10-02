@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.18.0",
+  "version": "1.19.0",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",
@@ -43,6 +43,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix",
+    "lint:styles": "stylelint \"src/**/*.scss\"",
+    "tokens:build": "node scripts/buildTokens.js",
     "build:server": "tsc -p server/tsconfig.json",
     "sync-server": "npm run build:server && node server/dist/index.js",
     "test:server": "npm run build:server && node server/dist/testRunner.js"
@@ -73,7 +75,9 @@
     "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
+    "postcss-scss": "^4.0.9",
     "prettier": "^3.3.3",
+    "stylelint": "^15.11.0",
     "workbox-cli": "^6.6.0"
   }
 }

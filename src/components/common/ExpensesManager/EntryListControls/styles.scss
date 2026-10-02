@@ -245,7 +245,7 @@
     justify-content: center;
     background-color: $accent;
     color: $text-on-accent;
-    border-radius: 50%;
+    border-radius: $radius-round;
     font-size: 0.7rem;
     font-weight: 700;
   }
@@ -259,12 +259,11 @@
   // Scrim + sheet must stack ABOVE the fixed bottom nav (.app-nav,
   // z-index 100 in Header.scss) or the nav paints over the sheet's action
   // buttons and steals their taps on mobile.
-  // The rgba(0,0,0,0.5) scrim is the one literal the design specifies.
   &__scrim {
     position: fixed;
     inset: 0;
     z-index: 110;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: $scrim;
   }
 
   &__panel {
@@ -618,7 +617,7 @@
     height: 1.35rem;
     background: transparent;
     border: none;
-    border-radius: 50%;
+    border-radius: $radius-round;
     color: $text-secondary;
     cursor: pointer;
     transition:

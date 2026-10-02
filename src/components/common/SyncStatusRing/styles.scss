@@ -8,7 +8,7 @@
   flex: 0 0 auto;
   width: 0.6rem;
   height: 0.6rem;
-  border-radius: 50%;
+  border-radius: $radius-round;
   border: 2px solid $text-muted;
   // The halo is what makes the ring feel lit rather than drawn. It is part
   // of the same transition as the border so a status change fades instead of

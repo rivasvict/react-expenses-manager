@@ -1,0 +1,22 @@
+{
+  "customSyntax": "postcss-scss",
+  "ignoreFiles": ["src/styles/_tokens.scss"],
+  "rules": {
+    "color-no-hex": [
+      true,
+      { "message": "Use a design token from src/styles/tokens.json instead of a hex color (docs/design-system/README.md)." }
+    ],
+    "color-named": [
+      "never",
+      { "message": "Use a design token from src/styles/tokens.json instead of a named color (docs/design-system/README.md)." }
+    ],
+    "declaration-property-value-disallowed-list": [
+      {
+        "/.*/": ["/(rgb|hsl)a?\\(\\s*[\\d.]/"],
+        "/^border(-(top|bottom)-(left|right))?-radius$/": ["/\\d(px|rem|em)\\b/", "/^\\d+%$/"],
+        "/^font-family$/": ["/^(?!\\$)/"]
+      },
+      { "message": "Use a design token from src/styles/tokens.json for colors, radii and font stacks (docs/design-system/README.md)." }
+    ]
+  }
+}

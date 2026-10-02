@@ -116,7 +116,7 @@
       border-color: transparent;
 
       &:hover {
-        background-color: rgba(240, 185, 11, 0.2);
+        background-color: rgba($accent, 0.2);
         border-color: transparent;
       }
     }
