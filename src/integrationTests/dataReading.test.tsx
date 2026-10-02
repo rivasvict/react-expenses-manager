@@ -60,7 +60,8 @@ describe("edit / delete", () => {
     // Wait for the edit form to load the entry
     const amountInput = await screen.findByPlaceholderText(/insert.*amount/i);
     await user.clear(amountInput);
-    await user.type(amountInput, "90");
+    // Already focused by clear(); clicking it again would close its keypad.
+    await user.type(amountInput, "90", { skipClick: true });
 
     await user.click(screen.getByRole("button", { name: /submit/i }));
 

@@ -103,7 +103,8 @@ describe("AmountInput", () => {
   it("restarts the calculation from what is typed into the field", async () => {
     const { user } = await renderFocused();
 
-    await user.type(amountField(), "30");
+    // The field is already focused; clicking it again would close the keypad.
+    await user.type(amountField(), "30", { skipClick: true });
     await press(user, ["Plus", "5"]);
 
     expect(amountField()).toHaveValue(35);
@@ -151,5 +152,19 @@ describe("AmountInput", () => {
     await press(user, ["Multiply", "2"]);
 
     expect(amountField()).toHaveValue(30);
+  });
+
+  it("closes when the already-focused field is tapped again, and reopens on the next tap", async () => {
+    const { user } = await renderFocused("10");
+
+    await press(user, ["Plus", "5"]);
+    await user.click(amountField());
+    expect(keypad()).not.toBeInTheDocument();
+    expect(amountField()).not.toHaveFocus();
+    expect(amountField()).toHaveValue(15);
+
+    await user.click(amountField());
+    expect(keypad()).toBeInTheDocument();
+    expect(amountField()).toHaveFocus();
   });
 });

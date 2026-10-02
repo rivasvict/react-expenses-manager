@@ -104,4 +104,20 @@ describe("amount calculator keypad", () => {
 
     expect(await screen.findByText("$20.00")).toBeInTheDocument();
   });
+
+  it("tapping the amount field again closes the open keypad", async () => {
+    const { user } = await renderApp("/");
+
+    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    const amountField = await screen.findByPlaceholderText(/insert expense amount/i);
+
+    await user.click(amountField);
+    await pressKeys(user, ["4", "2"]);
+    await user.click(amountField);
+
+    expect(
+      screen.queryByRole("group", { name: "Calculator keypad" })
+    ).not.toBeInTheDocument();
+    expect(amountField).toHaveValue(42);
+  });
 });

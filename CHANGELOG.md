@@ -21,8 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   evaluated by a small parser (`src/helpers/calculatorHelper/`), never `eval`.
 - The keypad is hidden until the amount field is tapped or focused, and
   hides again as soon as focus leaves the field (moving to the next field,
-  tapping elsewhere, tabbing past the keys). Pressing its keys keeps focus in
-  the field. It replaces the phone's own keyboard on that field; typing on a
+  tapping elsewhere, tabbing past the keys) or when the already-focused field
+  is tapped again. Pressing its keys keeps focus in the field. It replaces the phone's own keyboard on that field; typing on a
   physical keyboard still works and restarts the calculation from what was
   typed.
 

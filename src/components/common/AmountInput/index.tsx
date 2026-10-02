@@ -30,7 +30,7 @@ type AmountInputProps = {
 /**
  * The amount field of every entry form: a number input whose calculator
  * keypad appears while the field has focus and disappears once focus leaves
- * the field and the keypad. Whatever the keypad computes is written straight
+ * the field and the keypad, or when the already-focused field is tapped again. Whatever the keypad computes is written straight
  * into the amount, so "12+8" leaves 20 in the field even without pressing
  * "=", and typing into the field (physical keyboard) restarts the
  * calculation from what was typed. The phone's own keyboard is suppressed
@@ -105,6 +105,17 @@ const AmountInput = ({
   // touch included (taps dispatch mousedown too).
   const keepFocus = (event: React.MouseEvent) => event.preventDefault();
 
+  // Tapping the field again while its keypad is open is the second way to
+  // dismiss it: the field gives up focus, so the focusout above closes the
+  // keypad. Cancelling mousedown's default stops the browser from focusing
+  // the field straight back (taps dispatch mousedown too).
+  const dismissOnRepeatTap = (event: React.MouseEvent<HTMLInputElement>) => {
+    const field = event.currentTarget;
+    if (!isKeypadOpen || field.ownerDocument.activeElement !== field) return;
+    event.preventDefault();
+    field.blur();
+  };
+
   return (
     <div className="amount-input" onFocus={handleFocus} onBlur={handleBlur}>
       <InputNumber
@@ -114,6 +125,7 @@ const AmountInput = ({
         value={value ?? ""}
         inputMode="none"
         aria-controls={keypadId}
+        onMouseDown={dismissOnRepeatTap}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           const typed = event.currentTarget.value;
           setExpression(toExpression(typed));
