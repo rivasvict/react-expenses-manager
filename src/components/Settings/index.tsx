@@ -6,6 +6,7 @@ import checkIcon from "@iconify-icons/codicon/check";
 import { MainContentContainer } from "../common/MainContentContainer";
 import { SUPPORTED_LANGUAGES, useTranslation } from "../../i18n";
 import { LANGUAGE_NATIVE_NAMES } from "../../i18n/languages";
+import VersionLabel from "../common/VersionLabel";
 import "./styles.scss";
 
 /**
@@ -80,6 +81,7 @@ const Settings = () => {
             </fieldset>
           </Col>
         </Row>
+        <VersionLabel />
       </Container>
       <Container className="bottom-content" fluid>
         <Row>
