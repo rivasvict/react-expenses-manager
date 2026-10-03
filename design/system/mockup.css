@@ -1,8 +1,8 @@
 /*
-  Shared base for UI mockups (docs/ui-workflow.md). Load it AFTER tokens.css:
+  Shared base for UI mockups (design/README.md). Load it AFTER tokens.css:
 
-    <link rel="stylesheet" href="…/design-system/tokens.css">
-    <link rel="stylesheet" href="…/design-system/mockup.css">
+    <link rel="stylesheet" href="…/system/tokens.css">
+    <link rel="stylesheet" href="…/system/mockup.css">
 
   It reproduces the app shell and the shared components with the same values
   as src/variables.scss, expressed only through the tokens in tokens.css, so a

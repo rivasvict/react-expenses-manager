@@ -5,7 +5,7 @@ import { checkMockups, findMockupProblems } from "./mockupGuard";
 
 const page = (head = "", body = "") =>
   `<!doctype html><html><head>
-  <link rel="stylesheet" href="../../design-system/tokens.css">${head}
+  <link rel="stylesheet" href="../../system/tokens.css">${head}
   </head><body>${body}</body></html>`;
 
 describe("findMockupProblems", () => {
@@ -20,7 +20,7 @@ describe("findMockupProblems", () => {
 
   it("requires the tokens.css link", () => {
     expect(findMockupProblems("<html><body>No tokens</body></html>")).toEqual([
-      "does not link design-system/tokens.css.",
+      "does not link system/tokens.css.",
     ]);
   });
 
@@ -79,24 +79,24 @@ describe("findMockupProblems", () => {
 
 describe("checkMockups", () => {
   it("prefixes each problem with the mockup's path and reads every listed file", () => {
-    const docsDir = fs.mkdtempSync(path.join(os.tmpdir(), "ui-guard-"));
+    const designDir = fs.mkdtempSync(path.join(os.tmpdir(), "ui-guard-"));
     try {
-      fs.mkdirSync(path.join(docsDir, "f/ui"), { recursive: true });
-      fs.writeFileSync(path.join(docsDir, "f/ui/good.html"), page());
+      fs.mkdirSync(path.join(designDir, "f/ui"), { recursive: true });
+      fs.writeFileSync(path.join(designDir, "f/ui/good.html"), page());
       fs.writeFileSync(
-        path.join(docsDir, "f/ui/bad.html"),
+        path.join(designDir, "f/ui/bad.html"),
         page("<style>.a{color:#000}</style>")
       );
 
       expect(
-        checkMockups(docsDir, [
+        checkMockups(designDir, [
           { mockupPaths: ["f/ui/good.html", "f/ui/bad.html"] },
         ])
       ).toEqual([
         "f/ui/bad.html uses a literal color in CSS; use a var(--token) from tokens.css.",
       ]);
     } finally {
-      fs.rmSync(docsDir, { recursive: true, force: true });
+      fs.rmSync(designDir, { recursive: true, force: true });
     }
   });
 });

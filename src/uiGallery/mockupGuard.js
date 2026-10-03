@@ -1,5 +1,5 @@
-// Keeps UI mockups honest about the design system (docs/ui-workflow.md): a
-// mockup must take its look from docs/design-system/tokens.css, never from
+// Keeps UI mockups honest about the design system (design/README.md): a
+// mockup must take its look from design/system/tokens.css, never from
 // literal colors, and must be self-contained (no CDN scripts or fonts) so it
 // renders the same everywhere, including offline and in the sandbox.
 // CommonJS for the same reason as scanFeatures.js.
@@ -7,7 +7,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const TOKENS_LINK = "design-system/tokens.css";
+const TOKENS_LINK = "system/tokens.css";
 
 const LITERAL_COLOR = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|hsl)a?\(\s*[\d.]/;
 const PAINT_ATTRIBUTE =
@@ -47,12 +47,12 @@ const findMockupProblems = (html) => {
   return problems;
 };
 
-// Checks every mockup of every feature, reading files under `docsDir`.
-const checkMockups = (docsDir, features) =>
+// Checks every mockup of every feature, reading files under `designDir`.
+const checkMockups = (designDir, features) =>
   features.flatMap((feature) =>
     feature.mockupPaths.flatMap((mockupPath) =>
       findMockupProblems(
-        fs.readFileSync(path.join(docsDir, mockupPath), "utf8")
+        fs.readFileSync(path.join(designDir, mockupPath), "utf8")
       ).map((problem) => `${mockupPath} ${problem}`)
     )
   );

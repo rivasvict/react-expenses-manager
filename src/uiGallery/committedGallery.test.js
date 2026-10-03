@@ -1,6 +1,6 @@
-// Guards the real docs/ tree, like src/styles/tokenFormats.test.js guards the
+// Guards the real design/ tree, like src/styles/tokenFormats.test.js guards the
 // generated token files: every feature's ui/ folder follows the convention,
-// every mockup follows the design-system rules, and docs/ui-gallery.html is
+// every mockup follows the design-system rules, and design/gallery.html is
 // up to date (run `npm run gallery:build` to fix a failure here).
 
 import fs from "fs";
@@ -9,21 +9,21 @@ import { checkMockups } from "./mockupGuard";
 import { buildGalleryHtml } from "./galleryHtml";
 import { scanFeatures } from "./scanFeatures";
 
-const docsDir = path.resolve(__dirname, "../../docs");
-const features = scanFeatures(docsDir);
+const designDir = path.resolve(__dirname, "../../design");
+const features = scanFeatures(designDir);
 
-describe("docs/ UI packages", () => {
+describe("design/ UI packages", () => {
   it("every feature's ui/ folder follows the convention", () => {
     expect(features.flatMap((feature) => feature.problems)).toEqual([]);
   });
 
   it("every mockup follows the design-system rules", () => {
-    expect(checkMockups(docsDir, features)).toEqual([]);
+    expect(checkMockups(designDir, features)).toEqual([]);
   });
 
-  it("docs/ui-gallery.html is in sync with the ui/ folders", () => {
+  it("design/gallery.html is in sync with the ui/ folders", () => {
     const committed = fs.readFileSync(
-      path.join(docsDir, "ui-gallery.html"),
+      path.join(designDir, "gallery.html"),
       "utf8"
     );
     expect(committed).toBe(buildGalleryHtml(features));

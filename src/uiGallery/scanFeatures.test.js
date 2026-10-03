@@ -47,26 +47,26 @@ describe("parseApprovedName", () => {
 });
 
 describe("scanFeatures", () => {
-  let docsDir;
+  let designDir;
 
   beforeEach(() => {
-    docsDir = fs.mkdtempSync(path.join(os.tmpdir(), "ui-gallery-"));
+    designDir = fs.mkdtempSync(path.join(os.tmpdir(), "ui-gallery-"));
   });
 
   afterEach(() => {
-    fs.rmSync(docsDir, { recursive: true, force: true });
+    fs.rmSync(designDir, { recursive: true, force: true });
   });
 
-  it("ignores docs folders that have no ui/ folder", () => {
-    writeFile(docsDir, "multi-user-sync/PRD.md", "# PRD");
-    expect(scanFeatures(docsDir)).toEqual([]);
+  it("ignores feature folders that have no ui/ folder", () => {
+    writeFile(designDir, "features/multi-user-sync/PRD.md", "# PRD");
+    expect(scanFeatures(designDir)).toEqual([]);
   });
 
   it("reads a valid approved feature into the model with no problems", () => {
-    writeFile(docsDir, "buckets/feature-brief.md", "# Brief");
+    writeFile(designDir, "features/buckets/feature-brief.md", "# Brief");
     writeFile(
-      docsDir,
-      "buckets/ui/decision.md",
+      designDir,
+      "features/buckets/ui/decision.md",
       decision({
         title: "Buckets",
         summary: "Why",
@@ -74,13 +74,25 @@ describe("scanFeatures", () => {
         chosen: "a-simple",
       })
     );
-    writeFile(docsDir, "buckets/ui/options/a-simple/list.html", "<html>");
-    writeFile(docsDir, "buckets/ui/options/b-rich/list.html", "<html>");
-    writeFile(docsDir, "buckets/ui/approved/list.empty.html", "<html>");
-    writeFile(docsDir, "buckets/ui/flow.html", "<html>");
-    writeFile(docsDir, "buckets/ui/fixtures.json", "{}");
+    writeFile(
+      designDir,
+      "features/buckets/ui/options/a-simple/list.html",
+      "<html>"
+    );
+    writeFile(
+      designDir,
+      "features/buckets/ui/options/b-rich/list.html",
+      "<html>"
+    );
+    writeFile(
+      designDir,
+      "features/buckets/ui/approved/list.empty.html",
+      "<html>"
+    );
+    writeFile(designDir, "features/buckets/ui/flow.html", "<html>");
+    writeFile(designDir, "features/buckets/ui/fixtures.json", "{}");
 
-    const [feature] = scanFeatures(docsDir);
+    const [feature] = scanFeatures(designDir);
 
     expect(feature).toMatchObject({
       slug: "buckets",
@@ -89,10 +101,10 @@ describe("scanFeatures", () => {
       status: "approved",
       chosen: "a-simple",
       example: false,
-      briefPath: "buckets/feature-brief.md",
-      decisionPath: "buckets/ui/decision.md",
-      flowPath: "buckets/ui/flow.html",
-      fixturesPath: "buckets/ui/fixtures.json",
+      briefPath: "features/buckets/feature-brief.md",
+      decisionPath: "features/buckets/ui/decision.md",
+      flowPath: "features/buckets/ui/flow.html",
+      fixturesPath: "features/buckets/ui/fixtures.json",
       problems: [],
     });
     expect(feature.options.map((option) => option.id)).toEqual([
@@ -103,43 +115,55 @@ describe("scanFeatures", () => {
       {
         screen: "list",
         state: "empty",
-        path: "buckets/ui/approved/list.empty.html",
+        path: "features/buckets/ui/approved/list.empty.html",
       },
     ]);
     expect(feature.mockupPaths).toEqual([
-      "buckets/ui/options/a-simple/list.html",
-      "buckets/ui/options/b-rich/list.html",
-      "buckets/ui/approved/list.empty.html",
-      "buckets/ui/flow.html",
+      "features/buckets/ui/options/a-simple/list.html",
+      "features/buckets/ui/options/b-rich/list.html",
+      "features/buckets/ui/approved/list.empty.html",
+      "features/buckets/ui/flow.html",
     ]);
   });
 
   it("accepts brief.md as well as feature-brief.md", () => {
-    writeFile(docsDir, "f/brief.md", "# Brief");
-    writeFile(docsDir, "f/ui/decision.md", decision({ status: "exploring" }));
-    writeFile(docsDir, "f/ui/options/a/x.html", "<html>");
-    expect(scanFeatures(docsDir)[0].briefPath).toBe("f/brief.md");
+    writeFile(designDir, "features/f/brief.md", "# Brief");
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "exploring" })
+    );
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    expect(scanFeatures(designDir)[0].briefPath).toBe("features/f/brief.md");
   });
 
   it("reports a missing decision.md", () => {
-    writeFile(docsDir, "f/ui/options/a/x.html", "<html>");
-    expect(scanFeatures(docsDir)[0].problems).toEqual([
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    expect(scanFeatures(designDir)[0].problems).toEqual([
       "f: ui/decision.md is missing.",
     ]);
   });
 
   it("reports an unknown status", () => {
-    writeFile(docsDir, "f/ui/decision.md", decision({ status: "done" }));
-    writeFile(docsDir, "f/ui/options/a/x.html", "<html>");
-    expect(scanFeatures(docsDir)[0].problems).toEqual([
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "done" })
+    );
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    expect(scanFeatures(designDir)[0].problems).toEqual([
       'f: ui/decision.md needs "status:" to be one of exploring, approved, implemented (got "done").',
     ]);
   });
 
   it("requires a chosen option and approved screens once approved", () => {
-    writeFile(docsDir, "f/ui/decision.md", decision({ status: "approved" }));
-    writeFile(docsDir, "f/ui/options/a/x.html", "<html>");
-    expect(scanFeatures(docsDir)[0].problems).toEqual([
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "approved" })
+    );
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    expect(scanFeatures(designDir)[0].problems).toEqual([
       'f: A approved feature needs "chosen:" in ui/decision.md.',
       "f: A approved feature needs at least one screen in ui/approved/.",
     ]);
@@ -147,21 +171,25 @@ describe("scanFeatures", () => {
 
   it("reports a chosen option that does not exist", () => {
     writeFile(
-      docsDir,
-      "f/ui/decision.md",
+      designDir,
+      "features/f/ui/decision.md",
       decision({ status: "exploring", chosen: "z" })
     );
-    writeFile(docsDir, "f/ui/options/a/x.html", "<html>");
-    expect(scanFeatures(docsDir)[0].problems).toEqual([
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    expect(scanFeatures(designDir)[0].problems).toEqual([
       'f: ui/decision.md "chosen: z" is not a folder in ui/options/.',
     ]);
   });
 
   it("reports an option folder without screens and a badly named approved file", () => {
-    writeFile(docsDir, "f/ui/decision.md", decision({ status: "exploring" }));
-    writeFile(docsDir, "f/ui/options/a/notes.md", "no html here");
-    writeFile(docsDir, "f/ui/approved/a.b.c.html", "<html>");
-    expect(scanFeatures(docsDir)[0].problems).toEqual([
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "exploring" })
+    );
+    writeFile(designDir, "features/f/ui/options/a/notes.md", "no html here");
+    writeFile(designDir, "features/f/ui/approved/a.b.c.html", "<html>");
+    expect(scanFeatures(designDir)[0].problems).toEqual([
       "f: ui/options/a/ has no .html screen.",
       "f: ui/approved/a.b.c.html must be named <screen>.<state>.html (or <screen>.html).",
       "f: The feature has no mockups in ui/options/ or ui/approved/.",

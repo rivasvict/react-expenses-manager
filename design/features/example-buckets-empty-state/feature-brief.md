@@ -1,7 +1,7 @@
 # Example — Buckets empty state
 
 > **Example only.** This brief is a demonstration of the feature-package
-> format (docs/ui-workflow.md); there is nothing to implement.
+> format (design/README.md); there is nothing to implement.
 
 ## Problem
 
@@ -14,6 +14,6 @@ The empty state explains the feature and leads to *Add new bucket*.
 
 ## Constraints
 
-- Follow docs/design-system/README.md and use only its tokens.
+- Follow design/system/README.md and use only its tokens.
 - Every visible string needs English and Spanish.
 - One gold primary button per screen.

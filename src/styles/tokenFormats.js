@@ -8,7 +8,7 @@ const GENERATED_NOTICE =
 const TOKEN_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
 const SCSS_PATH = "src/styles/_tokens.scss";
-const CSS_PATH = "docs/design-system/tokens.css";
+const CSS_PATH = "design/system/tokens.css";
 
 const isMetaKey = (key) => key.startsWith("$");
 

@@ -1,11 +1,11 @@
-// Renders the scanned features into docs/ui-gallery.html: one self-contained
+// Renders the scanned features into design/gallery.html: one self-contained
 // page that shows every feature's UI options and approved screens, with a
-// status filter and a phone/desktop switch (docs/ui-workflow.md). It styles
+// status filter and a phone/desktop switch (design/README.md). It styles
 // itself with the design-system tokens only, like the mockups it shows.
 // CommonJS for the same reason as scanFeatures.js.
 
 const GENERATED_NOTICE =
-  "GENERATED from docs/*/ui/ by `npm run gallery:build` — do not edit.";
+  "GENERATED from design/features/*/ui/ by `npm run gallery:build` — do not edit.";
 
 const STATUS_LABELS = {
   exploring: "Exploring",
@@ -208,14 +208,14 @@ const buildGalleryHtml = (features) => `<!doctype html>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>UI gallery</title>
   <!-- ${GENERATED_NOTICE} -->
-  <link rel="stylesheet" href="design-system/tokens.css">
+  <link rel="stylesheet" href="system/tokens.css">
   <style>${STYLE}  </style>
 </head>
 <body data-viewport="phone">
   <div class="page">
     <header class="top">
       <h1>UI gallery</h1>
-      <p>Every feature's UI options and approved screens, straight from <code>docs/&lt;feature&gt;/ui/</code>. Click a screen to open it full size.</p>
+      <p>Every feature's UI options and approved screens, straight from <code>design/features/&lt;feature&gt;/ui/</code>. Click a screen to open it full size.</p>
       <div class="controls">
         <label>Status
           <select id="status">

@@ -9,7 +9,7 @@ example: true
 # Decision
 
 **This is an example, not a feature to build.** It exists so the folder
-convention (docs/ui-workflow.md) and the gallery have something real to show.
+convention (design/README.md) and the gallery have something real to show.
 Agents must not implement it or treat it as a spec.
 
 ## Options considered

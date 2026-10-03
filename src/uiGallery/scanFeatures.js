@@ -1,6 +1,6 @@
-// Reads every `docs/<feature>/ui/` folder into a plain model the gallery
-// renders from, collecting the convention's violations as `problems` instead
-// of throwing, so one run can report them all (docs/ui-workflow.md).
+// Reads every `design/features/<feature>/ui/` folder into a plain model the
+// gallery renders from, collecting the convention's violations as `problems`
+// instead of throwing, so one run can report them all (design/README.md).
 // CommonJS so the plain-Node build script (scripts/buildGallery.js) can
 // require it without a transpiler.
 
@@ -105,11 +105,14 @@ const checkDecision = (data, options, approved, problems) => {
   }
 };
 
-const readFeature = (docsDir, slug) => {
-  const uiDir = path.join(docsDir, slug, "ui");
+const readFeature = (designDir, slug) => {
+  const featureDir = path.join(designDir, "features", slug);
+  const uiDir = path.join(featureDir, "ui");
   if (!fs.existsSync(uiDir)) return null;
 
-  const relativeUi = `${slug}/ui`;
+  // Every path in the model is relative to `designDir`, where the gallery lives.
+  const relativeFeature = `features/${slug}`;
+  const relativeUi = `${relativeFeature}/ui`;
   const problems = [];
   const decisionFile = path.join(uiDir, "decision.md");
   const hasDecision = fs.existsSync(decisionFile);
@@ -127,7 +130,7 @@ const readFeature = (docsDir, slug) => {
   }
 
   const briefFile = BRIEF_FILES.find((file) =>
-    fs.existsSync(path.join(docsDir, slug, file))
+    fs.existsSync(path.join(featureDir, file))
   );
   const has = (file) => fs.existsSync(path.join(uiDir, file));
   const flowFile = has("flow.html") ? "flow.html" : null;
@@ -141,7 +144,7 @@ const readFeature = (docsDir, slug) => {
     example: data.example === true,
     options,
     approved,
-    briefPath: briefFile ? `${slug}/${briefFile}` : null,
+    briefPath: briefFile ? `${relativeFeature}/${briefFile}` : null,
     decisionPath: hasDecision ? `${relativeUi}/decision.md` : null,
     flowPath: flowFile ? `${relativeUi}/${flowFile}` : null,
     fixturesPath: has("fixtures.json") ? `${relativeUi}/fixtures.json` : null,
@@ -155,10 +158,10 @@ const readFeature = (docsDir, slug) => {
   };
 };
 
-// Every `docs/<feature>/` that has a `ui/` folder, sorted by folder name.
-const scanFeatures = (docsDir) =>
-  listDirs(docsDir)
-    .map((slug) => readFeature(docsDir, slug))
+// Every `design/features/<feature>/` that has a `ui/` folder, sorted by name.
+const scanFeatures = (designDir) =>
+  listDirs(path.join(designDir, "features"))
+    .map((slug) => readFeature(designDir, slug))
     .filter(Boolean);
 
 module.exports = {

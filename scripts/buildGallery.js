@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Regenerates docs/ui-gallery.html from every docs/<feature>/ui/ folder and
+// Regenerates design/gallery.html from every design/features/<feature>/ui/ folder and
 // fails (without writing) when a feature breaks the convention or a mockup
 // breaks the design-system rules. Usage: npm run gallery:build
 
@@ -9,13 +9,13 @@ const { scanFeatures } = require("../src/uiGallery/scanFeatures");
 const { checkMockups } = require("../src/uiGallery/mockupGuard");
 const { buildGalleryHtml } = require("../src/uiGallery/galleryHtml");
 
-const docsDir = path.resolve(__dirname, "../docs");
-const galleryFile = path.join(docsDir, "ui-gallery.html");
+const designDir = path.resolve(__dirname, "../design");
+const galleryFile = path.join(designDir, "gallery.html");
 
-const features = scanFeatures(docsDir);
+const features = scanFeatures(designDir);
 const problems = [
   ...features.flatMap((feature) => feature.problems),
-  ...checkMockups(docsDir, features),
+  ...checkMockups(designDir, features),
 ];
 
 if (problems.length > 0) {
@@ -25,4 +25,4 @@ if (problems.length > 0) {
 }
 
 fs.writeFileSync(galleryFile, buildGalleryHtml(features));
-console.log(`wrote docs/ui-gallery.html (${features.length} feature(s))`);
+console.log(`wrote design/gallery.html (${features.length} feature(s))`);
