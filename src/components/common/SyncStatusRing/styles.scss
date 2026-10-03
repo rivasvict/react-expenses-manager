@@ -1,15 +1,20 @@
 @import '../../../variables.scss';
 
-// A ring, not a filled dot: the app bar already carries two filled circles
-// (the brand mark and the account chip), so an open ring reads as a status
-// light rather than a third control. Sized to sit beside the account chip
-// without competing with it.
-.sync-status-ring {
+.sync-status-ring-wrap {
+  position: relative;
   flex: 0 0 auto;
-  width: 0.6rem;
-  height: 0.6rem;
+  display: inline-flex;
+}
+
+// A ring, not a filled dot: it surrounds the account chip's thumbnail like a
+// presence light, sitting just outside the chip's edge. It never takes
+// pointer events, so the chip underneath stays fully clickable.
+.sync-status-ring {
+  position: absolute;
+  inset: -4px;
   border-radius: $radius-round;
   border: 2px solid $text-muted;
+  pointer-events: none;
   // The halo is what makes the ring feel lit rather than drawn. It is part
   // of the same transition as the border so a status change fades instead of
   // snapping.
