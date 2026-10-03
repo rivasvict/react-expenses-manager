@@ -11,6 +11,7 @@ same PR that adds it.
 | Text input, select, checkbox, switch | Form controls | `.form-control` / `.form-check-input` in `src/global.scss`; `$select-chevron` in `src/variables.scss` |
 | Validation message | Form controls | `.validation-message` in `src/global.scss` |
 | Searchable category select | Form controls | `src/components/common/CategorySearchSelect/` |
+| Slide-down / slide-up reveal (the amount keypad) | Motion | `src/components/common/SlideReveal/`; `$transition-slide` in `src/variables.scss` |
 | Money row + icon chip | Money rows | `src/components/common/ExpensesManager/Summaries/EntriesSummary.scss`; `@mixin icon-chip`, `@mixin money-figures` in `src/variables.scss` |
 | Budget bucket (progress card) | Budget buckets | `src/components/common/ExpensesManager/Buckets/components/Bucket/` |
 | App navigation / bottom tab bar | Navigation | `.app-nav` in `src/components/common/Header.scss` |

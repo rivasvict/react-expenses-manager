@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.20.0] - 2026-10-02
+## [1.21.0] - 2026-10-03
 
 ### Added
 
@@ -28,6 +28,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   flow and fixtures. It is marked as an example and is not to be built.
 - `CLAUDE.md` now tells agents that an approved design is the binding visual
   spec, and how to design inside `docs/<feature>/ui/`.
+
+## [1.20.0] - 2026-10-02
+
+### Added
+
+- The calculator keypad under the amount field now slides down when it opens
+  and slides back up when it closes, instead of appearing and vanishing
+  abruptly. The motion is skipped for people who prefer reduced motion.
 
 ## [1.19.0] - 2026-10-02
 
