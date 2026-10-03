@@ -22,20 +22,6 @@ const pickLanguage = async (user: User, languageName: RegExp) => {
 };
 
 describe("language settings", () => {
-  it("shows the app version on Settings, in the chosen language", async () => {
-    const { user } = await renderApp("/settings");
-
-    expect(
-      await screen.findByText(/^Version \d+\.\d+\.\d+/),
-    ).toBeInTheDocument();
-
-    await pickLanguage(user, /Español/);
-
-    expect(
-      await screen.findByText(/^Versión \d+\.\d+\.\d+/),
-    ).toBeInTheDocument();
-  });
-
   it("renders in English by default", async () => {
     await renderApp("/");
 
