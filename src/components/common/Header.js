@@ -81,8 +81,9 @@ const Header = ({ session }) => {
         </nav>
         <div className="app-header__account">
           <SettingsChip />
-          <SyncStatusRing />
-          <AccountChip session={session} />
+          <SyncStatusRing>
+            <AccountChip session={session} />
+          </SyncStatusRing>
         </div>
       </div>
     </header>

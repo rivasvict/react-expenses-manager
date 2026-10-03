@@ -31,7 +31,7 @@ const settleProbe = async () => {
 };
 
 const renderRing = async () => {
-  render(<SyncStatusRing />);
+  render(<SyncStatusRing><a href="/account">Account</a></SyncStatusRing>);
   await settleProbe();
 };
 
@@ -80,6 +80,15 @@ describe("SyncStatusRing", () => {
     expect(ring()).toHaveClass("sync-status-ring--offline");
   });
 
+  it("keeps the wrapped control reachable next to the ring", async () => {
+    await renderRing();
+
+    expect(screen.getByRole("link", { name: "Account" })).toBeInTheDocument();
+    expect(ring()).not.toContainElement(
+      screen.getByRole("link", { name: "Account" })
+    );
+  });
+
   it("polls once per interval, not once per render", async () => {
     await renderRing();
     expect(checkHealth).toHaveBeenCalledTimes(1);
@@ -89,7 +98,11 @@ describe("SyncStatusRing", () => {
   });
 
   it("stops polling once it is unmounted", async () => {
-    const { unmount } = render(<SyncStatusRing />);
+    const { unmount } = render(
+      <SyncStatusRing>
+        <a href="/account">Account</a>
+      </SyncStatusRing>
+    );
     await settleProbe();
     unmount();
 
