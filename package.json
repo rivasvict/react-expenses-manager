@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.22.0",
+  "version": "1.23.0",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",
@@ -46,6 +46,7 @@
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "tokens:build": "node scripts/buildTokens.js",
     "gallery:build": "node scripts/buildGallery.js",
+    "design:review": "node scripts/designReview.js",
     "build:server": "tsc -p server/tsconfig.json",
     "sync-server": "npm run build:server && node server/dist/index.js",
     "test:server": "npm run build:server && node server/dist/testRunner.js"

@@ -9,9 +9,15 @@
   mockup looks like the app without importing any of its code. Classes are
   prefixed `mk-` so they are never mistaken for app classes.
 
-  Not covered: the app-bar navigation / bottom tab bar (identical on every
-  screen) and icons. Draw icons inline as SVG that paints with
-  style="fill: var(--token)".
+  Calibrated to the PHONE layout (below the app's 768px nav breakpoint) by
+  measuring the real app with `npm run design:review`: the work-area card is
+  inset exactly as the app insets it and fills the viewport above the bottom
+  tab bar. Desktop widths are not calibrated.
+
+  Not covered: the app bar (settings, sync and account chips), the bottom tab
+  bar (identical on every screen) and icons. The design reviewer compares only
+  the work-area card, so these are not diffed. Draw icons inline as SVG that
+  paints with style="fill: var(--token)".
 */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -46,22 +52,31 @@ body.mk {
 .mk-header__logo { width: 40px; height: 40px; display: block; }
 .mk-header__name { font-weight: 700; font-size: 1.02rem; letter-spacing: -0.01em; }
 
-/* The work-area card every screen lives in. */
+/* The work-area card every screen lives in. The app gives it 10px of vertical
+   and 1rem of horizontal padding, plus a 0.75rem inset from its inner
+   container, and stretches it to fill the viewport minus the 72px app bar and
+   the 80px bottom tab bar (4.5rem + 5rem). */
 .mk-shell { max-width: 40rem; margin: 0 auto; padding: 0 0 1.875rem; }
 .mk-work-area {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-shell);
   box-shadow: var(--shadow-card);
-  padding: 1.1rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: var(--mk-gap, 0.625rem);
+  padding: 0.625rem 1.75rem;
+  min-height: calc(100vh - 9.5rem);
 }
+
+/* The app's `vertical-standard-space`: 0.625rem above an element. */
+.mk-space-top { margin-top: 0.625rem; }
+
+/* A column of actions under a form. A flex column, as in the app, so the first
+   button's margin does not collapse into this container's own. */
+.mk-actions { display: flex; flex-direction: column; margin-top: 0.625rem; }
 
 /* Small uppercase page title shown above the content. */
 .mk-eyebrow {
   margin: 0 0 0.25rem;
+  line-height: 1.2;
   text-align: center;
   font-size: 0.78rem;
   font-weight: 700;
@@ -136,3 +151,72 @@ body.mk {
 .mk-text-income { color: var(--income); }
 .mk-text-expense { color: var(--expense); }
 .mk-center { text-align: center; }
+
+/* Content-title tile: the card that names the screen's task ("Add new bucket"). */
+.mk-tile {
+  margin: 0 0 0.625rem;
+  padding: 0.9rem 1rem;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Forms. The app starts a form 3px below its title tile's margin. */
+/* A flex column, as in the app, so sibling margins add up instead of collapsing. */
+.mk-form { display: flex; flex-direction: column; padding-top: 0.1875rem; }
+.mk-label {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.mk-hint {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+.mk-field-gap { margin-top: 0.8125rem; }
+
+/* Text input and the native-select look (a trigger with a chevron). */
+.mk-input,
+.mk-select {
+  position: relative;
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  font-size: 1em;
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+}
+.mk-input { padding: 0.92em 1.1em; }
+.mk-input::placeholder { color: var(--text-muted); }
+/* A field being typed into: gold border and a soft ring. */
+.mk-input--focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem var(--accent-soft);
+}
+.mk-select { padding: 0 2.4rem 0 1.1em; }
+.mk-select--placeholder { color: var(--text-primary); }
+.mk-select__chevron {
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+}
+
+/* A validation message under a form. */
+.mk-error { margin: 0 0 1rem; line-height: 1.5; color: var(--danger); }

@@ -14,6 +14,29 @@ all before (and separately from) the code that ships.
 (for example `docs/multi-user-sync/` and `docs/deployment/`). Proposals and
 evaluations never go there.
 
+## The workflow
+
+```
+brief ─▶ /ui-explore ─▶ you pick ─▶ /ui-approve ─▶ implement ─▶ design-reviewer ─▶ merge
+         2–3 options     an option    approved screens,  (separate     pixel-diffs the built
+         in the gallery               flow, fixtures     agent)        app against the design
+```
+
+| Step | Who | What happens |
+|---|---|---|
+| 1. Explore | `/ui-explore <feature>` skill | Reads the brief and the design system, builds 2–3 genuinely different options under `ui/options/`, rebuilds the gallery. |
+| 2. Choose | **You** | Open `design/gallery.html`, compare the options, name one. |
+| 3. Approve | `/ui-approve <feature> <option>` skill | Writes the complete approved screens (every state and language), `flow.json`, `fixtures.json` and the implementer notes; sets `status: approved`. |
+| 4. Implement | A separate agent | Builds the whole feature from the brief and the approved screens (see "Rules for agents"). |
+| 5. Review | `design-reviewer` agent | Builds the app, renders each approved screen from the mockup and from the real app, pixel-diffs them, checks the flow and the repo checks, and reports. It never edits code. |
+
+The skills live in `.claude/skills/ui-explore/` and `.claude/skills/ui-approve/`,
+the agent in `.claude/agents/design-reviewer.md`. Two worked examples show the
+result: [`example-buckets-empty-state`](features/example-buckets-empty-state/ui/decision.md)
+(one screen, two languages) and
+[`example-add-bucket-flow`](features/example-add-bucket-flow/ui/decision.md)
+(a flow with a form in four states). Open their `flow.html` to click through.
+
 ## Changes here don't bump the app version
 
 A pull request that changes **only files under `design/`** is a proposal or an
@@ -54,8 +77,9 @@ design/
         b-<name>/<screen>.html
       approved/
         <screen>.<state>.html    the binding spec, one file per screen and state
-      flow.html            optional: the screen map (routes and how they connect)
-      fixtures.json        optional: the data each approved screen shows
+      flow.json            the screens and the transitions between them
+      flow.html            GENERATED from flow.json: a click-through walkthrough
+      fixtures.json        how to put the real app into each approved screen
 ```
 
 A worked example lives in
@@ -95,25 +119,60 @@ Cover every state a user can reach: default, empty, loading, error, and each
 language (`.es`) when the layout differs. An implementer must never have to
 guess a state.
 
+### `flow.json`
+
+How a user moves through the feature. Screens are approved screens, by
+`<screen>.<state>` id; a screen the app **already has** and the feature does not
+redesign is `"external": true`. Every approved screen name must appear.
+
+```json
+{
+  "screens": [
+    { "id": "buckets-list", "title": "Buckets", "route": "/buckets", "external": true },
+    { "id": "add-bucket.default", "title": "Add bucket", "route": "/add-bucket" },
+    { "id": "add-bucket.error", "title": "Nothing chosen", "route": "/add-bucket" }
+  ],
+  "transitions": [
+    { "from": "buckets-list", "to": "add-bucket.default", "label": "Tap Add new bucket" },
+    { "from": "add-bucket.default", "to": "add-bucket.error", "label": "Tap Submit with nothing chosen" }
+  ]
+}
+```
+
+`npm run gallery:build` validates it against `approved/` (an unknown screen, a
+transition to nowhere or an approved screen left out is an error) and generates
+`flow.html` from it: **a walkthrough** (a phone frame where you click a
+transition to go to the next screen, with Back and Restart) and **an overview**
+of every screen and where it leads. Never edit `flow.html`.
+
 ### `fixtures.json`
 
-The data each approved screen shows, in the form the app stores it, so the
-mockup and the built screen can be rendered from the same input and compared:
+How the design reviewer puts the **real app** into each approved screen, so the
+built screen and the mockup show the same thing:
 
 ```json
 {
   "screens": {
-    "buckets-empty.default": {
-      "route": "/buckets",
+    "add-bucket.error": {
+      "route": "/add-bucket",
       "viewport": { "width": 375, "height": 720 },
-      "localStorage": { "settings.language": "en", "buckets": "{}" }
+      "localStorage": { "everShowDataDisclaimer": "0", "settings.language": "en" },
+      "actions": [{ "click": "button[type=submit]" }, { "blur": true }]
     }
   }
 }
 ```
 
-The keys are screen names as in `approved/` (`<screen>.<state>`). The format
-is deliberately small; the reviewer tooling that consumes it comes later.
+- Keys are screen names as in `approved/` (`<screen>.<state>`); every approved
+  screen needs one.
+- `localStorage` seeds the app before it starts. **Always include
+  `"everShowDataDisclaimer": "0"`**: without it the app's first-run modal
+  covers the screen. Non-string values are stored as JSON.
+- `actions` reach states that need interaction, in order: `{"click": selector}`,
+  `{"fill": [selector, text]}`, `{"wait": ms}`, `{"blur": true}` (drop the focus
+  a click leaves behind). Selectors are Playwright selectors.
+- Optional `region` (`{"app": selector, "mockup": selector}`) changes what is
+  compared; the default is the work-area card on both sides.
 
 ## Writing a mockup
 
@@ -163,17 +222,43 @@ change; `src/uiGallery/committedGallery.test.js` fails when it is stale.
 The gallery filters by status, switches every preview between phone (375) and
 desktop (1280), and opens any screen full size on click.
 
+## Reviewing a built feature
+
+```bash
+npm run build
+npm run design:review -- --feature <feature>      # or --url http://localhost:3000
+```
+
+For every approved screen it renders the mockup and the real app (from
+`fixtures.json`), pixel-compares the work-area card on both sides, and writes
+`design/.review/<feature>/` (gitignored): `index.html` with the mockup, the app
+and the difference side by side, `report.md`, `report.json` and the images.
+
+- A screen passes when both sides render at the same size and at most
+  `--threshold` percent of pixels (default 2) differ by more than `--tolerance`
+  per colour channel (default 12 of 255). Exit code 1 means a screen failed.
+- The threshold is a share of the whole screen, so **a small but real difference
+  can pass it** (a wrong colour on one line of text). Open the diff image of any
+  screen that is not exactly 0.00%.
+- It needs Playwright with a Chromium and Node 18+ (the app itself builds on the
+  Node in `.nvmrc`). Set `PLAYWRIGHT_MODULE` if Playwright is installed
+  elsewhere.
+- `mockup.css` is calibrated to the **phone** layout, by measuring the real app
+  with this tool. The app bar and tab bar are not compared.
+
 ## Rules for agents
 
-- **Designing:** work only inside `design/`; never change `src/` to try a
-  design. Use the design system and its tokens; offer 2–3 genuinely different
-  options when exploring. A design-only PR gets no version bump and no
-  changelog entry (see above).
+- **Designing:** use `/ui-explore` and `/ui-approve`. Work only inside
+  `design/`; never change `src/` to try a design. Use the design system and its
+  tokens; offer 2–3 genuinely different options when exploring, and let the
+  user choose. A design-only PR gets no version bump and no changelog entry
+  (see above).
 - **Implementing:** a feature whose `decision.md` says `approved` has a binding
   visual spec in `ui/approved/`. Build to it and to the flow. **Do not improvise
   where it is silent or where it conflicts with the app's constraints: flag the
   gap in the PR** (and, if the design must change, in `decision.md`).
   Packages with `example: true` are never built. The implementation PR is a
-  normal one: it bumps the version and adds a changelog entry.
+  normal one: it bumps the version and adds a changelog entry. Before opening
+  it, run the `design-reviewer` agent (or `npm run design:review`).
 - **Always:** every visible string still needs English and Spanish
   (`src/i18n/`), whatever the mockup shows.

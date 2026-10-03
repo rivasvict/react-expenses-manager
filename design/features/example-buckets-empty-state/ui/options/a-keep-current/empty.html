@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="../../../../../system/tokens.css">
   <link rel="stylesheet" href="../../../../../system/mockup.css">
   <style>
-    .empty { padding: 2rem 1rem 1rem; text-align: center; }
-    .empty__image { width: 100%; max-width: 240px; height: auto; margin-bottom: 1.5rem; border-radius: var(--radius-card); }
-    .empty__title { margin: 0 0 0.5rem; font-size: 1.2rem; font-weight: 700; }
+    .empty { padding: 2rem 0 1rem; text-align: center; }
+    .empty__image { display: block; width: 100%; max-width: 240px; height: auto; margin: 0 auto 1.5rem; border-radius: var(--radius-card); }
+    .empty__title { margin: 0 0 0.5rem; font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
     .empty__message { max-width: 420px; margin: 0 auto; line-height: 1.5; color: var(--text-secondary); }
   </style>
 </head>
@@ -30,8 +30,8 @@
         <h2 class="empty__title">No buckets yet</h2>
         <p class="empty__message">You haven't added any buckets. Add your first bucket to start tracking your monthly spending limits.</p>
       </section>
-      <a class="mk-btn mk-btn--primary" href="#">Add new bucket</a>
-      <button class="mk-btn mk-btn--secondary" type="button">Go back</button>
+      <a class="mk-btn mk-btn--primary mk-space-top" href="#">Add new bucket</a>
+      <button class="mk-btn mk-btn--secondary mk-space-top" type="button">Go Back</button>
     </div>
   </main>
 </body>

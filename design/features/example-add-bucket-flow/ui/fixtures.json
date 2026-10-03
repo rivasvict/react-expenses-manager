@@ -1,0 +1,70 @@
+{
+  "screens": {
+    "add-bucket.default": {
+      "route": "/add-bucket",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      }
+    },
+    "add-bucket.filled": {
+      "route": "/add-bucket",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "#categoryName"
+        },
+        {
+          "click": "role=option[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "#bucket-allowance",
+            "300"
+          ]
+        }
+      ]
+    },
+    "add-bucket.error": {
+      "route": "/add-bucket",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "add-bucket.es": {
+      "route": "/add-bucket",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      }
+    }
+  }
+}

@@ -5,6 +5,41 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.23.0] - 2026-10-03
+
+### Added
+
+- The design workflow is now runnable end to end. Two skills drive it:
+  `/ui-explore` turns a feature brief into 2–3 comparable UI options, and
+  `/ui-approve` turns the option you name into the approved screens, a flow,
+  fixtures and notes for the implementer. A `design-reviewer` agent then checks
+  the built feature against that design.
+- `npm run design:review -- --feature <slug>` renders every approved screen from
+  its mockup and from the real built app (seeded from `fixtures.json`),
+  pixel-compares them and writes a side-by-side report to `design/.review/`
+  (gitignored). It exits non-zero when a screen does not match.
+- Flows are data: a feature's `ui/flow.json` lists its screens and transitions,
+  is validated against the approved screens, and `npm run gallery:build`
+  generates `ui/flow.html` from it, a click-through walkthrough plus an overview
+  of every screen and where it leads.
+- A second worked example, `design/features/example-add-bucket-flow/`: a
+  multi-screen flow (a form in its empty, filled, error and Spanish states) whose
+  approved screens match the real app. Reviewing it found that the app renders
+  the Add-bucket error in Bootstrap's red instead of the design system's
+  `--danger` token.
+- Fixtures can drive the app into a state with `actions` (`click`, `fill`,
+  `wait`, `blur`) and a `region` to compare.
+
+### Changed
+
+- `design/system/mockup.css` is calibrated against the real app: the work-area
+  card is inset and sized as the app does, mockups no longer let sibling margins
+  collapse, and it gains the title tile, form label, hint, input, select, error
+  and action-column components. The Buckets empty-state example now matches the
+  real screen (it said "Go back"; the app says "Go Back").
+- `design/gallery.html` is generated together with every flow page, and the
+  stale-file test covers all of them.
+
 ## [1.22.0] - 2026-10-03
 
 ### Added

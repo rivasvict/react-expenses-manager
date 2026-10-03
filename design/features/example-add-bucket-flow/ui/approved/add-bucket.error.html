@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add bucket — validation error</title>
+  <link rel="stylesheet" href="../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../system/mockup.css">
+</head>
+<body class="mk">
+  <header class="mk-header">
+      <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Buckets</h3>
+      <div class="mk-tile">Add new bucket</div>
+      <div class="mk-form">
+        <span class="mk-label">Category</span>
+        <p class="mk-hint">Pick one of your existing categories to give it a monthly spending limit.</p>
+        <div class="mk-select mk-select--placeholder"><span>Select a category</span><svg class="mk-select__chevron" viewBox="0 0 16 16" aria-hidden="true"><path style="fill: var(--text-secondary)" d="M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z"/></svg></div>
+        <span class="mk-label mk-field-gap">Monthly allowance</span>
+        <input class="mk-input" type="number" placeholder="Insert bucket allowance" readonly>
+        <p class="mk-error" role="alert">Please select a category</p>
+        <div class="mk-actions">
+          <a class="mk-btn mk-btn--primary mk-space-top" href="#">Submit</a>
+          <button class="mk-btn mk-btn--secondary mk-space-top" type="button">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

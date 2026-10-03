@@ -1,0 +1,63 @@
+{
+  "screens": [
+    {
+      "id": "buckets-list",
+      "title": "Buckets (list)",
+      "route": "/buckets",
+      "external": true
+    },
+    {
+      "id": "add-bucket.default",
+      "title": "Add bucket",
+      "route": "/add-bucket"
+    },
+    {
+      "id": "add-bucket.error",
+      "title": "Add bucket: nothing chosen",
+      "route": "/add-bucket"
+    },
+    {
+      "id": "add-bucket.filled",
+      "title": "Add bucket: ready to save",
+      "route": "/add-bucket"
+    },
+    {
+      "id": "buckets-saved",
+      "title": "Buckets (with the new bucket)",
+      "route": "/buckets",
+      "external": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "buckets-list",
+      "to": "add-bucket.default",
+      "label": "Tap Add new bucket"
+    },
+    {
+      "from": "add-bucket.default",
+      "to": "add-bucket.error",
+      "label": "Tap Submit with nothing chosen"
+    },
+    {
+      "from": "add-bucket.error",
+      "to": "add-bucket.filled",
+      "label": "Pick a category and type an allowance"
+    },
+    {
+      "from": "add-bucket.default",
+      "to": "add-bucket.filled",
+      "label": "Pick a category and type an allowance"
+    },
+    {
+      "from": "add-bucket.filled",
+      "to": "buckets-saved",
+      "label": "Tap Submit"
+    },
+    {
+      "from": "add-bucket.default",
+      "to": "buckets-list",
+      "label": "Tap Cancel"
+    }
+  ]
+}

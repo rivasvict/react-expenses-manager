@@ -1,13 +1,63 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flow — Example — Buckets empty state</title>
-  <!-- GENERATED from flow.json by `npm run gallery:build` — do not edit. -->
-  <link rel="stylesheet" href="../../../system/tokens.css">
-  <link rel="stylesheet" href="../../../system/mockup.css">
-  <style>
+// Renders a feature's flow (see flow.js) into `ui/flow.html`: a walkthrough
+// where you click a transition to move to the next screen, and an overview of
+// every screen with where it leads (design/README.md). Self-contained and
+// styled with the design tokens only, like every mockup.
+// CommonJS for the same reason as scanFeatures.js.
+
+const { orderScreens } = require("./flow");
+
+const GENERATED_NOTICE =
+  "GENERATED from flow.json by `npm run gallery:build` — do not edit.";
+
+const escapeHtml = (value) =>
+  String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+// The flow page lives in `ui/`, the approved screens in `ui/approved/`.
+const relativeScreenPath = (screenPath) =>
+  screenPath.slice(screenPath.indexOf("/approved/") + 1);
+
+const hrefTo = (screenPath) =>
+  escapeHtml(
+    relativeScreenPath(screenPath).split("/").map(encodeURIComponent).join("/")
+  );
+
+const labelsFrom = (flow, screenId) =>
+  flow.transitions.filter((transition) => transition.from === screenId);
+
+const titleOf = (flow, screenId) =>
+  flow.screens.find((screen) => screen.id === screenId).title;
+
+const renderThumb = (screen) =>
+  screen.external
+    ? `<div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>`
+    : `<div class="fl-thumb"><iframe src="${hrefTo(screen.path)}" title="${escapeHtml(screen.title)}" tabindex="-1"></iframe></div>`;
+
+const renderStep = (flow, screen, index) => {
+  const outgoing = labelsFrom(flow, screen.id);
+  return `
+        <li class="fl-step">
+          <span class="fl-step__index">${index + 1}</span>
+          ${renderThumb(screen)}
+          <h3>${escapeHtml(screen.title)}</h3>
+          ${screen.route ? `<p class="fl-route">${escapeHtml(screen.route)}</p>` : ""}
+          ${
+            outgoing.length === 0
+              ? '<p class="mk-text-muted">End of this flow</p>'
+              : `<ul class="fl-leads">${outgoing
+                  .map(
+                    (transition) =>
+                      `<li><span class="mk-text-secondary">${escapeHtml(transition.label)}</span> → ${escapeHtml(titleOf(flow, transition.to))}</li>`
+                  )
+                  .join("")}</ul>`
+          }
+        </li>`;
+};
+
+const STYLE = `
     .fl { max-width: 72rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
     .fl h1 { margin: 0 0 0.25rem; font-size: 1.5rem; letter-spacing: -0.01em; }
     .fl h2 {
@@ -57,59 +107,9 @@
     }
     .fl-leads { margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.85rem; }
     .fl-leads li { margin-bottom: 0.2rem; }
-  </style>
-</head>
-<body class="mk">
-  <div class="fl">
-    <h1>Flow — Example — Buckets empty state</h1>
-    <p class="fl-lead">Click through the screens the way a user would, or scan them all below.</p>
+`;
 
-    <h2>Walkthrough</h2>
-    <section class="fl-walk" aria-label="Walkthrough">
-      <div class="fl-stage">
-        <iframe id="fl-frame" title="Current screen"></iframe>
-        <div id="fl-external" class="fl-stage__external" hidden>This screen already exists in the app and is not designed here.</div>
-      </div>
-      <div class="fl-panel">
-        <p class="fl-eyebrow" style="margin-top: 0">You are on</p>
-        <h3 id="fl-title"></h3>
-        <p id="fl-route" class="fl-route"></p>
-        <p class="fl-eyebrow">Next</p>
-        <div id="fl-next" class="fl-next"></div>
-        <div class="fl-controls">
-          <button id="fl-back" type="button" class="mk-btn mk-btn--secondary">Back</button>
-          <button id="fl-restart" type="button" class="mk-btn mk-btn--secondary">Restart</button>
-        </div>
-      </div>
-    </section>
-
-    <h2>All screens (3)</h2>
-    <ol class="fl-strip">
-        <li class="fl-step">
-          <span class="fl-step__index">1</span>
-          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
-          <h3>Dashboard</h3>
-          <p class="fl-route">/</p>
-          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Buckets in the nav</span> → Buckets (no buckets yet)</li></ul>
-        </li>
-        <li class="fl-step">
-          <span class="fl-step__index">2</span>
-          <div class="fl-thumb"><iframe src="approved/buckets-empty.default.html" title="Buckets (no buckets yet)" tabindex="-1"></iframe></div>
-          <h3>Buckets (no buckets yet)</h3>
-          <p class="fl-route">/buckets</p>
-          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add new bucket</span> → Add bucket</li></ul>
-        </li>
-        <li class="fl-step">
-          <span class="fl-step__index">3</span>
-          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
-          <h3>Add bucket</h3>
-          <p class="fl-route">/add-bucket</p>
-          <p class="mk-text-muted">End of this flow</p>
-        </li>
-    </ol>
-  </div>
-  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard","title":"Dashboard","route":"/","external":true,"src":""},{"id":"buckets-empty.default","title":"Buckets (no buckets yet)","route":"/buckets","external":false,"src":"approved/buckets-empty.default.html"},{"id":"add-bucket","title":"Add bucket","route":"/add-bucket","external":true,"src":""}],"transitions":[{"from":"dashboard","to":"buckets-empty.default","label":"Tap Buckets in the nav"},{"from":"buckets-empty.default","to":"add-bucket","label":"Tap Add new bucket"}]}</script>
-  <script>
+const SCRIPT = `
     (() => {
       const data = JSON.parse(document.getElementById("flow-data").textContent);
       const byId = new Map(data.screens.map((screen) => [screen.id, screen]));
@@ -140,7 +140,7 @@
           const button = document.createElement("button");
           button.type = "button";
           button.className = "mk-btn mk-btn--secondary";
-          button.textContent = transition.label + " \u2192 " + byId.get(transition.to).title;
+          button.textContent = transition.label + " \\u2192 " + byId.get(transition.to).title;
           button.addEventListener("click", () => {
             history.push(transition.to);
             show();
@@ -160,6 +160,67 @@
       });
       show();
     })();
-  </script>
+`;
+
+// `feature` needs `title` and a validated `flow` (flow.js).
+const buildFlowHtml = (feature) => {
+  const { flow } = feature;
+  const ordered = orderScreens(flow);
+  const data = {
+    screens: flow.screens.map((screen) => ({
+      id: screen.id,
+      title: screen.title,
+      route: screen.route,
+      external: screen.external,
+      src: screen.external ? "" : relativeScreenPath(screen.path),
+    })),
+    transitions: flow.transitions,
+  };
+  const dataJson = JSON.stringify(data).replace(/</g, "\\u003c");
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow — ${escapeHtml(feature.title)}</title>
+  <!-- ${GENERATED_NOTICE} -->
+  <link rel="stylesheet" href="../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../system/mockup.css">
+  <style>${STYLE}  </style>
+</head>
+<body class="mk">
+  <div class="fl">
+    <h1>Flow — ${escapeHtml(feature.title)}</h1>
+    <p class="fl-lead">Click through the screens the way a user would, or scan them all below.</p>
+
+    <h2>Walkthrough</h2>
+    <section class="fl-walk" aria-label="Walkthrough">
+      <div class="fl-stage">
+        <iframe id="fl-frame" title="Current screen"></iframe>
+        <div id="fl-external" class="fl-stage__external" hidden>This screen already exists in the app and is not designed here.</div>
+      </div>
+      <div class="fl-panel">
+        <p class="fl-eyebrow" style="margin-top: 0">You are on</p>
+        <h3 id="fl-title"></h3>
+        <p id="fl-route" class="fl-route"></p>
+        <p class="fl-eyebrow">Next</p>
+        <div id="fl-next" class="fl-next"></div>
+        <div class="fl-controls">
+          <button id="fl-back" type="button" class="mk-btn mk-btn--secondary">Back</button>
+          <button id="fl-restart" type="button" class="mk-btn mk-btn--secondary">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <h2>All screens (${ordered.length})</h2>
+    <ol class="fl-strip">${ordered.map((screen, index) => renderStep(flow, screen, index)).join("")}
+    </ol>
+  </div>
+  <script type="application/json" id="flow-data">${dataJson}</script>
+  <script>${SCRIPT}  </script>
 </body>
 </html>
+`;
+};
+
+module.exports = { buildFlowHtml };

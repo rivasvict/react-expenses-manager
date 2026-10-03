@@ -6,6 +6,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { parseFlow } = require("./flow");
 
 const STATUSES = ["exploring", "approved", "implemented"];
 const BRIEF_FILES = ["feature-brief.md", "brief.md"];
@@ -133,7 +134,20 @@ const readFeature = (designDir, slug) => {
     fs.existsSync(path.join(featureDir, file))
   );
   const has = (file) => fs.existsSync(path.join(uiDir, file));
-  const flowFile = has("flow.html") ? "flow.html" : null;
+
+  // `flow.json` is the source of truth; `flow.html` is then generated from it.
+  // A hand-written `flow.html` without a `flow.json` is still accepted.
+  const hasFlowJson = has("flow.json");
+  let flow = null;
+  if (hasFlowJson) {
+    const parsed = parseFlow(
+      fs.readFileSync(path.join(uiDir, "flow.json"), "utf8"),
+      approved
+    );
+    flow = parsed.flow;
+    problems.push(...parsed.problems);
+  }
+  const flowFile = hasFlowJson || has("flow.html") ? "flow.html" : null;
 
   return {
     slug,
@@ -146,13 +160,16 @@ const readFeature = (designDir, slug) => {
     approved,
     briefPath: briefFile ? `${relativeFeature}/${briefFile}` : null,
     decisionPath: hasDecision ? `${relativeUi}/decision.md` : null,
+    flow,
+    flowGenerated: hasFlowJson,
     flowPath: flowFile ? `${relativeUi}/${flowFile}` : null,
     fixturesPath: has("fixtures.json") ? `${relativeUi}/fixtures.json` : null,
     // Every mockup page, so the token guard can check each one.
     mockupPaths: [
       ...options.flatMap((option) => option.screens.map((s) => s.path)),
       ...approved.map((screen) => screen.path),
-      ...(flowFile ? [`${relativeUi}/${flowFile}`] : []),
+      // A generated flow page is checked as it is built, not read from disk.
+      ...(flowFile && !hasFlowJson ? [`${relativeUi}/${flowFile}`] : []),
     ].map(toPosix),
     problems: problems.map((problem) => `${slug}: ${problem}`),
   };

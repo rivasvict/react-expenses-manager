@@ -126,6 +126,73 @@ describe("scanFeatures", () => {
     ]);
   });
 
+  it("reads flow.json into the model and treats flow.html as generated", () => {
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "exploring" })
+    );
+    writeFile(designDir, "features/f/ui/approved/form.default.html", "<html>");
+    writeFile(
+      designDir,
+      "features/f/ui/flow.json",
+      JSON.stringify({
+        screens: [{ id: "form.default", title: "Form", route: "/f" }],
+        transitions: [],
+      })
+    );
+
+    const [feature] = scanFeatures(designDir);
+
+    expect(feature.problems).toEqual([]);
+    expect(feature.flowGenerated).toBe(true);
+    expect(feature.flowPath).toBe("features/f/ui/flow.html");
+    expect(feature.flow.screens[0]).toMatchObject({
+      id: "form.default",
+      path: "features/f/ui/approved/form.default.html",
+    });
+    // The generated flow page is checked as it is built, not read from disk.
+    expect(feature.mockupPaths).toEqual([
+      "features/f/ui/approved/form.default.html",
+    ]);
+  });
+
+  it("prefixes flow.json problems with the feature", () => {
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "exploring" })
+    );
+    writeFile(designDir, "features/f/ui/approved/form.default.html", "<html>");
+    writeFile(
+      designDir,
+      "features/f/ui/flow.json",
+      JSON.stringify({ screens: [{ id: "ghost.default" }] })
+    );
+    expect(scanFeatures(designDir)[0].problems).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(
+          /^f: flow\.json screens\[0\] "ghost\.default" is not a screen in ui\/approved\//
+        ),
+        'f: flow.json does not include the approved screen "form".',
+      ])
+    );
+  });
+
+  it("still accepts a hand-written flow.html when there is no flow.json", () => {
+    writeFile(
+      designDir,
+      "features/f/ui/decision.md",
+      decision({ status: "exploring" })
+    );
+    writeFile(designDir, "features/f/ui/options/a/x.html", "<html>");
+    writeFile(designDir, "features/f/ui/flow.html", "<html>");
+    const [feature] = scanFeatures(designDir);
+    expect(feature.flowGenerated).toBe(false);
+    expect(feature.flow).toBeNull();
+    expect(feature.mockupPaths).toContain("features/f/ui/flow.html");
+  });
+
   it("accepts brief.md as well as feature-brief.md", () => {
     writeFile(designDir, "features/f/brief.md", "# Brief");
     writeFile(

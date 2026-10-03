@@ -1,0 +1,11 @@
+{
+  "screens": [
+    { "id": "dashboard", "title": "Dashboard", "route": "/", "external": true },
+    { "id": "buckets-empty.default", "title": "Buckets (no buckets yet)", "route": "/buckets" },
+    { "id": "add-bucket", "title": "Add bucket", "route": "/add-bucket", "external": true }
+  ],
+  "transitions": [
+    { "from": "dashboard", "to": "buckets-empty.default", "label": "Tap Buckets in the nav" },
+    { "from": "buckets-empty.default", "to": "add-bucket", "label": "Tap Add new bucket" }
+  ]
+}

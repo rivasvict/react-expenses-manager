@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flow — Example — Buckets empty state</title>
+  <title>Flow — Example — Add a bucket</title>
   <!-- GENERATED from flow.json by `npm run gallery:build` — do not edit. -->
   <link rel="stylesheet" href="../../../system/tokens.css">
   <link rel="stylesheet" href="../../../system/mockup.css">
@@ -61,7 +61,7 @@
 </head>
 <body class="mk">
   <div class="fl">
-    <h1>Flow — Example — Buckets empty state</h1>
+    <h1>Flow — Example — Add a bucket</h1>
     <p class="fl-lead">Click through the screens the way a user would, or scan them all below.</p>
 
     <h2>Walkthrough</h2>
@@ -83,32 +83,46 @@
       </div>
     </section>
 
-    <h2>All screens (3)</h2>
+    <h2>All screens (5)</h2>
     <ol class="fl-strip">
         <li class="fl-step">
           <span class="fl-step__index">1</span>
           <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
-          <h3>Dashboard</h3>
-          <p class="fl-route">/</p>
-          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Buckets in the nav</span> → Buckets (no buckets yet)</li></ul>
-        </li>
-        <li class="fl-step">
-          <span class="fl-step__index">2</span>
-          <div class="fl-thumb"><iframe src="approved/buckets-empty.default.html" title="Buckets (no buckets yet)" tabindex="-1"></iframe></div>
-          <h3>Buckets (no buckets yet)</h3>
+          <h3>Buckets (list)</h3>
           <p class="fl-route">/buckets</p>
           <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add new bucket</span> → Add bucket</li></ul>
         </li>
         <li class="fl-step">
-          <span class="fl-step__index">3</span>
-          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
+          <span class="fl-step__index">2</span>
+          <div class="fl-thumb"><iframe src="approved/add-bucket.default.html" title="Add bucket" tabindex="-1"></iframe></div>
           <h3>Add bucket</h3>
           <p class="fl-route">/add-bucket</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Submit with nothing chosen</span> → Add bucket: nothing chosen</li><li><span class="mk-text-secondary">Pick a category and type an allowance</span> → Add bucket: ready to save</li><li><span class="mk-text-secondary">Tap Cancel</span> → Buckets (list)</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">3</span>
+          <div class="fl-thumb"><iframe src="approved/add-bucket.error.html" title="Add bucket: nothing chosen" tabindex="-1"></iframe></div>
+          <h3>Add bucket: nothing chosen</h3>
+          <p class="fl-route">/add-bucket</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick a category and type an allowance</span> → Add bucket: ready to save</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">4</span>
+          <div class="fl-thumb"><iframe src="approved/add-bucket.filled.html" title="Add bucket: ready to save" tabindex="-1"></iframe></div>
+          <h3>Add bucket: ready to save</h3>
+          <p class="fl-route">/add-bucket</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Submit</span> → Buckets (with the new bucket)</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">5</span>
+          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
+          <h3>Buckets (with the new bucket)</h3>
+          <p class="fl-route">/buckets</p>
           <p class="mk-text-muted">End of this flow</p>
         </li>
     </ol>
   </div>
-  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard","title":"Dashboard","route":"/","external":true,"src":""},{"id":"buckets-empty.default","title":"Buckets (no buckets yet)","route":"/buckets","external":false,"src":"approved/buckets-empty.default.html"},{"id":"add-bucket","title":"Add bucket","route":"/add-bucket","external":true,"src":""}],"transitions":[{"from":"dashboard","to":"buckets-empty.default","label":"Tap Buckets in the nav"},{"from":"buckets-empty.default","to":"add-bucket","label":"Tap Add new bucket"}]}</script>
+  <script type="application/json" id="flow-data">{"screens":[{"id":"buckets-list","title":"Buckets (list)","route":"/buckets","external":true,"src":""},{"id":"add-bucket.default","title":"Add bucket","route":"/add-bucket","external":false,"src":"approved/add-bucket.default.html"},{"id":"add-bucket.error","title":"Add bucket: nothing chosen","route":"/add-bucket","external":false,"src":"approved/add-bucket.error.html"},{"id":"add-bucket.filled","title":"Add bucket: ready to save","route":"/add-bucket","external":false,"src":"approved/add-bucket.filled.html"},{"id":"buckets-saved","title":"Buckets (with the new bucket)","route":"/buckets","external":true,"src":""}],"transitions":[{"from":"buckets-list","to":"add-bucket.default","label":"Tap Add new bucket"},{"from":"add-bucket.default","to":"add-bucket.error","label":"Tap Submit with nothing chosen"},{"from":"add-bucket.error","to":"add-bucket.filled","label":"Pick a category and type an allowance"},{"from":"add-bucket.default","to":"add-bucket.filled","label":"Pick a category and type an allowance"},{"from":"add-bucket.filled","to":"buckets-saved","label":"Tap Submit"},{"from":"add-bucket.default","to":"buckets-list","label":"Tap Cancel"}]}</script>
   <script>
     (() => {
       const data = JSON.parse(document.getElementById("flow-data").textContent);
