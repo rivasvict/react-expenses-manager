@@ -74,6 +74,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `npm run tokens:build` now writes `tokens.css` to `design/system/`, and the
   lint messages and `CLAUDE.md` point to the new location.
 
+## [1.21.1] - 2026-10-03
+
+### Fixed
+
+- The sync-server status ring now surrounds the account thumbnail in the app
+  bar instead of sitting beside it as a separate dot.
+
 ## [1.21.0] - 2026-10-03
 
 ### Added
