@@ -80,7 +80,7 @@ describe("SyncStatusRing", () => {
     expect(ring()).toHaveClass("sync-status-ring--offline");
   });
 
-  it("keeps the wrapped control reachable next to the ring", async () => {
+  it("keeps the wrapped control outside the ring element, so it stays reachable", async () => {
     await renderRing();
 
     expect(screen.getByRole("link", { name: "Account" })).toBeInTheDocument();
