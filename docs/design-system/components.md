@@ -17,5 +17,6 @@ same PR that adds it.
 | App navigation / bottom tab bar | Navigation | `.app-nav` in `src/components/common/Header.scss` |
 | Month header (prev/next) | Navigation | `src/components/common/NavigableMonthHeader/` |
 | Doughnut chart | Categorical chart palette | `src/components/common/DoughnutChart/` |
+| Version label (quiet app-version caption) | Masthead | `src/components/common/VersionLabel/`; version from `src/version.ts` |
 | Brand mark | Masthead | `src/components/common/BrandMark/` |
 | Dashboard composition | The dashboard, assembled | `src/components/Dashboard/components/DashboardContent/` |

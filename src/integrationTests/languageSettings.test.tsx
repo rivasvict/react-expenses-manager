@@ -45,7 +45,9 @@ describe("language settings", () => {
     await pickLanguage(user, /Español/);
 
     // The app bar follows at once, without a reload.
-    const nav = screen.getByRole("navigation", { name: "Navegación principal" });
+    const nav = screen.getByRole("navigation", {
+      name: "Navegación principal",
+    });
     expect(within(nav).getByText("Inicio")).toBeInTheDocument();
     expect(within(nav).getByText("Límites")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Ajustes" })).toBeInTheDocument();
@@ -79,7 +81,7 @@ describe("language settings", () => {
 
     expect(await screen.findByText("Settings")).toBeInTheDocument();
     expect(
-      screen.getByRole("navigation", { name: "Main navigation" })
+      screen.getByRole("navigation", { name: "Main navigation" }),
     ).toBeInTheDocument();
   });
 
@@ -90,7 +92,7 @@ describe("language settings", () => {
 
     await user.click(screen.getByText("Datos"));
     await user.click(
-      await screen.findByRole("button", { name: "Borrar todos los datos" })
+      await screen.findByRole("button", { name: "Borrar todos los datos" }),
     );
     unmount();
 
@@ -105,12 +107,12 @@ describe("language settings", () => {
 
     await user.click(screen.getByText("Categorías"));
     await user.click(
-      await screen.findByRole("link", { name: "Añadir categoría" })
+      await screen.findByRole("link", { name: "Añadir categoría" }),
     );
     await user.click(await screen.findByRole("button", { name: "Guardar" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "El nombre de la categoría no puede estar vacío"
+      "El nombre de la categoría no puede estar vacío",
     );
   });
 });

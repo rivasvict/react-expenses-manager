@@ -59,6 +59,8 @@ const es: Translations = {
   "settings.language.description":
     "Elige el idioma en el que se muestra la aplicación. Tu elección se guarda en este dispositivo y se aplica al instante.",
 
+  "version.label": "Versión {{version}}",
+
   // First-run data disclaimer
   "dataDisclaimer.title": "Tus datos se quedan en este dispositivo",
   "dataDisclaimer.body":
