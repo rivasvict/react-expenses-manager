@@ -59,6 +59,8 @@ const en = {
   "settings.language.description":
     "Choose the language the app is shown in. Your choice is saved on this device and applies right away.",
 
+  "version.label": "Version {{version}}",
+
   // First-run data disclaimer
   "dataDisclaimer.title": "Your data stays on this device",
   "dataDisclaimer.body":

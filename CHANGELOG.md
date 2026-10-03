@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.21.0] - 2026-10-03
+## [1.22.0] - 2026-10-03
 
 ### Added
 
@@ -38,6 +38,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - The design system moved from `docs/design-system/` to `design/system/`.
   `npm run tokens:build` now writes `tokens.css` to `design/system/`, and the
   lint messages and `CLAUDE.md` point to the new location.
+
+## [1.21.0] - 2026-10-03
+
+### Added
+
+- Settings now shows the app version (for example "Version 1.21.0") as a quiet
+  caption under the language card, so it is easy to quote in a bug report. The
+  number is read from `package.json` at build time, so it cannot drift.
 
 ## [1.20.0] - 2026-10-02
 
