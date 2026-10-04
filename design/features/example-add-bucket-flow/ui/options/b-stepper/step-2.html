@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Option B — step 2</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+    .step { margin: 0.25rem 0 1rem; text-align: center; }
+    .step__count { margin: 0 0 0.25rem; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+    .step__title { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+    .step__dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.6rem; }
+    .step__dot { width: 0.5rem; height: 0.5rem; border-radius: var(--radius-round); background-color: var(--border-strong); }
+    .step__dot--on { background-color: var(--accent); }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+      <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Buckets</h3>
+      <div class="step">
+        <p class="step__count">Step 2 of 2</p>
+        <h2 class="step__title">How much per month for Eating out?</h2>
+        <div class="step__dots" aria-hidden="true"><span class="step__dot step__dot--on"></span><span class="step__dot step__dot--on"></span></div>
+      </div>
+      <div class="mk-form">
+        <span class="mk-label">Monthly allowance</span>
+        <input class="mk-input" type="number" placeholder="Insert bucket allowance" value="300" readonly>
+        <div class="mk-actions">
+          <a class="mk-btn mk-btn--primary mk-space-top" href="#">Submit</a>
+          <button class="mk-btn mk-btn--secondary mk-space-top" type="button">Back</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

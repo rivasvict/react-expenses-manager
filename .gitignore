@@ -35,3 +35,5 @@ yarn-error.log*
 /.claude/worktrees
 # deployment state (logs, pid) written by deploy.sh
 /.deploy
+# design reviewer output (screenshots and reports)
+/design/.review

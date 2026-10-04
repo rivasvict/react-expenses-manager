@@ -2,25 +2,13 @@
   "screens": {
     "buckets-empty.default": {
       "route": "/buckets",
-      "viewport": {
-        "width": 375,
-        "height": 720
-      },
-      "localStorage": {
-        "settings.language": "en",
-        "buckets": "{}"
-      }
+      "viewport": { "width": 375, "height": 720 },
+      "localStorage": { "everShowDataDisclaimer": "0", "settings.language": "en", "buckets": {} }
     },
     "buckets-empty.es": {
       "route": "/buckets",
-      "viewport": {
-        "width": 375,
-        "height": 720
-      },
-      "localStorage": {
-        "settings.language": "es",
-        "buckets": "{}"
-      }
+      "viewport": { "width": 375, "height": 720 },
+      "localStorage": { "everShowDataDisclaimer": "0", "settings.language": "es", "buckets": {} }
     }
   }
 }
