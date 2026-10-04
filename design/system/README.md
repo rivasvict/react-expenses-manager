@@ -13,6 +13,7 @@ before building or designing any UI.
 | [`src/styles/tokens.json`](../../src/styles/tokens.json) | **The single source of truth** for every color, radius, shadow and font stack. |
 | [`tokens.css`](tokens.css) | Generated: the tokens as CSS custom properties (`--accent`, `--radius-card`, …) for HTML mockups. |
 | [`src/styles/_tokens.scss`](../../src/styles/_tokens.scss) | Generated: the tokens as SCSS variables (`$accent`, `$radius-card`, …), pulled in by `src/variables.scss`. |
+| [`mockup.css`](mockup.css) | Shared base for UI mockups: the app shell, cards, buttons and text roles, built only from `tokens.css`. See [`../README.md`](../README.md). |
 | [`components.md`](components.md) | Inventory: each design-system component → the code that implements it. |
 | [`reference/design-system.dc.html`](reference/design-system.dc.html) | The visual reference board exported from Claude Design (snapshot — see below). |
 
@@ -20,7 +21,7 @@ before building or designing any UI.
 
 ```
 src/styles/tokens.json ──npm run tokens:build──┬─▶ src/styles/_tokens.scss ─▶ src/variables.scss ─▶ every .scss
-                                               └─▶ docs/design-system/tokens.css ─▶ HTML mockups
+                                               └─▶ design/system/tokens.css ─▶ HTML mockups
 src/styles/tokens.json ──import──▶ JS/TSX that needs a color at runtime (charts, SVG marks)
 ```
 
@@ -30,6 +31,10 @@ To change or add a token:
 2. Run `npm run tokens:build`.
 3. Commit the JSON **and** both generated files. A unit test
    (`src/styles/tokenFormats.test.js`) fails if they are out of sync.
+
+A token change alters the app (`tokens.json` lives in `src/`), so its PR bumps
+the version like any other. Editing only files under `design/` does not (see
+[`../README.md`](../README.md)).
 
 ## The rules (enforced in CI)
 

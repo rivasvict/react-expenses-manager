@@ -5,6 +5,40 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.22.0] - 2026-10-03
+
+### Added
+
+- A dedicated `design/` folder for proposals, evaluations and the design
+  system, kept apart from `docs/` (which documents shipped parts of the app).
+  A pull request that changes only files under `design/` does not bump the
+  version or add a changelog entry; everything else still does. The rule is in
+  `CLAUDE.md` and `design/README.md`.
+- A convention for designing a feature's UI before it is built, documented in
+  `design/README.md`. A feature keeps its designs in
+  `design/features/<feature>/ui/`: a `decision.md` with a status
+  (`exploring`, `approved`, `implemented`), the alternatives under `options/`,
+  and the final screens, one per screen and state, under `approved/`. The
+  approved screens are the visual spec an implementing agent builds to.
+- `npm run gallery:build` scans every `ui/` folder and writes
+  `design/gallery.html`, a single page that shows each feature's options and
+  approved screens with a status filter and a phone/desktop switch. It refuses
+  to build, and lists every problem, when a package breaks the convention or a
+  mockup uses a literal color, skips `tokens.css` or loads an external
+  resource. A unit test fails if the committed gallery is stale.
+- `design/system/mockup.css`, a shared base (app shell, cards, buttons, text
+  roles) for mockups, built only from the design tokens.
+- A worked example, `design/features/example-buckets-empty-state/`: two
+  options for the Buckets empty state, the decision, English and Spanish
+  approved screens, a flow and fixtures. It is marked as an example and is not
+  to be built.
+
+### Changed
+
+- The design system moved from `docs/design-system/` to `design/system/`.
+  `npm run tokens:build` now writes `tokens.css` to `design/system/`, and the
+  lint messages and `CLAUDE.md` point to the new location.
+
 ## [1.21.1] - 2026-10-03
 
 ### Fixed

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow — Buckets empty state</title>
+  <link rel="stylesheet" href="../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../system/mockup.css">
+  <style>
+    .flow { max-width: 56rem; margin: 0 auto; padding: 2rem 1rem; }
+    .flow h1 { margin: 0 0 0.25rem; font-size: 1.4rem; }
+    .flow p { margin: 0 0 1.5rem; color: var(--text-secondary); }
+    .steps { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    .step { min-width: 11rem; }
+    .step__route { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+    .step__name { font-weight: 600; }
+    .arrow { color: var(--text-muted); font-size: 1.25rem; }
+    .step--here { border-color: var(--accent); }
+  </style>
+</head>
+<body class="mk">
+  <div class="flow">
+    <h1>Flow — Buckets empty state</h1>
+    <p>How a user reaches the screen and where it leads.</p>
+    <div class="steps">
+      <div class="mk-card step"><div class="step__route">/</div><div class="step__name">Dashboard</div><div class="mk-text-secondary">Tap “Buckets” in the nav</div></div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="mk-card step step--here"><div class="step__route">/buckets</div><div class="step__name">Buckets (empty)</div><div class="mk-text-secondary">approved/buckets-empty.*</div></div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="mk-card step"><div class="step__route">/add-bucket</div><div class="step__name">Add bucket</div><div class="mk-text-secondary">“Add new bucket”</div></div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="mk-card step"><div class="step__route">/buckets</div><div class="step__name">Buckets (with one)</div><div class="mk-text-secondary">Saved</div></div>
+    </div>
+  </div>
+</body>
+</html>

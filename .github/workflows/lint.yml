@@ -21,7 +21,7 @@ jobs:
 
       - run: npm ci
 
-      # Both enforce the design-token rules in docs/design-system/README.md.
+      # Both enforce the design-token rules in design/system/README.md.
       - run: npm run lint
 
       - run: npm run lint:styles
