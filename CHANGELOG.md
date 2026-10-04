@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.23.1] - 2026-10-04
+
+### Changed
+
+- Playwright is now a dev dependency, so `npm run design:review` works after
+  `npm ci` plus a one-time `npx playwright install chromium`, instead of
+  needing a separate manual install.
+
 ## [1.23.0] - 2026-10-03
 
 ### Added

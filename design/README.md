@@ -240,9 +240,11 @@ and the difference side by side, `report.md`, `report.json` and the images.
 - The threshold is a share of the whole screen, so **a small but real difference
   can pass it** (a wrong colour on one line of text). Open the diff image of any
   screen that is not exactly 0.00%.
-- It needs Playwright with a Chromium and Node 18+ (the app itself builds on the
-  Node in `.nvmrc`). Set `PLAYWRIGHT_MODULE` if Playwright is installed
-  elsewhere.
+- It needs Node 18+ (the app itself builds on the Node in `.nvmrc`) and a
+  Chromium. Playwright is a dev dependency, so `npm ci` installs it; fetch its
+  browser once with `npx playwright install chromium`. Set `PLAYWRIGHT_MODULE`
+  if Playwright is installed elsewhere, or `PLAYWRIGHT_BROWSERS_PATH` to use a
+  Chromium that is already on the machine.
 - `mockup.css` is calibrated to the **phone** layout, by measuring the real app
   with this tool. The app bar and tab bar are not compared.
 

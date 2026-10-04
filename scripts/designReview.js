@@ -69,7 +69,7 @@ const loadPlaywright = () => {
     }
   }
   return fail(
-    "Playwright was not found. Install it (for example `npm install --no-save playwright && npx playwright install chromium`) or set PLAYWRIGHT_MODULE to its path."
+    "Playwright was not found. Run `npm ci` (Playwright is a dev dependency), then `npx playwright install chromium` or set PLAYWRIGHT_MODULE to its path."
   );
 };
 

@@ -17,7 +17,7 @@ npm run lint:fix   # Auto-fix lint issues
 npm run lint:styles   # Stylelint: design-token rules for SCSS
 npm run tokens:build  # Regenerate _tokens.scss / tokens.css from src/styles/tokens.json
 npm run gallery:build # Validate design/features/*/ui/ packages; regenerate design/gallery.html and each ui/flow.html
-npm run design:review -- --feature <slug>  # Compare a built feature with its approved design (needs `npm run build`, Playwright, Node 18+)
+npm run design:review -- --feature <slug>  # Compare a built feature with its approved design (needs `npm run build`, Node 18+ and a Chromium: `npx playwright install chromium`)
 ```
 
 Node version is pinned in `.nvmrc`.

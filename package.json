@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.23.0",
+  "version": "1.23.1",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",
@@ -77,6 +77,7 @@
     "@testing-library/user-event": "^14.6.1",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
+    "playwright": "^1.63.0",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.3.3",
     "stylelint": "^15.11.0",

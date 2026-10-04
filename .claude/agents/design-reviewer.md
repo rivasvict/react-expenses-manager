@@ -27,12 +27,13 @@ A feature slug: a folder in `design/features/`. If none is given, ask.
    `node_modules` is missing, then `npm run build` (use the Node version in
    `.nvmrc`).
 3. **Run the comparison**: `npm run design:review -- --feature <slug>`.
-   - It needs Playwright with a Chromium and Node 18+. If the build needs
-     Node 16 and the reviewer needs 18+, run each step with the right Node
-     (the build output is plain files). In the Claude Code web sandbox,
-     Chromium is under `/opt/pw-browsers` and Playwright is installed
-     globally: set `PLAYWRIGHT_MODULE=$(npm root -g)/playwright` and
-     `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`. **Never run
+   - It needs Node 18+ and a Chromium; Playwright itself comes with
+     `npm ci` (dev dependency). If the build needs Node 16 and the reviewer
+     needs 18+, run each step with the right Node (the build output is plain
+     files). On a normal machine, fetch the browser once with
+     `npx playwright install chromium`. In the Claude Code web sandbox,
+     Chromium is already under `/opt/pw-browsers`: set
+     `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` and **never run
      `playwright install` there.**
    - Exit code 0 means every screen is within tolerance; 1 means at least one
      is not; 2 means the setup is wrong (read the message and fix the setup,
