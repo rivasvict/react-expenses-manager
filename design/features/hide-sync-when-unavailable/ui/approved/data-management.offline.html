@@ -35,7 +35,11 @@
     .identity__name { margin: 0; font-weight: 700; }
     .identity__email { margin: 0; font-size: 0.88rem; color: var(--text-secondary); }
     .reassure { margin: 0.9rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); }
-    .message { margin: 0 0 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+    .first { margin-top: 0.875rem; }
+    .section__title { line-height: 1.2; }
+    .dm-area { display: flex; flex-direction: column; justify-content: space-between; }
+    .wide { margin-left: -0.75rem; margin-right: -0.75rem; }
+    .message { margin: 0; color: var(--text-secondary); line-height: 1.5; }
   </style>
 </head>
 <body class="mk">
@@ -51,24 +55,26 @@
     <span class="bar__chips"><span class="chip" role="img" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 5.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm8.2-3-1.6-.4a6.9 6.9 0 0 0-.6-1.5l.9-1.4-2-2-1.4.9c-.5-.3-1-.5-1.5-.6L13.6 3h-3.2l-.4 1.6c-.5.1-1 .3-1.5.6l-1.4-.9-2 2 .9 1.4c-.3.5-.5 1-.6 1.5L3.8 10v3.2l1.6.4c.1.5.3 1 .6 1.5l-.9 1.4 2 2 1.4-.9c.5.3 1 .5 1.5.6l.4 1.6h3.2l.4-1.6c.5-.1 1-.3 1.5-.6l1.4.9 2-2-.9-1.4c.3-.5.5-1 .6-1.5l1.6-.4V11Z" style="fill: var(--text-secondary)"/></svg></span><span class="chip" role="img" aria-label="Account"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0-1.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5ZM4 20c0-3.3 3.6-5.5 8-5.5s8 2.2 8 5.5h-1.5c0-2.2-2.8-4-6.5-4s-6.5 1.8-6.5 4Z" style="fill: var(--text-secondary)"/></svg><span class="chip__ring" role="img" aria-label="Sync server: offline"></span></span></span>
   </header>
   <main class="mk-shell">
-    <div class="mk-work-area">
+    <div class="mk-work-area dm-area">
+      <div>
       <h3 class="mk-eyebrow">Data Management</h3>
-      <section class="mk-card section">
+      <section class="mk-card section wide first">
         <h2 class="section__title">Keep your data safe</h2>
         <p class="section__text">Everything you track lives only in this browser. Download a backup file regularly so you can restore it here or on another device.</p>
         <button class="mk-btn mk-btn--primary" type="button">Download Backup</button>
         <button class="mk-btn mk-btn--secondary mk-space-top" type="button">Restore Backup</button>
       </section>
-      <section class="mk-card section">
+      <section class="mk-card section wide">
         <h2 class="section__title">Sync with your party</h2>
         <p class="status"><span class="status__dot" aria-hidden="true"></span>Sync server is offline</p>
         <p class="note-text">Syncing comes back by itself once the server answers. Your entries are safe on this device.</p>
       </section>
-      <section class="mk-card section section--danger">
+      <section class="mk-card section section--danger wide">
         <h2 class="section__title">Danger zone</h2>
         <p class="section__text">Remove every entry, bucket and category from this device. This cannot be undone.</p>
         <button class="mk-btn mk-btn--danger" type="button">Clear all data</button>
       </section>
+      </div>
       <div class="mk-actions">
         <button class="mk-btn mk-btn--secondary" type="button">Go Back</button>
       </div>
