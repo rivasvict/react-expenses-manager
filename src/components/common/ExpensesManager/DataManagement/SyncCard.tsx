@@ -18,6 +18,8 @@ import {
   isSyncApiError,
 } from "../../../../services/syncApi/contract";
 import { formatRelativeTime } from "../../../../helpers/date";
+import SyncOfflineNote from "../../SyncOfflineNote";
+import { useSyncAvailability } from "../../SyncAvailability";
 import {
   getSyncErrorMessage,
   TranslationKey,
@@ -123,6 +125,7 @@ const SyncCard = ({
   const translator = useTranslation();
   const { t } = translator;
   const history = useHistory();
+  const isOffline = useSyncAvailability().availability === "offline";
   const [isSyncing, setIsSyncing] = useState(false);
   const [status, setStatus] = useState<TranslationKey | null>(null);
   const [alert, setAlert] = useState<BannerMessage | null>(null);
@@ -131,12 +134,14 @@ const SyncCard = ({
   // Party state drives the gating captions; /me is refreshed on mount
   // (RFC §2.2) — this is metadata only, never a backup call. A failed
   // check flips to an honest caption instead of "Checking…" forever.
+  // Not while the server is offline: it would be a request to a server known
+  // to be down, and the card shows no party state then anyway.
   useEffect(() => {
-    if (!session) return;
+    if (!session || isOffline) return;
     onRefreshMe().then((succeeded) => {
       if (!succeeded) setMeCheckFailed(true);
     });
-  }, [session, onRefreshMe]);
+  }, [session, onRefreshMe, isOffline]);
 
   // A blocked/canceled rejection discovered mid-review (DESIGN §4.3.4)
   // lands here as the same §4.2 banner a direct sync would have shown.
@@ -198,6 +203,15 @@ const SyncCard = ({
       setIsSyncing(false);
     }
   };
+
+  // The sync server is down: no button and no caption, only why.
+  if (isOffline)
+    return (
+      <Col className="data-section" data-testid="sync-card">
+        <h2 className="data-section__title">{t("syncCard.title")}</h2>
+        <SyncOfflineNote>{t("syncOffline.dataManagementNote")}</SyncOfflineNote>
+      </Col>
+    );
 
   return (
     <Col className="data-section" data-testid="sync-card">

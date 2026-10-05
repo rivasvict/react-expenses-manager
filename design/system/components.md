@@ -20,3 +20,4 @@ same PR that adds it.
 | Version label (quiet app-version caption) | Masthead | `src/components/common/VersionLabel/`; version from `src/version.ts` |
 | Brand mark | Masthead | `src/components/common/BrandMark/` |
 | Dashboard composition | The dashboard, assembled | `src/components/Dashboard/components/DashboardContent/` |
+| Sync server status note (offline dot + label + explanation, in place of an action that needs the server) | Sync unavailable | `src/components/common/SyncOfflineNote/` |

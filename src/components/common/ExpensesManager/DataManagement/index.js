@@ -14,6 +14,7 @@ import { MainContentContainer } from "../../MainContentContainer";
 import { downloadFileFromData } from "./utils";
 import { FileButton } from "./components";
 import SyncCard from "./SyncCard";
+import { useSyncAvailability } from "../../SyncAvailability";
 import { useTranslation } from "../../../../i18n";
 
 import "./styles.scss";
@@ -30,6 +31,7 @@ const DataManagement = ({
   history,
 }) => {
   const { t, language, setLanguage } = useTranslation();
+  const { availability } = useSyncAvailability();
   const [restoreError, setRestoreError] = useState(null);
 
   const goBack = () => {
@@ -124,9 +126,11 @@ const DataManagement = ({
               another way of keeping data safe, so it sits between backup
               and the danger zone. The existing cards above/below are
               untouched (AC-3.7, docs/multi-user-sync/PRD.md). */}
-          <Row>
-            <SyncCard />
-          </Row>
+          {availability !== "not-configured" && (
+            <Row>
+              <SyncCard />
+            </Row>
+          )}
           <Row>
             <Col className="data-section data-section--danger">
               <h2 className="data-section__title">

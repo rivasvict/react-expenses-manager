@@ -287,6 +287,20 @@ const es: Translations = {
   "syncCard.neverSynced": "Aún no se ha sincronizado",
   "syncCard.lastSynced": "Última sincronización: {{when}}",
 
+  // Sync server unavailable (offline or not set up): the account chip stays,
+  // and the actions that need the server are replaced by these notes.
+  "syncOffline.status": "El servidor de sincronización está sin conexión",
+  "syncOffline.dataManagementNote":
+    "La sincronización se reanuda sola en cuanto el servidor responda. Tus movimientos están a salvo en este dispositivo.",
+  "syncOffline.accountSignedInNote":
+    "Tu grupo y la sincronización están ocultos hasta que vuelva a responder. Sigues con la sesión iniciada.",
+  "syncOffline.accountSignedOutNote":
+    "Iniciar sesión y registrarse necesitan el servidor de sincronización. Puedes volver aquí cuando responda.",
+  "syncUnavailable.title": "La sincronización no está disponible ahora",
+  "syncUnavailable.message":
+    "Esta página necesita el servidor de sincronización y no responde. Todo lo demás sigue funcionando en este dispositivo como siempre.",
+  "syncUnavailable.goToDashboard": "Ir al inicio",
+
   // Sync server errors, by code
   "syncError.VALIDATION_ERROR":
     "Algunos de los datos que introdujiste no son válidos. Revísalos e inténtalo de nuevo.",

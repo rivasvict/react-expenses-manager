@@ -10,6 +10,8 @@ import ContentTileSection from "../common/ContentTitleSection";
 import { logOut } from "../../redux/syncManager/actionCreators";
 import { getInitials } from "../../helpers/general";
 import { SyncSession } from "../../services/session";
+import SyncOfflineNote from "../common/SyncOfflineNote";
+import { useSyncAvailability } from "../common/SyncAvailability";
 import { useTranslation } from "../../i18n";
 import "./styles.scss";
 
@@ -26,6 +28,7 @@ interface AccountProps {
  */
 const Account = ({ session, onLogOut }: AccountProps) => {
   const { t } = useTranslation();
+  const isOffline = useSyncAvailability().availability === "offline";
   const [justSignedOut, setJustSignedOut] = useState(false);
 
   const handleLogOut = () => {
@@ -52,10 +55,19 @@ const Account = ({ session, onLogOut }: AccountProps) => {
             </div>
           </div>
           {/* docs/multi-user-sync/DESIGN.md §2.3: the party hub is reached
-              from the account. */}
-          <ContentTileSection title={t("party.pageTitle")} to="/party">
-            {t("party.pageTitle")}
-          </ContentTileSection>
+              from the account. It needs the server, so while the server is
+              offline the identity card above stays and a note explains why. */}
+          {isOffline ? (
+            <div className="account-card__offline-note">
+              <SyncOfflineNote>
+                {t("syncOffline.accountSignedInNote")}
+              </SyncOfflineNote>
+            </div>
+          ) : (
+            <ContentTileSection title={t("party.pageTitle")} to="/party">
+              {t("party.pageTitle")}
+            </ContentTileSection>
+          )}
           <Button
             variant="secondary"
             className="full-width"
@@ -71,19 +83,27 @@ const Account = ({ session, onLogOut }: AccountProps) => {
               {t("account.signedOut")}
             </p>
           )}
-          <p className="account-card__description">
-            {t("account.description")}
-          </p>
-          <ButtonLikeLink
-            className="btn-primary"
-            to="/sign-in"
-            buttonTitle={t("account.signIn")}
-          />
-          <ButtonLikeLink
-            className="btn-secondary"
-            to="/sign-up"
-            buttonTitle={t("account.signUp")}
-          />
+          {isOffline ? (
+            <SyncOfflineNote>
+              {t("syncOffline.accountSignedOutNote")}
+            </SyncOfflineNote>
+          ) : (
+            <React.Fragment>
+              <p className="account-card__description">
+                {t("account.description")}
+              </p>
+              <ButtonLikeLink
+                className="btn-primary"
+                to="/sign-in"
+                buttonTitle={t("account.signIn")}
+              />
+              <ButtonLikeLink
+                className="btn-secondary"
+                to="/sign-up"
+                buttonTitle={t("account.signUp")}
+              />
+            </React.Fragment>
+          )}
           <p className="account-card__reassurance text-secondary">
             {t("account.reassurance")}
           </p>
