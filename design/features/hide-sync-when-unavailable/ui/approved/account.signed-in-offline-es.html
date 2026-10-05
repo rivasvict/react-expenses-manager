@@ -23,6 +23,19 @@
     .status__dot { width: 0.6rem; height: 0.6rem; flex: 0 0 auto; border-radius: var(--radius-round); background-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
     .status__dot--neutral { background-color: var(--text-muted); box-shadow: none; }
     .page-title { margin: 0 0 0.625rem; }
+
+    /* Calibrated to the real screens (measured with npm run design:review). */
+    .section { margin-top: 0.625rem; padding: 1rem 1.1rem 1.1rem; }
+    .section__text { font-size: 0.88rem; margin: 0 0 0.9rem; }
+    .section__text--last { margin-bottom: 0; }
+    .status { margin: 0 0 0.5rem; }
+    .note-text { margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+    .identity { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+    .identity .chip { font-size: 0.95rem; border: 0; }
+    .identity__name { margin: 0; font-weight: 700; }
+    .identity__email { margin: 0; font-size: 0.88rem; color: var(--text-secondary); }
+    .reassure { margin: 0.9rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); }
+    .message { margin: 0 0 0.75rem; color: var(--text-secondary); line-height: 1.5; }
   </style>
 </head>
 <body class="mk">
@@ -39,21 +52,19 @@
   </header>
   <main class="mk-shell">
     <div class="mk-work-area">
-      <h1 class="mk-title page-title">Cuenta</h1>
-      <div class="mk-card">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <h3 class="mk-eyebrow">Cuenta</h3>
+      <div class="mk-card section">
+        <div class="identity">
           <span class="chip chip--user" aria-hidden="true">MR</span>
           <div>
-            <p style="margin: 0; font-weight: 600;">Maria Rivas</p>
-            <p class="mk-text-secondary" style="margin: 0;">maria.rivas@example.com</p>
+            <p class="identity__name">Maria Rivas</p>
+            <p class="identity__email">maria.rivas@example.com</p>
           </div>
         </div>
-      </div>
-      <section class="mk-card section">
+        <div style="margin-bottom: 1rem;">
         <p class="status"><span class="status__dot" aria-hidden="true"></span>El servidor de sincronización está sin conexión</p>
-        <p class="section__text" style="margin: 0;">Tu grupo y la sincronización están ocultos hasta que vuelva a responder. Sigues con la sesión iniciada.</p>
-      </section>
-      <div class="mk-actions">
+        <p class="note-text">Tu grupo y la sincronización están ocultos hasta que vuelva a responder. Sigues con la sesión iniciada.</p>
+        </div>
         <button class="mk-btn mk-btn--secondary" type="button">Cerrar sesión</button>
       </div>
     </div>

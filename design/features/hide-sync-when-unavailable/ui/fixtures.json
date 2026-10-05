@@ -4,7 +4,7 @@
       "route": "/data-management",
       "viewport": {
         "width": 375,
-        "height": 720
+        "height": 1000
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
@@ -20,7 +20,7 @@
       "route": "/data-management",
       "viewport": {
         "width": 375,
-        "height": 720
+        "height": 1000
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",

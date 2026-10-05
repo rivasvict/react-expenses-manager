@@ -28,8 +28,8 @@ user is looking.
 | Surface | Online / unknown | Offline |
 |---|---|---|
 | App bar: account chip + status ring | as today | unchanged (red ring) |
-| Account, signed in | identity, Party tile, Log out | identity, **status card**, Log out. **Party tile hidden.** |
-| Account, signed out | description, Sign in, Sign up, reassurance | **status card** instead of description + Sign in / Sign up; reassurance kept |
+| Account, signed in | identity, Party tile, Log out | identity, **status note** (in the Party tile's place, inside the same account card), Log out. **Party tile hidden.** |
+| Account, signed out | description, Sign in, Sign up, reassurance | **status note** instead of description + Sign in / Sign up; reassurance kept |
 | Data Management, sync card | title, description, **Sync with party** button, caption | title, **status line**, note. **No button and no caption.** |
 | `/party`, `/party/invite`, `/party/join`, `/sign-in`, `/sign-up`, `/sync-review` | as today | the **Sync unavailable** screen (below) |
 | Log out | works | still works (local only); the session is kept in `localStorage` |
@@ -66,7 +66,10 @@ real screen by reloading once the server answers.
 - `MainContentContainer`, `ContentTileSection`, `ButtonLikeLink`; `.data-section`
   in `DataManagement/styles.scss`; `.account-card` in `Account/styles.scss`.
 - Status line: a 0.6rem dot (`$danger`, `0 0 0 3px $danger-soft`) beside a
-  semibold label, as drawn. The dot repeats the ring's offline look.
+  semibold label, then the explanation at the same size as the card's other
+  descriptions (0.88rem, `$text-secondary`), as drawn. The dot repeats the
+  ring's offline look. The mockups reproduce the real screens' structure
+  (centred eyebrow title, one account card) so the review diff is meaningful.
 - No new token. One new shared component, **Sync server status note** (the
   dot + label + paragraph card), gets a row in `design/system/components.md`.
 

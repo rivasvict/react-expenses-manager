@@ -23,6 +23,19 @@
     .status__dot { width: 0.6rem; height: 0.6rem; flex: 0 0 auto; border-radius: var(--radius-round); background-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
     .status__dot--neutral { background-color: var(--text-muted); box-shadow: none; }
     .page-title { margin: 0 0 0.625rem; }
+
+    /* Calibrated to the real screens (measured with npm run design:review). */
+    .section { margin-top: 0.625rem; padding: 1rem 1.1rem 1.1rem; }
+    .section__text { font-size: 0.88rem; margin: 0 0 0.9rem; }
+    .section__text--last { margin-bottom: 0; }
+    .status { margin: 0 0 0.5rem; }
+    .note-text { margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+    .identity { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+    .identity .chip { font-size: 0.95rem; border: 0; }
+    .identity__name { margin: 0; font-weight: 700; }
+    .identity__email { margin: 0; font-size: 0.88rem; color: var(--text-secondary); }
+    .reassure { margin: 0.9rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); }
+    .message { margin: 0 0 0.75rem; color: var(--text-secondary); line-height: 1.5; }
   </style>
 </head>
 <body class="mk">
@@ -39,12 +52,12 @@
   </header>
   <main class="mk-shell">
     <div class="mk-work-area">
-      <h1 class="mk-title page-title">Account</h1>
-      <section class="mk-card section">
+      <h3 class="mk-eyebrow">Account</h3>
+      <div class="mk-card section">
         <p class="status"><span class="status__dot" aria-hidden="true"></span>Sync server is offline</p>
-        <p class="section__text" style="margin: 0;">Signing in and signing up need the sync server. You can come back here once it answers.</p>
-      </section>
-      <p class="mk-text-secondary mk-space-top">Everything still works without an account — this is only needed for syncing with a party.</p>
+        <p class="note-text">Signing in and signing up need the sync server. You can come back here once it answers.</p>
+        <p class="reassure">Everything still works without an account — this is only needed for syncing with a party.</p>
+      </div>
     </div>
   </main>
 </body>
