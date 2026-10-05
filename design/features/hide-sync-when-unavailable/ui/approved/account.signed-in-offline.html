@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account, signed in, sync server offline</title>
+  <link rel="stylesheet" href="../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../system/mockup.css">
+  <style>
+    .bar { max-width: 40rem; margin: 0 auto; padding: 1rem 1rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .bar__brand { display: flex; align-items: center; gap: 0.6rem; }
+    .bar__chips { display: flex; align-items: center; gap: 0.5rem; }
+    .chip { position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-size: 0.85rem; font-weight: 700; }
+    .chip--user { color: var(--accent); background-color: var(--accent-soft); border-color: transparent; }
+    .chip__ring { position: absolute; inset: -4px; border-radius: var(--radius-round); border: 2px solid var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+    .chip__dot { position: absolute; top: 1px; right: 1px; width: 11px; height: 11px; border-radius: var(--radius-round); background-color: var(--danger); border: 2px solid var(--bg-page); }
+    .section { margin-top: 0.625rem; }
+    .section__title { margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; }
+    .section__text { margin: 0 0 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+    .section--danger { border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
+    .section--danger .section__title { color: var(--danger); }
+    .status { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.5rem; font-weight: 600; }
+    .status__dot { width: 0.6rem; height: 0.6rem; flex: 0 0 auto; border-radius: var(--radius-round); background-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); }
+    .status__dot--neutral { background-color: var(--text-muted); box-shadow: none; }
+    .page-title { margin: 0 0 0.625rem; }
+
+    /* Calibrated to the real screens (measured with npm run design:review). */
+    .section { margin-top: 0.625rem; padding: 1rem 1.1rem 1.1rem; }
+    .section__text { font-size: 0.88rem; margin: 0 0 0.9rem; }
+    .section__text--last { margin-bottom: 0; }
+    .status { margin: 0 0 0.5rem; }
+    .note-text { margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+    .identity { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+    .identity .chip { font-size: 0.95rem; border: 0; }
+    .identity__name { margin: 0; font-weight: 700; }
+    .identity__email { margin: 0; font-size: 0.88rem; color: var(--text-secondary); }
+    .reassure { margin: 0.9rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--text-secondary); }
+    .first { margin-top: 0.875rem; }
+    .section__title { line-height: 1.2; }
+    .dm-area { display: flex; flex-direction: column; justify-content: space-between; }
+    .wide { margin-left: -0.75rem; margin-right: -0.75rem; }
+    .message { margin: 0; color: var(--text-secondary); line-height: 1.5; }
+  </style>
+</head>
+<body class="mk">
+  <header class="bar">
+    <span class="bar__brand">
+      <svg width="40" height="40" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+      <span class="mk-header__name">Expenses Tracker</span>
+    </span>
+    <span class="bar__chips"><span class="chip" role="img" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm0 5.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm8.2-3-1.6-.4a6.9 6.9 0 0 0-.6-1.5l.9-1.4-2-2-1.4.9c-.5-.3-1-.5-1.5-.6L13.6 3h-3.2l-.4 1.6c-.5.1-1 .3-1.5.6l-1.4-.9-2 2 .9 1.4c-.3.5-.5 1-.6 1.5L3.8 10v3.2l1.6.4c.1.5.3 1 .6 1.5l-.9 1.4 2 2 1.4-.9c.5.3 1 .5 1.5.6l.4 1.6h3.2l.4-1.6c.5-.1 1-.3 1.5-.6l1.4.9 2-2-.9-1.4c.3-.5.5-1 .6-1.5l1.6-.4V11Z" style="fill: var(--text-secondary)"/></svg></span><span class="chip chip--user" role="img" aria-label="Account: Maria Rivas">MR<span class="chip__ring" role="img" aria-label="Sync server: offline"></span></span></span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area ">
+      <h3 class="mk-eyebrow">Account</h3>
+      <div class="mk-card section first">
+        <div class="identity">
+          <span class="chip chip--user" aria-hidden="true">MR</span>
+          <div>
+            <p class="identity__name">Maria Rivas</p>
+            <p class="identity__email">maria.rivas@example.com</p>
+          </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+        <p class="status"><span class="status__dot" aria-hidden="true"></span>Sync server is offline</p>
+        <p class="note-text">Your party and syncing are hidden until it answers again. You stay signed in.</p>
+        </div>
+        <button class="mk-btn mk-btn--secondary" type="button">Log out</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "account.signed-out-offline",
+      "title": "Account: signed out, server offline",
+      "route": "/account"
+    },
+    {
+      "id": "account.signed-in-offline",
+      "title": "Account: signed in, server offline",
+      "route": "/account"
+    },
+    {
+      "id": "account.signed-in-offline-es",
+      "title": "Account: signed in, server offline (Spanish)",
+      "route": "/account"
+    },
+    {
+      "id": "data-management.offline",
+      "title": "Data Management: server offline",
+      "route": "/data-management"
+    },
+    {
+      "id": "data-management.offline-es",
+      "title": "Data Management: server offline (Spanish)",
+      "route": "/data-management"
+    },
+    {
+      "id": "sync-unavailable.default",
+      "title": "Sync unavailable",
+      "route": "/party"
+    },
+    {
+      "id": "sync-unavailable.es",
+      "title": "Sync unavailable (Spanish)",
+      "route": "/party"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard",
+      "to": "account.signed-out-offline",
+      "label": "Tap the account chip (signed out)"
+    },
+    {
+      "from": "dashboard",
+      "to": "account.signed-in-offline",
+      "label": "Tap the account chip (signed in)"
+    },
+    {
+      "from": "dashboard",
+      "to": "data-management.offline",
+      "label": "Tap Data in the tab bar"
+    },
+    {
+      "from": "account.signed-in-offline",
+      "to": "account.signed-in-offline-es",
+      "label": "Switch the language to Espa\u00f1ol"
+    },
+    {
+      "from": "data-management.offline",
+      "to": "data-management.offline-es",
+      "label": "Switch the language to Espa\u00f1ol"
+    },
+    {
+      "from": "dashboard",
+      "to": "sync-unavailable.default",
+      "label": "Open an old /party, /sign-in or /sync-review link"
+    },
+    {
+      "from": "sync-unavailable.default",
+      "to": "dashboard",
+      "label": "Tap Go to dashboard"
+    },
+    {
+      "from": "sync-unavailable.default",
+      "to": "sync-unavailable.es",
+      "label": "Switch the language to Espa\u00f1ol"
+    },
+    {
+      "from": "sync-unavailable.es",
+      "to": "dashboard",
+      "label": "Tap Ir al inicio"
+    }
+  ]
+}

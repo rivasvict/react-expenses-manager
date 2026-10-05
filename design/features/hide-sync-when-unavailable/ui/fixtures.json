@@ -1,0 +1,134 @@
+{
+  "screens": {
+    "data-management.offline": {
+      "route": "/data-management",
+      "viewport": {
+        "width": 375,
+        "height": 1000
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "data-management.offline-es": {
+      "route": "/data-management",
+      "viewport": {
+        "width": 375,
+        "height": 1000
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "account.signed-in-offline": {
+      "route": "/account",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "sync.session": {
+          "token": "design-review-token",
+          "user": {
+            "id": "u1",
+            "email": "maria.rivas@example.com",
+            "firstName": "Maria",
+            "lastName": "Rivas"
+          }
+        }
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "account.signed-in-offline-es": {
+      "route": "/account",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "sync.session": {
+          "token": "design-review-token",
+          "user": {
+            "id": "u1",
+            "email": "maria.rivas@example.com",
+            "firstName": "Maria",
+            "lastName": "Rivas"
+          }
+        }
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "account.signed-out-offline": {
+      "route": "/account",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "sync-unavailable.default": {
+      "route": "/party",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    "sync-unavailable.es": {
+      "route": "/party",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      },
+      "actions": [
+        {
+          "wait": 1500
+        }
+      ]
+    }
+  }
+}
