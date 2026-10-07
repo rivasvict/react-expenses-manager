@@ -57,9 +57,9 @@ Node version is pinned in `.nvmrc`.
 
 **Authentication:** `AuthenticatedApp` is currently commented out in `src/App.js`. The app runs without auth, using `WithBalance` to load entries directly.
 
-**Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed.
+**Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed. `REACT_APP_SYNC_API_HOST` is the sync server: a URL, or `same-origin` for relative `/api` calls (release builds); empty in a production build means "no sync".
 
-**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`.
+**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`. `DATA_DIR` (env) relocates its data directory (default `server/.data/`).
 
 ## Key patterns
 
@@ -73,6 +73,14 @@ Node version is pinned in `.nvmrc`.
 - Action creators are injected via `mapActionToProps` — components never import storage directly
 - Categories are hardcoded in `src/helpers/entriesHelper/entriesHelper.js` (`getEntryCategoryOption`) and must match the bucket names in the reducer's `initialState`
 - Mixed JS/TS: existing JS files stay `.js`; new components use `.tsx`. TypeScript errors in JSX are sometimes suppressed with `{/* @ts-expect-error */}` or `{/** @ts-ignore */}`
+
+## Releases & deployment
+
+- Merging to `master` auto-releases `v<package.json version>` if that tag does not exist yet (`.github/workflows/release.yml`); the **Release readiness** PR check enforces the version bump and the `## [x.y.z] - YYYY-MM-DD` CHANGELOG heading.
+- **Never delete, retag or edit a published release or tag.** Fix a bad release by shipping a new version.
+- Deploy tooling lives in `deploy/` (the server-side `deploy-expenses-manager`, the installer, the systemd unit) and `scripts/release/` (version checks, packaging), each with its tests beside it (`*.test.mjs`, Node's test runner on Node 18).
+- The frontend release build uses `REACT_APP_SYNC_API_HOST=same-origin`, so the bundle is host-agnostic.
+- Skills: `release` (repo/CI side) and `deploy-server` (on the box). Docs: `docs/deployment/`.
 
 ## Integration test helpers (`src/integrationTests/helpers/`)
 
@@ -95,7 +103,7 @@ Node version is pinned in `.nvmrc`.
 * When creating **new files** — components, helpers, services, reducers — add their tests in the same PR, colocated as described above. When you only **edit an existing file** that lacks coverage, do *not* backfill its tests as part of that PR: add a `TODO` comment at the top of the file stating the gap, create (or reuse) a GitHub issue tracking it, and reference that issue's URL in the comment. This keeps a feature PR from turning into a test-backfill project while making sure the debt is written down rather than forgotten.
 * When a comment cites project documentation by tag or section — `DESIGN §2.1`, `RFC §3`, `AC-1.6`, `NFR-5` — it must also give the **path to the document**, so a reader can actually find it (e.g. `docs/multi-user-sync/DESIGN.md §2.1`). A bare tag is untraceable for anyone who does not already know where it lives. Give the full path at a file's *first* such reference; later mentions in that same file may use the short tag, since the path is already established at the top. Do not cite a PR by number for future work (`lands in PR 2`) — PR numbering shifts as branches are split and reordered; say "a later PR" instead.
 * A component defined inside another component's file must not exceed **5 lines**. Past that, move it into its own module (a directory with an `index.tsx`, matching `GlyphIcon`/`BrandMark`/`AccountChip` under `src/components/common/`, with a colocated `styles.scss` when it has styles of its own). The 5 lines are a ceiling to design comfortably under, **not** a target to hit: do not cut identifiers short, strip comments, or cram JSX just to get under the number. Use however many lines the implementation needs to stay clean and clear — and if that is more than 5, that is the signal it belongs in its own file.
-* Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there. **The one exception is a pull request that changes only files under `design/`**: that is a proposal or an evaluation, not a change to the app, so it gets no version bump and no changelog entry. If a PR touches `design/` and anything else, the usual rule applies to the whole PR, so keep design work in its own PR.
+* Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`, e.g. via `npm version --no-git-tag-version <x.y.z>`) to a version **strictly greater than master's**, and add a `## [x.y.z] - YYYY-MM-DD` entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there. CI enforces both (Release readiness), and the merge publishes that version as a release. **The one exception is a pull request that changes only files under `design/`**: that is a proposal or an evaluation, not a change to the app, so it gets no version bump and no changelog entry. If a PR touches `design/` and anything else, the usual rule applies to the whole PR, so keep design work in its own PR.
 
 ## GitHub issue creation
 

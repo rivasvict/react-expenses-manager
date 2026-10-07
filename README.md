@@ -61,7 +61,10 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/ad
 
 ### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Releases of this app (signed archives deployed to a home server over Tailscale)
+are documented in [docs/deployment/README.md](docs/deployment/README.md).
+
+For a generic Create React App deployment, this section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
 ### `npm run build` fails to minify
 
