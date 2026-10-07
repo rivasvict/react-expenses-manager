@@ -45,7 +45,9 @@ output in `server/dist/`, gitignored).
     dev-only value. Override for anything beyond local development.
   - `CORS_ORIGIN` — allowed browser origin
 - The frontend reads the server URL from `REACT_APP_SYNC_API_HOST`
-  (defaults to `http://localhost:4000`, see `.env.template`).
+  (defaults to `http://localhost:4000` in development; a production build
+  made without it has no sync server, and the app hides its sync actions).
+  See `.env.template`.
 - Multi-user testing: use two browser profiles (or one normal + one
   private window) against the same server.
 

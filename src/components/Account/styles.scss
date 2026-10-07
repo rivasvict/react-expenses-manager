@@ -20,6 +20,11 @@
       margin: 0.9rem 0 0;
     }
 
+    // Where the Party tile would be: same gap below as the tile leaves.
+    &__offline-note {
+      margin-bottom: 1rem;
+    }
+
     &__status {
       color: $text-primary;
       font-size: 0.88rem;

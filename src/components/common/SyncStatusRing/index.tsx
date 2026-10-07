@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useSyncServerStatus } from "./useSyncServerStatus";
+import { useSyncAvailability } from "../SyncAvailability";
 import { useTranslation } from "../../../i18n";
 import "./styles.scss";
 
@@ -24,7 +24,7 @@ interface SyncStatusRingProps {
  */
 const SyncStatusRing = ({ children }: SyncStatusRingProps) => {
   const { t } = useTranslation();
-  const status = useSyncServerStatus();
+  const { status } = useSyncAvailability();
   const label = t(STATUS_LABEL_KEYS[status]);
   return (
     <span className="sync-status-ring-wrap">

@@ -9,6 +9,7 @@ import BrandMark from "./BrandMark";
 import AccountChip from "./AccountChip";
 import SyncStatusRing from "./SyncStatusRing";
 import SettingsChip from "./SettingsChip";
+import { useSyncAvailability } from "./SyncAvailability";
 import { useTranslation } from "../../i18n";
 /**
  * TODO:
@@ -45,6 +46,7 @@ const NAV_ITEMS = [
  */
 const Header = ({ session }) => {
   const { t } = useTranslation();
+  const { availability } = useSyncAvailability();
   return (
     <header className="app-header">
       <div className="app-header__bar">
@@ -81,9 +83,14 @@ const Header = ({ session }) => {
         </nav>
         <div className="app-header__account">
           <SettingsChip />
-          <SyncStatusRing>
-            <AccountChip session={session} />
-          </SyncStatusRing>
+          {/* A build with no sync server has no account to show. While the
+              server is merely offline the chip stays, ring and all, so the bar
+              never changes shape. */}
+          {availability !== "not-configured" && (
+            <SyncStatusRing>
+              <AccountChip session={session} />
+            </SyncStatusRing>
+          )}
         </div>
       </div>
     </header>

@@ -1,0 +1,18 @@
+@import "../../../variables.scss";
+
+.sync-unavailable {
+  &__tile {
+    @include card();
+    padding: 0.9rem 1rem;
+    margin-bottom: $vertical-standard-margin;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  &__message {
+    color: $text-secondary;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+}

@@ -28,6 +28,8 @@ import InviteScreen from "../Party/InviteScreen";
 import JoinScreen from "../Party/JoinScreen";
 import SyncReview from "../SyncReview";
 import Settings from "../Settings";
+import SyncGate from "../common/SyncGate";
+import { SyncAvailabilityProvider } from "../common/SyncAvailability";
 
 function Dashboard({ entries, selectedDate }) {
   useEffect(() => {
@@ -98,27 +100,41 @@ function Dashboard({ entries, selectedDate }) {
                 is gated by the session (AC-1.7,
                 docs/multi-user-sync/PRD.md). */}
             <Route path={`${match.url}account`}>
-              <Account />
+              <SyncGate allowOffline>
+                <Account />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}sign-up`}>
-              <SignUpScreen />
+              <SyncGate>
+                <SignUpScreen />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}sign-in`}>
-              <SignInScreen />
+              <SyncGate>
+                <SignInScreen />
+              </SyncGate>
             </Route>
             {/* Party screens (multi-user sync, DESIGN §3). The specific
                 sub-routes must precede the bare /party path. */}
             <Route path={`${match.url}party/invite`}>
-              <InviteScreen />
+              <SyncGate>
+                <InviteScreen />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}party/join`}>
-              <JoinScreen />
+              <SyncGate>
+                <JoinScreen />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}party`}>
-              <Party />
+              <SyncGate>
+                <Party />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}sync-review`}>
-              <SyncReview />
+              <SyncGate keepWhileMounted>
+                <SyncReview />
+              </SyncGate>
             </Route>
             <Route path={`${match.url}settings`}>
               <Settings />
@@ -151,4 +167,14 @@ Dashboard.propTypes = {
   entries: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(Dashboard);
+const ConnectedDashboard = connect(mapStateToProps)(Dashboard);
+
+// The sync server's availability is probed once here, above the app bar and
+// every route, so they all read the same answer.
+const DashboardWithSyncAvailability = () => (
+  <SyncAvailabilityProvider>
+    <ConnectedDashboard />
+  </SyncAvailabilityProvider>
+);
+
+export default DashboardWithSyncAvailability;

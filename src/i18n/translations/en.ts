@@ -282,6 +282,20 @@ const en = {
   "syncCard.neverSynced": "Never synced yet",
   "syncCard.lastSynced": "Last synced: {{when}}",
 
+  // Sync server unavailable (offline or not set up): the account chip stays,
+  // and the actions that need the server are replaced by these notes.
+  "syncOffline.status": "Sync server is offline",
+  "syncOffline.dataManagementNote":
+    "Syncing comes back by itself once the server answers. Your entries are safe on this device.",
+  "syncOffline.accountSignedInNote":
+    "Your party and syncing are hidden until it answers again. You stay signed in.",
+  "syncOffline.accountSignedOutNote":
+    "Signing in and signing up need the sync server. You can come back here once it answers.",
+  "syncUnavailable.title": "Sync isn't available right now",
+  "syncUnavailable.message":
+    "This page needs the sync server, and it isn't answering. Everything else works on this device as usual.",
+  "syncUnavailable.goToDashboard": "Go to dashboard",
+
   // Sync server errors, by code — shown when the UI is not in English (the
   // server's own English wording is shown as is otherwise).
   "syncError.VALIDATION_ERROR":

@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.24.0] - 2026-10-05
+
+### Changed
+
+- When the sync server is offline, the app stops offering what needs it. The
+  account chip stays in the app bar with its red ring, but Account drops
+  Sign in / Sign up (or the Party tile, when signed in; Log out stays and you
+  stay signed in), and the sync card on Data Management shows "Sync server is
+  offline" instead of the Sync button. Opening Party, Sign in, Sign up or the
+  sync review while it is offline shows a "Sync isn't available right now"
+  page with a link to the dashboard. Everything comes back by itself when the
+  server answers. Backup, restore, Settings and all your entries are unchanged.
+- A production build made without `REACT_APP_SYNC_API_HOST` now means "no sync
+  server": the account chip, status ring and sync card are hidden for good.
+  Development and tests still default to `http://localhost:4000`.
+- The sync server's health probe now runs once for the whole app and is shared
+  by the app bar and the screens, instead of living inside the status ring.
+
 ## [1.23.1] - 2026-10-04
 
 ### Changed

@@ -1,5 +1,6 @@
 import { render, screen, act } from "@testing-library/react";
 import SyncStatusRing from "./index";
+import { SyncAvailabilityProvider } from "../SyncAvailability";
 import { HEALTH_POLL_INTERVAL_MS } from "./useSyncServerStatus";
 import * as syncApi from "../../../services/syncApi";
 
@@ -31,7 +32,13 @@ const settleProbe = async () => {
 };
 
 const renderRing = async () => {
-  render(<SyncStatusRing><a href="/account">Account</a></SyncStatusRing>);
+  render(
+    <SyncAvailabilityProvider>
+      <SyncStatusRing>
+        <a href="/account">Account</a>
+      </SyncStatusRing>
+    </SyncAvailabilityProvider>
+  );
   await settleProbe();
 };
 
@@ -99,9 +106,11 @@ describe("SyncStatusRing", () => {
 
   it("stops polling once it is unmounted", async () => {
     const { unmount } = render(
-      <SyncStatusRing>
-        <a href="/account">Account</a>
-      </SyncStatusRing>
+      <SyncAvailabilityProvider>
+        <SyncStatusRing>
+          <a href="/account">Account</a>
+        </SyncStatusRing>
+      </SyncAvailabilityProvider>
     );
     await settleProbe();
     unmount();
