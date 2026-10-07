@@ -44,6 +44,10 @@ output in `server/dist/`, gitignored).
     needs for invitation records; any string works locally, defaults to a
     dev-only value. Override for anything beyond local development.
   - `CORS_ORIGIN` — allowed browser origin
+  - `DATA_DIR` — directory for the JSON data files. Defaults to
+    `server/.data/`; a relative path is resolved from the working directory.
+    Release deployments point it outside the release folders
+    (`/var/lib/expenses-manager/data`, see `docs/deployment/README.md`).
 - The frontend reads the server URL from `REACT_APP_SYNC_API_HOST`
   (defaults to `http://localhost:4000` in development; a production build
   made without it has no sync server, and the app hides its sync actions).
