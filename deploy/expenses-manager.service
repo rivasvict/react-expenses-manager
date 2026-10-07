@@ -1,0 +1,32 @@
+# Installed to /etc/systemd/system/expenses-manager.service by
+# deploy/install-expenses-manager.sh. It is deliberately NOT enabled: the box
+# serves nothing until `deploy-expenses-manager start` (docs/deployment/operating.md).
+# The [Install] section only exists so the owner can opt into start-on-boot
+# later with `systemctl enable expenses-manager`.
+[Unit]
+Description=Expenses manager sync server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=expenses-manager
+Group=expenses-manager
+EnvironmentFile=/etc/expenses-manager/expenses-manager.env
+WorkingDirectory=/opt/expenses-manager/current
+ExecStart=/opt/expenses-manager/current/node/bin/node server/dist/index.js
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ReadWritePaths=/var/lib/expenses-manager
+CapabilityBoundingSet=
+RestrictSUIDSGID=yes
+LockPersonality=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
