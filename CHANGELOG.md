@@ -5,6 +5,36 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.25.0] - 2026-10-07
+
+### Added
+
+- Automated, signed releases: merging to `master` publishes a GitHub Release for
+  the version in `package.json` (tarball, `SHA256SUMS` and an SSH signature),
+  unless that version is already released. A new **Release readiness** PR check
+  requires a version above master's and a `## [x.y.z] - YYYY-MM-DD` CHANGELOG
+  entry.
+- `deploy-expenses-manager`, a one-command deploy for the server box
+  (verify signature and checksums, back up, switch, health-check, publish over
+  Tailscale, automatic rollback), plus a one-time idempotent installer, a
+  hardened systemd unit and data migration from the legacy `deploy.sh` setup.
+- `DATA_DIR` for the sync server, so data can live outside the release folders.
+- `REACT_APP_SYNC_API_HOST=same-origin`, which makes the app call `/api` on the
+  origin that serves it, so release bundles carry no hostname.
+- Deployment docs under `docs/deployment/` and two Claude Code skills,
+  `release` and `deploy-server`.
+
+### Changed
+
+- The lint, unit, integration and server test workflows are reusable
+  (`workflow_call`) and all GitHub Actions are pinned to commit SHAs.
+
+### Deprecated
+
+- `deploy.sh` and `stop.sh` are legacy and will be removed once release-based
+  deploys are proven
+  (https://github.com/rivasvict/react-expenses-manager/issues/201).
+
 ## [1.24.0] - 2026-10-05
 
 ### Changed
