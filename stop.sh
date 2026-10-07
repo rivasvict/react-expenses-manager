@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 #
+# LEGACY: superseded by `deploy-expenses-manager` (see
+# docs/deployment/README.md). Kept until https://github.com/rivasvict/react-expenses-manager/issues/201
+# is resolved.
+#
+# The new installer (deploy/install-expenses-manager.sh) sources this file for
+# its one-time data migration and reuses stop_running_services, so keep that
+# function intact until the issue above is resolved.
+#
+#
 # Stops everything deploy.sh starts: the published `tailscale serve` routes
 # and the detached sync server (tmux session, or its nohup'd PID).
 #

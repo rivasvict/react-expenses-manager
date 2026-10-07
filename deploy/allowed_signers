@@ -1,0 +1,5 @@
+# Release-signing PUBLIC key, the box's trust anchor (docs/deployment/server-setup.md,
+# step 1). The line below is a PLACEHOLDER: the release workflow and the
+# installer both refuse to run until it is replaced with the real line:
+#   expenses-manager-release namespaces="expenses-manager-release" <contents of the .pub file>
+expenses-manager-release namespaces="expenses-manager-release" ssh-ed25519 PLACEHOLDER_REPLACE_WITH_REAL_PUBLIC_KEY_SEE_docs/deployment/server-setup.md

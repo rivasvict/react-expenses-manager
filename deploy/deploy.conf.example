@@ -1,0 +1,10 @@
+# Template for /etc/expenses-manager/deploy.conf (root:root, 0600), read by
+# deploy-expenses-manager. KEY=value lines only; nothing here is executed.
+GITHUB_REPO=rivasvict/react-expenses-manager
+KEEP_RELEASES=5
+KEEP_BACKUPS=10
+# Loopback port of the sync server; keep it equal to PORT in the .env file.
+PORT=4000
+# Private repos only: a file holding a fine-grained, read-only token
+# (see docs/deployment/server-setup.md).
+# GITHUB_TOKEN_FILE=/etc/expenses-manager/github-token

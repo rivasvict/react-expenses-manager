@@ -1,5 +1,11 @@
 # Serving sync over Tailscale (family testing setup)
 
+> **Current flow:** releases are built in CI and deployed with
+> `deploy-expenses-manager` — see [README.md](README.md). This page keeps the
+> *why Tailscale* and the architecture, which still hold. The manual steps and
+> `deploy.sh` below are **legacy** and stay only until
+> https://github.com/rivasvict/react-expenses-manager/issues/201 is resolved.
+
 This is a family-testing setup, not a production deployment: run the
 multi-user sync backend on a home Linux machine, reachable securely from
 family iPhones on Safari, working offline when not connected, and syncing
@@ -38,7 +44,9 @@ Linux box (tailnet member)
 Single origin for app + API means no CORS configuration needed, no
 mixed-content issues (both are HTTPS), and the existing
 `REACT_APP_SYNC_API_HOST` env var (`src/config.js`) just becomes the
-`ts.net` URL — no code change needed there.
+`ts.net` URL — no code change needed there. (Release builds use
+`REACT_APP_SYNC_API_HOST=same-origin` instead, so the bundle carries no
+hostname; see [README.md](README.md).)
 
 ## Server changes made for this deployment
 
@@ -49,7 +57,7 @@ mixed-content issues (both are HTTPS), and the existing
   `TOKEN_SECRET` and `ENCRYPTION_KEY` are set, so it can't silently run on
   dev-only default secrets in a real deployment.
 
-## Automated deploy
+## Automated deploy (legacy: `deploy.sh`)
 
 `deploy.sh` at the repo root performs steps 3–5 below in one go: it asks
 which revision to deploy, stops any running `tailscale serve` config and
@@ -83,7 +91,7 @@ place that knows how to tear the setup down.
 Steps 1, 2, 6 and 7 are one-time machine/phone setup and are still manual.
 The steps below remain the reference for what the script does.
 
-## Step-by-step setup: Linux Mint box + 2 iPhones
+## Step-by-step setup: Linux Mint box + 2 iPhones (legacy, manual)
 
 1. **Install Tailscale on the Linux box.**
    ```bash

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 #
+# LEGACY: superseded by `deploy-expenses-manager` (see
+# docs/deployment/README.md). Kept until https://github.com/rivasvict/react-expenses-manager/issues/201
+# is resolved.
+#
+#
 # One-shot deployment of the frontend + sync server behind Tailscale.
 # Implements the manual steps in docs/deployment/tailscale-sync.md:
 #

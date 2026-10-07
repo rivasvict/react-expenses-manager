@@ -7,6 +7,7 @@
 import http from "node:http";
 import path from "node:path";
 import { createApp, App } from "./core/router";
+import { resolveDataDir } from "./config";
 import { createFsStorage } from "./storage-fs";
 import { ERROR_CODES, HTTP_STATUS } from "./core/httpConstants";
 import { createJsonResponder, PayloadTooLargeError, readBody } from "./utils";
@@ -40,8 +41,13 @@ if (process.env.NODE_ENV === "production") {
 const MAX_BODY_BYTES = 1024 * 1024; // 1 MB (RFC §3)
 
 // This file runs compiled, from server/dist/, so the data directory is one
-// level up — it stays at server/.data/ (gitignored), as documented.
-const DATA_DIR = path.join(__dirname, "..", ".data");
+// level up — it stays at server/.data/ (gitignored), as documented, unless
+// DATA_DIR points elsewhere (release deployments keep data outside the
+// release directories).
+const DATA_DIR = resolveDataDir(
+  process.env,
+  path.join(__dirname, "..", ".data")
+);
 
 export interface RequestListenerOptions {
   app: App;

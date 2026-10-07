@@ -1,0 +1,247 @@
+name: Release
+
+# Publishes a signed GitHub Release for the version in package.json whenever
+# master holds a version that has no tag yet (docs/deployment/releases.md).
+# Tagging and building happen in this one run: tags made with GITHUB_TOKEN do
+# not start other workflows. A released version is never touched again: fix a
+# bad release by shipping a new version.
+
+on:
+  push:
+    branches:
+      - master
+  # Retry the current master head after fixing configuration (a missing
+  # secret, say). Safe: a version that already has a tag is a no-op.
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: plan
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      version: ${{ steps.plan.outputs.version }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "server/.nvmrc"
+
+      - name: Decide whether this version needs a release
+        id: plan
+        env:
+          RELEASE_SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+
+          if [ "$REF" != "refs/heads/master" ]; then
+            echo "::error::Releases are cut from master only (this run is on $REF). Use 'Run workflow' on master."
+            exit 1
+          fi
+
+          VERSION="$(node scripts/release/releaseInfo.mjs version)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # --exit-code: 0 = the tag exists, 2 = it does not, anything else is
+          # a real failure (network, auth) that must not read as "no tag".
+          status=0
+          git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null || status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "v$VERSION already released, nothing to do." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          elif [ "$status" -ne 2 ]; then
+            echo "::error::Could not look up tags on origin (git ls-remote exit $status)."
+            exit 1
+          fi
+
+          # Defence in depth for branches without protection: the readiness
+          # check may not have been required.
+          node scripts/release/releaseInfo.mjs check-changelog
+          NEWEST="$(git tag -l 'v*' | sed 's/^v//' | node scripts/release/releaseInfo.mjs max)"
+          if [ -n "$NEWEST" ]; then
+            node scripts/release/releaseInfo.mjs check-bump --base-version "$NEWEST"
+          fi
+
+          if [ -z "$RELEASE_SIGNING_KEY" ]; then
+            echo "::error::The RELEASE_SIGNING_KEY repository secret is empty. Create the signing key and add it as described in docs/deployment/server-setup.md (step 1), then re-run this workflow with 'Run workflow'."
+            exit 1
+          fi
+          if grep -v '^[[:space:]]*#' deploy/allowed_signers | grep -q PLACEHOLDER; then
+            echo "::error::deploy/allowed_signers still holds the placeholder public key. Replace it with the real release-signing public key (docs/deployment/server-setup.md, step 1), merge that, then re-run this workflow."
+            exit 1
+          fi
+
+          echo "release=true" >> "$GITHUB_OUTPUT"
+          echo "Releasing v$VERSION." >> "$GITHUB_STEP_SUMMARY"
+
+  lint:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    uses: ./.github/workflows/lint.yml
+
+  unit-tests:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    uses: ./.github/workflows/unit-tests.yml
+
+  integration-tests:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    uses: ./.github/workflows/integration-tests.yml
+
+  server-tests:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    uses: ./.github/workflows/server-tests.yml
+
+  script-tests:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "server/.nvmrc"
+
+      - run: shellcheck deploy/*.sh scripts/release/*.sh
+
+      - run: find scripts/release deploy -name '*.test.mjs' -print0 | sort -z | xargs -0 node --test
+
+  build:
+    name: build
+    needs: [plan, lint, unit-tests, integration-tests, server-tests, script-tests]
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - run: npm ci
+
+      # same-origin: the bundle is host-agnostic and calls /api on whichever
+      # origin serves it. Going through `npm run build` keeps the version string.
+      - name: Build the frontend and the sync server
+        env:
+          REACT_APP_SYNC_API_HOST: same-origin
+        run: |
+          npm run build
+          npm run build:server
+
+      - name: Package
+        env:
+          VERSION: ${{ needs.plan.outputs.version }}
+        run: scripts/release/package-release.sh "$VERSION" "$GITHUB_SHA" release-assets
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-assets
+          path: |
+            release-assets/expenses-manager-*.tar.gz
+            release-assets/SHA256SUMS
+          if-no-files-found: error
+
+  publish:
+    name: publish
+    needs: [plan, build]
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    # The only job that can write to the repository.
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.plan.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "server/.nvmrc"
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: release-assets
+          path: release-assets
+
+      - name: Sign the checksums
+        env:
+          RELEASE_SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+        run: |
+          umask 077
+          printf '%s\n' "$RELEASE_SIGNING_KEY" > "$RUNNER_TEMP/release-signing-key"
+          ssh-keygen -Y sign -f "$RUNNER_TEMP/release-signing-key" \
+            -n expenses-manager-release release-assets/SHA256SUMS
+
+      - name: Remove the signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release-signing-key"
+
+      # The box verifies against the committed public key; if the secret and
+      # that key disagree, no box could ever verify this release.
+      - name: Verify the signature against the committed public key
+        run: |
+          if ! ssh-keygen -Y verify -f deploy/allowed_signers -I expenses-manager-release \
+            -n expenses-manager-release -s release-assets/SHA256SUMS.sig \
+            < release-assets/SHA256SUMS; then
+            echo "::error::The signature does not verify against deploy/allowed_signers: the RELEASE_SIGNING_KEY secret and the committed public key are not a pair. See docs/deployment/server-setup.md (step 1 and key rotation)."
+            exit 1
+          fi
+
+      - name: Write the release notes
+        run: node scripts/release/releaseInfo.mjs notes > release-assets/notes.md
+
+      # Draft first, publish second: the tag only comes into existence, on this
+      # commit, when the draft is published with every asset attached. Never
+      # --clobber, and a published release is never edited or deleted.
+      - name: Publish the release
+        run: |
+          set -euo pipefail
+          tag="v$VERSION"
+
+          # A draft left by a failed run has no tag; it is safe to replace.
+          gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --paginate \
+            --jq ".[] | select(.draft == true and .tag_name == \"$tag\") | .id" |
+            while read -r id; do
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id"
+            done
+
+          flags=(--latest)
+          if [[ "$VERSION" == *-* ]]; then flags=(--prerelease); fi
+
+          gh release create "$tag" --draft --target "$GITHUB_SHA" --title "$tag" \
+            --notes-file release-assets/notes.md \
+            "release-assets/expenses-manager-$VERSION.tar.gz" \
+            release-assets/SHA256SUMS release-assets/SHA256SUMS.sig
+          gh release edit "$tag" --draft=false "${flags[@]}"
+
+      - name: Summary
+        run: |
+          {
+            echo "## Released v$VERSION"
+            echo
+            echo "- Commit: \`$GITHUB_SHA\`"
+            echo "- Assets: \`expenses-manager-$VERSION.tar.gz\`, \`SHA256SUMS\`, \`SHA256SUMS.sig\`"
+            echo "- Deploy on the box: \`sudo deploy-expenses-manager v$VERSION\`"
+          } >> "$GITHUB_STEP_SUMMARY"

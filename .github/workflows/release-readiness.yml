@@ -1,0 +1,93 @@
+name: Release readiness
+
+# The PR gate for the release flow (docs/deployment/releases.md): merging to
+# master publishes v<package.json version>, so the version and CHANGELOG must be
+# right before the merge. Make "Release readiness" a required check
+# (docs/deployment/server-setup.md, step 2).
+
+on:
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  version-and-changelog:
+    name: version-and-changelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "server/.nvmrc"
+
+      - name: Compare against master's version
+        run: |
+          git fetch origin master
+          git show origin/master:package.json > "$RUNNER_TEMP/base-package.json"
+          node scripts/release/releaseInfo.mjs version
+          node scripts/release/releaseInfo.mjs check-bump --base "$RUNNER_TEMP/base-package.json"
+
+      - name: Check the CHANGELOG entry
+        run: node scripts/release/releaseInfo.mjs check-changelog
+
+  script-tests:
+    name: script-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # node:test, so Node 18 (server/.nvmrc), not the Node 16 the frontend uses.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "server/.nvmrc"
+
+      - run: shellcheck deploy/*.sh scripts/release/*.sh
+
+      # Explicit files: `node --test <dir>` and `node --test <glob>` behave
+      # differently across Node versions (see server/testRunner.ts).
+      - run: find scripts/release deploy -name '*.test.mjs' -print0 | sort -z | xargs -0 node --test
+
+  package-dry-run:
+    name: package-dry-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Build exactly as the release does
+        env:
+          REACT_APP_SYNC_API_HOST: same-origin
+        run: |
+          npm run build
+          npm run build:server
+
+      - name: Package
+        run: |
+          VERSION="$(node scripts/release/releaseInfo.mjs version)"
+          scripts/release/package-release.sh "$VERSION" "$(git rev-parse HEAD)" "$RUNNER_TEMP/dry-run"
+
+      # A throwaway key proves the signing and verification commands the
+      # release workflow uses; nothing is uploaded or published.
+      - name: Sign and verify with a throwaway key
+        working-directory: ${{ runner.temp }}/dry-run
+        run: |
+          ssh-keygen -q -t ed25519 -N "" -C dry-run -f "$RUNNER_TEMP/dry-run-key"
+          printf 'expenses-manager-release namespaces="expenses-manager-release" %s\n' \
+            "$(cat "$RUNNER_TEMP/dry-run-key.pub")" > "$RUNNER_TEMP/dry-run-signers"
+          ssh-keygen -Y sign -f "$RUNNER_TEMP/dry-run-key" -n expenses-manager-release SHA256SUMS
+          ssh-keygen -Y verify -f "$RUNNER_TEMP/dry-run-signers" -I expenses-manager-release \
+            -n expenses-manager-release -s SHA256SUMS.sig < SHA256SUMS
+          sha256sum -c SHA256SUMS

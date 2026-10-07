@@ -37,4 +37,14 @@ describe("sync server address", () => {
     expect(config.REACT_APP_SYNC_API_HOST).toBe("");
     expect(isSyncConfigured()).toBe(false);
   });
+
+  it("uses the page's own origin when the address is same-origin", () => {
+    const { config, isSyncConfigured } = loadConfig({
+      nodeEnv: "production",
+      syncHost: "same-origin",
+    });
+
+    expect(config.REACT_APP_SYNC_API_HOST).toBe("");
+    expect(isSyncConfigured()).toBe(true);
+  });
 });
