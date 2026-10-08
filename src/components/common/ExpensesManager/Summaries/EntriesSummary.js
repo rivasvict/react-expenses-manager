@@ -3,13 +3,14 @@ import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { formatNumberForDisplay } from "../../../../helpers/entriesHelper/entriesHelper";
 import { getCategoryGlyph } from "../../../../helpers/entriesHelper/categoryIcons";
+import { getEntryAddedDate } from "../../../../helpers/entriesHelper/entryAddedDate";
 import { IconMoneyIn, IconMoneyOut } from "../../Icons";
 import GlyphIcon from "../../GlyphIcon";
 import "./EntriesSummary.scss";
 import RowLink from "../../RowLink";
 import { useTranslation } from "../../../../i18n";
 
-function GetEntriesList({ entries, entryType }) {
+function GetEntriesList({ entries, entryType, translator }) {
   // Fallback glyph for categories with no icon mapping (user-created ones):
   // the money-direction arrow — i.e. exactly today's chip.
   const FallbackIcon = entryType === "income" ? IconMoneyIn : IconMoneyOut;
@@ -20,6 +21,9 @@ function GetEntriesList({ entries, entryType }) {
     // Described rows stack (category title + note); bare rows keep one line
     // (candidate 4) — the rule is content-driven, so rows never reshape on resize.
     const hasDescription = Boolean(entry.description);
+    // When the entry was added sits muted under the amount; entries without
+    // an `addedAt` stamp (older or recurring ones) keep the one-line amount.
+    const addedDate = getEntryAddedDate(entry.addedAt, translator);
     return (
       <RowLink
         to={`edit-${entryType}/${entry.id}`}
@@ -49,8 +53,28 @@ function GetEntriesList({ entries, entryType }) {
             capitalize(category)
           )}
         </Col>
-        <Col xs={4} className="item-amount">
-          {formatNumberForDisplay(entry.amount)}
+        <Col
+          xs={4}
+          className={`item-amount${addedDate ? " item-amount--stacked" : ""}`}
+        >
+          {addedDate ? (
+            <React.Fragment>
+              <span className="item-amount-value">
+                {formatNumberForDisplay(entry.amount)}
+              </span>
+              <time
+                className="item-added"
+                dateTime={new Date(entry.addedAt).toISOString()}
+              >
+                <span className="visually-hidden">
+                  {translator.t("entriesSummary.addedOn", { date: addedDate })}
+                </span>
+                <span aria-hidden="true">{addedDate}</span>
+              </time>
+            </React.Fragment>
+          ) : (
+            formatNumberForDisplay(entry.amount)
+          )}
         </Col>
       </RowLink>
     );
@@ -62,8 +86,9 @@ function GetEntriesList({ entries, entryType }) {
 // The header names the list by its entry type ("Incomes" / "Expenses"); the
 // `name` callers pass is the same plural, just not translated.
 function EntriesSummary({ entries, entryType, total, hideHeader }) {
-  const { t } = useTranslation();
-  const entriesList = GetEntriesList({ entries, entryType });
+  const translator = useTranslation();
+  const { t } = translator;
+  const entriesList = GetEntriesList({ entries, entryType, translator });
   return (
     <Container className={`entries-summary entries-summary--${entryType}`}>
       {!hideHeader && (

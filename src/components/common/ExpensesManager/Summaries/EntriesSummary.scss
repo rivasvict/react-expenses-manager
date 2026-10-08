@@ -103,6 +103,22 @@
       width: auto;
       white-space: nowrap;
     }
+
+    // Entries stamped with `addedAt` stack the day they were added under the
+    // amount, muted and sized like the note line beside it, so the row's
+    // left side (chip, category, note) is untouched.
+    .item-amount--stacked {
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      line-height: 1.35;
+
+      .item-added {
+        font-size: 0.78rem;
+        font-weight: 400;
+        color: $text-muted;
+      }
+    }
   }
 
   &.entries-summary--income {

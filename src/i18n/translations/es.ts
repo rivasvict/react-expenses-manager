@@ -115,6 +115,7 @@ const es: Translations = {
 
   // Entry lists
   "entriesSummary.empty": "Todavía no hay nada este mes.",
+  "entriesSummary.addedOn": "Añadido el {{date}}",
   "entries.count_one": "{{count}} movimiento",
   "entries.count_other": "{{count}} movimientos",
   "entriesReport.pageTitle": "Informe mensual",

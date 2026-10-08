@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.25.0] - 2026-10-08
+
+### Added
+
+- Entries now remember the day they were added. On the Incomes and Expenses
+  lists, each new entry shows that date in small muted text under its amount
+  ("Added Oct 8, 2026" for screen readers), in English or Spanish. Editing an
+  entry keeps its original date.
+- Entries saved before this version, and recurring entries, have no such date
+  and look exactly as before. The date is stored as an optional `addedAt`
+  field (Unix ms) on the entry, so backups, restores and sync keep working in
+  both directions with older versions.
+
 ## [1.24.0] - 2026-10-05
 
 ### Changed
