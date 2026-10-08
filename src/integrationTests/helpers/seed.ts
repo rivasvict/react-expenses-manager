@@ -6,6 +6,8 @@ export interface SeedEntry {
   description?: string;
   type: "income" | "expense";
   categories_path: string;
+  /** When the entry was added (Unix ms); entries from older versions have none. */
+  addedAt?: number;
 }
 
 export type SeededEntry = SeedEntry & { id: string };

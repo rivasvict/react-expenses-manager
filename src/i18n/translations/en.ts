@@ -115,6 +115,7 @@ const en = {
 
   // Entry lists
   "entriesSummary.empty": "Nothing here yet for this month.",
+  "entriesSummary.addedOn": "Added {{date}}",
   "entries.count_one": "{{count}} entry",
   "entries.count_other": "{{count}} entries",
   "entriesReport.pageTitle": "Monthly report",

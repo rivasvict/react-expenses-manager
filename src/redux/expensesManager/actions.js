@@ -114,11 +114,18 @@ const withAddedBy = (item) => {
   return addedBy ? { ...item, addedBy } : item;
 };
 
+// New balance entries record when they were added (Unix ms), shown under the
+// amount in the entry list. Only creation stamps it: edits keep the original
+// value, and entries saved before the stamp existed simply have none.
+const withAddedAt = (item) => ({ ...item, addedAt: Date.now() });
+
 const setNewRecord = ({ entry, type, selectedDate }, { storage }) => {
   return async (dispatch) => {
     try {
       dispatch(setAppLoading(true));
-      const savedEntry = await storage.setNewRecord(withAddedBy(entry));
+      const savedEntry = await storage.setNewRecord(
+        withAddedAt(withAddedBy(entry))
+      );
       // TODO: Revisit this against the pattern of action creators
       dispatch({ type, payload: { entry: savedEntry, selectedDate } });
       dispatch(setAppLoading(false));
