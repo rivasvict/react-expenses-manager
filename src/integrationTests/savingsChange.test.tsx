@@ -35,6 +35,7 @@ describe("dashboard savings change", () => {
         name: "Savings up 12.5% compared with September",
       })
     ).toHaveTextContent("+12.5%");
+    expect(screen.getByText("vs September")).toBeInTheDocument();
   });
 
   it("shows a drop against the previous month", async () => {
@@ -47,6 +48,7 @@ describe("dashboard savings change", () => {
         name: "Savings down 12.5% compared with September",
       })
     ).toHaveTextContent("−12.5%");
+    expect(screen.getByText("vs September")).toBeInTheDocument();
   });
 
   it("follows the month header: the first month with data has nothing to compare", async () => {
