@@ -124,6 +124,9 @@ const captureApp = async (browser, baseUrl, screen) => {
     );
   }, screen.localStorage);
   const page = await context.newPage();
+  // Pin the app's clock where the screen depends on today's date; timers keep
+  // running, so the app still loads and animates as usual.
+  if (screen.now) await page.clock.setFixedTime(new Date(screen.now));
   await page.goto(baseUrl + screen.route, { waitUntil: "networkidle" });
   await page.addStyleTag({ content: FREEZE_MOTION });
   await page

@@ -77,6 +77,14 @@ const en = {
   "dashboard.addIncome": "Add Income",
   "dashboard.addExpenses": "Add Expenses",
 
+  // Savings change badge (dashboard balance hero); {{month}} is the previous
+  // month's name as it reads mid-sentence
+  "savingsChange.vs": "vs {{month}}",
+  "savingsChange.label.up": "Savings up {{percent}} compared with {{month}}",
+  "savingsChange.label.down": "Savings down {{percent}} compared with {{month}}",
+  "savingsChange.label.flat": "Savings unchanged compared with {{month}}",
+  "savingsChange.nothingToCompare": "Nothing to compare with {{month}}",
+
   // Add / edit entry form
   "entryForm.pageTitle.income": "Income entry",
   "entryForm.pageTitle.expense": "Expense entry",

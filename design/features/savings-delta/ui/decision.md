@@ -1,103 +1,105 @@
 ---
 title: Savings change from the previous month
 summary: The dashboard shows how much this month's savings rose or fell against the previous month, as a green-up or red-down percentage.
-status: exploring
+status: implemented
+chosen: a-badge-in-hero
 ---
 
 # Decision
 
 Brief: [`../feature-brief.md`](../feature-brief.md).
 
-Nothing is chosen yet. Each option is drawn in four states, using the same
-data: October 2026 against September 2026, where September saved $1,440.00.
+## Decision
 
-| File | State |
+**a-badge-in-hero.** A tinted pill (`▲ +12.5%`) and a "vs September" caption
+sit directly under the savings amount, inside the existing balance hero. The
+change stays next to the number it describes, the layout matches how banking
+apps show a trend, and it adds only about 30px to a dashboard whose buttons
+already sit close to the tab bar.
+
+Why the others did not win: **b-strip-above-chart** separates the trend from
+its figure with a card border, adds a second green or red block under a green
+or red amount, and pushes the Add buttons down by about 65px.
+**c-inside-donut** mixes two different ideas (the ring shows how *this* month
+splits; the centre would compare with *last* month), and it disappears with
+the donut in a month without entries, which is exactly when a −100% drop
+matters.
+
+## For the implementer
+
+### What to build
+
+- A new shared component, `src/components/common/SavingsChangeBadge/`
+  (`index.tsx` and `styles.scss`), rendered as the last child of the balance
+  hero in `DashboardContent`, under `.balance-hero__amount`. It is
+  display-only: the whole hero card stays one link to Summary.
+- A pure helper, `src/helpers/savingsChange/savingsChange.ts`, that computes
+  the change from the `entries` tree and `selectedDate` already in Redux. No
+  storage, backup or sync change.
+- Reuse: the hero tile (`ContentTileSection`), the `money-figures` mixin, and
+  the tokens `$income` / `$income-soft`, `$expense` / `$expense-soft`,
+  `$text-secondary`, `$highlight` and `$radius-pill`. **No new tokens.**
+
+### Rules
+
+| Rule | Value |
 |---|---|
-| `dashboard.html` | Savings went up: $1,620.00, **+12.5%** |
-| `dashboard-es.html` | The same in Spanish (the longest copy) |
-| `dashboard-down.html` | Savings went down: $1,260.00, **−12.5%** |
-| `dashboard-nothing-to-compare.html` | September has no entries (the first month with data), so there is no percentage |
+| Savings of a month | Incomes minus expenses: the hero's own figure. |
+| Previous month | The calendar month before the **selected** month (January → December of the year before). |
+| Change | `(current − previous) / \|previous\| × 100`, rounded to one decimal. Dividing by the absolute value keeps the sign honest when the previous month was negative. |
+| Up | `--income` text on `--income-soft`, up arrow, `+` sign. |
+| Down | `--expense` text on `--expense-soft`, down arrow, `−` (U+2212) sign. |
+| No change (rounds to 0.0) | `--text-secondary` on `--highlight`, a flat dash, no sign: `0.0%`. |
+| Nothing to compare | The previous month has no entries, or saved exactly $0.00. No pill, only the caption. |
+| Very large change | From 1,000% upward, show `>999%`. |
+| Selected month has no entries | It saved $0.00, so the change is shown as normal (for example −100.0%); the donut hides as it does today. |
 
-In every option the indicator uses the existing semantic pair: `--income`
-(green) with an up arrow and a `+` sign, or `--expense` (red) with a down arrow
-and a `−` sign. Because of the arrow and the sign, the meaning does not depend
-on colour alone. The indicator is read aloud as one phrase ("Savings up 12.5%
-compared with September"). No new tokens are needed.
+### Pill and caption
 
-## Options considered
+- Badge row: flex, wrap, `gap: 0.25rem 0.5rem`, `margin-top: 0.35rem`.
+- Pill: `inline-flex`, `gap: 0.3rem`, `padding: 0.15rem 0.6rem`,
+  `border-radius: $radius-pill`, `0.85rem / 700`, line height 1.5, tabular
+  figures. Icon: 0.8em square SVG filled with `currentColor`.
+- Caption: `0.82rem / 400`, `--text-secondary`.
 
-### a-badge-in-hero: a badge inside the savings card
+### Accessibility
 
-A small tinted pill (`↑ +12.5%`) and a "vs September" caption sit right
-under the savings amount, inside the existing balance hero card. The change
-stays with the number it describes. Banking and brokerage apps usually show
-it this way ("$1,620.00 · ↑ 12.5%"), so users already know how to read it.
+The badge is one `role="img"` whose name is the whole sentence; the pill and
+caption are `aria-hidden`. The arrow and the sign carry the direction, so
+colour is never the only signal.
 
-- **Good at:** one glance reads both the figure and its trend; adds about 30px
-  of height and no new card; the donut and the rest of the screen stay as
-  they are. The pill shape and its soft tint match the money chips' tinted
-  circles.
-- **Costs:** the hero card is a link to Summary, so the badge sits inside a
-  tap target (fine, since the badge is display-only, but the spoken label must
-  read well within the link). It is the smallest of the three, so the trend
-  is less prominent than in B.
-- **Nothing to compare:** the pill is left out and only the caption is shown:
-  "Nothing to compare with September".
+### Strings (new i18n keys)
 
-### b-strip-above-chart: a strip between the savings card and the donut
+| Key | English | Spanish |
+|---|---|---|
+| `savingsChange.vs` | vs {{month}} | frente a {{month}} |
+| `savingsChange.label.up` | Savings up {{percent}} compared with {{month}} | El ahorro subió un {{percent}} respecto a {{month}} |
+| `savingsChange.label.down` | Savings down {{percent}} compared with {{month}} | El ahorro bajó un {{percent}} respecto a {{month}} |
+| `savingsChange.label.flat` | Savings unchanged compared with {{month}} | El ahorro no cambió respecto a {{month}} |
+| `savingsChange.nothingToCompare` | Nothing to compare with {{month}} | Nada que comparar con {{month}} |
 
-This is the placement the request suggested. A thin full-width card under the
-hero reads "Compared with September" on the left and `↑ +12.5%` on the right.
-The whole strip is tinted green or red, the same way the app already tints
-the Summary total tiles (`content-title-selection--total` with
-`tile-tone--income` / `--expense`).
+`{{month}}` is the previous month's name as it reads mid-sentence: capitalised
+in English ("September"), lowercase in Spanish ("septiembre"), unlike the month
+header's title case. Percentages use the same `en-US` number format as the
+app's money (`12.5%`).
 
-- **Good at:** the most prominent of the three, and it has room to grow: a
-  later "+$180.00" amount fits on the left without redesigning anything.
-  Reuses an existing tinted-tile pattern.
-- **Costs:** adds a card (about 65px), which pushes the Add buttons further
-  down toward the tab bar. When savings go up, two green blocks sit on top of
-  each other. The trend is separated from the figure it describes by a card
-  border.
-- **Nothing to compare:** the strip stays, untinted, and reads "Nothing to
-  compare with September". It could also be hidden, but then the screen would
-  jump when the user moves between months.
+### Review
 
-### c-inside-donut: inside the donut's hole
+`fixtures.json` pins the app's clock with `now` (the dashboard opens on the
+current month) and compares only the balance hero (`region`), since the hero is
+the only part of the screen this feature changes and the donut is a Chart.js
+canvas.
 
-The percentage (`↑ +12.5%`) and "vs September" fill the empty centre of the
-donut chart.
+## Approved screens
 
-- **Good at:** adds no height at all, and fills space that is empty today.
-- **Costs:** mixes two unrelated ideas: the ring shows how *this* month
-  splits, while the centre compares with *last* month. Users tend to read a
-  donut's centre as the ring's total. The donut is hidden when the month has
-  no incomes or expenses (`shouldShow` in `BalanceChart`), so the indicator
-  would disappear with it. That is exactly when a −100% drop matters. The
-  build is also the most involved: an overlay positioned over the ring only,
-  not the Chart.js legend, which shares the canvas.
-- **Nothing to compare:** the centre reads "No September data".
+| Screen | State | File |
+|---|---|---|
+| Dashboard | Savings went up (default) | `approved/dashboard.up.html` |
+| Dashboard | Savings went up, Spanish | `approved/dashboard.up-es.html` |
+| Dashboard | Savings went down | `approved/dashboard.down.html` |
+| Dashboard | No change | `approved/dashboard.no-change.html` |
+| Dashboard | Nothing to compare (first month with data) | `approved/dashboard.nothing-to-compare.html` |
+| Dashboard | Selected month has no entries | `approved/dashboard.empty-month.html` |
 
-## Recommendation
-
-**a-badge-in-hero.** It answers the question where the user is already
-looking (the savings figure), follows a convention people already know from
-banking apps, and costs the least screen space on a dashboard whose buttons
-already sit near the tab bar. Choose **b** if the trend should be the most
-prominent thing after the balance, or if the amount difference ($) is planned
-soon.
-
-## States every option must cover (for the approval step)
-
-- **Up / down:** as drawn. The percentage has one decimal place. From
-  1,000% upward, show `>999%` so the badge never grows wider.
-- **No change** (rounds to 0.0%): neutral `--text-secondary`, a flat dash
-  instead of an arrow, and no sign: "0.0% vs September".
-- **Nothing to compare** (the previous month has no entries, or its savings
-  are exactly $0.00): as drawn.
-- **Current month has no entries:** the savings are $0.00, so the change is
-  shown as normal (for example −100.0%). This is meaningful, not an error.
-- **Error:** none. The value is calculated from entries already in memory, and
-  nothing is loaded.
-- **Spanish:** the month name is lowercase inside the sentence ("frente a
-  septiembre"), unlike the month header ("Octubre 2026").
+There is no loading or error state: the value is computed from entries
+already in memory.

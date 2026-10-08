@@ -77,6 +77,13 @@ const es: Translations = {
   "dashboard.addIncome": "Añadir ingreso",
   "dashboard.addExpenses": "Añadir gasto",
 
+  // Savings change badge (dashboard balance hero)
+  "savingsChange.vs": "frente a {{month}}",
+  "savingsChange.label.up": "El ahorro subió un {{percent}} respecto a {{month}}",
+  "savingsChange.label.down": "El ahorro bajó un {{percent}} respecto a {{month}}",
+  "savingsChange.label.flat": "El ahorro no cambió respecto a {{month}}",
+  "savingsChange.nothingToCompare": "Nada que comparar con {{month}}",
+
   // Add / edit entry form
   "entryForm.pageTitle.income": "Movimiento de ingreso",
   "entryForm.pageTitle.expense": "Movimiento de gasto",

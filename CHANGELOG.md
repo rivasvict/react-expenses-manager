@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.26.0] - 2026-10-08
+
+### Added
+
+- The dashboard shows how the month's savings changed against the previous
+  month, right under the savings amount: a green pill with an up arrow when
+  they went up (`+12.5%`), a red one with a down arrow when they went down
+  (`−12.5%`), a neutral `0.0%` when nothing changed, and "Nothing to compare
+  with August" when the previous month has no entries or saved $0.00. It
+  follows the month picked in the month header and reads aloud as one
+  sentence ("Savings up 12.5% compared with September"), in English or Spanish.
+
+### Changed
+
+- Design review fixtures (`design/features/<feature>/ui/fixtures.json`) take
+  an optional `now` that pins the app's clock, for screens such as the
+  dashboard that open on the current month.
+
 ## [1.25.0] - 2026-10-08
 
 ### Added

@@ -173,6 +173,9 @@ built screen and the mockup show the same thing:
   a click leaves behind). Selectors are Playwright selectors.
 - Optional `region` (`{"app": selector, "mockup": selector}`) changes what is
   compared; the default is the work-area card on both sides.
+- Optional `now` (`"2026-10-15T12:00:00"`) pins the app's clock for screens
+  that depend on today's date, such as the dashboard, which opens on the
+  current month.
 
 ## Writing a mockup
 

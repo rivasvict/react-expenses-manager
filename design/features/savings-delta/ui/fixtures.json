@@ -1,0 +1,316 @@
+{
+  "screens": {
+    "dashboard.up": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.up-es": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.down": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2940",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.no-change": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2760",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.nothing-to-compare": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "click": "button[aria-label='Previous month']"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "dashboard.empty-month": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-11-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    }
+  }
+}

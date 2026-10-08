@@ -1,0 +1,49 @@
+@import '../../../variables.scss';
+
+.savings-change {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  margin-top: 0.35rem;
+
+  .savings-change__pill {
+    @include money-figures();
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: $radius-pill;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .savings-change__pill--up {
+    color: $income;
+    background-color: $income-soft;
+  }
+
+  .savings-change__pill--down {
+    color: $expense;
+    background-color: $expense-soft;
+  }
+
+  .savings-change__pill--flat {
+    color: $text-secondary;
+    background-color: $highlight;
+  }
+
+  .savings-change__icon {
+    width: 0.8em;
+    height: 0.8em;
+    flex: 0 0 auto;
+    fill: currentColor;
+  }
+
+  .savings-change__caption {
+    color: $text-secondary;
+    font-size: 0.82rem;
+    font-weight: 400;
+  }
+}

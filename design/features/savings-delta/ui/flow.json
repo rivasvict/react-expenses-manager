@@ -1,0 +1,88 @@
+{
+  "screens": [
+    {
+      "id": "dashboard.up",
+      "title": "Savings went up",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.up-es",
+      "title": "Savings went up (Spanish)",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.down",
+      "title": "Savings went down",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.no-change",
+      "title": "Savings unchanged",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.nothing-to-compare",
+      "title": "First month with data: nothing to compare",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.empty-month",
+      "title": "Month without entries",
+      "route": "/"
+    },
+    {
+      "id": "summary",
+      "title": "Summary",
+      "route": "/summary",
+      "external": true
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route": "/settings",
+      "external": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard.up",
+      "to": "dashboard.nothing-to-compare",
+      "label": "Tap Previous month (September is the first month with data)"
+    },
+    {
+      "from": "dashboard.nothing-to-compare",
+      "to": "dashboard.up",
+      "label": "Tap Next month"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "dashboard.empty-month",
+      "label": "A new month starts with no entries yet"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "dashboard.down",
+      "label": "October's expenses grow past $2,760.00"
+    },
+    {
+      "from": "dashboard.down",
+      "to": "dashboard.no-change",
+      "label": "October saves exactly September's $1,440.00"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "summary",
+      "label": "Tap the savings card (badge included)"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "settings",
+      "label": "Pick Spanish in Settings"
+    },
+    {
+      "from": "settings",
+      "to": "dashboard.up-es",
+      "label": "Back to the dashboard"
+    }
+  ]
+}

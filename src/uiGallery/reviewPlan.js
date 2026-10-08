@@ -64,6 +64,17 @@ const planScreen = (id, fixture, mockupPath, problems) => {
     checkAction(action, `${where} actions[${index}]`, problems)
   );
   if (validActions.includes(false)) return null;
+  // Screens that depend on today's date (the dashboard opens on the current
+  // month) pin the app's clock to this moment.
+  if (
+    fixture.now !== undefined &&
+    !(isNonEmptyString(fixture.now) && !Number.isNaN(Date.parse(fixture.now)))
+  ) {
+    problems.push(
+      `${where} "now" must be a date the browser can parse, like "2026-10-15T12:00:00".`
+    );
+    return null;
+  }
 
   return {
     id,
@@ -77,6 +88,7 @@ const planScreen = (id, fixture, mockupPath, problems) => {
     ),
     actions,
     region: { ...DEFAULT_REGION, ...(fixture.region || {}) },
+    ...(fixture.now !== undefined && { now: fixture.now }),
     mockupPath,
   };
 };
