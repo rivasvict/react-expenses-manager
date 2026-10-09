@@ -21,3 +21,4 @@ same PR that adds it.
 | Brand mark | Masthead | `src/components/common/BrandMark/` |
 | Dashboard composition | The dashboard, assembled | `src/components/Dashboard/components/DashboardContent/` |
 | Sync server status note (offline dot + label + explanation, in place of an action that needs the server) | Sync unavailable | `src/components/common/SyncOfflineNote/` |
+| Savings change badge (▲/▼ percentage pill + "vs <month>" caption under the savings amount) | The dashboard, assembled | `src/components/common/SavingsChangeBadge/`; computed by `src/helpers/savingsChange/` |

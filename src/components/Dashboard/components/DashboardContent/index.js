@@ -18,6 +18,7 @@ import BalanceChart from "./components/BalanceChart";
 import ChartContainerRowWrapper from "../../../common/ChartContainerRowWrapper";
 import { NavigableMonthHeader } from "../../../common/NavigableMonthHeader/index.ts";
 import { useTranslation } from "../../../../i18n";
+import SavingsChangeBadge from "../../../common/SavingsChangeBadge";
 
 const DashboardContent = ({ entries, match, selectedDate }) => {
   const { t } = useTranslation();
@@ -55,6 +56,7 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
         >
           {formatNumberForDisplay(totalSum)}
         </span>
+        <SavingsChangeBadge entries={entries} selectedDate={selectedDate} />
       </ContentTileSection>
       <ChartContainerRowWrapper>
         <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />

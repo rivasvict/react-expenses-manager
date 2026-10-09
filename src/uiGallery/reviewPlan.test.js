@@ -50,6 +50,21 @@ describe("planReview", () => {
     });
   });
 
+  it("keeps a pinned clock, and rejects one the browser cannot parse", () => {
+    const { screens, problems } = planReview(
+      approved,
+      fixtures({
+        "form.default": { route: "/", now: "2026-10-15T12:00:00" },
+        "form.error": { route: "/", now: "mid-October" },
+      })
+    );
+    expect(screens).toHaveLength(1);
+    expect(screens[0].now).toBe("2026-10-15T12:00:00");
+    expect(problems).toEqual([
+      'fixtures.json "form.error" "now" must be a date the browser can parse, like "2026-10-15T12:00:00".',
+    ]);
+  });
+
   it("requires a fixtures.json with a screens object", () => {
     expect(planReview(approved, {}).problems).toEqual([
       'fixtures.json needs a "screens" object keyed by <screen>.<state>.',
