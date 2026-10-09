@@ -59,7 +59,9 @@ line instead of flipping the verdict; zero extra dashboard height to speak of
 (~25px). **Costs:** the "compare with a month" wording of the request is
 answered by the period-vs-period pill, not by picking a single month; it
 changes the shipped hero (two links in one card). Down state drawn
-(`trend-down.html`).
+(`trend-down.html`). Custom range (`trend-custom.html`): the calendar segment
+opens the same from/to month-and-year sheet as A, with a live preview of what
+the range saved; the range ends at the month in the header.
 
 ### c-verdict-first
 
@@ -69,7 +71,10 @@ the presets as rows with the custom range behind a hairline at the bottom.
 The **reference month is picked by tapping a point on the chart** (default:
 the range's first month), so "compare with a previous month" is direct
 manipulation rather than another control. Spanish drawn (`trend-es.html`)
-to check the longer copy.
+to check the longer copy. Custom range (`trend-custom.html`, English only for
+now; the Spanish version is drawn on approval): "Custom range…" in the menu
+opens a sheet where the user taps the first and last month on a
+year grid (months between fill in), instead of four selects.
 **Good at:** the fewest visible buttons; reads as an answer before it reads
 as a chart. **Costs:** presets take two taps instead of one and are less
 discoverable; the verdict needs careful copy rules (up / down / mixed / not
