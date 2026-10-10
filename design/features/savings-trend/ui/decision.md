@@ -79,11 +79,32 @@ year grid (months between fill in), instead of four selects.
 as a chart. **Costs:** presets take two taps instead of one and are less
 discoverable; the verdict needs careful copy rules (up / down / mixed / not
 enough data) in both languages; tap-to-compare must have a keyboard
-equivalent. Same entry point as A.
+equivalent. Same row entry as A, drawn in `dashboard.html`, but its second line carries the
+verdict ("▲ You're saving more") instead of a mini chart; that keeps the row
+as short as A's and the dashboard about 60px taller.
+
+### d-trend-link-with-compare
+
+A hybrid requested after the first round: **B's dashboard entry** (the hero is
+split by a hairline; the badge row becomes its own link) with **everything
+else from A** (the "October vs April" headline, the chart against April's
+line, the 1M–YTD segmented control, the custom from/to sheet, the not-enough-
+history state; `trend.html`, `trend-custom.html` and `trend-empty.html` are
+A's screens). Two changes on the dashboard: the badge caption is shortened to
+**"vs Sep"** (the spoken label keeps the full month name), and the "Trend ›"
+link gets **A's trend icon** (the gold trending-up glyph in a small tinted
+circle) to its left.
+**Good at:** the least dashboard height of any option (about 25px), the
+literal "compare with a month" reading, and one-tap presets. **Costs:** the
+hero card now has two tap areas; "vs Sep" is shorter in English but Spanish
+needs its own abbreviation rules ("frente a sep") and the month name has to be
+abbreviated consistently, which the shipped badge ("vs September") does not
+do today, so the badge's caption would change for every month in both
+languages.
 
 ## Recommendation
 
-**B's metric and entry with A's range control.** Cumulative savings answers
+**Either B, or D if the "compare with a month" headline matters more than the running total:** B's metric and entry with A's range control. Cumulative savings answers
 the user's question ("am I progressing?") most honestly, and the badge-row
 link is the most discoverable place: users already look at the badge to see
 how they are doing, so "Trend ›" next to it is where they'll look for more,
