@@ -1,7 +1,8 @@
 import en from "./en";
 import es from "./es";
+import fr from "./fr";
 
-const DICTIONARIES = { es };
+const DICTIONARIES = { es, fr };
 const PLACEHOLDER = /\{\{\s*(\w+)\s*\}\}/g;
 const TAG = /<\/?(\w+)>/g;
 

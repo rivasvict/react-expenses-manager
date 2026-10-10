@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import "dayjs/locale/fr";
 import { upperFirst } from "lodash";
 import { DEFAULT_LANGUAGE, defaultTranslator } from "../i18n";
 const toMiliseconds = (seconds) => seconds * 1000;

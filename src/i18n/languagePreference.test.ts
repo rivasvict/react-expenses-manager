@@ -18,7 +18,7 @@ describe("languagePreference", () => {
   });
 
   it("falls back to English for an unsupported stored value", () => {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, "fr");
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, "de");
     expect(getStoredLanguage()).toBe("en");
   });
 

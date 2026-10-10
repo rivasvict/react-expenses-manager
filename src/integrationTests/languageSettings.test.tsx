@@ -61,6 +61,23 @@ describe("language settings", () => {
     expect(screen.getByTitle("Ingresos")).toHaveTextContent("$100.00");
   });
 
+  it("switches the app to French", async () => {
+    const { user } = await renderApp("/settings");
+    await pickLanguage(user, /Français/);
+
+    const nav = screen.getByRole("navigation", {
+      name: "Navigation principale",
+    });
+    expect(within(nav).getByText("Plafonds")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Réglages" })).toBeInTheDocument();
+
+    await user.click(within(nav).getByText("Accueil"));
+
+    expect(await screen.findByText("Mai 2026")).toBeInTheDocument();
+    expect(screen.getByText("Bilan mensuel")).toBeInTheDocument();
+    expect(screen.getByText("Ajouter un revenu")).toBeInTheDocument();
+  });
+
   it("remembers the language on this device across app loads", async () => {
     const { user, unmount } = await renderApp("/settings");
     await pickLanguage(user, /Español/);

@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.28.0] - 2026-10-10
+
+### Added
+
+- The app is now available in **French**. Pick *Français* on the Settings
+  screen; the choice is saved on this device like the other languages. Month
+  names and dates follow it too. As with Spanish, your own categories,
+  buckets, descriptions and amounts are shown exactly as you saved them.
+
 ## [1.27.0] - 2026-10-10
 
 ### Added

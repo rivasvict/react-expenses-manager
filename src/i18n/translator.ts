@@ -1,6 +1,7 @@
 import { DEFAULT_LANGUAGE, Language } from "./languages";
 import en, { TranslationKey } from "./translations/en";
 import es from "./translations/es";
+import fr from "./translations/fr";
 
 export type TranslationParams = Record<string, string | number>;
 
@@ -27,6 +28,7 @@ export type Translator = {
 const DICTIONARIES: Record<Language, Record<TranslationKey, string>> = {
   en,
   es,
+  fr,
 };
 
 const PLACEHOLDER = /\{\{\s*(\w+)\s*\}\}/g;

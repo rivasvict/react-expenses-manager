@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import "dayjs/locale/fr";
 import { upperFirst } from "lodash";
 
 export type MonthLabelStyle = "title" | "sentence" | "short";

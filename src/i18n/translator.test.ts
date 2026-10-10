@@ -3,10 +3,12 @@ import { createTranslator, defaultTranslator } from "./translator";
 describe("createTranslator", () => {
   const english = createTranslator("en");
   const spanish = createTranslator("es");
+  const french = createTranslator("fr");
 
   it("returns the text for the language", () => {
     expect(english.t("nav.home")).toBe("Home");
     expect(spanish.t("nav.home")).toBe("Inicio");
+    expect(french.t("nav.home")).toBe("Accueil");
   });
 
   it("fills in {{placeholders}}", () => {
@@ -28,6 +30,9 @@ describe("createTranslator", () => {
     expect(english.plural("entries.count", 3)).toBe("3 entries");
     expect(spanish.plural("entries.count", 1)).toBe("1 movimiento");
     expect(spanish.plural("entries.count", 3)).toBe("3 movimientos");
+    // French treats 0 as singular.
+    expect(french.plural("entries.count", 0)).toBe("0 opération");
+    expect(french.plural("entries.count", 3)).toBe("3 opérations");
   });
 
   it("exposes its language", () => {
