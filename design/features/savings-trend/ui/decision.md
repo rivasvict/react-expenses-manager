@@ -72,10 +72,10 @@ the tokens `$income`/`$income-soft`, `$expense`/`$expense-soft`, `$accent`/
 | Savings of a month | Incomes minus expenses (the hero's own figure). A month with no entries counts as $0.00 on the chart. |
 | End month | The Redux `selectedDate`. |
 | Reference month | `1M`/`2M`/`3M`/`6M`: that many months before the end month. `1Y`: 12 months before. `YTD`: January of the end month's year. Custom: the **From** month. |
-| Preset availability | A preset is enabled only if its reference month is a recorded month (the Redux entries tree starts at the first month with data). Disabled ones are dimmed and not focusable (`disabled`). `YTD` is also disabled when the end month is January. |
-| Default and fallback | `6M`, or the longest enabled preset when `6M` is not available. |
-| Not enough history | When no earlier recorded month exists (including no entries at all): the whole control is disabled with nothing selected and the message card replaces the headline and chart (`trend.empty`). |
-| Moving the end month | The chosen preset stays selected when still available, else falls back to the default above. A custom range keeps its length, clamped to the recorded history. |
+| Presets | **Always selectable.** A preset that reaches before the first recorded month compares with the first recorded month instead (the headline names the month actually used), and the picked preset stays picked while the month header moves. `YTD` in January (nothing earlier in the year) compares with December, like 1M. |
+| Default | `6M`. |
+| Not enough history | When no earlier recorded month exists (including no entries at all): the message card replaces the headline and chart (`trend.empty`). The presets stay selectable; only the calendar button is dimmed, since there is no earlier month to pick. |
+| Moving the end month | The picked preset or custom span stays picked; a custom span keeps its length, clamped to the recorded history. |
 | Headline | `{end} vs {reference}` (month names; **with the year on both** when the years differ, e.g. "October 2026 vs October 2025"). The amount is `end − reference` with a sign (`+`, `−` U+2212), green / red / neutral; the pill is the percentage, using the savings badge's rules (`(end − reference) / \|reference\| × 100`, one decimal, `>999%` from 1,000%). **No pill** when the reference month has no entries or saved exactly $0.00; the caption (`$end vs $reference`) stays. |
 | Colour is never the only signal | Sign and arrow on every figure; the area below the line is hatched; the end dot is outlined in the surface colour. |
 
@@ -107,7 +107,7 @@ card's width.
 | Area | Between the line and the baseline: `$income` at 0.2 opacity above, `$expense` at 0.16 below plus a 45° hatch (`$expense`, 1.5px strokes every 5 units, 0.55 opacity). Split with two clip rects at the baseline. |
 | Line | 2px, round joins and caps; `$income` above the baseline, `$expense` below (the same two clips). |
 | Dots | Reference: 4.5 radius, surface fill, `$text-secondary` 2px ring. End: 5 radius, `$income` or `$expense` by sign, 2px ring in the card colour. |
-| Labels | Reference label "April $1,280.00" (11px / 600, `$text-secondary`) above its dot (below it when the dot is within 14 units of the top). End value (11px / 700, `$text-primary`) above its dot, right-aligned. X ticks 10px, `$text-muted`: up to 7 labels, **5 when the labels carry a year**, evenly spread, first left-aligned, last right-aligned. A year ("Oct ’25") is added when the range crosses a year. |
+| Labels | Reference label "April $1,280.00" (11px / 700, `$text-primary`) above its dot (below it when the dot is within 14 units of the top). End value (11px / 700, `$text-primary`) above its dot, right-aligned. X ticks 11px, `$text-secondary`, except the first (the reference month) in `$text-primary` / 600: up to 7 labels, **5 when the labels carry a year**, evenly spread, first left-aligned, last right-aligned. A year ("Oct ’25") is added when the range crosses a year. |
 | Legend | Dashed line "Savings in April", then "Above" and "Below" swatches, 12px, `$text-secondary`. Wraps. |
 | Selecting a month | Tapping or clicking the plot selects the nearest month (tap it again to clear); hovering with a mouse previews one; with the plot focused, ← → move the selection and Esc clears it. The selection shows a vertical guide, a dot and a tooltip (month and year, savings, and the difference against the reference month: "+$110.00 vs Apr"). The end value label is hidden while the tooltip shows. The tooltip sits at the top of the plot, on the side away from the selected point. |
 
@@ -161,8 +161,11 @@ header are title case ("Octubre"). Cancel uses `common.cancel`.
   `dashboard.nothing-to-compare`); the link never shrinks.
 - **The in-progress month.** The end month is usually partial; this is the same
   caveat as the savings badge and is out of scope.
-- **January.** `YTD` is disabled when the end month is January (nothing earlier
-  in the year); it uses the same dimmed look as the empty state.
+- **January.** `YTD` compares January with December (nothing earlier in the
+  year), like 1M; it stays selectable.
+- **Fewer months than the preset asks for.** The comparison clamps to the first
+  recorded month and the headline says which month that is ("October vs July"
+  for a 6M preset with three earlier months).
 - **Many months.** The chart and tick rules above hold for any range; keep the
   data table in the DOM for all of them.
 - **Reference month with no entries.** The chart still draws (that month is
@@ -195,6 +198,5 @@ plot (clicked at its centre, which selects the middle month).
 
 States that reuse the same pattern and are **not** drawn: the dashboard with an
 unchanged (`0.0%`) badge and with a month that has no entries (both follow
-`dashboard.up` with the grey pill / the same footer), a disabled `YTD` in
-January, and the custom range applied (the calendar button selected, the
+`dashboard.up` with the grey pill / the same footer), and the custom range applied (the calendar button selected, the
 headline carrying both years like `trend.year`).

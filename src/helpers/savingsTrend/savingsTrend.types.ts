@@ -22,9 +22,3 @@ export interface SavingsTrend {
   /** Percentage change; `none` when the reference month cannot be compared. */
   change: SavingsChange;
 }
-
-/** A range that can be drawn, with how many months it reaches back. */
-export interface ResolvedRange {
-  range: TrendRange;
-  monthsBack: number;
-}

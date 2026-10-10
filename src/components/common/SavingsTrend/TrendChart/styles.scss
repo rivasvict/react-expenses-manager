@@ -61,8 +61,14 @@
   }
 
   &__tick {
-    fill: $text-muted;
-    font-size: 10px;
+    fill: $text-secondary;
+    font-size: 11px;
+  }
+
+  // The reference month is what every other month is compared with.
+  &__tick--reference {
+    fill: $text-primary;
+    font-weight: 600;
   }
 
   &__guide {
@@ -98,9 +104,9 @@
 
   &__reference-label {
     @include money-figures();
-    fill: $text-secondary;
+    fill: $text-primary;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   &__key {

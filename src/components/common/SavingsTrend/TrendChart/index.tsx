@@ -160,7 +160,7 @@ const TrendChart = ({ points }: TrendChartProps) => {
             {getTickIndexes(points.length, crossesYears ? MAX_TICKS_WITH_YEAR : MAX_TICKS).map((i) => (
               <text
                 key={i}
-                className="savings-trend-chart__tick"
+                className={`savings-trend-chart__tick${i === 0 ? " savings-trend-chart__tick--reference" : ""}`}
                 x={xs[i]}
                 y={CHART.height - 4}
                 textAnchor={i === 0 ? "start" : i === last ? "end" : "middle"}

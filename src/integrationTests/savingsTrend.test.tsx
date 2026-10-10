@@ -234,26 +234,58 @@ describe("custom range", () => {
 });
 
 describe("limited history", () => {
-  it("disables the presets that reach before the first recorded month", async () => {
+  const ALL_PRESETS = [
+    "Last month",
+    "Last 2 months",
+    "Last 3 months",
+    "Last 6 months",
+    "Last 12 months",
+    "This year so far",
+  ];
+  const expectPresetsEnabled = () =>
+    ALL_PRESETS.forEach((name) =>
+      expect(screen.getByRole("button", { name })).toBeEnabled()
+    );
+
+  it("compares with the first recorded month when a preset reaches further back, keeping every preset selectable", async () => {
     // Four months: July to October 2026.
     seedMonths([100, 200, 300, 400], 2026, 6);
     await renderApp("/savings-trend");
 
-    // 6M is out of reach, so the longest preset that fits (3M) is shown.
+    // 6M is picked but only three months are recorded before October.
     expect(await screen.findByRole("group", { name: "October vs July" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Last 3 months" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Last 6 months" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Last 12 months" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Last month" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Last 6 months" })).toHaveAttribute("aria-pressed", "true");
+    expectPresetsEnabled();
   });
 
-  it("disables YTD in January", async () => {
+  it("keeps every preset selectable, and the picked one picked, when the month header steps back", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+    await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
+    expect(headline("October 2026 vs October 2025")).toBeInTheDocument();
+
+    // Back to March 2026: only five earlier months are recorded.
+    for (const title of ["September 2026", "August 2026", "July 2026", "June 2026", "May 2026", "April 2026", "March 2026"]) {
+      await stepBack(user, title);
+    }
+
+    expect(headline("March 2026 vs October 2025")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Last 12 months" })).toHaveAttribute("aria-pressed", "true");
+    expectPresetsEnabled();
+    await user.click(screen.getByRole("button", { name: "Last 3 months" }));
+    expect(headline("March 2026 vs December 2025")).toBeInTheDocument();
+  });
+
+  it("compares January with December for YTD, like 1M", async () => {
     jest.setSystemTime(new Date("2026-01-15T12:00:00Z"));
     seedMonths(SAVINGS.slice(0, 4));
-    await renderApp("/savings-trend");
+    const { user } = await renderApp("/savings-trend");
 
-    expect(await screen.findByRole("button", { name: "Last month" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "This year so far" })).toBeDisabled();
+    await user.click(await screen.findByRole("button", { name: "This year so far" }));
+
+    // January saved -$180.00 against December's $210.00.
+    expect(headline("January 2026 vs December 2025")).toHaveTextContent("−$390.00");
+    expectPresetsEnabled();
   });
 
   it("says there is not enough history when only one month is recorded", async () => {
@@ -265,12 +297,12 @@ describe("limited history", () => {
       screen.getByText(/A trend needs at least two months/)
     ).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
-    ["Last month", "Last 6 months", "This year so far", "Custom range"].forEach((name) =>
-      expect(screen.getByRole("button", { name })).toBeDisabled()
-    );
+    expectPresetsEnabled();
+    // There are no earlier months to pick from.
+    expect(screen.getByRole("button", { name: "Custom range" })).toBeDisabled();
   });
 
-  it("says so too at the first recorded month, and recovers when stepping forward", async () => {
+  it("says there is not enough history at the first recorded month, and the comparison returns on the next month", async () => {
     seedMonths(SAVINGS.slice(-3), 2026, 7);
     const { user } = await renderApp("/savings-trend");
     await screen.findByRole("group", { name: "October vs August" });
@@ -278,6 +310,10 @@ describe("limited history", () => {
     await stepBack(user, "September 2026");
     await stepBack(user, "August 2026");
     expect(screen.getByText("Not enough history yet")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /next/i }));
+    await monthTitle("September 2026");
+    expect(headline("September vs August")).toBeInTheDocument();
   });
 
   it("keeps the amount but drops the percentage when the reference month has no entries", async () => {

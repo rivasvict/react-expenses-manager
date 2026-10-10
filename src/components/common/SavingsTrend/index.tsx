@@ -10,11 +10,10 @@ import type {
   MonthDate,
 } from "../../../helpers/savingsChange/savingsChange";
 import {
-  getAvailablePresets,
+  getMonthsBack,
   getRecordedMonths,
   getReferenceMonth,
   getSavingsTrend,
-  resolveRange,
   toMonthIndex,
 } from "../../../helpers/savingsTrend/savingsTrend";
 import type {
@@ -51,10 +50,11 @@ const SavingsTrend = ({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const customButtonRef = useRef<HTMLButtonElement>(null);
 
-  const resolved = resolveRange(entries, selectedDate, requested);
-  const trend = resolved
-    ? getSavingsTrend(entries, selectedDate, resolved.monthsBack)
-    : null;
+  const monthsBack = getMonthsBack(entries, selectedDate, requested);
+  const trend =
+    monthsBack === null
+      ? null
+      : getSavingsTrend(entries, selectedDate, monthsBack);
 
   const closeSheet = () => {
     setIsSheetOpen(false);
@@ -80,8 +80,8 @@ const SavingsTrend = ({
       <NavigableMonthHeader />
       <RangeSwitch
         end={selectedDate}
-        active={resolved ? resolved.range : null}
-        available={getAvailablePresets(entries, selectedDate)}
+        active={requested}
+        isCustomDisabled={!trend}
         onSelectPreset={selectPreset}
         onOpenCustom={() => setIsSheetOpen(true)}
         customButtonRef={customButtonRef}
@@ -104,10 +104,10 @@ const SavingsTrend = ({
           </span>
         </div>
       )}
-      {trend && resolved && isSheetOpen && (
+      {trend && monthsBack !== null && isSheetOpen && (
         <CustomRangeSheet
           months={getRecordedMonths(entries)}
-          initialFrom={getReferenceMonth(selectedDate, resolved.monthsBack)}
+          initialFrom={getReferenceMonth(selectedDate, monthsBack)}
           initialTo={selectedDate}
           onApply={applyCustomRange}
           onClose={closeSheet}

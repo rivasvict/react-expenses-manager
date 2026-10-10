@@ -1,10 +1,9 @@
 import {
-  getAvailablePresets,
+  getMonthsBack,
   getPresetMonthsBack,
   getRecordedMonths,
   getReferenceMonth,
   getSavingsTrend,
-  resolveRange,
 } from "./savingsTrend";
 import type { EntriesTree } from "../savingsChange/savingsChange";
 
@@ -59,88 +58,42 @@ describe("getRecordedMonths", () => {
   });
 });
 
-describe("getAvailablePresets", () => {
-  it("enables every preset whose reference month was recorded", () => {
-    expect(getAvailablePresets(thirteenMonths(), OCTOBER_2026)).toEqual({
-      "1M": true,
-      "2M": true,
-      "3M": true,
-      "6M": true,
-      "1Y": true,
-      YTD: true,
-    });
-  });
-
-  it("disables presets that reach before the first recorded month", () => {
-    const entries: EntriesTree = {
-      2026: { 6: empty, 7: empty, 8: empty, 9: empty },
-    };
-    expect(getAvailablePresets(entries, OCTOBER_2026)).toEqual({
-      "1M": true,
-      "2M": true,
-      "3M": true,
-      "6M": false,
-      "1Y": false,
-      YTD: false,
-    });
-  });
-
-  it("disables YTD in January, with nothing earlier in the year", () => {
-    const available = getAvailablePresets(thirteenMonths(), {
-      year: 2026,
-      month: 0,
-    });
-    expect(available.YTD).toBe(false);
-    expect(available["1M"]).toBe(true);
-  });
-
-  it("disables everything at the first recorded month", () => {
-    const available = getAvailablePresets(thirteenMonths(), {
-      year: 2025,
-      month: 9,
-    });
-    expect(Object.values(available).every((isOn) => !isOn)).toBe(true);
-  });
-});
-
-describe("resolveRange", () => {
+describe("getMonthsBack", () => {
   const entries = thirteenMonths();
+  const preset = (id: "1M" | "6M" | "1Y" | "YTD") => ({ kind: "preset" as const, id });
 
-  it("keeps an available preset", () => {
-    expect(
-      resolveRange(entries, OCTOBER_2026, { kind: "preset", id: "1Y" })
-    ).toEqual({ range: { kind: "preset", id: "1Y" }, monthsBack: 12 });
+  it("reaches back as far as the preset says when the history allows", () => {
+    expect(getMonthsBack(entries, OCTOBER_2026, preset("1M"))).toBe(1);
+    expect(getMonthsBack(entries, OCTOBER_2026, preset("6M"))).toBe(6);
+    expect(getMonthsBack(entries, OCTOBER_2026, preset("1Y"))).toBe(12);
+    expect(getMonthsBack(entries, OCTOBER_2026, preset("YTD"))).toBe(9);
   });
 
-  it("falls back to 6M when the asked preset is not available", () => {
-    expect(
-      resolveRange(entries, { year: 2026, month: 0 }, { kind: "preset", id: "YTD" })
-    ).toEqual({ range: { kind: "preset", id: "3M" }, monthsBack: 3 });
+  it("clamps a preset that reaches before the first recorded month", () => {
+    const fourMonths: EntriesTree = { 2026: { 6: empty, 7: empty, 8: empty, 9: empty } };
+    expect(getMonthsBack(fourMonths, OCTOBER_2026, preset("6M"))).toBe(3);
+    expect(getMonthsBack(fourMonths, OCTOBER_2026, preset("1Y"))).toBe(3);
+    expect(getMonthsBack(fourMonths, OCTOBER_2026, preset("1M"))).toBe(1);
   });
 
-  it("falls back to the longest available preset when 6M is not available", () => {
-    const shortHistory: EntriesTree = { 2026: { 7: empty, 8: empty, 9: empty } };
-    expect(
-      resolveRange(shortHistory, OCTOBER_2026, { kind: "preset", id: "1Y" })
-    ).toEqual({ range: { kind: "preset", id: "2M" }, monthsBack: 2 });
+  it("clamps as the end month moves back through the history", () => {
+    expect(getMonthsBack(entries, { year: 2026, month: 2 }, preset("1Y"))).toBe(5);
+    expect(getMonthsBack(entries, { year: 2025, month: 10 }, preset("6M"))).toBe(1);
+  });
+
+  it("compares January with the month before for YTD, like 1M", () => {
+    expect(getMonthsBack(entries, { year: 2026, month: 0 }, preset("YTD"))).toBe(1);
   });
 
   it("keeps a custom span but clamps it to the recorded history", () => {
-    expect(
-      resolveRange(entries, OCTOBER_2026, { kind: "custom", monthsBack: 7 })
-    ).toEqual({ range: { kind: "custom", monthsBack: 7 }, monthsBack: 7 });
-    expect(
-      resolveRange(entries, { year: 2026, month: 2 }, { kind: "custom", monthsBack: 20 })
-    ).toEqual({ range: { kind: "custom", monthsBack: 5 }, monthsBack: 5 });
+    expect(getMonthsBack(entries, OCTOBER_2026, { kind: "custom", monthsBack: 7 })).toBe(7);
+    expect(getMonthsBack(entries, { year: 2026, month: 2 }, { kind: "custom", monthsBack: 20 })).toBe(5);
   });
 
   it("is null when no earlier month is recorded", () => {
-    expect(
-      resolveRange({ 2026: { 9: empty } }, OCTOBER_2026, { kind: "preset", id: "6M" })
-    ).toBeNull();
-    expect(
-      resolveRange({}, OCTOBER_2026, { kind: "custom", monthsBack: 3 })
-    ).toBeNull();
+    expect(getMonthsBack({ 2026: { 9: empty } }, OCTOBER_2026, preset("6M"))).toBeNull();
+    expect(getMonthsBack(entries, { year: 2025, month: 9 }, preset("1M"))).toBeNull();
+    expect(getMonthsBack({}, OCTOBER_2026, { kind: "custom", monthsBack: 3 })).toBeNull();
   });
 });
 

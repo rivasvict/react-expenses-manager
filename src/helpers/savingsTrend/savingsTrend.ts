@@ -7,7 +7,6 @@ import {
 } from "../savingsChange/savingsChange";
 import type {
   PresetId,
-  ResolvedRange,
   SavingsTrend,
   TrendPoint,
   TrendRange,
@@ -19,8 +18,6 @@ import type {
 export const PRESET_IDS: PresetId[] = ["1M", "2M", "3M", "6M", "1Y", "YTD"];
 
 const FIXED_PRESET_MONTHS = { "1M": 1, "2M": 2, "3M": 3, "6M": 6, "1Y": 12 };
-
-const DEFAULT_PRESET: PresetId = "6M";
 
 const MONTHS_IN_YEAR = 12;
 
@@ -54,52 +51,25 @@ const getAvailableMonthsBack = (entries: EntriesTree, end: MonthDate) => {
   return first ? Math.max(0, toMonthIndex(end) - toMonthIndex(first)) : 0;
 };
 
-/** A preset is available when its reference month has been recorded. */
-export const getAvailablePresets = (
-  entries: EntriesTree,
-  end: MonthDate
-): Record<PresetId, boolean> => {
-  const available = getAvailableMonthsBack(entries, end);
-  const isAvailable = (id: PresetId) => {
-    const monthsBack = getPresetMonthsBack(id, end);
-    return monthsBack >= 1 && monthsBack <= available;
-  };
-  return Object.fromEntries(
-    PRESET_IDS.map((id) => [id, isAvailable(id)])
-  ) as Record<PresetId, boolean>;
-};
-
-/** 6M, or the longest preset that is available when 6M is not. */
-const getDefaultPreset = (entries: EntriesTree, end: MonthDate): PresetId => {
-  const available = getAvailablePresets(entries, end);
-  if (available[DEFAULT_PRESET]) return DEFAULT_PRESET;
-  return PRESET_IDS.filter((id) => available[id]).sort(
-    (a, b) => getPresetMonthsBack(b, end) - getPresetMonthsBack(a, end)
-  )[0];
-};
-
 /**
- * The range to draw for what the user asked for, at the given end month, or
- * null when there is no earlier month to compare with. A preset that is not
- * available falls back to the default; a custom span is clamped to the history.
+ * How many months back the range reaches at the given end month, or null when
+ * no earlier month has been recorded (nothing to compare with). Every preset
+ * is always selectable: one that reaches before the first recorded month is
+ * clamped to it, and `YTD` in January (nothing earlier in the year) compares
+ * with the month before, like 1M.
  */
-export const resolveRange = (
+export const getMonthsBack = (
   entries: EntriesTree,
   end: MonthDate,
   requested: TrendRange
-): ResolvedRange | null => {
+): number | null => {
   const available = getAvailableMonthsBack(entries, end);
   if (available < 1) return null;
-  if (requested.kind === "custom") {
-    const monthsBack = Math.min(requested.monthsBack, available);
-    return { range: { kind: "custom", monthsBack }, monthsBack };
-  }
-  const presets = getAvailablePresets(entries, end);
-  const id = presets[requested.id] ? requested.id : getDefaultPreset(entries, end);
-  return {
-    range: { kind: "preset", id },
-    monthsBack: getPresetMonthsBack(id, end),
-  };
+  const asked =
+    requested.kind === "custom"
+      ? requested.monthsBack
+      : getPresetMonthsBack(requested.id, end);
+  return Math.min(Math.max(asked, 1), available);
 };
 
 const toPoint = (entries: EntriesTree, date: MonthDate): TrendPoint => ({
