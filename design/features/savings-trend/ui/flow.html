@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow — Savings trend</title>
+  <!-- GENERATED from flow.json by `npm run gallery:build` — do not edit. -->
+  <link rel="stylesheet" href="../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../system/mockup.css">
+  <style>
+    .fl { max-width: 72rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .fl h1 { margin: 0 0 0.25rem; font-size: 1.5rem; letter-spacing: -0.01em; }
+    .fl h2 {
+      margin: 2rem 0 0.75rem; font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .fl-lead { margin: 0; color: var(--text-secondary); }
+    .fl-walk { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+    .fl-stage {
+      width: 375px; height: 720px; flex: 0 0 auto; overflow: hidden;
+      border: 1px solid var(--border-strong); border-radius: var(--radius-card);
+      background: var(--bg-page); position: relative;
+    }
+    .fl-stage iframe { width: 375px; height: 720px; border: 0; }
+    .fl-stage [hidden] { display: none; }
+    .fl-stage__external {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 2rem; text-align: center; color: var(--text-secondary);
+    }
+    .fl-panel { flex: 1 1 18rem; max-width: 26rem; }
+    .fl-panel h3 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+    .fl-eyebrow {
+      margin: 1.25rem 0 0.5rem; font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .fl-route { margin: 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+    .fl-next { display: flex; flex-direction: column; gap: 0.5rem; }
+    .fl-controls { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+    .fl-controls .mk-btn { width: auto; flex: 1; }
+    .fl-next .mk-btn { height: auto; min-height: 3.1em; padding: 0.5rem 0.75rem; text-align: center; }
+    .fl-strip { display: flex; flex-wrap: wrap; gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
+    .fl-step { width: 14rem; position: relative; }
+    .fl-step h3 { margin: 0.5rem 0 0.15rem; font-size: 0.95rem; }
+    .fl-step__index {
+      position: absolute; top: 0.4rem; left: 0.4rem; z-index: 1; min-width: 1.5rem; height: 1.5rem;
+      display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700;
+      color: var(--text-on-accent); background: var(--accent); border-radius: var(--radius-round);
+    }
+    .fl-thumb {
+      width: 14rem; height: 18rem; overflow: hidden; border: 1px solid var(--border-strong);
+      border-radius: var(--radius-card); background: var(--bg-page);
+    }
+    .fl-thumb iframe { width: 375px; height: 720px; border: 0; pointer-events: none; transform: scale(0.6); transform-origin: 0 0; }
+    .fl-thumb--external {
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      border-style: dashed; color: var(--text-muted); font-size: 0.85rem;
+    }
+    .fl-leads { margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.85rem; }
+    .fl-leads li { margin-bottom: 0.2rem; }
+  </style>
+</head>
+<body class="mk">
+  <div class="fl">
+    <h1>Flow — Savings trend</h1>
+    <p class="fl-lead">Click through the screens the way a user would, or scan them all below.</p>
+
+    <h2>Walkthrough</h2>
+    <section class="fl-walk" aria-label="Walkthrough">
+      <div class="fl-stage">
+        <iframe id="fl-frame" title="Current screen"></iframe>
+        <div id="fl-external" class="fl-stage__external" hidden>This screen already exists in the app and is not designed here.</div>
+      </div>
+      <div class="fl-panel">
+        <p class="fl-eyebrow" style="margin-top: 0">You are on</p>
+        <h3 id="fl-title"></h3>
+        <p id="fl-route" class="fl-route"></p>
+        <p class="fl-eyebrow">Next</p>
+        <div id="fl-next" class="fl-next"></div>
+        <div class="fl-controls">
+          <button id="fl-back" type="button" class="mk-btn mk-btn--secondary">Back</button>
+          <button id="fl-restart" type="button" class="mk-btn mk-btn--secondary">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <h2>All screens (13)</h2>
+    <ol class="fl-strip">
+        <li class="fl-step">
+          <span class="fl-step__index">1</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.up.html" title="Dashboard: savings went up" tabindex="-1"></iframe></div>
+          <h3>Dashboard: savings went up</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Trend under the savings badge</span> → Savings trend, 6 months, up</li><li><span class="mk-text-secondary">Tap the savings amount</span> → Summary</li><li><span class="mk-text-secondary">Tap Previous month (September is the first month with data)</span> → Dashboard: first month with data</li><li><span class="mk-text-secondary">October's expenses grow past $3,300.00</span> → Dashboard: savings went down</li><li><span class="mk-text-secondary">Pick Spanish in Settings</span> → Settings</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">2</span>
+          <div class="fl-thumb"><iframe src="approved/trend.up.html" title="Savings trend, 6 months, up" tabindex="-1"></iframe></div>
+          <h3>Savings trend, 6 months, up</h3>
+          <p class="fl-route">/savings-trend</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap 1Y</span> → Savings trend, 1 year</li><li><span class="mk-text-secondary">Tap a month on the chart</span> → A month selected on the chart</li><li><span class="mk-text-secondary">Tap the calendar button</span> → Custom range sheet</li><li><span class="mk-text-secondary">Tap Home</span> → Dashboard: savings went up</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">3</span>
+          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
+          <h3>Summary</h3>
+          <p class="fl-route">/summary</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">4</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.nothing-to-compare.html" title="Dashboard: first month with data" tabindex="-1"></iframe></div>
+          <h3>Dashboard: first month with data</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Trend (nothing earlier to compare with)</span> → Not enough history</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">5</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.down.html" title="Dashboard: savings went down" tabindex="-1"></iframe></div>
+          <h3>Dashboard: savings went down</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Trend</span> → Savings trend, down</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">6</span>
+          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
+          <h3>Settings</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Back to the dashboard</span> → Dashboard (Spanish)</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">7</span>
+          <div class="fl-thumb"><iframe src="approved/trend.year.html" title="Savings trend, 1 year" tabindex="-1"></iframe></div>
+          <h3>Savings trend, 1 year</h3>
+          <p class="fl-route">/savings-trend</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap 6M</span> → Savings trend, 6 months, up</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">8</span>
+          <div class="fl-thumb"><iframe src="approved/trend.tooltip.html" title="A month selected on the chart" tabindex="-1"></iframe></div>
+          <h3>A month selected on the chart</h3>
+          <p class="fl-route">/savings-trend</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap the same month again</span> → Savings trend, 6 months, up</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">9</span>
+          <div class="fl-thumb"><iframe src="approved/trend.custom.html" title="Custom range sheet" tabindex="-1"></iframe></div>
+          <h3>Custom range sheet</h3>
+          <p class="fl-route">/savings-trend</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Show trend or Cancel</span> → Savings trend, 6 months, up</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">10</span>
+          <div class="fl-thumb"><iframe src="approved/trend.empty.html" title="Not enough history" tabindex="-1"></iframe></div>
+          <h3>Not enough history</h3>
+          <p class="fl-route">/savings-trend</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">11</span>
+          <div class="fl-thumb"><iframe src="approved/trend.down.html" title="Savings trend, down" tabindex="-1"></iframe></div>
+          <h3>Savings trend, down</h3>
+          <p class="fl-route">/savings-trend</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">12</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.up-es.html" title="Dashboard (Spanish)" tabindex="-1"></iframe></div>
+          <h3>Dashboard (Spanish)</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Tendencia</span> → Savings trend (Spanish)</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">13</span>
+          <div class="fl-thumb"><iframe src="approved/trend.up-es.html" title="Savings trend (Spanish)" tabindex="-1"></iframe></div>
+          <h3>Savings trend (Spanish)</h3>
+          <p class="fl-route">/savings-trend</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+    </ol>
+  </div>
+  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard.up","title":"Dashboard: savings went up","route":"/","external":false,"src":"approved/dashboard.up.html"},{"id":"dashboard.up-es","title":"Dashboard (Spanish)","route":"/","external":false,"src":"approved/dashboard.up-es.html"},{"id":"dashboard.down","title":"Dashboard: savings went down","route":"/","external":false,"src":"approved/dashboard.down.html"},{"id":"dashboard.nothing-to-compare","title":"Dashboard: first month with data","route":"/","external":false,"src":"approved/dashboard.nothing-to-compare.html"},{"id":"trend.up","title":"Savings trend, 6 months, up","route":"/savings-trend","external":false,"src":"approved/trend.up.html"},{"id":"trend.up-es","title":"Savings trend (Spanish)","route":"/savings-trend","external":false,"src":"approved/trend.up-es.html"},{"id":"trend.down","title":"Savings trend, down","route":"/savings-trend","external":false,"src":"approved/trend.down.html"},{"id":"trend.year","title":"Savings trend, 1 year","route":"/savings-trend","external":false,"src":"approved/trend.year.html"},{"id":"trend.tooltip","title":"A month selected on the chart","route":"/savings-trend","external":false,"src":"approved/trend.tooltip.html"},{"id":"trend.custom","title":"Custom range sheet","route":"/savings-trend","external":false,"src":"approved/trend.custom.html"},{"id":"trend.empty","title":"Not enough history","route":"/savings-trend","external":false,"src":"approved/trend.empty.html"},{"id":"summary","title":"Summary","route":"/summary","external":true,"src":""},{"id":"settings","title":"Settings","route":"/settings","external":true,"src":""}],"transitions":[{"from":"dashboard.up","to":"trend.up","label":"Tap Trend under the savings badge"},{"from":"dashboard.up","to":"summary","label":"Tap the savings amount"},{"from":"dashboard.up","to":"dashboard.nothing-to-compare","label":"Tap Previous month (September is the first month with data)"},{"from":"dashboard.nothing-to-compare","to":"trend.empty","label":"Tap Trend (nothing earlier to compare with)"},{"from":"dashboard.up","to":"dashboard.down","label":"October's expenses grow past $3,300.00"},{"from":"dashboard.down","to":"trend.down","label":"Tap Trend"},{"from":"dashboard.up","to":"settings","label":"Pick Spanish in Settings"},{"from":"settings","to":"dashboard.up-es","label":"Back to the dashboard"},{"from":"dashboard.up-es","to":"trend.up-es","label":"Tap Tendencia"},{"from":"trend.up","to":"trend.year","label":"Tap 1Y"},{"from":"trend.year","to":"trend.up","label":"Tap 6M"},{"from":"trend.up","to":"trend.tooltip","label":"Tap a month on the chart"},{"from":"trend.tooltip","to":"trend.up","label":"Tap the same month again"},{"from":"trend.up","to":"trend.custom","label":"Tap the calendar button"},{"from":"trend.custom","to":"trend.up","label":"Tap Show trend or Cancel"},{"from":"trend.up","to":"dashboard.up","label":"Tap Home"}]}</script>
+  <script>
+    (() => {
+      const data = JSON.parse(document.getElementById("flow-data").textContent);
+      const byId = new Map(data.screens.map((screen) => [screen.id, screen]));
+      const frame = document.getElementById("fl-frame");
+      const external = document.getElementById("fl-external");
+      const title = document.getElementById("fl-title");
+      const route = document.getElementById("fl-route");
+      const next = document.getElementById("fl-next");
+      const back = document.getElementById("fl-back");
+      let history = [data.screens[0].id];
+
+      const show = () => {
+        const screen = byId.get(history[history.length - 1]);
+        title.textContent = screen.title;
+        route.textContent = screen.route;
+        external.hidden = !screen.external;
+        frame.hidden = screen.external;
+        if (!screen.external) frame.src = screen.src;
+        next.textContent = "";
+        const outgoing = data.transitions.filter((t) => t.from === screen.id);
+        if (outgoing.length === 0) {
+          const end = document.createElement("p");
+          end.className = "mk-text-muted";
+          end.textContent = "End of this flow.";
+          next.append(end);
+        }
+        outgoing.forEach((transition) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "mk-btn mk-btn--secondary";
+          button.textContent = transition.label + " \u2192 " + byId.get(transition.to).title;
+          button.addEventListener("click", () => {
+            history.push(transition.to);
+            show();
+          });
+          next.append(button);
+        });
+        back.disabled = history.length < 2;
+      };
+
+      back.addEventListener("click", () => {
+        if (history.length > 1) history.pop();
+        show();
+      });
+      document.getElementById("fl-restart").addEventListener("click", () => {
+        history = [data.screens[0].id];
+        show();
+      });
+      show();
+    })();
+  </script>
+</body>
+</html>

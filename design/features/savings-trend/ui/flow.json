@@ -1,0 +1,153 @@
+{
+  "screens": [
+    {
+      "id": "dashboard.up",
+      "title": "Dashboard: savings went up",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.up-es",
+      "title": "Dashboard (Spanish)",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.down",
+      "title": "Dashboard: savings went down",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.nothing-to-compare",
+      "title": "Dashboard: first month with data",
+      "route": "/"
+    },
+    {
+      "id": "trend.up",
+      "title": "Savings trend, 6 months, up",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.up-es",
+      "title": "Savings trend (Spanish)",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.down",
+      "title": "Savings trend, down",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.year",
+      "title": "Savings trend, 1 year",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.tooltip",
+      "title": "A month selected on the chart",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.custom",
+      "title": "Custom range sheet",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.empty",
+      "title": "Not enough history",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "summary",
+      "title": "Summary",
+      "route": "/summary",
+      "external": true
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route": "/settings",
+      "external": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard.up",
+      "to": "trend.up",
+      "label": "Tap Trend under the savings badge"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "summary",
+      "label": "Tap the savings amount"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "dashboard.nothing-to-compare",
+      "label": "Tap Previous month (September is the first month with data)"
+    },
+    {
+      "from": "dashboard.nothing-to-compare",
+      "to": "trend.empty",
+      "label": "Tap Trend (nothing earlier to compare with)"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "dashboard.down",
+      "label": "October's expenses grow past $3,300.00"
+    },
+    {
+      "from": "dashboard.down",
+      "to": "trend.down",
+      "label": "Tap Trend"
+    },
+    {
+      "from": "dashboard.up",
+      "to": "settings",
+      "label": "Pick Spanish in Settings"
+    },
+    {
+      "from": "settings",
+      "to": "dashboard.up-es",
+      "label": "Back to the dashboard"
+    },
+    {
+      "from": "dashboard.up-es",
+      "to": "trend.up-es",
+      "label": "Tap Tendencia"
+    },
+    {
+      "from": "trend.up",
+      "to": "trend.year",
+      "label": "Tap 1Y"
+    },
+    {
+      "from": "trend.year",
+      "to": "trend.up",
+      "label": "Tap 6M"
+    },
+    {
+      "from": "trend.up",
+      "to": "trend.tooltip",
+      "label": "Tap a month on the chart"
+    },
+    {
+      "from": "trend.tooltip",
+      "to": "trend.up",
+      "label": "Tap the same month again"
+    },
+    {
+      "from": "trend.up",
+      "to": "trend.custom",
+      "label": "Tap the calendar button"
+    },
+    {
+      "from": "trend.custom",
+      "to": "trend.up",
+      "label": "Tap Show trend or Cancel"
+    },
+    {
+      "from": "trend.up",
+      "to": "dashboard.up",
+      "label": "Tap Home"
+    }
+  ]
+}
