@@ -1,0 +1,92 @@
+@import '../../../../variables.scss';
+
+// A bottom sheet over a scrim, stacked above the fixed bottom nav (z-index 100
+// in Header.scss) like the entry list's Filters sheet.
+.custom-range-sheet {
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    background-color: $scrim;
+  }
+
+  &__panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 111;
+    max-width: $shell-max-width;
+    max-height: 85vh;
+    margin: 0 auto;
+    overflow-y: auto;
+    background-color: $bg-surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius-shell $radius-shell 0 0;
+    box-shadow: $shadow-pop;
+    // Interpolated so libsass passes the CSS env() through untouched.
+    padding: 0.5rem 1rem #{"calc(1.5rem + env(safe-area-inset-bottom, 0px))"};
+  }
+
+  &__grabber {
+    width: 2.6rem;
+    height: 0.28rem;
+    margin: 0.25rem auto 0.6rem;
+    border-radius: $radius-control;
+    background-color: $border-strong;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__heading {
+    margin: 0;
+    color: $text-primary;
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__close {
+    @include icon-chip(2.2rem);
+    color: $text-secondary;
+    background-color: $bg-raised;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      border-color $transition-quick;
+
+    &:hover {
+      background-color: $bg-raised-hover;
+      border-color: $border-strong;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.8125rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: 0.625rem;
+  }
+}

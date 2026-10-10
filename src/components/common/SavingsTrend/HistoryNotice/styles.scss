@@ -1,0 +1,25 @@
+@import '../../../../variables.scss';
+
+.history-notice {
+  @include card();
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0.75rem;
+  padding: 1rem 1.15rem;
+  text-align: center;
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  &__body {
+    margin-top: 0.3rem;
+    color: $text-secondary;
+    font-size: 0.85rem;
+  }
+
+  &__action {
+    margin-top: 0.9rem;
+  }
+}

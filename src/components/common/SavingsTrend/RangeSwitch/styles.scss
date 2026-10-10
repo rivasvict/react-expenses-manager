@@ -1,0 +1,59 @@
+@import '../../../../variables.scss';
+
+.range-switch {
+  display: flex;
+  gap: 0.2rem;
+  margin: 0 0 0.75rem;
+  padding: 0.2rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+
+  &__item {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: $text-secondary;
+    background-color: transparent;
+    border: 0;
+    border-radius: $radius-control;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color $transition-quick,
+      color $transition-quick;
+
+    // The calendar button's icon.
+    svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+    }
+
+    &:hover:not(:disabled):not(&--on) {
+      background-color: $highlight;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__item--on {
+    color: $text-on-accent;
+    background-color: $accent;
+  }
+}

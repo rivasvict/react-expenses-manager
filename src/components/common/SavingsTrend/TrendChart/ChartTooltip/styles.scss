@@ -1,0 +1,30 @@
+@import '../../../../../variables.scss';
+
+.chart-tooltip {
+  @include money-figures();
+  position: absolute;
+  top: -0.35rem;
+  z-index: 1;
+  padding: 0.35rem 0.6rem;
+  background-color: $bg-raised-hover;
+  border: 1px solid $border-strong;
+  border-radius: $radius-control;
+  box-shadow: $shadow-pop;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  pointer-events: none;
+
+  strong {
+    display: block;
+    font-size: 0.85rem;
+  }
+
+  &__comparison--up {
+    color: $income;
+  }
+
+  &__comparison--down {
+    color: $expense;
+  }
+}

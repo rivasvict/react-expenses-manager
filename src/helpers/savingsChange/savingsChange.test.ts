@@ -1,7 +1,10 @@
 import {
+  compareSavings,
   formatPercent,
   getPreviousMonth,
   getSavingsChange,
+  getSavingsOfMonth,
+  monthHasEntries,
 } from "./savingsChange";
 
 const income = (amount: string) => ({ amount, type: "income" });
@@ -115,6 +118,42 @@ describe("getSavingsChange", () => {
       },
     };
     expect(getSavingsChange(entries, OCTOBER)).toEqual({ kind: "none" });
+  });
+});
+
+describe("compareSavings", () => {
+  const entries = {
+    2026: {
+      3: month([income("1280")], []),
+      9: month([income("1620")], []),
+    },
+  };
+
+  it("compares any two months, not only neighbours", () => {
+    expect(
+      compareSavings(entries, { year: 2026, month: 3 }, OCTOBER)
+    ).toEqual({ kind: "up", percent: 26.6 });
+  });
+
+  it("has nothing to compare when the reference month is not recorded", () => {
+    expect(
+      compareSavings(entries, { year: 2026, month: 4 }, OCTOBER)
+    ).toEqual({ kind: "none" });
+  });
+});
+
+describe("getSavingsOfMonth and monthHasEntries", () => {
+  const entries = { 2026: { 9: month([income("100")], [expense("30")]) } };
+
+  it("returns incomes minus expenses", () => {
+    expect(getSavingsOfMonth(entries, OCTOBER)).toBe(70);
+  });
+
+  it("reads an unrecorded month as $0.00 without entries", () => {
+    const august = { year: 2026, month: 7 };
+    expect(getSavingsOfMonth(entries, august)).toBe(0);
+    expect(monthHasEntries(entries, august)).toBe(false);
+    expect(monthHasEntries(entries, OCTOBER)).toBe(true);
   });
 });
 

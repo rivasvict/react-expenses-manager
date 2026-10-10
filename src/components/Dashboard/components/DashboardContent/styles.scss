@@ -3,13 +3,32 @@
 .dashboard-content {
   height: 100%;
 
+  // One card: the summary link on top, the savings change and the link to the
+  // Savings trend screen in a footer (design/features/savings-trend/ui/approved/).
   .balance-hero {
-    padding: 1.1rem 1.15rem;
+    @include card();
+    margin: 0 0 $vertical-standard-margin;
+    padding: 0;
+    overflow: hidden;
 
-    .tile-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.1rem;
+    // The summary tile is the card's top half, not a card of its own.
+    .balance-hero__summary {
+      margin: 0;
+      padding: 1.1rem 1.15rem 0.7rem;
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+
+      &:hover {
+        background-color: $bg-raised-hover;
+      }
+
+      .tile-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1rem;
+      }
     }
 
     .balance-hero__label {
@@ -32,6 +51,21 @@
 
     .balance-hero__amount--negative {
       color: $expense;
+    }
+
+    .balance-hero__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.3rem 1.15rem;
+      border-top: 1px solid $border-subtle;
+
+      .savings-change {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-top: 0;
+      }
     }
   }
 

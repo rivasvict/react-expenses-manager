@@ -50,6 +50,7 @@ Node version is pinned in `.nvmrc`.
 - `/edit-income/:entryId`, `/edit-expense/:entryId` — EditEntry
 - `/incomes`, `/expenses` — EntriesSummaryWithFilter
 - `/summary` — Summary
+- `/savings-trend` — Savings trend (range picker, line chart; reached from the "Trend" link in the dashboard's savings card)
 - `/data-management` — CSV import/export
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket

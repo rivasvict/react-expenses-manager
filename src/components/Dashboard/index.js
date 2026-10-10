@@ -28,6 +28,7 @@ import InviteScreen from "../Party/InviteScreen";
 import JoinScreen from "../Party/JoinScreen";
 import SyncReview from "../SyncReview";
 import Settings from "../Settings";
+import SavingsTrend from "../common/SavingsTrend";
 import SyncGate from "../common/SyncGate";
 import { SyncAvailabilityProvider } from "../common/SyncAvailability";
 
@@ -76,6 +77,9 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}summary`}>
               {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
               <Summary entries={entries} selectedDate={selectedDate} />
+            </Route>
+            <Route path={`${match.url}savings-trend`}>
+              <SavingsTrend />
             </Route>
             <Route path={`${match.url}data-management`}>
               <DataManagement />

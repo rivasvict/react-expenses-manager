@@ -1,0 +1,54 @@
+@import '../../../variables.scss';
+
+.savings-trend-link {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  // The footer is short; the link keeps a comfortable touch target.
+  min-height: 2.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+    border-radius: $radius-control;
+  }
+
+  &__chip {
+    @include icon-chip(1.6rem);
+    color: $accent;
+    background-color: $accent-soft;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  &__chevron {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// `#root a` in global.scss gives every link the primary ink and out-specifies a
+// class; this link is gold, so its colour is set with the same weight.
+#root .savings-trend-link {
+  color: $accent;
+
+  &:hover {
+    color: $accent-hover;
+  }
+}
