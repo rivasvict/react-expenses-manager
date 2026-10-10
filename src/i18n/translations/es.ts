@@ -84,6 +84,44 @@ const es: Translations = {
   "savingsChange.label.flat": "El ahorro no cambió respecto a {{month}}",
   "savingsChange.nothingToCompare": "Nada que comparar con {{month}}",
 
+  // Pantalla de tendencia del ahorro (/savings-trend) y su enlace en el panel.
+  "savingsTrend.pageTitle": "Tendencia del ahorro",
+  "savingsTrend.link": "Tendencia",
+  "savingsTrend.linkLabel": "Tendencia del ahorro",
+  "savingsTrend.rangeGroup": "Rango",
+  "savingsTrend.range.1M": "1M",
+  "savingsTrend.range.2M": "2M",
+  "savingsTrend.range.3M": "3M",
+  "savingsTrend.range.6M": "6M",
+  "savingsTrend.range.1Y": "1A",
+  "savingsTrend.range.YTD": "YTD",
+  "savingsTrend.rangeLabel.months_one": "Último mes",
+  "savingsTrend.rangeLabel.months_other": "Últimos {{count}} meses",
+  "savingsTrend.rangeLabel.ytd": "Lo que va del año",
+  "savingsTrend.customRange": "Rango personalizado",
+  "savingsTrend.compare": "{{end}} frente a {{reference}}",
+  "savingsTrend.note":
+    "Cada punto es el ahorro de un mes. Verde donde superó a {{reference}}, rojo donde quedó por debajo.",
+  "savingsTrend.key.reference": "Ahorro de {{reference}}",
+  "savingsTrend.key.above": "Por encima",
+  "savingsTrend.key.below": "Por debajo",
+  "savingsTrend.chartLabel":
+    "Ahorro mensual de {{from}} a {{to}}, terminando en {{value}}",
+  "savingsTrend.table.caption": "Ahorro mensual",
+  "savingsTrend.table.month": "Mes",
+  "savingsTrend.table.savings": "Ahorro",
+  "savingsTrend.tooltipVs": "{{difference}} frente a {{month}}",
+  "savingsTrend.empty.title": "Aún no hay suficiente historial",
+  "savingsTrend.empty.body":
+    "Una tendencia necesita al menos dos meses. Sigue añadiendo tus ingresos y gastos, o elige un mes posterior.",
+  "savingsTrend.sheet.title": "Rango personalizado",
+  "savingsTrend.sheet.hint":
+    "Compara un mes con cualquier mes anterior. Solo meses completos.",
+  "savingsTrend.sheet.from": "Desde",
+  "savingsTrend.sheet.to": "Hasta",
+  "savingsTrend.sheet.show": "Ver tendencia",
+  "savingsTrend.sheet.close": "Cerrar",
+
   // Add / edit entry form
   "entryForm.pageTitle.income": "Movimiento de ingreso",
   "entryForm.pageTitle.expense": "Movimiento de gasto",

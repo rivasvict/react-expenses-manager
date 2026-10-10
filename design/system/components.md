@@ -21,4 +21,10 @@ same PR that adds it.
 | Brand mark | Masthead | `src/components/common/BrandMark/` |
 | Dashboard composition | The dashboard, assembled | `src/components/Dashboard/components/DashboardContent/` |
 | Sync server status note (offline dot + label + explanation, in place of an action that needs the server) | Sync unavailable | `src/components/common/SyncOfflineNote/` |
-| Savings change badge (▲/▼ percentage pill + "vs <month>" caption under the savings amount) | The dashboard, assembled | `src/components/common/SavingsChangeBadge/`; computed by `src/helpers/savingsChange/` |
+| Savings change badge (▲/▼ percentage pill + "vs <month>" caption, in the savings card's footer) | The dashboard, assembled | `src/components/common/SavingsChangeBadge/`; computed by `src/helpers/savingsChange/` |
+| Savings change pill (arrow + signed percentage on a green / red / grey tint) | The dashboard, assembled | `src/components/common/ChangePill/` |
+| Savings trend link (gold "Trend ›" with a trending-up chip, in the savings card's footer) | The dashboard, assembled | `src/components/common/SavingsTrendLink/` |
+| Range switch (segmented control of 1M … YTD plus a calendar button; dimmed when out of reach) | Savings trend | `src/components/common/SavingsTrend/RangeSwitch/` |
+| Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
+| Trend summary (the "October vs April" amount, percentage pill and caption) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
+| Custom range sheet (bottom sheet over a scrim with From / To month selects) | Savings trend | `src/components/common/SavingsTrend/CustomRangeSheet/` |

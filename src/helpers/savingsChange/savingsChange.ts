@@ -45,32 +45,47 @@ const getMonthSavings = ({ incomes = [], expenses = [] }: MonthEntries) =>
 const roundToTenth = (value: number) => Math.round(value * 10) / 10;
 
 /**
- * Compares the selected month's savings with the previous month's. The change
- * is relative to the size of the previous savings, so going from -$200 to
- * $100 is +150%. There is nothing to compare when the previous month has no
+ * Compares the savings of `end` with those of `reference`. The change is
+ * relative to the size of the reference savings, so going from -$200 to $100
+ * is +150%. There is nothing to compare when the reference month has no
  * entries or saved exactly $0.00 (a percentage of zero is undefined).
  */
-export const getSavingsChange = (
+export const compareSavings = (
   entries: EntriesTree,
-  selectedDate: MonthDate
+  reference: MonthDate,
+  end: MonthDate
 ): SavingsChange => {
-  const previousEntries = getMonthEntries(
-    entries,
-    getPreviousMonth(selectedDate)
-  );
-  const previousSavings = getMonthSavings(previousEntries);
-  if (!hasEntries(previousEntries) || previousSavings === 0) {
+  const referenceEntries = getMonthEntries(entries, reference);
+  const referenceSavings = getMonthSavings(referenceEntries);
+  if (!hasEntries(referenceEntries) || referenceSavings === 0) {
     return { kind: "none" };
   }
-  const currentSavings = getMonthSavings(
-    getMonthEntries(entries, selectedDate)
-  );
+  const endSavings = getMonthSavings(getMonthEntries(entries, end));
   const percent = roundToTenth(
-    ((currentSavings - previousSavings) / Math.abs(previousSavings)) * 100
+    ((endSavings - referenceSavings) / Math.abs(referenceSavings)) * 100
   );
   if (percent === 0) return { kind: "flat", percent: 0 };
   return { kind: percent > 0 ? "up" : "down", percent: Math.abs(percent) };
 };
+
+/** The selected month's savings against the month before it. */
+export const getSavingsChange = (
+  entries: EntriesTree,
+  selectedDate: MonthDate
+): SavingsChange =>
+  compareSavings(entries, getPreviousMonth(selectedDate), selectedDate);
+
+/** Savings (incomes minus expenses) of one month; $0.00 when it has no entries. */
+export const getSavingsOfMonth = (
+  entries: EntriesTree,
+  date: MonthDate
+): number => getMonthSavings(getMonthEntries(entries, date));
+
+/** Whether the month has at least one income or expense. */
+export const monthHasEntries = (
+  entries: EntriesTree,
+  date: MonthDate
+): boolean => hasEntries(getMonthEntries(entries, date));
 
 /** "12.5%", or ">999%" once the change reaches 1,000%. */
 export const formatPercent = (percent: number) =>

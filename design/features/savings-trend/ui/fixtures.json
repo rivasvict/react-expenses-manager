@@ -1682,7 +1682,7 @@
           "wait": 500
         },
         {
-          "click": ".savings-trend-chart__hit"
+          "click": ".savings-trend-chart__area"
         },
         {
           "wait": 500

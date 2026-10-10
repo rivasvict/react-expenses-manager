@@ -1,7 +1,7 @@
 ---
 title: Savings trend
 summary: A Savings trend screen, reached from a "Trend" link on the dashboard's savings card, answers "am I growing my savings?" with a green/red area chart and 1M–YTD or custom month ranges.
-status: approved
+status: implemented
 chosen: d-trend-link-with-compare
 ---
 
@@ -73,9 +73,9 @@ the tokens `$income`/`$income-soft`, `$expense`/`$expense-soft`, `$accent`/
 | End month | The Redux `selectedDate`. |
 | Reference month | `1M`/`2M`/`3M`/`6M`: that many months before the end month. `1Y`: 12 months before. `YTD`: January of the end month's year. Custom: the **From** month. |
 | Preset availability | A preset is enabled only if its reference month is a recorded month (the Redux entries tree starts at the first month with data). Disabled ones are dimmed and not focusable (`disabled`). `YTD` is also disabled when the end month is January. |
-| Default | `6M`, or the largest enabled preset when `6M` is not available. |
+| Default and fallback | `6M`, or the longest enabled preset when `6M` is not available. |
 | Not enough history | When no earlier recorded month exists (including no entries at all): the whole control is disabled with nothing selected and the message card replaces the headline and chart (`trend.empty`). |
-| Moving the end month | The chosen preset stays selected when still available, else falls back to the largest enabled one. A custom range keeps its length, clamped to the recorded history. |
+| Moving the end month | The chosen preset stays selected when still available, else falls back to the default above. A custom range keeps its length, clamped to the recorded history. |
 | Headline | `{end} vs {reference}` (month names; **with the year on both** when the years differ, e.g. "October 2026 vs October 2025"). The amount is `end − reference` with a sign (`+`, `−` U+2212), green / red / neutral; the pill is the percentage, using the savings badge's rules (`(end − reference) / \|reference\| × 100`, one decimal, `>999%` from 1,000%). **No pill** when the reference month has no entries or saved exactly $0.00; the caption (`$end vs $reference`) stays. |
 | Colour is never the only signal | Sign and arrow on every figure; the area below the line is hatched; the end dot is outlined in the surface colour. |
 
@@ -174,9 +174,8 @@ header are title case ("Octubre"). Cancel uses `common.cancel`.
 
 `fixtures.json` pins the app's clock with `now`. Dashboard screens compare only
 the balance hero (`region`), since the donut is a Chart.js canvas; trend screens
-compare the work-area card. The `.savings-trend-chart__hit` element is the
-plot's transparent hit area (clicked at its centre, which selects the middle
-month).
+compare the work-area card. The `.savings-trend-chart__area` element is the
+plot (clicked at its centre, which selects the middle month).
 
 ## Approved screens
 

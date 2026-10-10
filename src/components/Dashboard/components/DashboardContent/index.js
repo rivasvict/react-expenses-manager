@@ -19,6 +19,7 @@ import ChartContainerRowWrapper from "../../../common/ChartContainerRowWrapper";
 import { NavigableMonthHeader } from "../../../common/NavigableMonthHeader/index.ts";
 import { useTranslation } from "../../../../i18n";
 import SavingsChangeBadge from "../../../common/SavingsChangeBadge";
+import SavingsTrendLink from "../../../common/SavingsTrendLink";
 
 const DashboardContent = ({ entries, match, selectedDate }) => {
   const { t } = useTranslation();
@@ -45,19 +46,24 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
       pageTitle={t("dashboard.pageTitle")}
     >
       <NavigableMonthHeader />
-      <ContentTileSection
-        title={t("common.summary")}
-        to={summaryUrl}
-        className="balance-hero"
-      >
-        <span className="balance-hero__label">{t("common.savings")}</span>
-        <span
-          className={`balance-hero__amount balance-hero__amount--${balanceTone}`}
+      <div className="balance-hero">
+        <ContentTileSection
+          title={t("common.summary")}
+          to={summaryUrl}
+          className="balance-hero__summary"
         >
-          {formatNumberForDisplay(totalSum)}
-        </span>
-        <SavingsChangeBadge entries={entries} selectedDate={selectedDate} />
-      </ContentTileSection>
+          <span className="balance-hero__label">{t("common.savings")}</span>
+          <span
+            className={`balance-hero__amount balance-hero__amount--${balanceTone}`}
+          >
+            {formatNumberForDisplay(totalSum)}
+          </span>
+        </ContentTileSection>
+        <div className="balance-hero__footer">
+          <SavingsChangeBadge entries={entries} selectedDate={selectedDate} />
+          <SavingsTrendLink to={`${match.url}savings-trend`} />
+        </div>
+      </div>
       <ChartContainerRowWrapper>
         <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
       </ChartContainerRowWrapper>

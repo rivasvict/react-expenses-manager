@@ -1,0 +1,49 @@
+@import '../../../../variables.scss';
+
+.trend-summary {
+  @include card();
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0.75rem;
+  padding: 1rem 1.15rem;
+
+  &__label {
+    color: $text-secondary;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  &__amount {
+    @include money-figures();
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  &__amount--up {
+    color: $income;
+  }
+
+  &__amount--down {
+    color: $expense;
+  }
+
+  &__amount--flat {
+    color: $text-secondary;
+  }
+
+  &__delta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    margin-top: 0.35rem;
+  }
+
+  &__caption {
+    @include money-figures();
+    color: $text-secondary;
+    font-size: 0.82rem;
+  }
+}
