@@ -22,3 +22,9 @@ export interface SavingsTrend {
   /** Percentage change; `none` when the reference month cannot be compared. */
   change: SavingsChange;
 }
+
+/** What a requested range can show; see `resolveRange`. */
+export type ResolvedRange =
+  | { status: "ready"; monthsBack: number }
+  | { status: "short"; monthsBack: number; earliest: MonthDate }
+  | { status: "empty" };

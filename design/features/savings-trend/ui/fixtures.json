@@ -1931,6 +1931,90 @@
           "wait": 500
         }
       ]
+    },
+    "trend.short": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1784116800000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1786795200000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        },
+        {
+          "click": "role=button[name=\"Last 6 months\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
     }
   }
 }

@@ -56,6 +56,7 @@ unchanged.
 | Screen | `src/components/common/SavingsTrend/` (`index.tsx`, `styles.scss`) | Route `${match.url}savings-trend` in `src/components/Dashboard/index.js`. Page title (eyebrow) via `MainContentContainer`. Connects to Redux with `connect()`; end month is the Redux `selectedDate`, moved by the existing `NavigableMonthHeader`. |
 | `RangeSwitch` | `src/components/common/SavingsTrend/RangeSwitch/` | The segmented control (a group of buttons with `aria-pressed`). |
 | `TrendChart` | `src/components/common/SavingsTrend/TrendChart/` | Plain SVG, no chart library: it must be pixel-stable for the design review and testable in jsdom. |
+| `HistoryNotice` | `src/components/common/SavingsTrend/HistoryNotice/` | The card that stands in for the headline and chart (no earlier month, or a range that reaches before the first recorded month), with an optional gold action button. |
 | `CustomRangeSheet` | `src/components/common/SavingsTrend/CustomRangeSheet/` | Bottom sheet on a scrim; same stacking and look as `FilterSheet` (z-index 110/111, `$radius-shell` top corners, grabber, close button). |
 | Docs | `design/system/components.md` | A row for each new shared component. |
 
@@ -72,10 +73,11 @@ the tokens `$income`/`$income-soft`, `$expense`/`$expense-soft`, `$accent`/
 | Savings of a month | Incomes minus expenses (the hero's own figure). A month with no entries counts as $0.00 on the chart. |
 | End month | The Redux `selectedDate`. |
 | Reference month | `1M`/`2M`/`3M`/`6M`: that many months before the end month. `1Y`: 12 months before. `YTD`: January of the end month's year. Custom: the **From** month. |
-| Presets | **Always selectable.** A preset that reaches before the first recorded month compares with the first recorded month instead (the headline names the month actually used), and the picked preset stays picked while the month header moves. `YTD` in January (nothing earlier in the year) compares with December, like 1M. |
-| Default | `6M`. |
-| Not enough history | When no earlier recorded month exists (including no entries at all): the message card replaces the headline and chart (`trend.empty`). The presets stay selectable; only the calendar button is dimmed, since there is no earlier month to pick. |
-| Moving the end month | The picked preset or custom span stays picked; a custom span keeps its length, clamped to the recorded history. |
+| Presets | **Always selectable**, and the picked one stays picked while the month header moves. A preset is *ready* when its reference month was recorded. `YTD` in January (nothing earlier in the year) compares with December, like 1M. |
+| Default | Until the user picks a range: `6M`, or the longest preset the history reaches (so a new user with three earlier months opens on `3M`). It follows the month header until a range is picked. |
+| Range reaches before the first recorded month | The headline and chart are **not** drawn (a shorter range under a longer label would mislead). A notice card says "Not enough history for this range", names the first recorded month ("Your records start in July 2026. Compare with it instead, or pick a shorter range.") and offers one gold button, "Compare with July 2026", which selects a custom range from the first recorded month (`trend.short`). The picked preset stays highlighted. |
+| Not enough history | When no earlier recorded month exists (including no entries at all): the same notice card, without a button (`trend.empty`). The presets stay selectable; only the calendar button is dimmed, since there is no earlier month to pick. |
+| Moving the end month | The picked preset or custom span stays picked and is re-evaluated at each month: ready, "reaches before the first recorded month", or "not enough history". |
 | Headline | `{end} vs {reference}` (month names; **with the year on both** when the years differ, e.g. "October 2026 vs October 2025"). The amount is `end − reference` with a sign (`+`, `−` U+2212), green / red / neutral; the pill is the percentage, using the savings badge's rules (`(end − reference) / \|reference\| × 100`, one decimal, `>999%` from 1,000%). **No pill** when the reference month has no entries or saved exactly $0.00; the caption (`$end vs $reference`) stays. |
 | Colour is never the only signal | Sign and arrow on every figure; the area below the line is hatched; the end dot is outlined in the surface colour. |
 
@@ -142,6 +144,9 @@ card's width.
 | `savingsTrend.tooltipVs` | {{difference}} vs {{month}} | {{difference}} frente a {{month}} |
 | `savingsTrend.empty.title` | Not enough history yet | Aún no hay suficiente historial |
 | `savingsTrend.empty.body` | A trend needs at least two months. Keep adding your incomes and expenses, or pick a later month. | Una tendencia necesita al menos dos meses. Sigue añadiendo tus ingresos y gastos, o elige un mes posterior. |
+| `savingsTrend.short.title` | Not enough history for this range | Aún no hay historial para este rango |
+| `savingsTrend.short.body` | Your records start in {{month}}. Compare with it instead, or pick a shorter range. | Tus registros empiezan en {{month}}. Compara con ese mes o elige un rango más corto. |
+| `savingsTrend.short.action` | Compare with {{month}} | Comparar con {{month}} |
 | `savingsTrend.sheet.title` | Custom range | Rango personalizado |
 | `savingsTrend.sheet.hint` | Compare a month with any month before it. Whole months only. | Compara un mes con cualquier mes anterior. Solo meses completos. |
 | `savingsTrend.sheet.from` / `to` | From / To | Desde / Hasta |
@@ -163,9 +168,9 @@ header are title case ("Octubre"). Cancel uses `common.cancel`.
   caveat as the savings badge and is out of scope.
 - **January.** `YTD` compares January with December (nothing earlier in the
   year), like 1M; it stays selectable.
-- **Fewer months than the preset asks for.** The comparison clamps to the first
-  recorded month and the headline says which month that is ("October vs July"
-  for a 6M preset with three earlier months).
+- **Fewer months than the preset asks for.** Nothing is drawn under the longer
+  label: the notice card (`trend.short`) explains and offers the comparison
+  that does exist.
 - **Many months.** The chart and tick rules above hold for any range; keep the
   data table in the DOM for all of them.
 - **Reference month with no entries.** The chart still draws (that month is
@@ -195,6 +200,7 @@ plot (clicked at its centre, which selects the middle month).
 | Savings trend | A month selected (tooltip) | `approved/trend.tooltip.html` |
 | Savings trend | Custom range sheet | `approved/trend.custom.html` |
 | Savings trend | Not enough history | `approved/trend.empty.html` |
+| Savings trend | Range reaches before the first recorded month | `approved/trend.short.html` |
 
 States that reuse the same pattern and are **not** drawn: the dashboard with an
 unchanged (`0.0%`) badge and with a month that has no entries (both follow

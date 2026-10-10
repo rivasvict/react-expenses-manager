@@ -117,6 +117,10 @@ const en = {
   "savingsTrend.empty.title": "Not enough history yet",
   "savingsTrend.empty.body":
     "A trend needs at least two months. Keep adding your incomes and expenses, or pick a later month.",
+  "savingsTrend.short.title": "Not enough history for this range",
+  "savingsTrend.short.body":
+    "Your records start in {{month}}. Compare with it instead, or pick a shorter range.",
+  "savingsTrend.short.action": "Compare with {{month}}",
   "savingsTrend.sheet.title": "Custom range",
   "savingsTrend.sheet.hint":
     "Compare a month with any month before it. Whole months only.",

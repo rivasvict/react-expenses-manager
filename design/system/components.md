@@ -28,3 +28,4 @@ same PR that adds it.
 | Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
 | Trend summary (the "October vs April" amount, percentage pill and caption) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
 | Custom range sheet (bottom sheet over a scrim with From / To month selects) | Savings trend | `src/components/common/SavingsTrend/CustomRangeSheet/` |
+| History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold action) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |

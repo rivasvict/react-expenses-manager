@@ -247,15 +247,43 @@ describe("limited history", () => {
       expect(screen.getByRole("button", { name })).toBeEnabled()
     );
 
-  it("compares with the first recorded month when a preset reaches further back, keeping every preset selectable", async () => {
+  it("opens on the longest range the history reaches, with every preset selectable", async () => {
     // Four months: July to October 2026.
     seedMonths([100, 200, 300, 400], 2026, 6);
     await renderApp("/savings-trend");
 
-    // 6M is picked but only three months are recorded before October.
     expect(await screen.findByRole("group", { name: "October vs July" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Last 3 months" })).toHaveAttribute("aria-pressed", "true");
+    expectPresetsEnabled();
+  });
+
+  it("explains a range that reaches before the first recorded month, instead of showing a shorter one", async () => {
+    seedMonths([100, 200, 300, 400], 2026, 6);
+    const { user } = await renderApp("/savings-trend");
+    await screen.findByRole("group", { name: "October vs July" });
+
+    await user.click(screen.getByRole("button", { name: "Last 6 months" }));
+
+    expect(screen.getByText("Not enough history for this range")).toBeInTheDocument();
+    expect(
+      screen.getByText("Your records start in July 2026. Compare with it instead, or pick a shorter range.")
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: /^October/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Last 6 months" })).toHaveAttribute("aria-pressed", "true");
     expectPresetsEnabled();
+  });
+
+  it("compares with the first recorded month from the explanation", async () => {
+    seedMonths([100, 200, 300, 400], 2026, 6);
+    const { user } = await renderApp("/savings-trend");
+    await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
+
+    await user.click(screen.getByRole("button", { name: "Compare with July 2026" }));
+
+    expect(headline("October vs July")).toHaveTextContent("+$300.00");
+    expect(screen.getByRole("button", { name: "Custom range" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByText("Not enough history for this range")).not.toBeInTheDocument();
   });
 
   it("keeps every preset selectable, and the picked one picked, when the month header steps back", async () => {
@@ -269,7 +297,8 @@ describe("limited history", () => {
       await stepBack(user, title);
     }
 
-    expect(headline("March 2026 vs October 2025")).toBeInTheDocument();
+    expect(screen.getByText("Not enough history for this range")).toBeInTheDocument();
+    expect(screen.getByText(/Your records start in October 2025/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Last 12 months" })).toHaveAttribute("aria-pressed", "true");
     expectPresetsEnabled();
     await user.click(screen.getByRole("button", { name: "Last 3 months" }));

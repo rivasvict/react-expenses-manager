@@ -114,6 +114,10 @@ const es: Translations = {
   "savingsTrend.empty.title": "Aún no hay suficiente historial",
   "savingsTrend.empty.body":
     "Una tendencia necesita al menos dos meses. Sigue añadiendo tus ingresos y gastos, o elige un mes posterior.",
+  "savingsTrend.short.title": "Aún no hay historial para este rango",
+  "savingsTrend.short.body":
+    "Tus registros empiezan en {{month}}. Compara con ese mes o elige un rango más corto.",
+  "savingsTrend.short.action": "Comparar con {{month}}",
   "savingsTrend.sheet.title": "Rango personalizado",
   "savingsTrend.sheet.hint":
     "Compara un mes con cualquier mes anterior. Solo meses completos.",

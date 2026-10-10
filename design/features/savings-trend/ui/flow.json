@@ -56,6 +56,11 @@
       "route": "/savings-trend"
     },
     {
+      "id": "trend.short",
+      "title": "Range reaches before the first month",
+      "route": "/savings-trend"
+    },
+    {
       "id": "summary",
       "title": "Summary",
       "route": "/summary",
@@ -143,6 +148,16 @@
       "from": "trend.custom",
       "to": "trend.up",
       "label": "Tap Show trend or Cancel"
+    },
+    {
+      "from": "trend.up",
+      "to": "trend.short",
+      "label": "Tap a range that reaches before the first recorded month (only four months recorded)"
+    },
+    {
+      "from": "trend.short",
+      "to": "trend.up",
+      "label": "Tap Compare with July 2026"
     },
     {
       "from": "trend.up",

@@ -83,7 +83,7 @@
       </div>
     </section>
 
-    <h2>All screens (13)</h2>
+    <h2>All screens (14)</h2>
     <ol class="fl-strip">
         <li class="fl-step">
           <span class="fl-step__index">1</span>
@@ -97,7 +97,7 @@
           <div class="fl-thumb"><iframe src="approved/trend.up.html" title="Savings trend, 6 months, up" tabindex="-1"></iframe></div>
           <h3>Savings trend, 6 months, up</h3>
           <p class="fl-route">/savings-trend</p>
-          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap 1Y</span> → Savings trend, 1 year</li><li><span class="mk-text-secondary">Tap a month on the chart</span> → A month selected on the chart</li><li><span class="mk-text-secondary">Tap the calendar button</span> → Custom range sheet</li><li><span class="mk-text-secondary">Tap Home</span> → Dashboard: savings went up</li></ul>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap 1Y</span> → Savings trend, 1 year</li><li><span class="mk-text-secondary">Tap a month on the chart</span> → A month selected on the chart</li><li><span class="mk-text-secondary">Tap the calendar button</span> → Custom range sheet</li><li><span class="mk-text-secondary">Tap a range that reaches before the first recorded month (only four months recorded)</span> → Range reaches before the first month</li><li><span class="mk-text-secondary">Tap Home</span> → Dashboard: savings went up</li></ul>
         </li>
         <li class="fl-step">
           <span class="fl-step__index">3</span>
@@ -150,27 +150,34 @@
         </li>
         <li class="fl-step">
           <span class="fl-step__index">10</span>
+          <div class="fl-thumb"><iframe src="approved/trend.short.html" title="Range reaches before the first month" tabindex="-1"></iframe></div>
+          <h3>Range reaches before the first month</h3>
+          <p class="fl-route">/savings-trend</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Compare with July 2026</span> → Savings trend, 6 months, up</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">11</span>
           <div class="fl-thumb"><iframe src="approved/trend.empty.html" title="Not enough history" tabindex="-1"></iframe></div>
           <h3>Not enough history</h3>
           <p class="fl-route">/savings-trend</p>
           <p class="mk-text-muted">End of this flow</p>
         </li>
         <li class="fl-step">
-          <span class="fl-step__index">11</span>
+          <span class="fl-step__index">12</span>
           <div class="fl-thumb"><iframe src="approved/trend.down.html" title="Savings trend, down" tabindex="-1"></iframe></div>
           <h3>Savings trend, down</h3>
           <p class="fl-route">/savings-trend</p>
           <p class="mk-text-muted">End of this flow</p>
         </li>
         <li class="fl-step">
-          <span class="fl-step__index">12</span>
+          <span class="fl-step__index">13</span>
           <div class="fl-thumb"><iframe src="approved/dashboard.up-es.html" title="Dashboard (Spanish)" tabindex="-1"></iframe></div>
           <h3>Dashboard (Spanish)</h3>
           <p class="fl-route">/</p>
           <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Tendencia</span> → Savings trend (Spanish)</li></ul>
         </li>
         <li class="fl-step">
-          <span class="fl-step__index">13</span>
+          <span class="fl-step__index">14</span>
           <div class="fl-thumb"><iframe src="approved/trend.up-es.html" title="Savings trend (Spanish)" tabindex="-1"></iframe></div>
           <h3>Savings trend (Spanish)</h3>
           <p class="fl-route">/savings-trend</p>
@@ -178,7 +185,7 @@
         </li>
     </ol>
   </div>
-  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard.up","title":"Dashboard: savings went up","route":"/","external":false,"src":"approved/dashboard.up.html"},{"id":"dashboard.up-es","title":"Dashboard (Spanish)","route":"/","external":false,"src":"approved/dashboard.up-es.html"},{"id":"dashboard.down","title":"Dashboard: savings went down","route":"/","external":false,"src":"approved/dashboard.down.html"},{"id":"dashboard.nothing-to-compare","title":"Dashboard: first month with data","route":"/","external":false,"src":"approved/dashboard.nothing-to-compare.html"},{"id":"trend.up","title":"Savings trend, 6 months, up","route":"/savings-trend","external":false,"src":"approved/trend.up.html"},{"id":"trend.up-es","title":"Savings trend (Spanish)","route":"/savings-trend","external":false,"src":"approved/trend.up-es.html"},{"id":"trend.down","title":"Savings trend, down","route":"/savings-trend","external":false,"src":"approved/trend.down.html"},{"id":"trend.year","title":"Savings trend, 1 year","route":"/savings-trend","external":false,"src":"approved/trend.year.html"},{"id":"trend.tooltip","title":"A month selected on the chart","route":"/savings-trend","external":false,"src":"approved/trend.tooltip.html"},{"id":"trend.custom","title":"Custom range sheet","route":"/savings-trend","external":false,"src":"approved/trend.custom.html"},{"id":"trend.empty","title":"Not enough history","route":"/savings-trend","external":false,"src":"approved/trend.empty.html"},{"id":"summary","title":"Summary","route":"/summary","external":true,"src":""},{"id":"settings","title":"Settings","route":"/settings","external":true,"src":""}],"transitions":[{"from":"dashboard.up","to":"trend.up","label":"Tap Trend under the savings badge"},{"from":"dashboard.up","to":"summary","label":"Tap the savings amount"},{"from":"dashboard.up","to":"dashboard.nothing-to-compare","label":"Tap Previous month (September is the first month with data)"},{"from":"dashboard.nothing-to-compare","to":"trend.empty","label":"Tap Trend (nothing earlier to compare with)"},{"from":"dashboard.up","to":"dashboard.down","label":"October's expenses grow past $3,300.00"},{"from":"dashboard.down","to":"trend.down","label":"Tap Trend"},{"from":"dashboard.up","to":"settings","label":"Pick Spanish in Settings"},{"from":"settings","to":"dashboard.up-es","label":"Back to the dashboard"},{"from":"dashboard.up-es","to":"trend.up-es","label":"Tap Tendencia"},{"from":"trend.up","to":"trend.year","label":"Tap 1Y"},{"from":"trend.year","to":"trend.up","label":"Tap 6M"},{"from":"trend.up","to":"trend.tooltip","label":"Tap a month on the chart"},{"from":"trend.tooltip","to":"trend.up","label":"Tap the same month again"},{"from":"trend.up","to":"trend.custom","label":"Tap the calendar button"},{"from":"trend.custom","to":"trend.up","label":"Tap Show trend or Cancel"},{"from":"trend.up","to":"dashboard.up","label":"Tap Home"}]}</script>
+  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard.up","title":"Dashboard: savings went up","route":"/","external":false,"src":"approved/dashboard.up.html"},{"id":"dashboard.up-es","title":"Dashboard (Spanish)","route":"/","external":false,"src":"approved/dashboard.up-es.html"},{"id":"dashboard.down","title":"Dashboard: savings went down","route":"/","external":false,"src":"approved/dashboard.down.html"},{"id":"dashboard.nothing-to-compare","title":"Dashboard: first month with data","route":"/","external":false,"src":"approved/dashboard.nothing-to-compare.html"},{"id":"trend.up","title":"Savings trend, 6 months, up","route":"/savings-trend","external":false,"src":"approved/trend.up.html"},{"id":"trend.up-es","title":"Savings trend (Spanish)","route":"/savings-trend","external":false,"src":"approved/trend.up-es.html"},{"id":"trend.down","title":"Savings trend, down","route":"/savings-trend","external":false,"src":"approved/trend.down.html"},{"id":"trend.year","title":"Savings trend, 1 year","route":"/savings-trend","external":false,"src":"approved/trend.year.html"},{"id":"trend.tooltip","title":"A month selected on the chart","route":"/savings-trend","external":false,"src":"approved/trend.tooltip.html"},{"id":"trend.custom","title":"Custom range sheet","route":"/savings-trend","external":false,"src":"approved/trend.custom.html"},{"id":"trend.empty","title":"Not enough history","route":"/savings-trend","external":false,"src":"approved/trend.empty.html"},{"id":"trend.short","title":"Range reaches before the first month","route":"/savings-trend","external":false,"src":"approved/trend.short.html"},{"id":"summary","title":"Summary","route":"/summary","external":true,"src":""},{"id":"settings","title":"Settings","route":"/settings","external":true,"src":""}],"transitions":[{"from":"dashboard.up","to":"trend.up","label":"Tap Trend under the savings badge"},{"from":"dashboard.up","to":"summary","label":"Tap the savings amount"},{"from":"dashboard.up","to":"dashboard.nothing-to-compare","label":"Tap Previous month (September is the first month with data)"},{"from":"dashboard.nothing-to-compare","to":"trend.empty","label":"Tap Trend (nothing earlier to compare with)"},{"from":"dashboard.up","to":"dashboard.down","label":"October's expenses grow past $3,300.00"},{"from":"dashboard.down","to":"trend.down","label":"Tap Trend"},{"from":"dashboard.up","to":"settings","label":"Pick Spanish in Settings"},{"from":"settings","to":"dashboard.up-es","label":"Back to the dashboard"},{"from":"dashboard.up-es","to":"trend.up-es","label":"Tap Tendencia"},{"from":"trend.up","to":"trend.year","label":"Tap 1Y"},{"from":"trend.year","to":"trend.up","label":"Tap 6M"},{"from":"trend.up","to":"trend.tooltip","label":"Tap a month on the chart"},{"from":"trend.tooltip","to":"trend.up","label":"Tap the same month again"},{"from":"trend.up","to":"trend.custom","label":"Tap the calendar button"},{"from":"trend.custom","to":"trend.up","label":"Tap Show trend or Cancel"},{"from":"trend.up","to":"trend.short","label":"Tap a range that reaches before the first recorded month (only four months recorded)"},{"from":"trend.short","to":"trend.up","label":"Tap Compare with July 2026"},{"from":"trend.up","to":"dashboard.up","label":"Tap Home"}]}</script>
   <script>
     (() => {
       const data = JSON.parse(document.getElementById("flow-data").textContent);

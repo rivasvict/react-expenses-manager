@@ -10,10 +10,11 @@ import type {
   MonthDate,
 } from "../../../helpers/savingsChange/savingsChange";
 import {
-  getMonthsBack,
+  getDefaultRange,
   getRecordedMonths,
   getReferenceMonth,
   getSavingsTrend,
+  resolveRange,
   toMonthIndex,
 } from "../../../helpers/savingsTrend/savingsTrend";
 import type {
@@ -24,15 +25,14 @@ import RangeSwitch from "./RangeSwitch";
 import TrendSummary from "./TrendSummary";
 import TrendChart from "./TrendChart";
 import CustomRangeSheet from "./CustomRangeSheet";
-import "./styles.scss";
+import HistoryNotice from "./HistoryNotice";
+import { getMonthLabel } from "../../../helpers/savingsTrend/monthLabels";
 
 interface SavingsTrendProps {
   entries: EntriesTree;
   selectedDate: MonthDate;
   onSelectedDateChange: (date: MonthDate) => void;
 }
-
-const DEFAULT_RANGE: TrendRange = { kind: "preset", id: "6M" };
 
 /**
  * The Savings trend screen: is the selected month's savings growing against an
@@ -45,23 +45,25 @@ const SavingsTrend = ({
   selectedDate,
   onSelectedDateChange,
 }: SavingsTrendProps) => {
-  const { t } = useTranslation();
-  const [requested, setRequested] = useState<TrendRange>(DEFAULT_RANGE);
+  const { t, language } = useTranslation();
+  // Until the user picks a range it is 6M, or the longest the history reaches.
+  const [picked, setPicked] = useState<TrendRange | null>(null);
+  const requested = picked ?? getDefaultRange(entries, selectedDate);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const customButtonRef = useRef<HTMLButtonElement>(null);
 
-  const monthsBack = getMonthsBack(entries, selectedDate, requested);
+  const resolved = resolveRange(entries, selectedDate, requested);
   const trend =
-    monthsBack === null
-      ? null
-      : getSavingsTrend(entries, selectedDate, monthsBack);
+    resolved.status === "ready"
+      ? getSavingsTrend(entries, selectedDate, resolved.monthsBack)
+      : null;
 
   const closeSheet = () => {
     setIsSheetOpen(false);
     customButtonRef.current?.focus();
   };
   const applyCustomRange = ({ from, to }: { from: MonthDate; to: MonthDate }) => {
-    setRequested({
+    setPicked({
       kind: "custom",
       monthsBack: toMonthIndex(to) - toMonthIndex(from),
     });
@@ -70,7 +72,9 @@ const SavingsTrend = ({
     }
     closeSheet();
   };
-  const selectPreset = (id: PresetId) => setRequested({ kind: "preset", id });
+  const monthName = (date: MonthDate) =>
+    `${getMonthLabel(date.month, language, "sentence")} ${date.year}`;
+  const selectPreset = (id: PresetId) => setPicked({ kind: "preset", id });
 
   return (
     <MainContentContainer
@@ -81,12 +85,12 @@ const SavingsTrend = ({
       <RangeSwitch
         end={selectedDate}
         active={requested}
-        isCustomDisabled={!trend}
+        isCustomDisabled={resolved.status === "empty"}
         onSelectPreset={selectPreset}
         onOpenCustom={() => setIsSheetOpen(true)}
         customButtonRef={customButtonRef}
       />
-      {trend ? (
+      {trend && (
         <>
           <TrendSummary trend={trend} />
           <TrendChart
@@ -94,20 +98,32 @@ const SavingsTrend = ({
             points={trend.points}
           />
         </>
-      ) : (
-        <div className="savings-trend__empty">
-          <span className="savings-trend__empty-title">
-            {t("savingsTrend.empty.title")}
-          </span>
-          <span className="savings-trend__empty-body">
-            {t("savingsTrend.empty.body")}
-          </span>
-        </div>
       )}
-      {trend && monthsBack !== null && isSheetOpen && (
+      {resolved.status === "short" && (
+        <HistoryNotice
+          title={t("savingsTrend.short.title")}
+          body={t("savingsTrend.short.body", {
+            month: monthName(resolved.earliest),
+          })}
+          action={{
+            label: t("savingsTrend.short.action", {
+              month: monthName(resolved.earliest),
+            }),
+            onClick: () =>
+              setPicked({ kind: "custom", monthsBack: resolved.monthsBack }),
+          }}
+        />
+      )}
+      {resolved.status === "empty" && (
+        <HistoryNotice
+          title={t("savingsTrend.empty.title")}
+          body={t("savingsTrend.empty.body")}
+        />
+      )}
+      {trend && resolved.status === "ready" && isSheetOpen && (
         <CustomRangeSheet
           months={getRecordedMonths(entries)}
-          initialFrom={getReferenceMonth(selectedDate, monthsBack)}
+          initialFrom={getReferenceMonth(selectedDate, resolved.monthsBack)}
           initialTo={selectedDate}
           onApply={applyCustomRange}
           onClose={closeSheet}

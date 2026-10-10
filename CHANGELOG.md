@@ -17,8 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   calendar button for a custom span of whole months (a From and a To month,
   newest first, always a valid pair). The month header moves the end month, so
   any earlier month can be the one you compare from. Every preset is always
-  selectable: one that reaches before your first recorded month compares with
-  that month, and a month with nothing earlier to compare with says so. Tap, hover or use the arrow keys to read any month on
+  selectable. It opens on 6M, or the longest range your history reaches; a
+  range that reaches before your first recorded month says so, names that
+  month and offers to compare with it instead of showing a shorter range under
+  a longer label. A month with nothing earlier to compare with says so too. Tap, hover or use the arrow keys to read any month on
   the chart; a hidden table lists the same figures for screen readers. In
   English or Spanish.
 - A gold **Trend** link, led by a small trending-up icon, in the footer of the
