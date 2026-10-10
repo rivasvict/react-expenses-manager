@@ -1,0 +1,2020 @@
+{
+  "screens": {
+    "dashboard.up": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero-card"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.up-es": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero-card"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.down": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "3300",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero-card"
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "dashboard.nothing-to-compare": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "region": {
+        "app": ".balance-hero",
+        "mockup": ".hero-card"
+      },
+      "actions": [
+        {
+          "click": "button[aria-label='Previous month']"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "trend.up": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "trend.up-es": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "trend.down": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "3300",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "trend.year": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=\"Last 12 months\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "trend.tooltip": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        },
+        {
+          "click": ".savings-trend-chart__area"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "trend.custom": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1760529600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1760529600000,
+            "amount": "3180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1763208000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1763208000000,
+            "amount": "3360",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1765800000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1765800000000,
+            "amount": "3790",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1768478400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1768478400000,
+            "amount": "4180",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1771156800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1771156800000,
+            "amount": "3520",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1773576000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1773576000000,
+            "amount": "3080",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1776254400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1776254400000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1778846400000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "3240",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1781524800000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1784116800000,
+            "amount": "2610",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1786795200000,
+            "amount": "2820",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        },
+        {
+          "click": "role=button[name=\"Custom range\"]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "trend.empty": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "trend.short": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1784116800000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1784116800000,
+            "amount": "2720",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1786795200000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1786795200000,
+            "amount": "2950",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1789473600000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "2560",
+            "type": "expense",
+            "categories_path": ",rent,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "4200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1792065600000,
+            "amount": "2580",
+            "type": "expense",
+            "categories_path": ",rent,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "wait": 500
+        },
+        {
+          "click": "role=button[name=\"Last 6 months\"]"
+        },
+        {
+          "wait": 500
+        },
+        {
+          "blur": true
+        }
+      ]
+    }
+  }
+}

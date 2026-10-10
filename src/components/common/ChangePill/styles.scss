@@ -1,0 +1,35 @@
+@import '../../../variables.scss';
+
+.change-pill {
+  @include money-figures();
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: $radius-pill;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.5;
+
+  &--up {
+    color: $income;
+    background-color: $income-soft;
+  }
+
+  &--down {
+    color: $expense;
+    background-color: $expense-soft;
+  }
+
+  &--flat {
+    color: $text-secondary;
+    background-color: $highlight;
+  }
+
+  &__icon {
+    width: 0.8em;
+    height: 0.8em;
+    flex: 0 0 auto;
+    fill: currentColor;
+  }
+}

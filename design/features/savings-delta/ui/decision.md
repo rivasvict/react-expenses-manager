@@ -25,6 +25,11 @@ splits; the centre would compare with *last* month), and it disappears with
 the donut in a month without entries, which is exactly when a −100% drop
 matters.
 
+> **Superseded in part.** The hero layout and the caption wording here were
+> changed by [`../../savings-trend/ui/decision.md`](../../savings-trend/ui/decision.md):
+> the badge now sits in the card's footer beside a Trend link, and its caption
+> uses the short month ("vs Sep"). The badge's rules and colours below still hold.
+
 ## For the implementer
 
 ### What to build

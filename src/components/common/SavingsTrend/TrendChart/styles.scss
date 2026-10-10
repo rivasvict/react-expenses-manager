@@ -1,0 +1,154 @@
+@import '../../../../variables.scss';
+
+.savings-trend-chart {
+  @include card();
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 0.5rem 0.5rem;
+
+  &__area {
+    position: relative;
+    cursor: pointer;
+
+    &:focus-visible {
+      @include focus-ring();
+      border-radius: $radius-control;
+    }
+  }
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__baseline {
+    stroke: $border-strong;
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+
+  &__area-above {
+    fill: $income;
+    fill-opacity: 0.2;
+  }
+
+  &__area-below {
+    fill: $expense;
+    fill-opacity: 0.16;
+  }
+
+  // The hatch keeps "below" readable without colour.
+  &__hatch {
+    stroke: $expense;
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+  }
+
+  &__line-above,
+  &__line-below {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  &__line-above {
+    stroke: $income;
+  }
+
+  &__line-below {
+    stroke: $expense;
+  }
+
+  &__tick {
+    fill: $text-secondary;
+    font-size: 11px;
+  }
+
+  // The reference month is what every other month is compared with.
+  &__tick--reference {
+    fill: $text-primary;
+    font-weight: 600;
+  }
+
+  &__guide {
+    stroke: $border-strong;
+    stroke-width: 1;
+  }
+
+  &__dot-reference {
+    fill: $bg-raised;
+    stroke: $text-secondary;
+    stroke-width: 2;
+  }
+
+  &__dot {
+    stroke: $bg-raised;
+    stroke-width: 2;
+
+    &--up {
+      fill: $income;
+    }
+
+    &--down {
+      fill: $expense;
+    }
+  }
+
+  &__end-label {
+    @include money-figures();
+    fill: $text-primary;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__reference-label {
+    @include money-figures();
+    fill: $text-primary;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    padding: 0.5rem 0.5rem 0;
+    color: $text-secondary;
+    font-size: 12px;
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 12px;
+    height: 8px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    border-radius: $radius-pill;
+
+    &--reference {
+      width: 14px;
+      height: 0;
+      border-top: 2px dashed $border-strong;
+      border-radius: 0;
+    }
+
+    &--above {
+      background-color: $income-soft;
+      border: 1px solid $income;
+    }
+
+    &--below {
+      background-color: $expense-soft;
+      border: 1px solid $expense;
+    }
+  }
+
+  &__note {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+  }
+}

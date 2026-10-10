@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.27.0] - 2026-10-10
+
+### Added
+
+- A **Savings trend** screen (`/savings-trend`) answers "am I growing my
+  savings?". It compares the selected month with an earlier one, as an amount
+  and a percentage, and draws the months in between as a line chart whose area
+  is green above the starting month's savings and red (hatched) below it. A
+  single control picks the range: 1M, 2M, 3M, 6M, 1Y or YTD in one tap, or a
+  calendar button for a custom span of whole months (a From and a To month,
+  newest first, always a valid pair). The month header moves the end month, so
+  any earlier month can be the one you compare from. Every preset is always
+  selectable. It opens on 6M, or the longest range your history reaches; a
+  range that reaches before your first recorded month says so, names that
+  month and offers to compare with it instead of showing a shorter range under
+  a longer label. A month with nothing earlier to compare with says so too. Tap, hover or use the arrow keys to read any month on
+  the chart; a hidden table lists the same figures for screen readers. In
+  English or Spanish.
+- A gold **Trend** link, led by a small trending-up icon, in the footer of the
+  dashboard's savings card opens it.
+
+### Changed
+
+- The dashboard's savings card is now one card with a footer: the savings
+  change moved there from under the amount, and its caption uses the short
+  month ("vs Sep", Spanish "frente a sep"; "Nothing to compare with Aug"). The
+  spoken description still names the full month. Tapping the savings amount
+  still opens the summary.
+- Design review fixtures can reach the new screens; the approved designs live
+  in `design/features/savings-trend/`.
+
 ## [1.26.0] - 2026-10-08
 
 ### Added

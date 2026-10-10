@@ -78,12 +78,56 @@ const en = {
   "dashboard.addExpenses": "Add Expenses",
 
   // Savings change badge (dashboard balance hero); {{month}} is the previous
-  // month's name as it reads mid-sentence
+  // month's name: short in the visible caption ("vs Sep"), full in the spoken label
   "savingsChange.vs": "vs {{month}}",
   "savingsChange.label.up": "Savings up {{percent}} compared with {{month}}",
   "savingsChange.label.down": "Savings down {{percent}} compared with {{month}}",
   "savingsChange.label.flat": "Savings unchanged compared with {{month}}",
   "savingsChange.nothingToCompare": "Nothing to compare with {{month}}",
+
+  // Savings trend screen (/savings-trend) and the dashboard link to it.
+  // {{reference}} / {{end}} are month names, with the year when the range
+  // crosses years; {{month}} in the tooltip is the short month name.
+  "savingsTrend.pageTitle": "Savings trend",
+  "savingsTrend.link": "Trend",
+  "savingsTrend.linkLabel": "Savings trend",
+  "savingsTrend.rangeGroup": "Range",
+  "savingsTrend.range.1M": "1M",
+  "savingsTrend.range.2M": "2M",
+  "savingsTrend.range.3M": "3M",
+  "savingsTrend.range.6M": "6M",
+  "savingsTrend.range.1Y": "1Y",
+  "savingsTrend.range.YTD": "YTD",
+  "savingsTrend.rangeLabel.months_one": "Last month",
+  "savingsTrend.rangeLabel.months_other": "Last {{count}} months",
+  "savingsTrend.rangeLabel.ytd": "This year so far",
+  "savingsTrend.customRange": "Custom range",
+  "savingsTrend.compare": "{{end}} vs {{reference}}",
+  "savingsTrend.note":
+    "Each point is one month's savings. Green where it beat {{reference}}, red where it fell short.",
+  "savingsTrend.key.reference": "Savings in {{reference}}",
+  "savingsTrend.key.above": "Above",
+  "savingsTrend.key.below": "Below",
+  "savingsTrend.chartLabel":
+    "Monthly savings from {{from}} to {{to}}, ending at {{value}}",
+  "savingsTrend.table.caption": "Monthly savings",
+  "savingsTrend.table.month": "Month",
+  "savingsTrend.table.savings": "Savings",
+  "savingsTrend.tooltipVs": "{{difference}} vs {{month}}",
+  "savingsTrend.empty.title": "Not enough history yet",
+  "savingsTrend.empty.body":
+    "A trend needs at least two months. Keep adding your incomes and expenses, or pick a later month.",
+  "savingsTrend.short.title": "Not enough history for this range",
+  "savingsTrend.short.body":
+    "Your records start in {{month}}. Compare with it instead, or pick a shorter range.",
+  "savingsTrend.short.action": "Compare with {{month}}",
+  "savingsTrend.sheet.title": "Custom range",
+  "savingsTrend.sheet.hint":
+    "Compare a month with any month before it. Whole months only.",
+  "savingsTrend.sheet.from": "From",
+  "savingsTrend.sheet.to": "To",
+  "savingsTrend.sheet.show": "Show trend",
+  "savingsTrend.sheet.close": "Close",
 
   // Add / edit entry form
   "entryForm.pageTitle.income": "Income entry",
