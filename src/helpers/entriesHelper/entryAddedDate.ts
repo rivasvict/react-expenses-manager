@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import "dayjs/locale/fr";
 import { defaultTranslator, Translator } from "../../i18n";
 
 /**

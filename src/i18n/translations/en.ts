@@ -26,6 +26,7 @@ const en = {
   // Language names, in the current UI language (Settings screen)
   "language.en": "English",
   "language.es": "Spanish",
+  "language.fr": "French",
 
   // Relative times and dates (dayjs format tokens for `time.dateFormat`)
   "time.justNow": "just now",

@@ -2,7 +2,7 @@
  * The languages the UI can be rendered in. English is the default and the
  * source of truth for every translation key (see ./translations/en.ts).
  */
-export const SUPPORTED_LANGUAGES = ["en", "es"] as const;
+export const SUPPORTED_LANGUAGES = ["en", "es", "fr"] as const;
 
 export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 
@@ -15,6 +15,7 @@ export const DEFAULT_LANGUAGE: Language = "en";
 export const LANGUAGE_NATIVE_NAMES: Record<Language, string> = {
   en: "English",
   es: "Español",
+  fr: "Français",
 };
 
 export const isSupportedLanguage = (value: unknown): value is Language =>
