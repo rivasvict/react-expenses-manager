@@ -62,6 +62,9 @@ const en = {
   "settings.currency.title": "Currency",
   "settings.currency.description":
     "Choose the currency your amounts are shown in. It only changes the symbol and how amounts are written — nothing is converted. Your choice is saved on this device only and is never shared when you sync.",
+  "settings.language.hint": "Applies right away",
+  "settings.currency.hint": "Symbol and format only",
+  "settings.sheet.close": "Close",
   "currency.USD": "US Dollar",
   "currency.EUR": "Euro",
   "currency.GBP": "British Pound",

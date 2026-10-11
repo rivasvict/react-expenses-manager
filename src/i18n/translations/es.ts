@@ -62,6 +62,9 @@ const es: Translations = {
   "settings.currency.title": "Moneda",
   "settings.currency.description":
     "Elige la moneda en la que se muestran tus importes. Solo cambia el símbolo y la forma de escribir los importes: no se convierte nada. Tu elección se guarda solo en este dispositivo y nunca se comparte al sincronizar.",
+  "settings.language.hint": "Se aplica al instante",
+  "settings.currency.hint": "Solo símbolo y formato",
+  "settings.sheet.close": "Cerrar",
   "currency.USD": "Dólar estadounidense",
   "currency.EUR": "Euro",
   "currency.GBP": "Libra esterlina",

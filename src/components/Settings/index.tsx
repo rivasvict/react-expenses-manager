@@ -1,90 +1,66 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { Icon } from "@iconify/react";
-import checkIcon from "@iconify-icons/codicon/check";
 import { MainContentContainer } from "../common/MainContentContainer";
-import { SUPPORTED_LANGUAGES, useTranslation } from "../../i18n";
+import { useTranslation } from "../../i18n";
 import { LANGUAGE_NATIVE_NAMES } from "../../i18n/languages";
+import {
+  Currency,
+  CURRENCY_SYMBOLS,
+  getStoredCurrency,
+  storeCurrency,
+} from "../../helpers/currency/currency";
 import VersionLabel from "../common/VersionLabel";
-import CurrencySection from "./CurrencySection";
+import CurrencySheet from "./CurrencySheet";
+import LanguageSheet from "./LanguageSheet";
+import SettingRow from "./SettingRow";
 import "./styles.scss";
 
+type OpenSheet = "language" | "currency" | null;
+
 /**
- * Device-level preferences: the UI language and the display currency. Picking
- * one applies immediately and is remembered in this browser only, so it works
- * the same with or without a sync server and never touches the entries model.
+ * Device-level preferences: the UI language and the display currency. Each is
+ * a row showing its current value; tapping it opens a sheet to pick another.
+ * Picking one applies immediately and is remembered in this browser only, so
+ * it works the same with or without a sync server and never touches the
+ * entries model.
  */
 const Settings = () => {
-  const { t, language: currentLanguage, setLanguage } = useTranslation();
+  const { t, language } = useTranslation();
   const history = useHistory();
+  const [openSheet, setOpenSheet] = useState<OpenSheet>(null);
+  const [currency, setCurrency] = useState<Currency>(getStoredCurrency);
+  const languageRow = useRef<HTMLButtonElement>(null);
+  const currencyRow = useRef<HTMLButtonElement>(null);
+
+  const closeSheet = () => {
+    (openSheet === "language" ? languageRow : currencyRow).current?.focus();
+    setOpenSheet(null);
+  };
+  const pickCurrency = (picked: Currency) => {
+    storeCurrency(picked);
+    setCurrency(picked);
+  };
 
   return (
     <MainContentContainer className="settings" pageTitle={t("settings.title")}>
       <Container className="settings__content" fluid>
         <Row>
           <Col className="settings-section">
-            <fieldset>
-              <legend className="settings-section__title">
-                {t("settings.language.title")}
-              </legend>
-              <p className="settings-section__description">
-                {t("settings.language.description")}
-              </p>
-              <div className="settings-options">
-                {SUPPORTED_LANGUAGES.map((language) => {
-                  const isSelected = language === currentLanguage;
-                  const nativeName = LANGUAGE_NATIVE_NAMES[language];
-                  // "Español · Spanish" helps someone who can't read the
-                  // other language; the current one needs no gloss.
-                  const translatedName = t(`language.${language}`);
-                  return (
-                    <label
-                      key={language}
-                      lang={language}
-                      className={`settings-option${
-                        isSelected ? " settings-option--selected" : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="language"
-                        className="settings-option__input"
-                        value={language}
-                        checked={isSelected}
-                        onChange={() => setLanguage(language)}
-                      />
-                      <span className="settings-option__text">
-                        <span className="settings-option__name">
-                          {nativeName}
-                        </span>
-                        {translatedName !== nativeName && (
-                          <span
-                            className="settings-option__hint"
-                            lang={currentLanguage}
-                          >
-                            {translatedName}
-                          </span>
-                        )}
-                      </span>
-                      {isSelected && (
-                        <span
-                          className="settings-option__check"
-                          aria-hidden="true"
-                        >
-                          <Icon icon={checkIcon} />
-                        </span>
-                      )}
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="settings-section">
-            <CurrencySection />
+            <SettingRow
+              ref={languageRow}
+              label={t("settings.language.title")}
+              hint={t("settings.language.hint")}
+              value={LANGUAGE_NATIVE_NAMES[language]}
+              onOpen={() => setOpenSheet("language")}
+            />
+            <SettingRow
+              ref={currencyRow}
+              label={t("settings.currency.title")}
+              hint={t("settings.currency.hint")}
+              value={`${CURRENCY_SYMBOLS[currency]} · ${currency}`}
+              onOpen={() => setOpenSheet("currency")}
+            />
           </Col>
         </Row>
         <VersionLabel />
@@ -98,6 +74,14 @@ const Settings = () => {
           </Col>
         </Row>
       </Container>
+      {openSheet === "language" && <LanguageSheet onClose={closeSheet} />}
+      {openSheet === "currency" && (
+        <CurrencySheet
+          current={currency}
+          onPick={pickCurrency}
+          onClose={closeSheet}
+        />
+      )}
     </MainContentContainer>
   );
 };
