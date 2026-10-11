@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.29.0] - 2026-10-11
+
+### Added
+
+- A **Currency** choice on the Settings screen. Every amount in the app — the
+  dashboard, entry lists, summary, buckets, savings trend and sync review — is
+  shown with the picked currency's own symbol (for example €, £, ¥, R$, CA$ or
+  MX$), and with no decimals for currencies that have none (yen, Chilean
+  peso). US Dollar ($) stays the default. Amounts are not converted. Like the
+  language, the choice is saved on this device only: it is never part of your
+  entries, backups or what is shared when you sync.
+
+### Changed
+
+- The sync review now writes amounts like the rest of the app, with thousands
+  separators ("$1,500.00" instead of "$1500.00").
+
 ## [1.28.0] - 2026-10-10
 
 ### Added

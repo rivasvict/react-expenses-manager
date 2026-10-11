@@ -7,12 +7,13 @@ import { MainContentContainer } from "../common/MainContentContainer";
 import { SUPPORTED_LANGUAGES, useTranslation } from "../../i18n";
 import { LANGUAGE_NATIVE_NAMES } from "../../i18n/languages";
 import VersionLabel from "../common/VersionLabel";
+import CurrencySection from "./CurrencySection";
 import "./styles.scss";
 
 /**
- * Device-level preferences. Today that is the UI language: picking one applies
- * immediately and is remembered in this browser only, so it works the same
- * with or without a sync server and never touches the entries model.
+ * Device-level preferences: the UI language and the display currency. Picking
+ * one applies immediately and is remembered in this browser only, so it works
+ * the same with or without a sync server and never touches the entries model.
  */
 const Settings = () => {
   const { t, language: currentLanguage, setLanguage } = useTranslation();
@@ -79,6 +80,11 @@ const Settings = () => {
                 })}
               </div>
             </fieldset>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="settings-section">
+            <CurrencySection />
           </Col>
         </Row>
         <VersionLabel />

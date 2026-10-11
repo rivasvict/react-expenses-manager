@@ -54,7 +54,7 @@ Node version is pinned in `.nvmrc`.
 - `/data-management` — CSV import/export
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
-- `/settings` — Settings (device preferences such as the UI language; reached from the gear chip in the app bar)
+- `/settings` — Settings (device preferences: the UI language and the display currency, both stored only in `localStorage` — see `src/helpers/currency/currency.ts`; reached from the gear chip in the app bar)
 
 **Authentication:** `AuthenticatedApp` is currently commented out in `src/App.js`. The app runs without auth, using `WithBalance` to load entries directly.
 

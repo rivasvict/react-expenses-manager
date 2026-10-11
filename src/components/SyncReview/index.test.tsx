@@ -204,7 +204,7 @@ describe("walking the items", () => {
     expect(screen.getByText("Salary")).toBeInTheDocument();
 
     await user.click(
-      screen.getByRole("button", { name: "Reject $1500.00 income added by tom" })
+      screen.getByRole("button", { name: "Reject $1,500.00 income added by tom" })
     );
 
     expect(screen.getByText("Review complete")).toBeInTheDocument();
@@ -453,7 +453,7 @@ describe("upload (DESIGN §4.3.4)", () => {
       screen.getByRole("button", { name: "Accept $42.10 expense added by tom" })
     );
     await user.click(
-      screen.getByRole("button", { name: "Reject $1500.00 income added by tom" })
+      screen.getByRole("button", { name: "Reject $1,500.00 income added by tom" })
     );
 
     await user.click(screen.getByRole("button", { name: "Upload & finish" }));

@@ -59,6 +59,21 @@ const fr: Translations = {
   "settings.language.title": "Langue",
   "settings.language.description":
     "Choisissez la langue de l'application. Votre choix est enregistré sur cet appareil et s'applique immédiatement.",
+  "settings.currency.title": "Devise",
+  "settings.currency.description":
+    "Choisissez la devise dans laquelle vos montants sont affichés. Seuls le symbole et l'écriture des montants changent : rien n'est converti. Votre choix est enregistré uniquement sur cet appareil et n'est jamais partagé lors de la synchronisation.",
+  "currency.USD": "Dollar américain",
+  "currency.EUR": "Euro",
+  "currency.GBP": "Livre sterling",
+  "currency.CAD": "Dollar canadien",
+  "currency.AUD": "Dollar australien",
+  "currency.MXN": "Peso mexicain",
+  "currency.BRL": "Réal brésilien",
+  "currency.COP": "Peso colombien",
+  "currency.ARS": "Peso argentin",
+  "currency.CLP": "Peso chilien",
+  "currency.JPY": "Yen japonais",
+  "currency.INR": "Roupie indienne",
 
   "version.label": "Version {{version}}",
 
