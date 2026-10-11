@@ -1,6 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MAY } from "./helpers/seed";
+import { pickCurrency } from "./helpers/settings";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -31,10 +32,6 @@ afterEach(() => {
 });
 
 type User = Awaited<ReturnType<typeof renderApp>>["user"];
-
-const pickCurrency = async (user: User, currencyName: RegExp) => {
-  await user.click(await screen.findByRole("radio", { name: currencyName }));
-};
 
 const goHome = async (user: User) => {
   const nav = screen.getByRole("navigation", { name: "Main navigation" });

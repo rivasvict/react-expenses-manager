@@ -1,0 +1,102 @@
+{
+  "screens": {
+    "settings.default": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      }
+    },
+    "language-sheet.default": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/Language/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "currency-sheet.default": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/Currency/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "settings.es": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      }
+    },
+    "language-sheet.es": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/Idioma/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "currency-sheet.es": {
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "route": "/settings",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/Moneda/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    }
+  }
+}

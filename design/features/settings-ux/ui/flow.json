@@ -1,0 +1,76 @@
+{
+  "screens": [
+    {
+      "id": "settings.default",
+      "title": "Settings",
+      "route": "/settings"
+    },
+    {
+      "id": "language-sheet.default",
+      "title": "Language sheet",
+      "route": "/settings"
+    },
+    {
+      "id": "currency-sheet.default",
+      "title": "Currency sheet",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.es",
+      "title": "Settings (Spanish)",
+      "route": "/settings"
+    },
+    {
+      "id": "language-sheet.es",
+      "title": "Language sheet (Spanish)",
+      "route": "/settings"
+    },
+    {
+      "id": "currency-sheet.es",
+      "title": "Currency sheet (Spanish)",
+      "route": "/settings"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "settings.default",
+      "to": "language-sheet.default",
+      "label": "Tap the Language row"
+    },
+    {
+      "from": "settings.default",
+      "to": "currency-sheet.default",
+      "label": "Tap the Currency row"
+    },
+    {
+      "from": "language-sheet.default",
+      "to": "settings.default",
+      "label": "Pick a language (or tap Close)"
+    },
+    {
+      "from": "currency-sheet.default",
+      "to": "settings.default",
+      "label": "Pick a currency (or tap Close)"
+    },
+    {
+      "from": "settings.es",
+      "to": "language-sheet.es",
+      "label": "Tap the Language row"
+    },
+    {
+      "from": "settings.es",
+      "to": "currency-sheet.es",
+      "label": "Tap the Currency row"
+    },
+    {
+      "from": "language-sheet.es",
+      "to": "settings.es",
+      "label": "Pick a language (or tap Cerrar)"
+    },
+    {
+      "from": "currency-sheet.es",
+      "to": "settings.es",
+      "label": "Pick a currency (or tap Cerrar)"
+    }
+  ]
+}

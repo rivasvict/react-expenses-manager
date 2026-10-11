@@ -1,6 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MAY } from "./helpers/seed";
+import { pickLanguage } from "./helpers/settings";
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
@@ -14,12 +15,6 @@ afterEach(() => {
   jest.useRealTimers();
   jest.restoreAllMocks();
 });
-
-type User = Awaited<ReturnType<typeof renderApp>>["user"];
-
-const pickLanguage = async (user: User, languageName: RegExp) => {
-  await user.click(await screen.findByRole("radio", { name: languageName }));
-};
 
 describe("language settings", () => {
   it("renders in English by default", async () => {
@@ -94,7 +89,7 @@ describe("language settings", () => {
     await pickLanguage(user, /Español/);
     expect(await screen.findByText("Ajustes")).toBeInTheDocument();
 
-    await pickLanguage(user, /English/);
+    await pickLanguage(user, /English/, /^Idioma/);
 
     expect(await screen.findByText("Settings")).toBeInTheDocument();
     expect(

@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
+import { pickLanguage } from "./helpers/settings";
 
 beforeEach(() => localStorage.clear());
 
@@ -11,7 +12,7 @@ describe("app version", () => {
       await screen.findByText(/^Version \d+\.\d+\.\d+/),
     ).toBeInTheDocument();
 
-    await user.click(await screen.findByRole("radio", { name: /Español/ }));
+    await pickLanguage(user, /Español/);
 
     expect(
       await screen.findByText(/^Versión \d+\.\d+\.\d+/),

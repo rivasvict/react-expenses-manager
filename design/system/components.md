@@ -28,4 +28,7 @@ same PR that adds it.
 | Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
 | Trend summary (the "October vs April" amount, percentage pill and caption) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
 | Custom range sheet (bottom sheet over a scrim with From / To month selects) | Savings trend | `src/components/common/SavingsTrend/CustomRangeSheet/` |
+| Bottom sheet (scrim, panel, grabber, heading, close chip; focuses its heading, closes on Escape or scrim) | Savings trend, Settings | `src/components/common/BottomSheet/` |
+| Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |
+| Currency tile grid (symbol + code radio tiles in a sheet) | Settings | `src/components/Settings/CurrencySheet/` |
 | History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold action) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |

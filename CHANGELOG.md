@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.30.0] - 2026-10-11
+
+### Changed
+
+- **Settings** is now calmer: Language and Currency are two rows that show your
+  current choice, instead of two long lists. Tap a row to open a sheet — a list
+  for the language, a grid of symbols and codes for the currency — pick one and
+  it applies right away and the sheet closes. Nothing about what the settings do
+  or where they are saved has changed.
+- The bottom sheet used by the Savings trend custom range is now a shared
+  component, so Settings uses the exact same sheet.
+
 ## [1.29.0] - 2026-10-11
 
 ### Added

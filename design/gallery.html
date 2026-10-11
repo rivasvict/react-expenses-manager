@@ -836,14 +836,65 @@
         </div>
       </details>
     </section>
-    <section class="feature" id="feature-settings-ux" data-status="exploring">
+    <section class="feature" id="feature-settings-ux" data-status="implemented">
       <header class="feature__head">
         <h2>Settings UX</h2>
-        <span class="badge badge--exploring">Exploring</span>
+        <span class="badge badge--implemented">Implemented</span>
       </header>
-      <p class="summary">Replace the two long radio lists on /settings with something that shows current choices at a glance and scales to more settings.</p>
-      <nav class="links" aria-label="Settings UX documents"><a href="features/settings-ux/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/settings-ux/ui/decision.md" target="_blank" rel="noopener">Decision</a></nav>
-      <details class="options" open>
+      <p class="summary">Settings becomes two value rows; Language opens a list sheet and Currency opens a symbol-and-code grid sheet.</p>
+      <nav class="links" aria-label="Settings UX documents"><a href="features/settings-ux/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/settings-ux/ui/flow.html" target="_blank" rel="noopener">Flow</a><a href="features/settings-ux/ui/decision.md" target="_blank" rel="noopener">Decision</a><a href="features/settings-ux/ui/fixtures.json" target="_blank" rel="noopener">Fixtures</a></nav>
+      <h3>Approved screens</h3>
+      <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/currency-sheet.default.html" target="_blank" rel="noopener" aria-label="Open currency-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/currency-sheet.default.html" title="currency-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>currency-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/currency-sheet.es.html" target="_blank" rel="noopener" aria-label="Open currency-sheet · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/currency-sheet.es.html" title="currency-sheet · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>currency-sheet · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/language-sheet.default.html" target="_blank" rel="noopener" aria-label="Open language-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/language-sheet.default.html" title="language-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>language-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/language-sheet.es.html" target="_blank" rel="noopener" aria-label="Open language-sheet · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/language-sheet.es.html" title="language-sheet · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>language-sheet · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/settings.default.html" target="_blank" rel="noopener" aria-label="Open settings · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/settings.default.html" title="settings · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/settings-ux/ui/approved/settings.es.html" target="_blank" rel="noopener" aria-label="Open settings · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/settings-ux/ui/approved/settings.es.html" title="settings · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · es</figcaption>
+        </figure>
+      </div>
+      <details class="options">
         <summary>Options (4)</summary>
         <div class="option">
           <h4>a-drill-in</h4>
@@ -917,7 +968,7 @@
           </div>
         </div>
         <div class="option">
-          <h4>d-sheet-list-and-grid</h4>
+          <h4>d-sheet-list-and-grid <span class="badge badge--approved">Chosen</span></h4>
           <div class="frames">
         <figure class="frame">
           <a class="frame__link" href="features/settings-ux/ui/options/d-sheet-list-and-grid/currency-sheet.html" target="_blank" rel="noopener" aria-label="Open d-sheet-list-and-grid · currency-sheet full size">

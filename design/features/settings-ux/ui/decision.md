@@ -1,12 +1,97 @@
 ---
 title: Settings UX
-summary: Replace the two long radio lists on /settings with something that shows current choices at a glance and scales to more settings.
-status: exploring
+summary: Settings becomes two value rows; Language opens a list sheet and Currency opens a symbol-and-code grid sheet.
+status: implemented
+chosen: d-sheet-list-and-grid
 ---
 
 # Decision
 
-Brief: [`../feature-brief.md`](../feature-brief.md). Not chosen yet.
+Brief: [`../feature-brief.md`](../feature-brief.md).
+
+## Decision
+
+**d-sheet-list-and-grid**, chosen by the owner. `/settings` shows one card with
+two rows (label, short hint, current value, chevron). Tapping a row opens a
+bottom sheet: **Language** holds today's option list, **Currency** holds a
+3-column grid of symbol + code tiles. Picking a value applies it at once and
+closes the sheet.
+
+Why the others did not win: **a** needs two new routes and a page change per
+setting; **b** keeps everything on the page but needs a 12-tile grid and a
+segmented control on a screen that should stay calm; **c** has the right
+landing page but its plain list makes the long currency list scroll inside the
+sheet. D keeps C's page and sheet pattern and gives each control the shape that
+fits its data.
+
+## For the implementer
+
+### Behaviour the screens do not show
+
+- Tapping a row opens its sheet; only one sheet is open at a time.
+- **Picking a value applies it immediately and closes the sheet** (the language
+  and currency are stored on this device exactly as today). Picking the value
+  that is already selected just closes the sheet.
+- The sheet closes with the Close (x) button, the scrim, or Escape. On close,
+  focus returns to the row that opened it. On open, focus goes to the sheet's
+  heading (as in the Savings trend custom range sheet).
+- The row's value follows at once: Language shows the language's own name
+  (English, Español, Français); Currency shows `<symbol> · <code>`.
+- Options are radios (`role="radio"` in a `radiogroup`) so a screen reader hears
+  the selected one. Each currency tile's accessible name is its full name
+  (for example "US Dollar"); the tile itself shows only the symbol and code.
+- The language list keeps today's rows: native name, plus the name in the
+  current language as a hint when it differs (Español with "Spanish"), and the
+  gold-soft wash and a check on the current one.
+- No error or empty state: an unreadable or unknown stored value falls back to
+  English / US Dollar as today.
+- Spanish text runs longer; row values stay on one line and the labels wrap.
+  The currency sheet's description is long (5 lines in Spanish): the sheet
+  scrolls (`max-height: 85vh`) rather than clipping.
+
+### Reuse
+
+- `MainContentContainer`, the settings card (`card` mixin) and `VersionLabel`
+  stay; the bottom "Go Back" stays.
+- The sheet follows `src/components/common/SavingsTrend/CustomRangeSheet/`
+  (scrim, panel, grabber, heading, close chip, Escape, `$scrim`, `$shadow-pop`,
+  z-index 110/111). Extract that chrome into a shared **Bottom sheet**
+  component so Settings does not copy it.
+- Option rows: today's `.settings-option` look (move its styles with the
+  component). Money/figures mixins are not needed.
+
+### New shared components (add a row to `design/system/components.md`)
+
+| Component | Where |
+|---|---|
+| Bottom sheet (scrim + panel + grabber + heading + close chip) | `src/components/common/BottomSheet/` |
+| Setting row (label, hint, value, chevron; opens a sheet) | `src/components/Settings/SettingRow/` |
+| Option tile grid (symbol + code radio tiles) | `src/components/Settings/CurrencySheet/` |
+
+No new token.
+
+### New strings (`en.ts`, `es.ts`, `fr.ts`)
+
+| Key | English | Spanish | French |
+|---|---|---|---|
+| `settings.language.hint` | Applies right away | Se aplica al instante | S'applique immédiatement |
+| `settings.currency.hint` | Symbol and format only | Solo símbolo y formato | Symbole et format uniquement |
+| `settings.sheet.close` | Close | Cerrar | Fermer |
+
+The sheet headings reuse `settings.language.title` / `settings.currency.title`
+and the sheet descriptions reuse `settings.language.description` /
+`settings.currency.description`.
+
+## Approved screens
+
+| Screen | State | File |
+|---|---|---|
+| Settings | default (English) | `approved/settings.default.html` |
+| Settings | Spanish | `approved/settings.es.html` |
+| Language sheet | default | `approved/language-sheet.default.html` |
+| Language sheet | Spanish | `approved/language-sheet.es.html` |
+| Currency sheet | default | `approved/currency-sheet.default.html` |
+| Currency sheet | Spanish | `approved/currency-sheet.es.html` |
 
 ## Options considered
 

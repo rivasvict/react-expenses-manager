@@ -1,0 +1,55 @@
+@import "../../../variables.scss";
+
+// A raised row like the entry list's sort options, with its current value and
+// a chevron on the right.
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.4rem;
+  padding: 0.65rem 0.9rem;
+  background-color: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  color: $text-primary;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  &__value {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    color: $text-secondary;
+  }
+}

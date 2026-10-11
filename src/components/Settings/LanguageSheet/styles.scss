@@ -1,0 +1,84 @@
+@import "../../../variables.scss";
+
+// Selectable rows mirroring the filter sheet's sort options: a raised row, the
+// gold-soft wash plus a check on the current choice.
+.language-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    float: none;
+    width: auto;
+    padding: 0;
+    margin-bottom: 0.4rem;
+  }
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  color: $text-primary;
+  cursor: pointer;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-within {
+    @include focus-ring();
+  }
+
+  &--selected,
+  &--selected:hover {
+    background-color: $accent-soft;
+    border-color: rgba($accent, 0.28);
+  }
+
+  &__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  &__check {
+    display: flex;
+    align-items: center;
+    color: $accent;
+    font-size: 1.1rem;
+  }
+}

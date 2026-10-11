@@ -54,7 +54,7 @@ Node version is pinned in `.nvmrc`.
 - `/data-management` — CSV import/export
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
-- `/settings` — Settings (device preferences: the UI language and the display currency, both stored only in `localStorage` — see `src/helpers/currency/currency.ts`; reached from the gear chip in the app bar)
+- `/settings` — Settings (device preferences: the UI language and the display currency, both stored only in `localStorage`; each is a row that opens a bottom sheet — see `src/helpers/currency/currency.ts`; reached from the gear chip in the app bar)
 
 **Authentication:** `AuthenticatedApp` is currently commented out in `src/App.js`. The app runs without auth, using `WithBalance` to load entries directly.
 
@@ -81,6 +81,7 @@ Node version is pinned in `.nvmrc`.
 - **`seed.ts`** — `seedEntries(entries)` writes entries to `localStorage`; `ts(year, month, day?)` builds a Unix-ms timestamp; month constants `JANUARY`–`DECEMBER` (0-indexed).
 - **`navigation.ts`** — `goToPrevMonth(user, expectedTitle)` and `goToNextMonth(user, expectedTitle)`: click the Prev/Next button and wait for the new month heading. Use these instead of inline `findByRole("button", …)` calls so the assertion pattern stays consistent across test files.
 - **`categorySelect.ts`** — `selectCategory(user, categoryName)`: opens the searchable category dropdown (`CategorySearchSelect`) and clicks the matching option. Use this instead of inline `click(combobox)` → `click(option)` pairs whenever a test just needs to pick a category. Its internal `findByRole("option", …)` throws when the category is missing, so option presence is still asserted. Tests that exercise the dropdown *mechanics* (type-to-filter, empty state, keyboard nav) should still drive the control directly. On `/expenses`/`/incomes` the category picker lives inside the Filters sheet, so call `openFilterSheet(user)` first.
+- **`settings.ts`** — `pickLanguage(user, name, rowName?)` and `pickCurrency(user, name, rowName?)`: on `/settings`, open the Language or Currency sheet from its row and click the option (the sheet closes on pick). `rowName` is the row's label in the language currently shown (defaults to English; pass `/^Idioma/` or `/^Moneda/` once the app is in Spanish). Use these instead of inline radio clicks.
 - **`filters.ts`** — `openFilterSheet(user)`: opens the "Filters & sort" sheet/panel from the entry-list toolbar and waits for its heading. `searchEntries(user, term)`: types into the toolbar's live "Search entries" field. Use these instead of inline queries whenever a test just needs to open the sheet or narrow the list; tests exercising the sheet/search mechanics themselves should drive the controls directly.
 
 ## General guidelines for development
