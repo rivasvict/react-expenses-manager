@@ -35,6 +35,17 @@ a long currency list scrolls inside a sheet (sheet needs a sticky title and
 `max-height`), and sheets are harder for keyboard/screen-reader users than a
 page; reuses the existing sheet pattern so little new CSS.
 
+**d-sheet-list-and-grid: C's rows and sheets, language as a list, currency as a
+grid.** The landing page is C's two value rows. Tapping Language opens a short
+sheet with today's option list (three rows, native names); tapping Currency
+opens a sheet holding B's 3-column symbol + code tile grid with the selected
+currency's full name and the "nothing is converted" note under it. Best at: each
+control matches its data (a list for 3 languages with readable names, a compact
+grid for 12 currencies that fits the sheet without scrolling), one tap to
+change, no new routes. Costs: the tile grid is a new component (as in B) and the
+sheet pattern's accessibility cost applies (focus trap, Escape to close, return
+focus to the row).
+
 ## Empty / error story
 
 Preferences are always readable: a missing or unknown stored value falls back to
