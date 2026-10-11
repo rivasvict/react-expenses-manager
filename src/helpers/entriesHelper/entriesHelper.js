@@ -3,6 +3,7 @@ import { getCurrentMonth, getCurrentTimestamp, getCurrentYear } from "../date";
 import { calculateTotal } from "../general";
 import { ENTRY_TYPES_SINGULAR } from "../../constants";
 import { capitalize } from "lodash";
+import { formatCurrency } from "../currency/currency";
 import { materializeFixedEntries } from "../fixedEntriesHelper/fixedEntriesHelper";
 import { defaultTranslator } from "../../i18n/translator";
 
@@ -73,22 +74,9 @@ const getCategoryPercentagesFromEntries = ({ totalSum, entries }) =>
     };
   }, {});
 
-/*
- *  TODO: This function probably needs to be separated
- *  from the rest of the helpers as the formatting
- *  functionalities may become more complex
- */
+// Amounts are shown in the currency picked on Settings (local to this device).
 function formatNumberForDisplay(amount) {
-  /**
-   * TODO: Make sure the locale settings are loaded from the browser
-   * and can be configurable from a database
-   * https://github.com/rivasvict/react-expenses-manager/issues/69
-   */
-  const USDollar = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-  return isNaN(amount) ? USDollar.format(0) : USDollar.format(amount);
+  return formatCurrency(amount);
 }
 
 function getSum({ entryType, entries }) {

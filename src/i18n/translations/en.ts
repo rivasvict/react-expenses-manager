@@ -59,6 +59,21 @@ const en = {
   "settings.language.title": "Language",
   "settings.language.description":
     "Choose the language the app is shown in. Your choice is saved on this device and applies right away.",
+  "settings.currency.title": "Currency",
+  "settings.currency.description":
+    "Choose the currency your amounts are shown in. It only changes the symbol and how amounts are written — nothing is converted. Your choice is saved on this device only and is never shared when you sync.",
+  "currency.USD": "US Dollar",
+  "currency.EUR": "Euro",
+  "currency.GBP": "British Pound",
+  "currency.CAD": "Canadian Dollar",
+  "currency.AUD": "Australian Dollar",
+  "currency.MXN": "Mexican Peso",
+  "currency.BRL": "Brazilian Real",
+  "currency.COP": "Colombian Peso",
+  "currency.ARS": "Argentine Peso",
+  "currency.CLP": "Chilean Peso",
+  "currency.JPY": "Japanese Yen",
+  "currency.INR": "Indian Rupee",
 
   "version.label": "Version {{version}}",
 

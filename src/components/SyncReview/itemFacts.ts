@@ -6,7 +6,7 @@
 // item-specific accessible action labels.
 import dayjs from "dayjs";
 import { SyncItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
-import { CURRENCY_SYMBOL } from "../../constants";
+import { formatCurrency, getCurrencySymbol } from "../../helpers/currency/currency";
 import { AddedBy } from "../../services/session";
 import { defaultTranslator, Translator } from "../../i18n/translator";
 
@@ -33,7 +33,9 @@ const prettyCategories = (path?: string): string | undefined => {
 
 const money = (value: any): string => {
   const parsed = Number(value);
-  return `${CURRENCY_SYMBOL}${Number.isFinite(parsed) ? parsed.toFixed(2) : value}`;
+  return Number.isFinite(parsed)
+    ? formatCurrency(parsed)
+    : `${getCurrencySymbol()}${value}`;
 };
 
 const attributionText = (
