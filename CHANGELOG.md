@@ -15,7 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   it applies right away and the sheet closes. Nothing about what the settings do
   or where they are saved has changed.
 - The bottom sheet used by the Savings trend custom range is now a shared
-  component, so Settings uses the exact same sheet.
+  component, so Settings uses the exact same sheet. Both sheets now slide up
+  from the bottom edge (and the scrim fades in) when they open, unless your
+  device is set to reduce motion.
 
 ## [1.29.0] - 2026-10-11
 
