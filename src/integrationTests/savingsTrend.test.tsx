@@ -463,19 +463,22 @@ describe("total saved tab", () => {
     expect(summary).toHaveTextContent("3 months · −$533.33 avg per month");
   });
 
-  it("counts a month without entries as zero", async () => {
-    // July has nothing; August and September save a little, October more.
+  it("counts a month with no incomes or expenses as $0.00 in the total", async () => {
+    // June is the first recorded month and July has no entries at all, so the
+    // 3M range (July to October) spans one empty month.
     seedEntries([
+      { date: ts(2026, 5), amount: "50", type: "income", categories_path: ",salary," },
       { date: ts(2026, 7), amount: "100", type: "income", categories_path: ",salary," },
       { date: ts(2026, 8), amount: "200", type: "income", categories_path: ",salary," },
       { date: ts(2026, 9), amount: "300", type: "income", categories_path: ",salary," },
-      { date: ts(2026, 6), amount: "1", type: "expense", categories_path: ",rent," },
     ]);
     const { user } = await renderApp("/savings-trend");
     await user.click(await screen.findByRole("button", { name: "Last 3 months" }));
 
-    // July: -$1.00, August $100.00, September $200.00, October $300.00.
-    expect(headline("Total saved, Jul – Oct")).toHaveTextContent("$599.00");
+    // July adds nothing: $0.00 + $100.00 + $200.00 + $300.00, over 4 months.
+    const summary = headline("Total saved, Jul – Oct");
+    expect(summary).toHaveTextContent("$600.00");
+    expect(summary).toHaveTextContent("4 months · $150.00 avg per month");
   });
 
   it("switches to the change and back, keeping the tab while the range changes", async () => {
