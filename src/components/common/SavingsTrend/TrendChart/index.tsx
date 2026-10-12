@@ -1,6 +1,7 @@
 import React, { useId, useState } from "react";
 import { useTranslation } from "../../../../i18n";
 import type { TrendPoint } from "../../../../helpers/savingsTrend/savingsTrend.types";
+import { getRunningTotals } from "../../../../helpers/savingsTrend/savingsTotal";
 import {
   formatSavings,
   formatSignedSavings,
@@ -18,6 +19,11 @@ import "./styles.scss";
 interface TrendChartProps {
   /** Every month from the reference month to the end month. */
   points: TrendPoint[];
+  /**
+   * `change` plots each month's savings against the reference month; `total`
+   * plots the running total against zero.
+   */
+  mode?: "change" | "total";
 }
 
 const MAX_TICKS = 7;
@@ -26,18 +32,22 @@ const MAX_TICKS_WITH_YEAR = 5;
 
 /**
  * The monthly savings as a line over a dashed baseline at the reference
- * month's savings: green where the line is above it, red (and hatched) where
- * it is below. Tap, hover or use the arrow keys to read a month.
+ * month's savings (or, in `total` mode, the running total over a zero line):
+ * green where the line is above it, red (and hatched) where it is below. Tap,
+ * hover or use the arrow keys to read a month.
  */
-const TrendChart = ({ points }: TrendChartProps) => {
+const TrendChart = ({ points, mode = "change" }: TrendChartProps) => {
   const { t, language } = useTranslation();
   const id = useId().replace(/:/g, "");
   const [selected, setSelected] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const active = hovered ?? selected;
 
-  const values = points.map((point) => point.savings);
-  const { xs, ys, baselineY } = getChartGeometry(values);
+  const isTotal = mode === "total";
+  const monthly = points.map((point) => point.savings);
+  const values = isTotal ? getRunningTotals(points) : monthly;
+  const baseline = isTotal ? 0 : values[0];
+  const { xs, ys, baselineY } = getChartGeometry(values, baseline);
   const last = points.length - 1;
   const crossesYears = points[0].year !== points[last].year;
   const monthName = (point: TrendPoint, style: "title" | "sentence") =>
@@ -53,9 +63,10 @@ const TrendChart = ({ points }: TrendChartProps) => {
   const polyline = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ");
   const area = `${xs[0].toFixed(1)},${baselineY.toFixed(1)} ${polyline} ${xs[last].toFixed(1)},${baselineY.toFixed(1)}`;
   const lineProps = { points: polyline, strokeWidth: 2 };
-  const isUp = (value: number) => value >= values[0];
+  const isUp = (value: number) => value >= baseline;
+  // The running total starts at its first month, so its label sits under the line.
   const referenceLabelY =
-    ys[0] > CHART.paddingTop + 14 ? ys[0] - 10 : ys[0] + 18;
+    !isTotal && ys[0] > CHART.paddingTop + 14 ? ys[0] - 10 : ys[0] + 18;
 
   const indexAt = (event: React.MouseEvent<HTMLElement>) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -80,7 +91,7 @@ const TrendChart = ({ points }: TrendChartProps) => {
   const point = active === null ? null : points[active];
   const difference = point ? point.savings - values[0] : 0;
 
-  const chartLabel = t("savingsTrend.chartLabel", {
+  const chartLabel = t(isTotal ? "savingsTrend.total.chartLabel" : "savingsTrend.chartLabel", {
     from: monthWithYear(points[0], "sentence"),
     to: monthWithYear(points[last], "sentence"),
     value: formatSavings(values[last]),
@@ -107,11 +118,18 @@ const TrendChart = ({ points }: TrendChartProps) => {
           {point && active !== null && (
             <ChartTooltip
               title={monthWithYear(point, "title")}
-              amount={formatSavings(point.savings)}
+              amount={formatSavings(values[active])}
               share={(xs[active] / CHART.width) * 100}
               anchor={active < points.length / 2 ? "left" : "right"}
               comparison={
-                active === 0
+                isTotal
+                  ? {
+                      text: t("savingsTrend.total.tooltipMonth", {
+                        amount: formatSignedSavings(point.savings),
+                      }),
+                      tone: point.savings >= 0 ? "up" : "down",
+                    }
+                  : active === 0
                   ? undefined
                   : {
                       text: t("savingsTrend.tooltipVs", {
@@ -198,7 +216,8 @@ const TrendChart = ({ points }: TrendChartProps) => {
               </text>
             )}
             <text className="savings-trend-chart__reference-label" x={xs[0]} y={referenceLabelY}>
-              {monthName(points[0], "title")} {formatSavings(values[0])}
+              {isTotal ? tickLabel(points[0]) : monthName(points[0], "title")}{" "}
+              {formatSavings(values[0])}
             </text>
           </svg>
           <table className="visually-hidden">
@@ -207,13 +226,15 @@ const TrendChart = ({ points }: TrendChartProps) => {
               <tr>
                 <th scope="col">{t("savingsTrend.table.month")}</th>
                 <th scope="col">{t("savingsTrend.table.savings")}</th>
+                {isTotal && <th scope="col">{t("savingsTrend.table.total")}</th>}
               </tr>
             </thead>
             <tbody>
-              {points.map((point) => (
-                <tr key={`${point.year}-${point.month}`}>
-                  <th scope="row">{monthWithYear(point, "title")}</th>
-                  <td>{formatSavings(point.savings)}</td>
+              {points.map((row, i) => (
+                <tr key={`${row.year}-${row.month}`}>
+                  <th scope="row">{monthWithYear(row, "title")}</th>
+                  <td>{formatSavings(row.savings)}</td>
+                  {isTotal && <td>{formatSavings(values[i])}</td>}
                 </tr>
               ))}
             </tbody>
@@ -222,7 +243,9 @@ const TrendChart = ({ points }: TrendChartProps) => {
         <div className="savings-trend-chart__key">
           <span>
             <span className="savings-trend-chart__swatch savings-trend-chart__swatch--reference" />
-            {t("savingsTrend.key.reference", { reference: referenceName })}
+            {isTotal
+              ? t("savingsTrend.total.key.zero")
+              : t("savingsTrend.key.reference", { reference: referenceName })}
           </span>
           <span>
             <span className="savings-trend-chart__swatch savings-trend-chart__swatch--above" />
@@ -235,7 +258,9 @@ const TrendChart = ({ points }: TrendChartProps) => {
         </div>
       </div>
       <p className="savings-trend-chart__note">
-        {t("savingsTrend.note", { reference: referenceName })}
+        {isTotal
+          ? t("savingsTrend.total.note")
+          : t("savingsTrend.note", { reference: referenceName })}
       </p>
     </>
   );

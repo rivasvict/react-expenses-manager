@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.31.0] - 2026-10-12
+
+### Added
+
+- The **Savings trend** screen now has two tabs on top of its headline card:
+  **Total saved** and **Change**. Total saved is shown first and the screen
+  opens on it. It adds up the savings of every month in the range you picked
+  (for example April to October) and shows how many months that covers and the
+  average per month; the chart under it plots what you have saved so far, month
+  by month, against a zero line, and tapping a month shows the running total and
+  what that month saved on its own. A negative total is shown with a minus and in
+  red. Change is the existing end-month-versus-start-month comparison, unchanged.
+  The tab you pick stays while you move the month or the range. Available in
+  English, Spanish and French.
+
 ## [1.30.0] - 2026-10-11
 
 ### Changed

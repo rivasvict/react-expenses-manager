@@ -29,6 +29,10 @@
     color: $expense;
   }
 
+  &__amount--neutral {
+    color: $text-primary;
+  }
+
   &__amount--flat {
     color: $text-secondary;
   }

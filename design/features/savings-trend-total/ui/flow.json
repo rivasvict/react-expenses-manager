@@ -1,0 +1,72 @@
+{
+  "screens": [
+    {
+      "id": "trend.existing",
+      "title": "Savings trend (opens on Total saved)",
+      "route": "/savings-trend",
+      "external": true
+    },
+    {
+      "id": "trend.total",
+      "title": "Total saved, 6 months",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.total-tooltip",
+      "title": "A month selected on the total chart",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.change",
+      "title": "Change, 6 months",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.total-es",
+      "title": "Total saved (Spanish)",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "trend.total-negative",
+      "title": "Total saved, negative",
+      "route": "/savings-trend"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "trend.existing",
+      "to": "trend.total",
+      "label": "Open Savings trend from the dashboard's Trend link"
+    },
+    {
+      "from": "trend.total",
+      "to": "trend.change",
+      "label": "Tap the Change tab"
+    },
+    {
+      "from": "trend.change",
+      "to": "trend.total",
+      "label": "Tap the Total saved tab"
+    },
+    {
+      "from": "trend.total",
+      "to": "trend.total-tooltip",
+      "label": "Tap a month on the chart"
+    },
+    {
+      "from": "trend.total-tooltip",
+      "to": "trend.total",
+      "label": "Tap the same month again"
+    },
+    {
+      "from": "trend.total",
+      "to": "trend.total-es",
+      "label": "Pick Spanish in Settings"
+    },
+    {
+      "from": "trend.total",
+      "to": "trend.total-negative",
+      "label": "Move to a history where expenses exceed incomes"
+    }
+  ]
+}

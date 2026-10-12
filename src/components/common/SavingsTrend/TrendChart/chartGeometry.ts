@@ -22,10 +22,13 @@ export interface ChartGeometry {
 
 /**
  * Evenly spaced points; the vertical scale covers the points and the baseline
- * (the first value) so the baseline is always on the chart.
+ * (the first value unless given, e.g. 0 for a running total) so the baseline
+ * is always on the chart.
  */
-export const getChartGeometry = (values: number[]): ChartGeometry => {
-  const baseline = values[0];
+export const getChartGeometry = (
+  values: number[],
+  baseline: number = values[0]
+): ChartGeometry => {
   const low = Math.min(...values, baseline);
   const high = Math.max(...values, baseline);
   const span = high - low || 1;
