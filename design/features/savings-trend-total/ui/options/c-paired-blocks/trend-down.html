@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C: Paired blocks, change down but total positive</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+    .mk-work-area { display: flex; flex-direction: column; }
+    .month-header { margin: 1.1rem 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .month-header .mk-title { flex: 1 1 auto; line-height: 1.2; }
+    .step { width: 2.5rem; height: 2.5rem; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--text-primary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .step--disabled { opacity: 0.35; }
+    .tone--up { color: var(--income); }
+    .tone--down { color: var(--expense); }
+    .tone--flat { color: var(--text-secondary); }
+    .arrow { width: 0.8em; height: 0.8em; flex: 0 0 auto; }
+    .delta { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.5rem; margin-top: 0.35rem; }
+    .delta__pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.6rem; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 700; line-height: 1.5; font-variant-numeric: tabular-nums; }
+    .delta__pill.tone--up { background-color: var(--income-soft); }
+    .delta__pill.tone--down { background-color: var(--expense-soft); }
+    .delta__pill.tone--flat { background-color: var(--highlight); }
+    .delta__caption { font-size: 0.82rem; color: var(--text-secondary); }
+
+    .seg { display: flex; padding: 0.2rem; gap: 0.2rem; margin: 0 0 0.75rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .seg__item { flex: 1 1 0; min-width: 0; height: 2.6rem; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); border-radius: var(--radius-control); }
+    .seg__item--on { color: var(--text-on-accent); background-color: var(--accent); }
+    .seg__item--off { opacity: 0.35; }
+    .seg__item svg { width: 1.05rem; height: 1.05rem; }
+    .figure { margin: 0 0 0.75rem; padding: 1rem 1.15rem; }
+    .figure__label { display: block; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+    .figure__amount { display: block; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+    .figure__title { display: block; font-size: 1.05rem; font-weight: 600; }
+    .figure__sub { display: block; margin-top: 0.3rem; font-size: 0.85rem; color: var(--text-secondary); }
+    .plot__area { position: relative; }
+    .plot { margin: 0 0 0.75rem; padding: 0.75rem 0.5rem 0.5rem; }
+    .plot svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .key { display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; padding: 0.5rem 0.5rem 0; font-size: 12px; color: var(--text-secondary); }
+    .key__swatch { display: inline-block; width: 12px; height: 8px; margin-right: 0.4rem; vertical-align: middle; border-radius: var(--radius-pill); }
+    .key__line { display: inline-block; width: 14px; margin-right: 0.4rem; vertical-align: middle; border-top: 2px dashed var(--border-strong); }
+    .note { margin: 0; font-size: 0.82rem; line-height: 1.45; color: var(--text-secondary); text-align: center; }
+    .tip { position: absolute; padding: 0.35rem 0.6rem; font-size: 0.78rem; line-height: 1.35; background-color: var(--bg-raised-hover); border: 1px solid var(--border-strong); border-radius: var(--radius-control); box-shadow: var(--shadow-pop); white-space: nowrap; }
+    .tip strong { display: block; font-size: 0.85rem; }
+
+  
+    .block-title { margin: 0.4rem 0 0.4rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); }
+    .figure__row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+    .spark { display: block; width: 100%; height: auto; margin-top: 0.4rem; overflow: visible; }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+      <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+      <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+    </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Savings trend</h3>
+      <div class="month-header">
+        <span class="step" role="button" aria-label="Previous month"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span>
+        <h1 class="mk-title">October 2026</h1>
+        <span class="step step--disabled" role="button" aria-label="Next month"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span>
+      </div>
+      <div class="seg" role="group" aria-label="Range"><span class="seg__item" role="button" aria-pressed="false" aria-label="Last month">1M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 2 months">2M</span><span class="seg__item seg__item--on" role="button" aria-pressed="true" aria-label="Last 3 months">3M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 6 months">6M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 12 months">1Y</span><span class="seg__item" role="button" aria-pressed="false" aria-label="This year so far">YTD</span><span class="seg__item" role="button" aria-label="Custom range"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2" style="fill: none; stroke: currentColor" stroke-width="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+      <h4 class="block-title">Change</h4>
+      <div class="mk-card figure" role="group" aria-label="October vs July">
+        <span class="figure__label">October vs July</span>
+        <span class="figure__amount tone--down">−$1,320.00</span>
+        <span class="delta"><span class="delta__pill tone--down"><svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10.5 10.5 5.5H7.4V1.5H4.6V5.5H1.5Z" style="fill: currentColor"/></svg>−146.7%</span><span class="delta__caption">−$420.00 vs $900.00</span></span>
+      </div>
+      <div class="mk-card plot">
+        <div class="plot__area"><svg viewBox="0 0 300 150" role="img" aria-label="Monthly savings, ending at −$420.00"><defs><clipPath id="cdown-up"><rect x="0" y="0" width="300" height="28.6"/></clipPath><clipPath id="cdown-dn"><rect x="0" y="28.6" width="300" height="121.4"/></clipPath><pattern id="cdown-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke-width="1.5" style="stroke: var(--expense); stroke-opacity: 0.55"/></pattern></defs><line x1="8" y1="28.6" x2="292" y2="28.6" stroke-width="1" stroke-dasharray="3 3" style="stroke: var(--border-strong)"/><polygon points="8.0,28.6 8.0,28.6 102.7,69.0 197.3,99.2 292.0,117.4 292.0,28.6" clip-path="url(#cdown-up)" style="fill: var(--income); fill-opacity: 0.2"/><polygon points="8.0,28.6 8.0,28.6 102.7,69.0 197.3,99.2 292.0,117.4 292.0,28.6" clip-path="url(#cdown-dn)" style="fill: var(--expense); fill-opacity: 0.16"/><polygon points="8.0,28.6 8.0,28.6 102.7,69.0 197.3,99.2 292.0,117.4 292.0,28.6" clip-path="url(#cdown-dn)" style="fill: url(#cdown-hatch)"/><polyline points="8.0,28.6 102.7,69.0 197.3,99.2 292.0,117.4" clip-path="url(#cdown-up)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="fill: none; stroke: var(--income)"/><polyline points="8.0,28.6 102.7,69.0 197.3,99.2 292.0,117.4" clip-path="url(#cdown-dn)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="fill: none; stroke: var(--expense)"/><text x="8.0" y="146" font-size="11" text-anchor="start" style="fill: var(--text-primary); font-weight: 600">Jul</text><text x="102.7" y="146" font-size="11" text-anchor="middle" style="fill: var(--text-secondary)">Aug</text><text x="197.3" y="146" font-size="11" text-anchor="middle" style="fill: var(--text-secondary)">Sep</text><text x="292.0" y="146" font-size="11" text-anchor="end" style="fill: var(--text-secondary)">Oct</text><circle cx="8.0" cy="28.6" r="4.5" stroke-width="2" style="fill: var(--bg-raised); stroke: var(--text-secondary)"/><circle cx="292.0" cy="117.4" r="5" stroke-width="2" style="fill: var(--expense); stroke: var(--bg-raised)"/><text x="292.0" y="107.4" font-size="11" font-weight="700" text-anchor="end" style="fill: var(--text-primary)">−$420.00</text><text x="8.0" y="18.6" font-size="11" font-weight="700" text-anchor="start" style="fill: var(--text-primary)">July $900.00</text></svg></div>
+        <div class="key"><span><span class="key__line"></span>Savings in July</span><span><span class="key__swatch" style="background-color: var(--income-soft); border: 1px solid var(--income)"></span>Above</span><span><span class="key__swatch" style="background-color: var(--expense-soft); border: 1px solid var(--expense)"></span>Below</span></div>
+      </div>
+      <h4 class="block-title">Total saved</h4>
+      <div class="mk-card figure" role="group" aria-label="Total saved, Jul – Oct">
+        <span class="figure__row"><span class="figure__amount">$630.00</span><span class="figure__label">Jul – Oct, 4 months</span></span>
+        <span class="figure__sub">$157.50 per month</span>
+        <svg class="spark" viewBox="0 0 300 72" role="img" aria-label="Total saved so far, ending at $630.00"><defs><clipPath id="csdown-up"><rect x="0" y="0" width="300" height="61.2"/></clipPath><clipPath id="csdown-dn"><rect x="0" y="61.2" width="300" height="10.8"/></clipPath><pattern id="csdown-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke-width="1.5" style="stroke: var(--expense); stroke-opacity: 0.55"/></pattern></defs><line x1="8" y1="61.2" x2="292" y2="61.2" stroke-width="1" stroke-dasharray="3 3" style="stroke: var(--border-strong)"/><polygon points="8.0,61.2 8.0,30.9 102.7,20.8 197.3,25.9 292.0,40.0 292.0,61.2" clip-path="url(#csdown-up)" style="fill: var(--income); fill-opacity: 0.2"/><polygon points="8.0,61.2 8.0,30.9 102.7,20.8 197.3,25.9 292.0,40.0 292.0,61.2" clip-path="url(#csdown-dn)" style="fill: var(--expense); fill-opacity: 0.16"/><polygon points="8.0,61.2 8.0,30.9 102.7,20.8 197.3,25.9 292.0,40.0 292.0,61.2" clip-path="url(#csdown-dn)" style="fill: url(#csdown-hatch)"/><polyline points="8.0,30.9 102.7,20.8 197.3,25.9 292.0,40.0" clip-path="url(#csdown-up)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="fill: none; stroke: var(--income)"/><polyline points="8.0,30.9 102.7,20.8 197.3,25.9 292.0,40.0" clip-path="url(#csdown-dn)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="fill: none; stroke: var(--expense)"/><circle cx="8.0" cy="30.9" r="4.5" stroke-width="2" style="fill: var(--bg-raised); stroke: var(--text-secondary)"/><circle cx="292.0" cy="40.0" r="5" stroke-width="2" style="fill: var(--income); stroke: var(--bg-raised)"/><text x="292.0" y="30.0" font-size="11" font-weight="700" text-anchor="end" style="fill: var(--text-primary)">$630.00</text><text x="8.0" y="20.9" font-size="11" font-weight="700" text-anchor="start" style="fill: var(--text-primary)">$900.00</text></svg>
+      </div>
+      <p class="note">Change compares October with July. Total saved adds up every month in between, too.</p>
+    </div>
+  </main>
+</body>
+</html>

@@ -131,6 +131,20 @@ const fr: Translations = {
   "savingsTrend.table.month": "Mois",
   "savingsTrend.table.savings": "Épargne",
   "savingsTrend.tooltipVs": "{{difference}} vs {{month}}",
+  "savingsTrend.view.group": "Afficher",
+  "savingsTrend.view.total": "Total épargné",
+  "savingsTrend.view.change": "Variation",
+  "savingsTrend.total.label": "Total épargné, {{span}}",
+  "savingsTrend.total.months_one": "{{count}} mois",
+  "savingsTrend.total.months_other": "{{count}} mois",
+  "savingsTrend.total.average": "{{amount}} en moyenne par mois",
+  "savingsTrend.total.note":
+    "Chaque point est ce que vous avez épargné jusque-là dans cette période. Il monte les mois où vous épargnez et baisse ceux où vous dépensez trop.",
+  "savingsTrend.total.key.zero": "Ligne zéro",
+  "savingsTrend.total.tooltipMonth": "{{amount}} ce mois-ci",
+  "savingsTrend.total.chartLabel":
+    "Total épargné de {{from}} à {{to}}, pour finir à {{value}}",
+  "savingsTrend.table.total": "Total à ce jour",
   "savingsTrend.empty.title": "Pas encore assez d'historique",
   "savingsTrend.empty.body":
     "Une évolution nécessite au moins deux mois. Continuez à saisir vos revenus et vos dépenses, ou choisissez un mois plus récent.",

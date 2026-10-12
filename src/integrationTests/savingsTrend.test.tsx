@@ -2,6 +2,7 @@ import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, SeedEntry, ts } from "./helpers/seed";
 import { LANGUAGE_STORAGE_KEY } from "../i18n/languagePreference";
+import { showChange, showTotalSaved } from "./helpers/trendView";
 
 const PINNED_DATE = new Date("2026-10-15T12:00:00Z");
 
@@ -55,6 +56,7 @@ describe("dashboard link to the savings trend", () => {
     await user.click(screen.getByRole("link", { name: "Savings trend" }));
 
     expect(await screen.findByRole("heading", { name: "Savings trend" })).toBeInTheDocument();
+    await showChange(user);
     expect(headline("October vs April")).toHaveTextContent("+$340.00");
   });
 
@@ -70,7 +72,8 @@ describe("dashboard link to the savings trend", () => {
 describe("savings trend screen", () => {
   it("compares the selected month with six months back by default", async () => {
     seedMonths(SAVINGS);
-    await renderApp("/savings-trend");
+    const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     const summary = await screen.findByRole("group", { name: "October vs April" });
     expect(summary).toHaveTextContent("+$340.00");
@@ -82,6 +85,7 @@ describe("savings trend screen", () => {
   it("switches to a year back, naming both years", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
 
@@ -94,6 +98,7 @@ describe("savings trend screen", () => {
   it("counts YTD from January of the selected year", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     await user.click(await screen.findByRole("button", { name: "This year so far" }));
 
@@ -106,6 +111,7 @@ describe("savings trend screen", () => {
   it("follows the month header back to an earlier month", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await screen.findByRole("group", { name: "October vs April" });
 
     await stepBack(user, "September 2026");
@@ -118,7 +124,8 @@ describe("savings trend screen", () => {
 
   it("shows a drop in the amount and the percentage with true minus signs", async () => {
     seedMonths([...SAVINGS.slice(0, -1), 900]);
-    await renderApp("/savings-trend");
+    const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     const summary = await screen.findByRole("group", { name: "October vs April" });
     expect(summary).toHaveTextContent("−$380.00");
@@ -127,7 +134,8 @@ describe("savings trend screen", () => {
 
   it("lists the monthly savings for assistive technology", async () => {
     seedMonths(SAVINGS);
-    await renderApp("/savings-trend");
+    const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     const table = await screen.findByRole("table", { name: "Monthly savings" });
     const rows = within(table).getAllByRole("row");
@@ -144,6 +152,7 @@ describe("savings trend screen", () => {
   it("reads a month on the chart with the arrow keys", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     const chart = await screen.findByRole("group", { name: /^Monthly savings from/ });
 
     chart.focus();
@@ -158,6 +167,7 @@ describe("savings trend screen", () => {
   it("reads the month under a tap on the chart", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     const plot = await screen.findByRole("group", { name: /^Monthly savings from/ });
 
     // jsdom has no layout, so a tap lands in the middle of the plot: July.
@@ -174,6 +184,7 @@ describe("custom range", () => {
   it("compares any two recorded months and moves the month header to the last one", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     await user.click(await screen.findByRole("button", { name: "Custom range" }));
     const sheet = screen.getByRole("dialog", { name: "Custom range" });
@@ -211,6 +222,7 @@ describe("custom range", () => {
   it("closes without changing anything on Cancel, and returns focus to the button", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     const custom = await screen.findByRole("button", { name: "Custom range" });
     await user.click(custom);
@@ -250,7 +262,8 @@ describe("limited history", () => {
   it("opens on the longest range the history reaches, with every preset selectable", async () => {
     // Four months: July to October 2026.
     seedMonths([100, 200, 300, 400], 2026, 6);
-    await renderApp("/savings-trend");
+    const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     expect(await screen.findByRole("group", { name: "October vs July" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Last 3 months" })).toHaveAttribute("aria-pressed", "true");
@@ -260,6 +273,7 @@ describe("limited history", () => {
   it("explains a range that reaches before the first recorded month, instead of showing a shorter one", async () => {
     seedMonths([100, 200, 300, 400], 2026, 6);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await screen.findByRole("group", { name: "October vs July" });
 
     await user.click(screen.getByRole("button", { name: "Last 6 months" }));
@@ -277,6 +291,7 @@ describe("limited history", () => {
   it("compares with the first recorded month from the explanation", async () => {
     seedMonths([100, 200, 300, 400], 2026, 6);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
 
     await user.click(screen.getByRole("button", { name: "Compare with July 2026" }));
@@ -289,6 +304,7 @@ describe("limited history", () => {
   it("keeps every preset selectable, and the picked one picked, when the month header steps back", async () => {
     seedMonths(SAVINGS);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
     expect(headline("October 2026 vs October 2025")).toBeInTheDocument();
 
@@ -309,6 +325,7 @@ describe("limited history", () => {
     jest.setSystemTime(new Date("2026-01-15T12:00:00Z"));
     seedMonths(SAVINGS.slice(0, 4));
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
 
     await user.click(await screen.findByRole("button", { name: "This year so far" }));
 
@@ -334,6 +351,7 @@ describe("limited history", () => {
   it("says there is not enough history at the first recorded month, and the comparison returns on the next month", async () => {
     seedMonths(SAVINGS.slice(-3), 2026, 7);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await screen.findByRole("group", { name: "October vs August" });
 
     await stepBack(user, "September 2026");
@@ -353,6 +371,7 @@ describe("limited history", () => {
       { date: ts(2026, 9), amount: "300", type: "income", categories_path: ",salary," },
     ]);
     const { user } = await renderApp("/savings-trend");
+    await showChange(user);
     await user.click(await screen.findByRole("button", { name: "Last 3 months" }));
 
     // July saved exactly $0.00, so there is no percentage to give.
@@ -374,11 +393,166 @@ describe("savings trend in Spanish", () => {
     expect(
       await screen.findByRole("heading", { name: "Tendencia del ahorro" })
     ).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: "Ahorro total" })).toHaveAttribute("aria-selected", "true");
+    expect(headline("Ahorro total, abr – oct")).toHaveTextContent("$8,720.00");
+    expect(headline("Ahorro total, abr – oct")).toHaveTextContent("7 meses · $1,245.71 de media al mes");
+    await showChange(user, "Cambio");
     const summary = headline("Octubre frente a abril");
     expect(summary).toHaveTextContent("+$340.00");
     expect(screen.getByRole("button", { name: "Últimos 6 meses" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("button", { name: "Último mes" })).toHaveTextContent("1M");
     expect(screen.getByRole("button", { name: "Últimos 12 meses" })).toHaveTextContent("1A");
     expect(screen.getByText(/Verde donde superó a abril/)).toBeInTheDocument();
+  });
+});
+
+describe("total saved tab", () => {
+  const totalChart = () =>
+    screen.findByRole("group", { name: /^Total saved from/ });
+
+  it("opens on Total saved, listed on the left of Change", async () => {
+    seedMonths(SAVINGS);
+    await renderApp("/savings-trend");
+
+    const tabs = await screen.findAllByRole("tab");
+    expect(tabs.map((tab) => tab.textContent)).toEqual(["Total saved", "Change"]);
+    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    expect(tabs[1]).toHaveAttribute("aria-selected", "false");
+  });
+
+  it("adds up every month of the range, with the months it spans and the average", async () => {
+    seedMonths(SAVINGS);
+    await renderApp("/savings-trend");
+
+    // April to October 2026: 1,280 + 760 + 1,050 + 1,390 + 1,180 + 1,440 + 1,620.
+    const summary = await screen.findByRole("group", { name: "Total saved, Apr – Oct" });
+    expect(summary).toHaveTextContent("$8,720.00");
+    expect(summary).toHaveTextContent("7 months · $1,245.71 avg per month");
+    expect(summary).not.toHaveTextContent("%");
+  });
+
+  it("names both years when the range crosses a year", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+
+    await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
+
+    const summary = headline("Total saved, Oct 2025 – Oct 2026");
+    expect(summary).toHaveTextContent("$11,610.00");
+    expect(summary).toHaveTextContent("13 months · $893.08 avg per month");
+  });
+
+  it("follows the range and the month header", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+
+    await user.click(await screen.findByRole("button", { name: "Last 2 months" }));
+    expect(headline("Total saved, Aug – Oct")).toHaveTextContent("$4,240.00");
+
+    await stepBack(user, "September 2026");
+    // The 2M range now ends in September: July + August + September.
+    expect(headline("Total saved, Jul – Sep")).toHaveTextContent("$4,010.00");
+  });
+
+  it("shows a negative total with a true minus", async () => {
+    seedMonths([-500, -300, -800], 2026, 7);
+    await renderApp("/savings-trend");
+
+    const summary = await screen.findByRole("group", { name: "Total saved, Aug – Oct" });
+    expect(summary).toHaveTextContent("−$1,600.00");
+    expect(summary).toHaveTextContent("3 months · −$533.33 avg per month");
+  });
+
+  it("counts a month with no incomes or expenses as $0.00 in the total", async () => {
+    // June is the first recorded month and July has no entries at all, so the
+    // 3M range (July to October) spans one empty month.
+    seedEntries([
+      { date: ts(2026, 5), amount: "50", type: "income", categories_path: ",salary," },
+      { date: ts(2026, 7), amount: "100", type: "income", categories_path: ",salary," },
+      { date: ts(2026, 8), amount: "200", type: "income", categories_path: ",salary," },
+      { date: ts(2026, 9), amount: "300", type: "income", categories_path: ",salary," },
+    ]);
+    const { user } = await renderApp("/savings-trend");
+    await user.click(await screen.findByRole("button", { name: "Last 3 months" }));
+
+    // July adds nothing: $0.00 + $100.00 + $200.00 + $300.00, over 4 months.
+    const summary = headline("Total saved, Jul – Oct");
+    expect(summary).toHaveTextContent("$600.00");
+    expect(summary).toHaveTextContent("4 months · $150.00 avg per month");
+  });
+
+  it("switches to the change and back, keeping the tab while the range changes", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+
+    await showChange(user);
+    expect(screen.getByRole("tab", { name: "Change" })).toHaveAttribute("aria-selected", "true");
+    expect(headline("October vs April")).toHaveTextContent("+$340.00");
+    expect(screen.queryByRole("group", { name: /^Total saved/ })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Last 3 months" }));
+    expect(headline("October vs July")).toBeInTheDocument();
+
+    await showTotalSaved(user);
+    expect(headline("Total saved, Jul – Oct")).toHaveTextContent("$5,630.00");
+  });
+
+  it("moves between the tabs with the arrow keys", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+
+    (await screen.findByRole("tab", { name: "Total saved" })).focus();
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByRole("tab", { name: "Change" })).toHaveFocus();
+    expect(headline("October vs April")).toBeInTheDocument();
+
+    await user.keyboard("{ArrowLeft}");
+    expect(screen.getByRole("tab", { name: "Total saved" })).toHaveFocus();
+  });
+
+  it("plots the running total and lists it for assistive technology", async () => {
+    seedMonths(SAVINGS);
+    await renderApp("/savings-trend");
+
+    expect(
+      await screen.findByRole("group", {
+        name: "Total saved from April 2026 to October 2026, ending at $8,720.00",
+      })
+    ).toBeInTheDocument();
+    const table = screen.getByRole("table", { name: "Monthly savings" });
+    const rows = within(table).getAllByRole("row");
+    expect(rows[0]).toHaveTextContent("MonthSavingsTotal so far");
+    expect(rows[1]).toHaveTextContent("April 2026$1,280.00$1,280.00");
+    expect(rows[7]).toHaveTextContent("October 2026$1,620.00$8,720.00");
+    expect(screen.getByText("Zero line")).toBeInTheDocument();
+    expect(screen.getByText(/It rises in months you save and falls in months you overspend/)).toBeInTheDocument();
+  });
+
+  it("reads a month on the chart: the total so far and what that month saved", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+    const plot = await totalChart();
+
+    // jsdom has no layout, so a tap lands in the middle of the plot: July.
+    await user.click(plot);
+    expect(tooltipMonth("July 2026")).toBeInTheDocument();
+    expect(screen.getByText("+$1,390.00 that month")).toBeInTheDocument();
+    expect(screen.getByTestId("chart-tooltip")).toHaveTextContent("$4,480.00");
+
+    await user.click(plot);
+    expect(tooltipMonth("July 2026")).not.toBeInTheDocument();
+  });
+
+  it("shows a month that overspent as a loss in the tooltip", async () => {
+    seedMonths(SAVINGS);
+    const { user } = await renderApp("/savings-trend");
+    await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
+    const plot = await totalChart();
+
+    plot.focus();
+    await user.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}{ArrowRight}");
+    // January 2026 (the fourth month after October 2025) saved -$180.00.
+    expect(tooltipMonth("January 2026")).toBeInTheDocument();
+    expect(screen.getByText("−$180.00 that month")).toBeInTheDocument();
   });
 });

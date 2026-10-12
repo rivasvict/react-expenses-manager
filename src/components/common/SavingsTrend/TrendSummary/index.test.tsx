@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import TrendSummary from ".";
 import { LanguageProvider } from "../../../../i18n";
 import { LANGUAGE_STORAGE_KEY } from "../../../../i18n/languagePreference";
@@ -81,5 +82,60 @@ describe("TrendSummary", () => {
     expect(
       screen.getByRole("group", { name: "Octubre frente a abril" })
     ).toBeInTheDocument();
+  });
+
+  describe("with tabs", () => {
+    const renderTabbed = (view: "total" | "change", trend = trendOf({})) => {
+      const onViewChange = jest.fn();
+      render(
+        <LanguageProvider>
+          <TrendSummary trend={trend} view={view} onViewChange={onViewChange} />
+        </LanguageProvider>
+      );
+      return { onViewChange };
+    };
+
+    it("has no tabs unless it is given a way to change view", () => {
+      renderSummary(trendOf({}));
+      expect(screen.queryByRole("tablist")).not.toBeInTheDocument();
+    });
+
+    it("shows the total saved over every month of the range on the Total saved tab", () => {
+      const points = [1280, 760, 1050].map((savings, i) => point(2026, 3 + i, savings));
+      renderTabbed(
+        "total",
+        trendOf({ points, reference: points[0], end: points[2] })
+      );
+      const summary = screen.getByRole("group", { name: "Total saved, Apr – Jun" });
+      expect(summary).toHaveTextContent("$3,090.00");
+      expect(summary).toHaveTextContent("3 months · $1,030.00 avg per month");
+      expect(screen.getByRole("tab", { name: "Total saved" })).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("names the year on both ends of a range that crosses years", () => {
+      const points = [point(2025, 9, 820), point(2026, 9, 1620)];
+      renderTabbed("total", trendOf({ points, reference: points[0], end: points[1] }));
+      expect(
+        screen.getByRole("group", { name: "Total saved, Oct 2025 \u2013 Oct 2026" })
+      ).toBeInTheDocument();
+    });
+
+    it("shows the comparison on the Change tab, with the Change tab selected", () => {
+      renderTabbed("change");
+      expect(screen.getByRole("group", { name: "October vs April" })).toHaveTextContent("+$340.00");
+      expect(screen.getByRole("tab", { name: "Change" })).toHaveAttribute("aria-selected", "true");
+    });
+
+    it("asks for the other view when its tab is clicked", async () => {
+      const { onViewChange } = renderTabbed("total");
+      await userEvent.click(screen.getByRole("tab", { name: "Change" }));
+      expect(onViewChange).toHaveBeenCalledWith("change");
+    });
+
+    it("shows a negative total in the expense terms with a true minus", () => {
+      const points = [point(2026, 7, -500), point(2026, 9, -800)];
+      renderTabbed("total", trendOf({ points, reference: points[0], end: points[1] }));
+      expect(screen.getByText("−$1,300.00")).toHaveClass("trend-summary__amount--down");
+    });
   });
 });

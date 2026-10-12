@@ -50,7 +50,7 @@ Node version is pinned in `.nvmrc`.
 - `/edit-income/:entryId`, `/edit-expense/:entryId` — EditEntry
 - `/incomes`, `/expenses` — EntriesSummaryWithFilter
 - `/summary` — Summary
-- `/savings-trend` — Savings trend (range picker, line chart; reached from the "Trend" link in the dashboard's savings card)
+- `/savings-trend` — Savings trend (range picker, a Total saved / Change tab pair that opens on Total saved, line chart; reached from the "Trend" link in the dashboard's savings card)
 - `/data-management` — CSV import/export
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
@@ -82,6 +82,7 @@ Node version is pinned in `.nvmrc`.
 - **`navigation.ts`** — `goToPrevMonth(user, expectedTitle)` and `goToNextMonth(user, expectedTitle)`: click the Prev/Next button and wait for the new month heading. Use these instead of inline `findByRole("button", …)` calls so the assertion pattern stays consistent across test files.
 - **`categorySelect.ts`** — `selectCategory(user, categoryName)`: opens the searchable category dropdown (`CategorySearchSelect`) and clicks the matching option. Use this instead of inline `click(combobox)` → `click(option)` pairs whenever a test just needs to pick a category. Its internal `findByRole("option", …)` throws when the category is missing, so option presence is still asserted. Tests that exercise the dropdown *mechanics* (type-to-filter, empty state, keyboard nav) should still drive the control directly. On `/expenses`/`/incomes` the category picker lives inside the Filters sheet, so call `openFilterSheet(user)` first.
 - **`settings.ts`** — `pickLanguage(user, name, rowName?)` and `pickCurrency(user, name, rowName?)`: on `/settings`, open the Language or Currency sheet from its row and click the option (the sheet closes on pick). `rowName` is the row's label in the language currently shown (defaults to English; pass `/^Idioma/` or `/^Moneda/` once the app is in Spanish). Use these instead of inline radio clicks.
+- **`trendView.ts`** — `showChange(user, tabName?)` and `showTotalSaved(user, tabName?)`: on `/savings-trend`, click the Change or Total saved tab. The screen opens on Total saved, so tests of the end-month-vs-reference comparison call `showChange` first; the tab stays selected while the month or range changes. Pass the tab's name in the current language (`"Cambio"`, `"Ahorro total"`) once the app is in Spanish.
 - **`filters.ts`** — `openFilterSheet(user)`: opens the "Filters & sort" sheet/panel from the entry-list toolbar and waits for its heading. `searchEntries(user, term)`: types into the toolbar's live "Search entries" field. Use these instead of inline queries whenever a test just needs to open the sheet or narrow the list; tests exercising the sheet/search mechanics themselves should drive the controls directly.
 
 ## General guidelines for development

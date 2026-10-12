@@ -133,6 +133,22 @@ const en = {
   "savingsTrend.table.month": "Month",
   "savingsTrend.table.savings": "Savings",
   "savingsTrend.tooltipVs": "{{difference}} vs {{month}}",
+  // Savings trend: the Total saved / Change tabs and the total-saved view.
+  // {{span}} is "Apr – Oct" (with the year on both ends across years).
+  "savingsTrend.view.group": "Show",
+  "savingsTrend.view.total": "Total saved",
+  "savingsTrend.view.change": "Change",
+  "savingsTrend.total.label": "Total saved, {{span}}",
+  "savingsTrend.total.months_one": "{{count}} month",
+  "savingsTrend.total.months_other": "{{count}} months",
+  "savingsTrend.total.average": "{{amount}} avg per month",
+  "savingsTrend.total.note":
+    "Each point is what you have saved so far in this range. It rises in months you save and falls in months you overspend.",
+  "savingsTrend.total.key.zero": "Zero line",
+  "savingsTrend.total.tooltipMonth": "{{amount}} that month",
+  "savingsTrend.total.chartLabel":
+    "Total saved from {{from}} to {{to}}, ending at {{value}}",
+  "savingsTrend.table.total": "Total so far",
   "savingsTrend.empty.title": "Not enough history yet",
   "savingsTrend.empty.body":
     "A trend needs at least two months. Keep adding your incomes and expenses, or pick a later month.",

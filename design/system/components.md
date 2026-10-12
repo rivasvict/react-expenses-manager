@@ -25,8 +25,10 @@ same PR that adds it.
 | Savings change pill (arrow + signed percentage on a green / red / grey tint) | The dashboard, assembled | `src/components/common/ChangePill/` |
 | Savings trend link (gold "Trend ›" with a trending-up chip, in the savings card's footer) | The dashboard, assembled | `src/components/common/SavingsTrendLink/` |
 | Range switch (segmented control of 1M … YTD plus a calendar button; dimmed when out of reach) | Savings trend | `src/components/common/SavingsTrend/RangeSwitch/` |
-| Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
-| Trend summary (the "October vs April" amount, percentage pill and caption) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
+| Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip; plots the running total over a zero line on the Total saved tab) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
+| Trend summary (the headline card: tabs on top, then either the "October vs April" amount, percentage pill and caption or the total saved) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
+| View tabs (underline tab pair, Total saved left / Change right, at the top of the headline card) | Savings trend | `src/components/common/SavingsTrend/ViewTabs/` |
+| Total figures (label, total saved, month count and monthly average, inside the headline card) | Savings trend | `src/components/common/SavingsTrend/TotalFigures/` (maths: `src/helpers/savingsTrend/savingsTotal.ts`) |
 | Custom range sheet (bottom sheet over a scrim with From / To month selects) | Savings trend | `src/components/common/SavingsTrend/CustomRangeSheet/` |
 | Bottom sheet (scrim, panel, grabber, heading, close chip; focuses its heading, closes on Escape or scrim) | Savings trend, Settings | `src/components/common/BottomSheet/` |
 | Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |

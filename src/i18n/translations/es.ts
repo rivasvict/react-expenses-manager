@@ -130,6 +130,20 @@ const es: Translations = {
   "savingsTrend.table.month": "Mes",
   "savingsTrend.table.savings": "Ahorro",
   "savingsTrend.tooltipVs": "{{difference}} frente a {{month}}",
+  "savingsTrend.view.group": "Mostrar",
+  "savingsTrend.view.total": "Ahorro total",
+  "savingsTrend.view.change": "Cambio",
+  "savingsTrend.total.label": "Ahorro total, {{span}}",
+  "savingsTrend.total.months_one": "{{count}} mes",
+  "savingsTrend.total.months_other": "{{count}} meses",
+  "savingsTrend.total.average": "{{amount}} de media al mes",
+  "savingsTrend.total.note":
+    "Cada punto es lo que has ahorrado hasta ese mes en este rango. Sube en los meses que ahorras y baja en los que gastas de más.",
+  "savingsTrend.total.key.zero": "Línea cero",
+  "savingsTrend.total.tooltipMonth": "{{amount}} ese mes",
+  "savingsTrend.total.chartLabel":
+    "Ahorro total de {{from}} a {{to}}, terminando en {{value}}",
+  "savingsTrend.table.total": "Total hasta ese mes",
   "savingsTrend.empty.title": "Aún no hay suficiente historial",
   "savingsTrend.empty.body":
     "Una tendencia necesita al menos dos meses. Sigue añadiendo tus ingresos y gastos, o elige un mes posterior.",

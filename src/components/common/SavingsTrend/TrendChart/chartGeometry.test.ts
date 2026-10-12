@@ -22,6 +22,12 @@ describe("getChartGeometry", () => {
     expect(baselineY).toBe(ys[0]);
   });
 
+  it("puts the baseline at the given value instead of the first one, e.g. zero for a running total", () => {
+    const { ys, baselineY } = getChartGeometry([1280, 2040, 3090], 0);
+    expect(baselineY).toBeGreaterThan(ys[0]);
+    expect(baselineY).toBeLessThanOrEqual(CHART.height - CHART.paddingBottom);
+  });
+
   it("keeps every point inside the top and bottom padding", () => {
     const { ys } = getChartGeometry([-180, 1620, 820]);
     ys.forEach((y) => {

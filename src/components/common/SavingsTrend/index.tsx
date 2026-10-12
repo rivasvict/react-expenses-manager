@@ -23,6 +23,7 @@ import type {
 } from "../../../helpers/savingsTrend/savingsTrend.types";
 import RangeSwitch from "./RangeSwitch";
 import TrendSummary from "./TrendSummary";
+import type { TrendView } from "./ViewTabs";
 import TrendChart from "./TrendChart";
 import CustomRangeSheet from "./CustomRangeSheet";
 import HistoryNotice from "./HistoryNotice";
@@ -37,8 +38,9 @@ interface SavingsTrendProps {
 /**
  * The Savings trend screen: is the selected month's savings growing against an
  * earlier month? A range picker (1M … YTD or a custom span in whole months), a
- * headline with the amount and percentage, and a line chart of the months in
- * between (design/features/savings-trend/ui/approved/).
+ * headline card with Total saved (the default) and Change tabs, and a line chart
+ * of the months in between (design/features/savings-trend/ui/approved/ and
+ * design/features/savings-trend-total/ui/approved/).
  */
 const SavingsTrend = ({
   entries,
@@ -49,6 +51,8 @@ const SavingsTrend = ({
   // Until the user picks a range it is 6M, or the longest the history reaches.
   const [picked, setPicked] = useState<TrendRange | null>(null);
   const requested = picked ?? getDefaultRange(entries, selectedDate);
+  // The screen opens on Total saved; the tab survives moving the month or range.
+  const [view, setView] = useState<TrendView>("total");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const customButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -92,10 +96,11 @@ const SavingsTrend = ({
       />
       {trend && (
         <>
-          <TrendSummary trend={trend} />
+          <TrendSummary trend={trend} view={view} onViewChange={setView} />
           <TrendChart
-            key={`${trend.reference.year}-${trend.reference.month}-${selectedDate.year}-${selectedDate.month}`}
+            key={`${view}-${trend.reference.year}-${trend.reference.month}-${selectedDate.year}-${selectedDate.month}`}
             points={trend.points}
+            mode={view}
           />
         </>
       )}
