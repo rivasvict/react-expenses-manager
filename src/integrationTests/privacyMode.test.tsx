@@ -70,6 +70,9 @@ describe("privacy mode", () => {
 
   it("hides the dashboard's figures right after the mode is turned on", async () => {
     const { user } = await renderApp("/");
+    expect(await screen.findByText("$1,460.00")).toBeInTheDocument();
+    expect(screen.getByTitle("Incomes")).toHaveTextContent("$1,500.00");
+    expect(screen.getByTitle("Expenses")).toHaveTextContent("$40.00");
     await openSettings(user);
 
     await togglePrivacyMode(user);
@@ -154,6 +157,8 @@ describe("privacy mode", () => {
     await goHome(user);
 
     expect(await screen.findByText("$1,460.00")).toBeInTheDocument();
+    expect(screen.getByTitle("Incomes")).toHaveTextContent("$1,500.00");
+    expect(screen.getByTitle("Expenses")).toHaveTextContent("$40.00");
     expect(
       screen.queryByRole("button", { name: /figures$/ }),
     ).not.toBeInTheDocument();
