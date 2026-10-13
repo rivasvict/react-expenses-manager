@@ -1,0 +1,61 @@
+{
+  "screens": [
+    {
+      "id": "settings.off",
+      "title": "Settings: Privacy mode off",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.on",
+      "title": "Settings: Privacy mode on",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.on-es",
+      "title": "Settings (Spanish)",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.hidden",
+      "title": "Dashboard: figures hidden",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.hidden-es",
+      "title": "Dashboard hidden (Spanish)",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.shown",
+      "title": "Dashboard: figures shown",
+      "route": "/"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "settings.off",
+      "to": "settings.on",
+      "label": "Turn Privacy mode on"
+    },
+    {
+      "from": "settings.on",
+      "to": "settings.off",
+      "label": "Turn Privacy mode off"
+    },
+    {
+      "from": "settings.on",
+      "to": "dashboard.hidden",
+      "label": "Open the app (Home)"
+    },
+    {
+      "from": "dashboard.hidden",
+      "to": "dashboard.shown",
+      "label": "Tap the eye on the Savings card"
+    },
+    {
+      "from": "dashboard.shown",
+      "to": "dashboard.hidden",
+      "label": "Tap the eye again, or close the app and reopen it"
+    }
+  ]
+}

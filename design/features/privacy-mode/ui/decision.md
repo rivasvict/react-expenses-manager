@@ -1,49 +1,131 @@
 ---
 title: Privacy mode
-summary: A Settings switch that makes the app open with money figures hidden, revealed on demand; off looks exactly like today.
-status: exploring
+summary: A Settings switch that makes the dashboard open with its figures blurred, with an eye on the Savings card to show them; off looks exactly like today.
+status: implemented
+chosen: d-eye-in-card
 ---
 
 # Decision
 
-Brief: [`../feature-brief.md`](../feature-brief.md). Not chosen yet.
+Brief: [`../feature-brief.md`](../feature-brief.md).
 
-## Owner's direction after round 1
+## Decision
 
-Take **A's reveal-everything model with C's blur**, and keep the app bar as it
-is: signed in, it already holds the brand, the gear and the account chip, so a
-fourth item there is too much at 375px. Answers to the open questions:
-**default off**; **only the dashboard hides** (the lists, Summary, Trend and
-Buckets are reached on purpose, so hiding there would be a nuisance); figures
-**always hidden on open while the switch is on**. The per-figure 5-second peek
-of C is dropped in favour of one reveal for the whole screen; say so if you
-want it back. Round 2 (D and E below) only decides *where the control lives*.
+**d-eye-in-card**, chosen by the owner after two rounds. With **Privacy mode**
+on, the dashboard opens with its money figures blurred and a small eye beside
+the "Savings" label shows them. With it off, nothing changes at all.
 
-## Round 2: where the reveal control lives (blurred figures, nothing new in the app bar)
+Why the others did not win: **A** (masked dots) and **C** (blur with a
+per-figure peek) put a fourth control in an app bar that, signed in, already
+holds the logo, the app name, the gear and the account chip; **B** (cover card)
+makes the dashboard look different while hidden. **E** (status strip) explained
+itself better but costs about 3rem of height and pushes the Add buttons below
+the fold, while **D** costs no space and sits beside the figure it protects.
 
-**D · Eye in the Savings card** (`options/d-eye-in-card/`). A small eye next to
-the "Savings" label (gold on a soft wash while hidden, plain when shown). It
-sits beside the figure it protects, like a bank app, and costs no vertical
-space. *Costs:* a small touch target inside a card that is itself a link to
-Summary (the chip needs its own tap area and must not navigate); the eye is
-the only hint that figures can be shown.
+Owner's answers: the setting is **off by default**; **only the dashboard**
+hides (lists, Summary, Trend and Buckets are reached on purpose); while on, the
+figures are **always hidden when the app opens**.
 
-**E · Status strip** (`options/e-status-strip/`). A full-width bar under the
-month header: "Figures hidden · Tap to show" (gold wash) and, once shown,
-"Figures shown · Tap to hide" (quiet outline). It explains *why* the numbers
-are blurred and is a large target. Tapping a blurred figure also shows
-everything. *Costs:* about 3rem of height, which pushes the Add Income/Expenses
-buttons below the fold on a short phone (the page scrolls); it is the one
-element that appears only while the switch is on.
+## For the implementer
 
-Both: nothing is added to the app bar, and with the switch off the dashboard
-is exactly today's (no eye, no strip).
+### What hides, and how
 
-**Recommendation: E.** It is self-explanatory to someone using the app for the
-first time or in a hurry, and its target is generous. Choose D if the extra
-row of height matters more than discoverability.
+Only on the dashboard (`/`), and only while Privacy mode is on and the user has
+not revealed:
 
-## Round 1 options (kept for reference)
+| Figure | Hidden form |
+|---|---|
+| Savings amount (hero) | Blurred placeholder `$8,888.88` (formatted with the chosen currency symbol), neutral colour |
+| Change pill in the card footer | Blurred placeholder `+8.8%` on a neutral tint: no arrow, no sign, no green/red. The "vs Sep" caption stays. The "nothing to compare" caption is replaced by the same pill and caption, so it does not reveal that there is no previous month |
+| Doughnut chart | A uniform grey ring (`--highlight`) the size of the chart, with a legend of grey dots ("Expenses", "Savings"); the real chart is **not rendered** |
+| Incomes and Expenses amounts | The same blurred placeholder; the icon chips lose their green/red tint |
+
+The placeholder is a fixed string, so the real digits (and their count) are
+never in the page. Each hidden figure is `role="img"` with an accessible name
+("Amount hidden", "Percentage change hidden", "Chart hidden") and its
+placeholder `aria-hidden`. A month with no entries is hidden the same way
+(otherwise the mask would say "nothing here").
+
+Not hidden: the month header, labels, the "Trend ›" link, the Add buttons, and
+**every other screen** (Summary, incomes and expenses lists, Savings trend,
+Buckets, Data management show their figures as today, even while Privacy mode
+is on).
+
+### Behaviour the screens do not show
+
+- **Setting**: a switch row **Privacy mode** on `/settings`, below Currency.
+  The whole row is the switch (`role="switch"`, `aria-checked`); tapping it
+  applies at once. Stored on this device only in `localStorage` as
+  `settings.privacyMode` = `"on"`; anything else (absent, unreadable, storage
+  blocked) means off. Never in the entries model, backup or sync.
+- **Off** (default): no eye, no blur; the dashboard is identical to today.
+- **On**: the dashboard is hidden every time the app opens. The eye
+  (`aria-label` "Show figures", gold on a soft gold wash while hidden) shows all
+  figures at once; in the shown state it is plain with `aria-label` "Hide
+  figures" and tapping it hides again.
+- A reveal lasts for the session: it survives navigating to other screens and
+  back, and is dropped when the app is closed, reloaded, or sent to the
+  background (`document.visibilityState === "hidden"`), and when the switch is
+  turned off and on again.
+- The eye overlays the savings tile instead of living inside it, because the
+  tile is a link to Summary and a button cannot sit inside a link. Tapping the
+  eye must not navigate. Its horizontal position follows the label's width in
+  each language (an invisible copy of the label pushes it, as in the mockup).
+- While hidden, tapping the savings tile still opens Summary (which shows its
+  figures, per the decision above).
+- Touch target: the eye is 2.2rem square; the savings tile stays the larger
+  target for Summary.
+- A change made in another tab follows through the `storage` event, like
+  language and currency.
+
+### Reuse and new pieces
+
+- Reuse: the `card` and `money-figures` mixins, `SettingRow`'s look for the new
+  switch row, `ChangePill`, `ContentTitleSection`, `$accent` / `$accent-soft` /
+  `$highlight` / `$text-secondary` tokens. No new tokens.
+- New shared components (each gets a row in `design/system/components.md`):
+  **Switch row** (Settings), **Privacy eye** (the eye chip), **Hidden figure**
+  (blurred placeholder with accessible name) and the hidden **Balance chart
+  placeholder**.
+- New state: a small provider holds the preference and the in-memory reveal.
+
+### New strings (English / Spanish / French)
+
+| Key | English | Spanish | French |
+|---|---|---|---|
+| `settings.privacy.title` | Privacy mode | Modo privacidad | Mode confidentialité |
+| `settings.privacy.hint` | Blurs figures when the app opens until you show them | Difumina las cifras al abrir la app hasta que las muestres | Floute les chiffres à l'ouverture de l'app jusqu'à ce que vous les affichiez |
+| `privacy.show` | Show figures | Mostrar cifras | Afficher les chiffres |
+| `privacy.hide` | Hide figures | Ocultar cifras | Masquer les chiffres |
+| `privacy.amountHidden` | Amount hidden | Importe oculto | Montant masqué |
+| `privacy.changeHidden` | Percentage change hidden | Variación porcentual oculta | Variation en pourcentage masquée |
+| `privacy.chartHidden` | Chart hidden | Gráfico oculto | Graphique masqué |
+
+### Edge cases
+
+- Long text: the hint wraps to two or three lines in Spanish and French; the
+  switch keeps its width. The eye stays after the label whatever its length.
+- Storage unavailable: the switch cannot persist and the app behaves as off on
+  the next load.
+- Negative, zero or very large savings: the placeholder is the same, so none
+  of that shows.
+- No error or empty state of its own.
+
+## Approved screens
+
+| Screen | State | File |
+|---|---|---|
+| Settings | Privacy mode off | [`approved/settings.off.html`](approved/settings.off.html) |
+| Settings | Privacy mode on | [`approved/settings.on.html`](approved/settings.on.html) |
+| Settings | Privacy mode on, Spanish | [`approved/settings.on-es.html`](approved/settings.on-es.html) |
+| Dashboard | Figures hidden | [`approved/dashboard.hidden.html`](approved/dashboard.hidden.html) |
+| Dashboard | Figures hidden, Spanish | [`approved/dashboard.hidden-es.html`](approved/dashboard.hidden-es.html) |
+| Dashboard | Figures shown | [`approved/dashboard.shown.html`](approved/dashboard.shown.html) |
+
+Flow: Settings (switch on) → open the app → Dashboard hidden → tap the eye →
+Dashboard shown → tap the eye or reopen the app → hidden again.
+
+## Exploration history (kept for reference)
 
 ## Options considered
 
@@ -99,16 +181,3 @@ needs a rule for that tap.
 - While on, figures are **always hidden when the app opens**; a reveal lasts
   until the app is closed or sent to the background.
 
-## Notes for building (if approved)
-
-- New shared pieces: a **Masked amount** component (renders the mask, never the
-  real value, when hidden), a **Privacy toggle chip** (A) or **Cover card**
-  (B), and a **Switch row** in Settings (the switch already exists as
-  `.form-check-input`); each gets a row in `design/system/components.md`.
-- Strings needed in English, Spanish and French: "Privacy mode", its hint,
-  "Show figures" / "Hide figures", "Figures are hidden", and each option's
-  extras.
-- The hidden figure is a fixed placeholder (for example `$8,888.88`, blurred)
-  so neither the real digits nor their count are in the page; the spoken label
-  is "Amount hidden". No arrow or green/red tint while hidden; the doughnut is
-  a uniform grey ring.
