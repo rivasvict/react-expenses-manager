@@ -9,6 +9,8 @@ import {
 } from "../../../helpers/savingsChange/savingsChange";
 import { getMonthLabel } from "../../../helpers/savingsTrend/monthLabels";
 import ChangePill from "../ChangePill";
+import HiddenFigure from "../HiddenFigure";
+import { HIDDEN_PERCENT } from "../../../privacy";
 import "./styles.scss";
 
 const LABEL_KEYS = {
@@ -20,6 +22,8 @@ const LABEL_KEYS = {
 interface SavingsChangeBadgeProps {
   entries: EntriesTree;
   selectedDate: MonthDate;
+  /** Privacy mode: show a blurred stand-in instead of the real change. */
+  hidden?: boolean;
 }
 
 /**
@@ -32,11 +36,29 @@ interface SavingsChangeBadgeProps {
 const SavingsChangeBadge = ({
   entries,
   selectedDate,
+  hidden = false,
 }: SavingsChangeBadgeProps) => {
   const { t, language } = useTranslation();
   const change = getSavingsChange(entries, selectedDate);
   const { month: previousMonth } = getPreviousMonth(selectedDate);
   const shortMonth = getMonthLabel(previousMonth, language, "short");
+
+  // Hidden, every month looks the same: no arrow, no colour, and no hint of
+  // whether there is a previous month to compare with.
+  if (hidden) {
+    return (
+      <span className="savings-change">
+        <HiddenFigure
+          className="savings-change__hidden-pill"
+          placeholder={HIDDEN_PERCENT}
+          label={t("privacy.changeHidden")}
+        />
+        <span className="savings-change__caption" aria-hidden="true">
+          {t("savingsChange.vs", { month: shortMonth })}
+        </span>
+      </span>
+    );
+  }
 
   if (change.kind === "none") {
     return (

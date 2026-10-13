@@ -4,6 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import Settings from "./index";
 import { LanguageProvider } from "../../i18n";
+import { PrivacyProvider } from "../../privacy";
+import { PRIVACY_MODE_STORAGE_KEY } from "../../privacy/privacyPreference";
 import { LANGUAGE_STORAGE_KEY } from "../../i18n/languagePreference";
 import {
   CURRENCY_STORAGE_KEY,
@@ -13,9 +15,11 @@ import {
 const renderSettings = () =>
   render(
     <LanguageProvider>
-      <MemoryRouter>
-        <Settings />
-      </MemoryRouter>
+      <PrivacyProvider>
+        <MemoryRouter>
+          <Settings />
+        </MemoryRouter>
+      </PrivacyProvider>
     </LanguageProvider>,
   );
 
@@ -111,5 +115,33 @@ describe("Settings", () => {
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(languageRow()).toHaveFocus();
+  });
+
+  it("has Privacy mode off by default and remembers it once turned on", async () => {
+    renderSettings();
+    const privacySwitch = () =>
+      screen.getByRole("switch", { name: /^Privacy mode/ });
+
+    expect(privacySwitch()).not.toBeChecked();
+
+    await userEvent.click(privacySwitch());
+
+    expect(privacySwitch()).toBeChecked();
+    expect(localStorage.getItem(PRIVACY_MODE_STORAGE_KEY)).toBe("on");
+
+    await userEvent.click(privacySwitch());
+
+    expect(privacySwitch()).not.toBeChecked();
+    expect(localStorage.getItem(PRIVACY_MODE_STORAGE_KEY)).toBeNull();
+  });
+
+  it("opens with Privacy mode on when it was stored as on, in Spanish too", () => {
+    localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, "es");
+    renderSettings();
+
+    expect(
+      screen.getByRole("switch", { name: /^Modo privacidad/ }),
+    ).toBeChecked();
   });
 });

@@ -1,0 +1,11 @@
+@import '../../../variables.scss';
+
+// Blurred stand-in for a figure; neutral, so it carries no green/red and no
+// direction (design/features/privacy-mode/ui/approved/).
+.hidden-figure {
+  display: inline-block;
+  color: $text-secondary;
+  filter: blur(0.4em);
+  user-select: none;
+  pointer-events: none;
+}

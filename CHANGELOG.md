@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.32.0] - 2026-10-13
+
+### Added
+
+- **Privacy mode.** A new switch on **Settings** (off by default) makes the
+  dashboard open with its money figures blurred, so nothing financial is on show
+  when you open the app in public: the savings total, the percentage change, the
+  savings chart and the incomes and expenses amounts. Nothing real is on the
+  page while they are hidden, and the blurred placeholders carry no arrow and no
+  green or red. A small eye next to "Savings" shows everything at once, and
+  tapping it again hides it. The figures stay shown while you move around the
+  app and are hidden again the next time you open it or send it to the
+  background. The other screens (Summary, incomes and expenses, Savings trend,
+  Buckets) always show their figures. With the switch off the dashboard looks
+  exactly as before. The preference is stored on this device only. Available in
+  English, Spanish and French.
+
 ## [1.31.0] - 2026-10-12
 
 ### Added

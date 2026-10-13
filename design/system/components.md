@@ -34,3 +34,7 @@ same PR that adds it.
 | Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |
 | Currency tile grid (symbol + code radio tiles in a sheet) | Settings | `src/components/Settings/CurrencySheet/` |
 | History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold action) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |
+| Switch row (label, hint and an on/off switch in the same raised row as a setting row; the whole row is the switch) | Settings | `src/components/Settings/SwitchRow/` |
+| Hidden figure (a blurred, fixed placeholder with a spoken label, in place of a money figure while Privacy mode hides it) | The dashboard, assembled | `src/components/common/HiddenFigure/`; the placeholders are in `src/privacy/hiddenFigures.ts` |
+| Privacy eye (gold eye chip beside the "Savings" label that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
+| Hidden balance chart (one uniform grey ring and a neutral legend in place of the savings doughnut) | The dashboard, assembled | `src/components/common/HiddenBalanceChart/` |

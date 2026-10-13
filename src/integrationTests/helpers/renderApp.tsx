@@ -9,6 +9,7 @@ import WithDataDisclaimer from "../../components/Dashboard/WithDataDisclaimer";
 import Dashboard from "../../components/Dashboard";
 import { setSession, SyncSession } from "../../services/session";
 import { LanguageProvider } from "../../i18n";
+import { PrivacyProvider } from "../../privacy";
 
 interface RenderAppResult extends RenderResult {
   store: ReturnType<typeof setupStore>;
@@ -39,22 +40,24 @@ export async function renderApp(
     result = render(
       <Provider store={store}>
         <LanguageProvider>
-          {/* createMemoryHistory has no getUserConfirmation of its own, so
-            without this a <Prompt> route guard would silently allow every
-            navigation here while BrowserRouter confirms in the real app. */}
-          <MemoryRouter
-            initialEntries={[initialRoute]}
-            getUserConfirmation={(message, callback) =>
-              callback(window.confirm(message))
-            }
-          >
-            <WithBalance>
-              <WithDataDisclaimer>
-                {/** @ts-ignore */}
-                <Dashboard />
-              </WithDataDisclaimer>
-            </WithBalance>
-          </MemoryRouter>
+          <PrivacyProvider>
+            {/* createMemoryHistory has no getUserConfirmation of its own, so
+              without this a <Prompt> route guard would silently allow every
+              navigation here while BrowserRouter confirms in the real app. */}
+            <MemoryRouter
+              initialEntries={[initialRoute]}
+              getUserConfirmation={(message, callback) =>
+                callback(window.confirm(message))
+              }
+            >
+              <WithBalance>
+                <WithDataDisclaimer>
+                  {/** @ts-ignore */}
+                  <Dashboard />
+                </WithDataDisclaimer>
+              </WithBalance>
+            </MemoryRouter>
+          </PrivacyProvider>
         </LanguageProvider>
       </Provider>
     );

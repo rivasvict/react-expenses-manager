@@ -56,5 +56,11 @@
         color: $expense;
       }
     }
+
+    // Privacy mode: nothing green or red while the amount is hidden.
+    &.total-row--hidden .total-row__icon-chip {
+      color: $text-secondary;
+      background-color: $highlight;
+    }
   }
 }
