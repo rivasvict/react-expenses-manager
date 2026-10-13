@@ -12,4 +12,14 @@
     font-size: 0.82rem;
     font-weight: 400;
   }
+
+  // The blurred stand-in for the change pill: the pill's shape on a neutral tint.
+  .savings-change__hidden-pill {
+    padding: 0.15rem 0.6rem;
+    border-radius: $radius-pill;
+    background-color: $highlight;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
 }

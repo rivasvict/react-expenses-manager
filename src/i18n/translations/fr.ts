@@ -64,6 +64,9 @@ const fr: Translations = {
     "Choisissez la devise dans laquelle vos montants sont affichés. Seuls le symbole et l'écriture des montants changent : rien n'est converti. Votre choix est enregistré uniquement sur cet appareil et n'est jamais partagé lors de la synchronisation.",
   "settings.language.hint": "S'applique immédiatement",
   "settings.currency.hint": "Symbole et format uniquement",
+  "settings.privacy.title": "Mode confidentialité",
+  "settings.privacy.hint":
+    "Floute les chiffres à l'ouverture de l'app jusqu'à ce que vous les affichiez",
   "settings.sheet.close": "Fermer",
   "currency.USD": "Dollar américain",
   "currency.EUR": "Euro",
@@ -86,6 +89,13 @@ const fr: Translations = {
     "Cette application sert à valider le produit. Rien de ce que vous saisissez n'est stocké ailleurs que sur cet appareil, et vos données sont conservées tant que les données du navigateur ne sont pas effacées. Vous pouvez télécharger une sauvegarde à tout moment depuis Gestion des données.",
   "dataDisclaimer.dontShowAgain": "Ne plus afficher ce message",
   "dataDisclaimer.confirm": "Compris",
+
+  // Privacy mode (Settings switch; the dashboard's figures blur until shown)
+  "privacy.show": "Afficher les chiffres",
+  "privacy.hide": "Masquer les chiffres",
+  "privacy.amountHidden": "Montant masqué",
+  "privacy.changeHidden": "Variation en pourcentage masquée",
+  "privacy.chartHidden": "Graphique masqué",
 
   // Month stepper
   "monthHeader.previous": "Mois précédent",

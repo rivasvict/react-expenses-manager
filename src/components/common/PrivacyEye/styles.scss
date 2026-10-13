@@ -1,0 +1,49 @@
+@import '../../../variables.scss';
+
+.privacy-eye {
+  position: absolute;
+  top: 0.7rem;
+  left: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  // The row itself lets taps through to the Summary link under it; only the
+  // button takes them.
+  pointer-events: none;
+
+  .privacy-eye__spacer {
+    visibility: hidden;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .privacy-eye__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    font-size: 1.125rem;
+    color: $text-secondary;
+    background: transparent;
+    border: 0;
+    border-radius: $radius-round;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color $transition-quick;
+
+    &:hover {
+      background-color: $highlight;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  .privacy-eye__button--hidden {
+    color: $accent;
+    background-color: $accent-soft;
+  }
+}

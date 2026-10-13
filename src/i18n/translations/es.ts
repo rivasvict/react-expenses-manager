@@ -64,6 +64,9 @@ const es: Translations = {
     "Elige la moneda en la que se muestran tus importes. Solo cambia el símbolo y la forma de escribir los importes: no se convierte nada. Tu elección se guarda solo en este dispositivo y nunca se comparte al sincronizar.",
   "settings.language.hint": "Se aplica al instante",
   "settings.currency.hint": "Solo símbolo y formato",
+  "settings.privacy.title": "Modo privacidad",
+  "settings.privacy.hint":
+    "Difumina las cifras al abrir la app hasta que las muestres",
   "settings.sheet.close": "Cerrar",
   "currency.USD": "Dólar estadounidense",
   "currency.EUR": "Euro",
@@ -86,6 +89,13 @@ const es: Translations = {
     "Esta aplicación está pensada para validar el producto. Nada de lo que registres se guarda en otro lugar que no sea este dispositivo, y tus datos se conservan mientras no se borren los datos del navegador. Puedes descargar una copia de seguridad en cualquier momento desde Gestión de datos.",
   "dataDisclaimer.dontShowAgain": "No volver a mostrar este mensaje",
   "dataDisclaimer.confirm": "Entendido",
+
+  // Privacy mode (Settings switch; the dashboard's figures blur until shown)
+  "privacy.show": "Mostrar cifras",
+  "privacy.hide": "Ocultar cifras",
+  "privacy.amountHidden": "Importe oculto",
+  "privacy.changeHidden": "Variación porcentual oculta",
+  "privacy.chartHidden": "Gráfico oculto",
 
   // Month stepper
   "monthHeader.previous": "Mes anterior",

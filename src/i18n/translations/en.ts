@@ -64,6 +64,9 @@ const en = {
     "Choose the currency your amounts are shown in. It only changes the symbol and how amounts are written — nothing is converted. Your choice is saved on this device only and is never shared when you sync.",
   "settings.language.hint": "Applies right away",
   "settings.currency.hint": "Symbol and format only",
+  "settings.privacy.title": "Privacy mode",
+  "settings.privacy.hint":
+    "Blurs figures when the app opens until you show them",
   "settings.sheet.close": "Close",
   "currency.USD": "US Dollar",
   "currency.EUR": "Euro",
@@ -86,6 +89,13 @@ const en = {
     "This app is intended for product validation purposes. Nothing you put here is stored anywhere other than this very device, and your data lives for as long as the browser's data does not get cleared. You can download a backup at any time from Data Management.",
   "dataDisclaimer.dontShowAgain": "Don't show this message again",
   "dataDisclaimer.confirm": "Got it",
+
+  // Privacy mode (Settings switch; the dashboard's figures blur until shown)
+  "privacy.show": "Show figures",
+  "privacy.hide": "Hide figures",
+  "privacy.amountHidden": "Amount hidden",
+  "privacy.changeHidden": "Percentage change hidden",
+  "privacy.chartHidden": "Chart hidden",
 
   // Month stepper
   "monthHeader.previous": "Previous month",

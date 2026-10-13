@@ -10,6 +10,8 @@
     margin: 0 0 $vertical-standard-margin;
     padding: 0;
     overflow: hidden;
+    // The Privacy mode eye is laid over the savings tile.
+    position: relative;
 
     // The summary tile is the card's top half, not a card of its own.
     .balance-hero__summary {

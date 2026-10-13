@@ -10,17 +10,20 @@ import {
   getStoredCurrency,
   storeCurrency,
 } from "../../helpers/currency/currency";
+import { usePrivacy } from "../../privacy";
 import VersionLabel from "../common/VersionLabel";
 import CurrencySheet from "./CurrencySheet";
 import LanguageSheet from "./LanguageSheet";
 import SettingRow from "./SettingRow";
+import SwitchRow from "./SwitchRow";
 import "./styles.scss";
 
 type OpenSheet = "language" | "currency" | null;
 
 /**
- * Device-level preferences: the UI language and the display currency. Each is
- * a row showing its current value; tapping it opens a sheet to pick another.
+ * Device-level preferences: the UI language, the display currency and Privacy
+ * mode. The first two are rows showing their current value; tapping one opens
+ * a sheet to pick another. Privacy mode is a switch row.
  * Picking one applies immediately and is remembered in this browser only, so
  * it works the same with or without a sync server and never touches the
  * entries model.
@@ -28,6 +31,8 @@ type OpenSheet = "language" | "currency" | null;
 const Settings = () => {
   const { t, language } = useTranslation();
   const history = useHistory();
+  const { enabled: privacyEnabled, setEnabled: setPrivacyEnabled } =
+    usePrivacy();
   const [openSheet, setOpenSheet] = useState<OpenSheet>(null);
   const [currency, setCurrency] = useState<Currency>(getStoredCurrency);
   const languageRow = useRef<HTMLButtonElement>(null);
@@ -60,6 +65,12 @@ const Settings = () => {
               hint={t("settings.currency.hint")}
               value={`${CURRENCY_SYMBOLS[currency]} · ${currency}`}
               onOpen={() => setOpenSheet("currency")}
+            />
+            <SwitchRow
+              label={t("settings.privacy.title")}
+              hint={t("settings.privacy.hint")}
+              checked={privacyEnabled}
+              onChange={setPrivacyEnabled}
             />
           </Col>
         </Row>

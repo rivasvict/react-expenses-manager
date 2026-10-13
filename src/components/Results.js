@@ -11,6 +11,8 @@ import "./Results.scss";
 import { IconMoneyIn, IconMoneyOut } from "./common/Icons";
 import RowLink from "./common/RowLink";
 import { useTranslation } from "../i18n";
+import HiddenFigure from "./common/HiddenFigure";
+import { HIDDEN_AMOUNT } from "../privacy";
 
 function TotalItem({
   name,
@@ -19,9 +21,17 @@ function TotalItem({
   url,
   variant,
   forcePositiveNumberDisplay = false,
+  hidden = false,
 }) {
+  const { t } = useTranslation();
   return (
-    <RowLink to={url} title={name} className={`total-row total-row--${variant}`}>
+    <RowLink
+      to={url}
+      title={name}
+      className={`total-row total-row--${variant}${
+        hidden ? " total-row--hidden" : ""
+      }`}
+    >
       <Col xs={2} className="total-row__icon">
         <span className="total-row__icon-chip" aria-hidden="true">
           {Icon ? <Icon /> : null}
@@ -31,15 +41,22 @@ function TotalItem({
         {name}
       </Col>
       <Col xs={5} className="total-row__amount">
-        {forcePositiveNumberDisplay && amount < 0
-          ? formatNumberForDisplay(-1 * amount)
-          : formatNumberForDisplay(amount)}
+        {hidden ? (
+          <HiddenFigure
+            placeholder={formatNumberForDisplay(HIDDEN_AMOUNT)}
+            label={t("privacy.amountHidden")}
+          />
+        ) : forcePositiveNumberDisplay && amount < 0 ? (
+          formatNumberForDisplay(-1 * amount)
+        ) : (
+          formatNumberForDisplay(amount)
+        )}
       </Col>
     </RowLink>
   );
 }
 
-function Results({ entries, baseUrl = "" }) {
+function Results({ entries, baseUrl = "", hidden = false }) {
   const { t } = useTranslation();
   const incomesName = "incomes";
   const expensesName = "expenses";
@@ -56,6 +73,7 @@ function Results({ entries, baseUrl = "" }) {
         url={incomesUrl}
         Icon={IconMoneyIn}
         variant="income"
+        hidden={hidden}
       />
       <TotalItem
         name={t("common.expenses")}
@@ -64,6 +82,7 @@ function Results({ entries, baseUrl = "" }) {
         Icon={IconMoneyOut}
         variant="expense"
         forcePositiveNumberDisplay={true}
+        hidden={hidden}
       />
     </React.Fragment>
   );

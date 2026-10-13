@@ -28,3 +28,9 @@ export const pickCurrency = (
   currencyName: RegExp,
   rowName: RegExp = /^Currency/,
 ) => pickFromSheet(user, rowName, currencyName);
+
+/** Flip the Privacy mode switch on /settings (English label by default). */
+export const togglePrivacyMode = async (
+  user: UserEvent,
+  rowName: RegExp = /^Privacy mode/,
+) => user.click(await screen.findByRole("switch", { name: rowName }));

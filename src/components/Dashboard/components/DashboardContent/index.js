@@ -20,9 +20,14 @@ import { NavigableMonthHeader } from "../../../common/NavigableMonthHeader/index
 import { useTranslation } from "../../../../i18n";
 import SavingsChangeBadge from "../../../common/SavingsChangeBadge";
 import SavingsTrendLink from "../../../common/SavingsTrendLink";
+import HiddenFigure from "../../../common/HiddenFigure";
+import HiddenBalanceChart from "../../../common/HiddenBalanceChart";
+import PrivacyEye from "../../../common/PrivacyEye";
+import { HIDDEN_AMOUNT, usePrivacy } from "../../../../privacy";
 
 const DashboardContent = ({ entries, match, selectedDate }) => {
   const { t } = useTranslation();
+  const { hidden } = usePrivacy();
   const monthBalance = (entries[selectedDate.year] &&
     entries[selectedDate.year][selectedDate.month]) || {
     incomes: [],
@@ -47,6 +52,7 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
     >
       <NavigableMonthHeader />
       <div className="balance-hero">
+        <PrivacyEye after={t("common.savings")} />
         <ContentTileSection
           title={t("common.summary")}
           to={summaryUrl}
@@ -54,31 +60,48 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
         >
           <span className="balance-hero__label">{t("common.savings")}</span>
           <span
-            className={`balance-hero__amount balance-hero__amount--${balanceTone}`}
+            className={`balance-hero__amount balance-hero__amount--${
+              hidden ? "neutral" : balanceTone
+            }`}
           >
-            {formatNumberForDisplay(totalSum)}
+            {hidden ? (
+              <HiddenFigure
+                placeholder={formatNumberForDisplay(HIDDEN_AMOUNT)}
+                label={t("privacy.amountHidden")}
+              />
+            ) : (
+              formatNumberForDisplay(totalSum)
+            )}
           </span>
         </ContentTileSection>
         <div className="balance-hero__footer">
-          <SavingsChangeBadge entries={entries} selectedDate={selectedDate} />
+          <SavingsChangeBadge
+            entries={entries}
+            selectedDate={selectedDate}
+            hidden={hidden}
+          />
           <SavingsTrendLink to={`${match.url}savings-trend`} />
         </div>
       </div>
       <ChartContainerRowWrapper>
-        <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
+        {hidden ? (
+          <HiddenBalanceChart />
+        ) : (
+          <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
+        )}
       </ChartContainerRowWrapper>
-      <MonthContent {...{ entries: monthBalance, match }} />
+      <MonthContent {...{ entries: monthBalance, match, hidden }} />
     </MainContentContainer>
   );
 };
 
-const MonthContent = ({ entries, match }) => {
+const MonthContent = ({ entries, match, hidden }) => {
   const { t } = useTranslation();
   return (
     <React.Fragment>
       <Row className="top-container">
         <Col xs={12} className="top-content">
-          <Results entries={entries} baseUrl={match.url} />
+          <Results entries={entries} baseUrl={match.url} hidden={hidden} />
         </Col>
       </Row>
       <Row className="bottom-container">

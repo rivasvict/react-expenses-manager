@@ -12,6 +12,7 @@ import { setUser } from "./redux/userManager/actionCreators";
 import WithBalance from "./components/WithBalance";
 import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
 import { LanguageProvider } from "./i18n";
+import { PrivacyProvider } from "./privacy";
 
 const mapStateToProps = (state) => ({ user: state.userManager.user });
 
@@ -50,11 +51,13 @@ function App({ reduxStore }) {
   return (
     <Provider store={reduxStore}>
       <LanguageProvider>
-        <Router>
-          <Switch>
-            <Routes />
-          </Switch>
-        </Router>
+        <PrivacyProvider>
+          <Router>
+            <Switch>
+              <Routes />
+            </Switch>
+          </Router>
+        </PrivacyProvider>
       </LanguageProvider>
     </Provider>
   );

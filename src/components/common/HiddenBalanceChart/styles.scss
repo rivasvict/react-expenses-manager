@@ -1,0 +1,43 @@
+@import '../../../variables.scss';
+
+// Same footprint as the Chart.js doughnut it replaces (a ring with a legend
+// under it), so nothing below it moves when figures are shown or hidden.
+.hidden-balance-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 214px;
+  justify-content: space-between;
+
+  .hidden-balance-chart__ring {
+    width: 176px;
+    height: 176px;
+    border-radius: $radius-round;
+    // A ring of the doughnut's thickness: its cutout is 68% of the radius.
+    background: radial-gradient(
+      circle,
+      transparent 0 67.5%,
+      $highlight 68%
+    );
+  }
+
+  .hidden-balance-chart__legend {
+    display: flex;
+    gap: 1.1rem;
+    margin: 0 0 0.35rem;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+    color: $text-secondary;
+
+    li::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 0.4rem;
+      border-radius: $radius-round;
+      background-color: $text-muted;
+    }
+  }
+}

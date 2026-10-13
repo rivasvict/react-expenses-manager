@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ajustes, modo privacidad activado</title>
+  <link rel="stylesheet" href="../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../system/mockup.css">
+  <style>
+    .mk-work-area { display: flex; flex-direction: column; }
+    .mk-header { padding-bottom: calc(0.75rem + 4px); }
+    /* The app insets this card 0.75rem less than a plain mk-card and starts it 10px below the title. */
+    .settings-card { margin: 0.625rem -0.75rem 0; padding: 1rem 1.1rem 1.1rem; }
+    .version { margin: 1.25rem 0 0; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
+    .stack { display: flex; flex-direction: column; gap: 0.625rem; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3.4rem; padding: 0.65rem 0.9rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .row__label { display: block; font-weight: 600; font-size: 0.95rem; }
+    .row__hint { display: block; color: var(--text-secondary); font-size: 0.78rem; }
+    .row__value { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.92rem; min-width: 0; }
+    .spacer { flex: 1 1 auto; }
+    .opt { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.65rem 0.85rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .opt--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .opt__text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+    .opt__name { display: block; font-size: 0.95rem; font-weight: 600; }
+    .opt__hint { display: block; font-size: 0.78rem; color: var(--text-secondary); }
+    .check { display: flex; align-items: center; color: var(--accent); font-size: 1.1rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .tile { min-height: 3.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .tile--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .tile__sym { font-weight: 700; font-size: 1rem; }
+    .tile__code { font-size: 0.74rem; color: var(--text-secondary); }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; background-color: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); }
+    .sheet__grip { width: 2.6rem; height: 0.28rem; margin: 0.25rem auto 0.6rem; background-color: var(--border-strong); border-radius: var(--radius-control); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.25rem; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    .sheet__close { width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .sheet__body { display: flex; flex-direction: column; gap: 0.4rem; }
+    .sheet .mk-hint { margin-bottom: 0.4rem; }
+    .switch { flex: 0 0 auto; width: 2.7rem; height: 1.55rem; padding: 0.2rem; display: flex; border-radius: var(--radius-pill); background-color: var(--highlight); border: 1px solid var(--border-strong); }
+    .switch::after { content: ""; width: 1.05rem; height: 1.05rem; border-radius: var(--radius-round); background-color: var(--text-secondary); }
+    .switch--on { background-color: var(--accent); border-color: var(--accent); justify-content: flex-end; }
+    .switch--on::after { background-color: var(--text-on-accent); }
+    .row__text { min-width: 0; }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h1 class="mk-eyebrow">Ajustes</h1>
+      <section class="mk-card settings-card">
+        <div class="stack">
+          <div class="row" role="button"><span><span class="row__label">Idioma</span><span class="row__hint">Se aplica al instante</span></span><span class="row__value">Español<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+          <div class="row" role="button"><span><span class="row__label">Moneda</span><span class="row__hint">Solo símbolo y formato</span></span><span class="row__value">$ · USD<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+          <div class="row" role="switch" aria-checked="true"><span class="row__text"><span class="row__label">Modo privacidad</span><span class="row__hint">Difumina las cifras al abrir la app hasta que las muestres</span></span><span class="switch switch--on"></span></div>
+        </div>
+      </section>
+      <p class="version">Versión 1.32.0</p>
+      <div class="spacer"></div>
+      <div class="mk-actions"><span class="mk-btn mk-btn--secondary">Volver</span></div>
+    </div>
+  </main>
+</body>
+</html>
