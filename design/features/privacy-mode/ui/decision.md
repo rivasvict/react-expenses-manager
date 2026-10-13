@@ -8,6 +8,43 @@ status: exploring
 
 Brief: [`../feature-brief.md`](../feature-brief.md). Not chosen yet.
 
+## Owner's direction after round 1
+
+Take **A's reveal-everything model with C's blur**, and keep the app bar as it
+is: signed in, it already holds the brand, the gear and the account chip, so a
+fourth item there is too much at 375px. Answers to the open questions:
+**default off**; **only the dashboard hides** (the lists, Summary, Trend and
+Buckets are reached on purpose, so hiding there would be a nuisance); figures
+**always hidden on open while the switch is on**. The per-figure 5-second peek
+of C is dropped in favour of one reveal for the whole screen; say so if you
+want it back. Round 2 (D and E below) only decides *where the control lives*.
+
+## Round 2: where the reveal control lives (blurred figures, nothing new in the app bar)
+
+**D · Eye in the Savings card** (`options/d-eye-in-card/`). A small eye next to
+the "Savings" label (gold on a soft wash while hidden, plain when shown). It
+sits beside the figure it protects, like a bank app, and costs no vertical
+space. *Costs:* a small touch target inside a card that is itself a link to
+Summary (the chip needs its own tap area and must not navigate); the eye is
+the only hint that figures can be shown.
+
+**E · Status strip** (`options/e-status-strip/`). A full-width bar under the
+month header: "Figures hidden · Tap to show" (gold wash) and, once shown,
+"Figures shown · Tap to hide" (quiet outline). It explains *why* the numbers
+are blurred and is a large target. Tapping a blurred figure also shows
+everything. *Costs:* about 3rem of height, which pushes the Add Income/Expenses
+buttons below the fold on a short phone (the page scrolls); it is the one
+element that appears only while the switch is on.
+
+Both: nothing is added to the app bar, and with the switch off the dashboard
+is exactly today's (no eye, no strip).
+
+**Recommendation: E.** It is self-explanatory to someone using the app for the
+first time or in a hurry, and its target is generous. Choose D if the extra
+row of height matters more than discoverability.
+
+## Round 1 options (kept for reference)
+
 ## Options considered
 
 **A · Masked in place** (`options/a-masked-in-place/`). The dashboard keeps its
@@ -55,15 +92,12 @@ needs a rule for that tap.
 - **Error**: none; the preference reads from `localStorage` and an unreadable
   value falls back to off (as language and currency do).
 
-## Open questions for the owner
+## Decided
 
-1. Should the setting **default to on** for new installs, or off (matches
-   "looks exactly like now" until chosen)?
-2. Should hiding also cover the **incomes / expenses lists, Summary, Savings
-   trend and Buckets**? The mockups assume yes; each option extends its own
-   treatment (mask in place, cover card, or blur).
-3. Should reveal survive a page reload, or always re-hide on open? The mockups
-   assume it always re-hides on open, which is the point of the feature.
+- Default **off** (nothing changes until the user switches it on).
+- Only the **dashboard** hides; other routes always show their figures.
+- While on, figures are **always hidden when the app opens**; a reveal lasts
+  until the app is closed or sent to the background.
 
 ## Notes for building (if approved)
 
@@ -74,5 +108,7 @@ needs a rule for that tap.
 - Strings needed in English, Spanish and French: "Privacy mode", its hint,
   "Show figures" / "Hide figures", "Figures are hidden", and each option's
   extras.
-- The mask is a fixed-width run of dots so it never leaks the amount's
-  magnitude; the spoken label is "Amount hidden".
+- The hidden figure is a fixed placeholder (for example `$8,888.88`, blurred)
+  so neither the real digits nor their count are in the page; the spoken label
+  is "Amount hidden". No arrow or green/red tint while hidden; the doughnut is
+  a uniform grey ring.
