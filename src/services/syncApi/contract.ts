@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by category management (design/features/category-management/ui/decision.md).
+// Tracked in: https://github.com/rivasvict/react-expenses-manager/issues/187
 // Shared shapes and error codes for the sync API (docs/multi-user-sync/RFC.md
 // §3). The dep-free server duplicates the error codes deliberately — RFC §3 is
 // the source of truth for both sides.
@@ -90,11 +93,18 @@ export interface InvitationResponse {
 // src/helpers/backupHelper/backupHelper.js) — the sync path reuses the
 // exact same shape (RFC §2.3), so entries, buckets, categories and fixed
 // entries stay whatever the backup feature already writes.
+// `categoryLists` (the user's income and expense categories) and
+// `categoryChanges` (the log of category renames and deletions, which is how
+// they travel through sync) were added by category management
+// (design/features/category-management/ui/decision.md). Both are optional:
+// backups written before it lack them, and the server never reads them.
 export interface BackupData {
   balance: any[];
   buckets: { [name: string]: any };
   categories: string[];
   fixedEntries: any[];
+  categoryLists?: { expense: string[]; income: string[] };
+  categoryChanges?: any[];
 }
 
 export interface BackupEnvelope {

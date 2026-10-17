@@ -52,6 +52,41 @@
     animation: bottom-sheet-slide-up $transition-slide both;
   }
 
+  // With a footer, or in the tall variant, the panel itself does not scroll:
+  // its body does, while the header and the footer stay put.
+  &__panel--sections {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  &__panel--tall {
+    max-height: 92vh;
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  &__footer {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem 0 #{"calc(1rem + env(safe-area-inset-bottom, 0px))"};
+    border-top: 1px solid $border-subtle;
+  }
+
+  &__eyebrow {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-secondary;
+  }
+
   &__grabber {
     width: 2.6rem;
     height: 0.28rem;

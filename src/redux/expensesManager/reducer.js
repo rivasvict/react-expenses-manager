@@ -15,6 +15,7 @@ import {
   ADD_BUCKET,
   ADD_CATEGORY,
   GET_CATEGORIES,
+  CATEGORY_CHANGED,
   GET_FIXED_ENTRIES,
   SET_FIXED_ENTRY,
   RESTORE_BACKUP,
@@ -24,6 +25,7 @@ import {
 } from "./actions";
 import { getEmptyFixedEntries } from "../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 import { getDefaultEntryFilters } from "../../helpers/entriesHelper/filterSortHelper";
+import { getEmptyCategoryLists } from "../../helpers/categoryLists/categoryLists";
 
 const staticInitialState = {
   entries: {},
@@ -31,9 +33,10 @@ const staticInitialState = {
   // Buckets start empty: they are created by the user and stored for later
   // retrieval. The screen shows an empty state until the first bucket is added.
   buckets: {},
-  // Categories the user created that do not have a bucket (spending limit,
-  // i.e. an allowance/budget) yet (issue #100/#71).
-  unbudgetedCategories: [],
+  // The user's income and expense categories (category management,
+  // design/features/category-management/ui/decision.md), loaded from
+  // localStorage on start.
+  categoryLists: getEmptyCategoryLists(),
   // Fixed (recurring) incomes/expenses per category, time-aware so edits and
   // removals propagate from a month forward (issue #103). Empty by default.
   fixedEntries: getEmptyFixedEntries(),
@@ -171,20 +174,23 @@ export const reducer = (state, action) => {
           ...state.buckets,
           ...payload.buckets,
         },
-        unbudgetedCategories: (state.unbudgetedCategories || []).filter(
-          (categoryName) =>
-            categoryName.toLowerCase() !== payload.categoryName?.toLowerCase()
-        ),
       };
     case ADD_CATEGORY:
-      return {
-        ...state,
-        unbudgetedCategories: payload.unbudgetedCategories,
-      };
     case GET_CATEGORIES:
       return {
         ...state,
-        unbudgetedCategories: payload.unbudgetedCategories,
+        categoryLists: payload.categoryLists,
+      };
+    // A category rename or deletion rewrites entries, fixed entries, buckets
+    // and the category lists together; each slice is replaced wholesale so a
+    // renamed or removed bucket does not linger.
+    case CATEGORY_CHANGED:
+      return {
+        ...state,
+        entries: payload.entries,
+        buckets: payload.buckets,
+        categoryLists: payload.categoryLists,
+        fixedEntries: payload.fixedEntries,
       };
     case SET_ENTRY_FILTERS:
       return {
@@ -209,7 +215,7 @@ export const reducer = (state, action) => {
         ...state,
         entries: payload.entries,
         buckets: payload.buckets,
-        unbudgetedCategories: payload.unbudgetedCategories,
+        categoryLists: payload.categoryLists,
         fixedEntries: payload.fixedEntries,
       };
     default:

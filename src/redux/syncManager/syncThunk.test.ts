@@ -40,9 +40,11 @@ jest.mock("../../services/syncApi", () => ({
 // top-level code runs, so the stub must reach the mock lazily (per call).
 const mockExportData = jest.fn();
 const mockImportData = jest.fn();
+const mockGetCategoryLists = jest.fn(async () => ({ expense: [], income: [] }));
 jest.mock("../../services/storageSelector", () => () => () => ({
   exportData: () => mockExportData(),
   importData: (data: unknown) => mockImportData(data),
+  getCategoryLists: () => mockGetCategoryLists(),
 }));
 
 const getBackupMock = syncApi.getBackup as unknown as jest.Mock;

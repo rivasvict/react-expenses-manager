@@ -5,6 +5,7 @@ import { MainContentContainer } from "../common/MainContentContainer";
 import ButtonLikeLink from "../common/ButtonLikeLink";
 import { FormButton } from "../common/Forms";
 import ReviewItemCard from "./ReviewItemCard";
+import CategoryNoteCard from "./CategoryNoteCard";
 import WizardProgress from "./WizardProgress";
 import WizardSummary, { UploadState } from "./WizardSummary";
 import {
@@ -26,6 +27,7 @@ import {
   SYNC_ERROR_CODES,
   isSyncApiError,
 } from "../../services/syncApi/contract";
+import { CategoryLists } from "../../helpers/categoryLists/categoryLists";
 import { useTranslation } from "../../i18n";
 import "./styles.scss";
 
@@ -40,11 +42,15 @@ interface Decision {
   modified: boolean;
 }
 
+// A category rename or deletion from another member: a note to acknowledge
+// (design/features/category-management/ui/decision.md).
+const isCategoryNote = (group: ReviewGroup) =>
+  group.item.kind === "category" && Boolean(group.item.category);
 
 interface SyncReviewProps {
   pendingReview: PendingReview | null;
   buckets: any;
-  unbudgetedCategories: string[];
+  categoryLists: CategoryLists;
   onCompleteReview: (payload: {
     acceptedItems: IncomingItem[];
     rejectedItems: { key: string; hash: string }[];
@@ -67,7 +73,7 @@ interface SyncReviewProps {
 const SyncReview = ({
   pendingReview,
   buckets,
-  unbudgetedCategories,
+  categoryLists,
   onCompleteReview,
   onSyncAgain,
   onClearPendingReview,
@@ -145,6 +151,9 @@ const SyncReview = ({
     });
   };
 
+  // A category change cannot be rejected
+  // (design/features/category-management/ui/decision.md): Reject all
+  // acknowledges the remaining ones instead.
   const handleRejectAll = () => {
     const confirmed = window.confirm(
       `Reject the remaining ${remaining.length} items without reviewing them individually?`
@@ -154,7 +163,7 @@ const SyncReview = ({
       const next = { ...previous };
       remaining.forEach((group) => {
         next[group.key] = {
-          action: "reject",
+          action: isCategoryNote(group) ? "accept" : "reject",
           items: group.items,
           modified: false,
         };
@@ -335,20 +344,30 @@ const SyncReview = ({
             total={groups.length}
             onAcceptAll={handleAcceptAll}
             onRejectAll={handleRejectAll}
+            showBulkActions={!isCategoryNote(currentGroup)}
           />
           <div ref={cardRef} tabIndex={-1}>
-            <ReviewItemCard
-              key={currentGroup.key}
-              item={currentGroup.item}
-              stateCount={currentGroup.items.length}
-              buckets={buckets}
-              unbudgetedCategories={unbudgetedCategories}
-              onAccept={(stagedItem, modified) =>
-                decide(currentGroup, "accept", stagedItem, modified)
-              }
-              onReject={() => decide(currentGroup, "reject")}
-              onCancelReview={handleCancelReview}
-            />
+            {isCategoryNote(currentGroup) ? (
+              <CategoryNoteCard
+                key={currentGroup.key}
+                change={currentGroup.item.category!.change}
+                affected={currentGroup.item.category!.affected || []}
+                onContinue={() => decide(currentGroup, "accept")}
+              />
+            ) : (
+              <ReviewItemCard
+                key={currentGroup.key}
+                item={currentGroup.item}
+                stateCount={currentGroup.items.length}
+                buckets={buckets}
+                categoryLists={categoryLists}
+                onAccept={(stagedItem, modified) =>
+                  decide(currentGroup, "accept", stagedItem, modified)
+                }
+                onReject={() => decide(currentGroup, "reject")}
+                onCancelReview={handleCancelReview}
+              />
+            )}
           </div>
         </React.Fragment>
       )}
@@ -359,7 +378,7 @@ const SyncReview = ({
 const mapStateToProps = (state: any) => ({
   pendingReview: state.syncManager.pendingReview,
   buckets: state.expensesManager.buckets,
-  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  categoryLists: state.expensesManager.categoryLists,
 });
 
 const mapActionsToProps = (dispatch: any) => ({

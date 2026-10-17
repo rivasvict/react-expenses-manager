@@ -1,0 +1,28 @@
+@import '../../../../../variables.scss';
+
+.categories-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.5rem 0.5rem;
+  text-align: center;
+
+  .category-illustration {
+    margin-bottom: 0.9rem;
+  }
+
+  &__title {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  &__text {
+    max-width: 21rem;
+    margin: 0 0 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: $text-secondary;
+  }
+}

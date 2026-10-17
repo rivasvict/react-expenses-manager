@@ -22,20 +22,20 @@ describe("category + bucket creation (issue #100)", () => {
     const { user } = await renderApp("/categories");
 
     // Existing bucket's category is shown; the new one is not there yet.
-    await screen.findByText("Food");
-    expect(screen.queryByText("Gym")).not.toBeInTheDocument();
+    await screen.findByRole("button", { name: /^Food/ });
+    expect(screen.queryByRole("button", { name: /^Gym/ })).not.toBeInTheDocument();
 
     await user.click(
-      await screen.findByRole("link", { name: /add new category/i })
+      screen.getByRole("button", { name: "Add expense category" })
     );
-    await user.type(await screen.findByPlaceholderText(/category name/i), "Gym");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await user.type(screen.getByRole("textbox", { name: "Name" }), "Gym");
+    await user.click(screen.getByRole("button", { name: "Create category" }));
 
-    // Redirected back to the categories list with the freshly created category,
-    // flagged as not having a bucket yet.
-    const gymEntry = await screen.findByTestId("category-gym");
-    expect(gymEntry).toHaveTextContent("Gym");
-    expect(gymEntry).toHaveTextContent(/no bucket/i);
+    // Back on the list with the freshly created category, unused and without
+    // a bucket.
+    expect(
+      await screen.findByRole("button", { name: /^Gym/ })
+    ).toHaveTextContent(/^Gym\s*Not used yet/);
   });
 
   it("a category can later get a bucket by selecting it from the Add bucket form", async () => {
@@ -57,17 +57,18 @@ describe("category + bucket creation (issue #100)", () => {
   });
 
   it("a newly created category becomes selectable when adding an expense, even without a bucket", async () => {
-    const { user } = await renderApp("/add-category");
+    const { user } = await renderApp("/categories");
 
     // Create the standalone "Gym" category (no bucket).
-    await user.type(await screen.findByPlaceholderText(/category name/i), "Gym");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await user.click(
+      await screen.findByRole("button", { name: "Add expense category" })
+    );
+    await user.type(screen.getByRole("textbox", { name: "Name" }), "Gym");
+    await user.click(screen.getByRole("button", { name: "Create category" }));
+    await screen.findByRole("button", { name: /^Gym/ });
 
-    // Land on the categories page, then head to the dashboard to add an expense.
-    await screen.findByTestId("category-gym");
+    // Head to the dashboard to add an expense.
     await user.click(await screen.findByRole("link", { name: /home/i }));
-
-    // Now add an expense and file it under the new category.
     await user.click(await screen.findByRole("link", { name: /add expenses/i }));
     await user.type(
       await screen.findByPlaceholderText(/insert expense amount/i),
@@ -85,23 +86,30 @@ describe("category + bucket creation (issue #100)", () => {
   });
 
   it("rejects a duplicate category name (case-insensitive) and creates nothing", async () => {
-    const { user } = await renderApp("/add-category");
+    const { user } = await renderApp("/categories");
 
-    // "food" collides with the seeded "Food" bucket.
-    await user.type(await screen.findByPlaceholderText(/category name/i), "food");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    // "food" collides with the "Food" category.
+    await user.click(
+      await screen.findByRole("button", { name: "Add expense category" })
+    );
+    await user.type(screen.getByRole("textbox", { name: "Name" }), "food");
+    await user.click(screen.getByRole("button", { name: "Create category" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(/already exists/i);
-
-    // We must still be on the add-category form, and storage must be untouched.
-    expect(screen.getByPlaceholderText(/category name/i)).toBeInTheDocument();
-    expect(localStorage.getItem("categories")).toBeNull();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "An expense category called “food” already exists."
+    );
+    // The sheet stays open, and the list still has a single Food.
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /^food/i })).toHaveLength(1);
   });
 
   it("rejects an empty category name", async () => {
-    const { user } = await renderApp("/add-category");
+    const { user } = await renderApp("/categories");
 
-    await user.click(await screen.findByRole("button", { name: /submit/i }));
+    await user.click(
+      await screen.findByRole("button", { name: "Add expense category" })
+    );
+    await user.click(screen.getByRole("button", { name: "Create category" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/cannot be empty/i);
   });

@@ -177,6 +177,7 @@ Every syncable unit gets an **itemKey** and a **contentHash**:
 | Entry | `entry:{id}` | whole entry minus `id` |
 | Fixed-entry history state | `fixed:{id}:{from}` | that history state minus `from` |
 | Bucket history state | `bucket:{lowercased name}:{from}` | that state minus `from` |
+| Category rename / deletion | `category:{id}` | the whole change |
 
 `contentHash` = FNV-1a over a canonical JSON serialization (recursively
 sorted keys). It detects change, it is not security — no crypto needed, so
@@ -195,6 +196,23 @@ it runs identically in jsdom.
   `(itemKey, contentHash)`, rejecting one edit does not suppress a *later,
   different* edit — and EC-5's modified value (new hash) is seen as current
   by the next syncer.
+
+- **Category changes** (category management, 1.33.0): renaming or
+  deleting a category appends a change `{ id, kind: "rename" | "delete",
+  type, name, newName?, moves?, fallback?, at, by? }` to the snapshot's
+  `categoryChanges` log (with the user's lists in `categoryLists`; both are
+  optional keys of the backup's `data`, so `schemaVersion` stays 1 and the
+  server, which never reads `data`, is unchanged). A remote change this
+  device lacks becomes an **informational** wizard card: it cannot be
+  rejected or modified, only acknowledged ("Reject all" acknowledges it
+  too). Before diffing, each side's missing changes are replayed on the
+  other side's entries, fixed entries and buckets, so the entries a rename
+  or deletion rewrote never show up as edits of their own. Accepted changes
+  are applied first, oldest first, by the same function the device uses
+  locally (`src/helpers/categoryChanges/categoryChanges.ts`); a deletion's
+  `fallback` files entries the deleting member never saw. Older app
+  versions ignore both keys, and their upload drops the log, so mixed
+  versions in one party should be avoided.
 
 ### 4.2 Diff (on download)
 

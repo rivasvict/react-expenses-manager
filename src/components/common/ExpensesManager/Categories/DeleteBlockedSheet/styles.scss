@@ -1,0 +1,21 @@
+@import '../../../../../variables.scss';
+
+.delete-blocked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.2rem 0.5rem 0.5rem;
+  text-align: center;
+
+  .category-illustration {
+    margin-bottom: 0.9rem;
+  }
+
+  &__text {
+    max-width: 21rem;
+    margin: 0 0 0.4rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: $text-secondary;
+  }
+}

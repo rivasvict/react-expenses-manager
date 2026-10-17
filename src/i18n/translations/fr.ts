@@ -297,20 +297,109 @@ const fr: Translations = {
   "editBucket.hint":
     "Les modifications s'appliquent à partir du mois affiché ; les mois précédents conservent leur ancienne limite.",
 
-  // Categories
+  // Categories (category management)
   "categories.pageTitle": "Catégories",
-  "categories.subtitle": "Toutes les catégories de dépenses, avec ou sans plafond",
-  "categories.noBucket": "(sans plafond)",
-  "categories.addNew": "Ajouter une catégorie",
-  "addCategory.name": "Nom",
-  "addCategory.hint":
-    "Les catégories regroupent vos dépenses. Vous pourrez ajouter plus tard une limite de dépenses (plafond) à une catégorie.",
+  "categories.tabExpenses": "Dépenses",
+  "categories.tabIncomes": "Revenus",
+  "categories.tabsLabel": "Type de catégorie",
+  "categories.lead": "Touchez une catégorie pour la renommer, voir où elle est utilisée ou la supprimer.",
+  "categories.addExpense": "Ajouter une catégorie de dépense",
+  "categories.addIncome": "Ajouter une catégorie de revenu",
+  "categories.expenseCount_one": "{{count}} dépense",
+  "categories.expenseCount_other": "{{count}} dépenses",
+  "categories.incomeCount_one": "{{count}} revenu",
+  "categories.incomeCount_other": "{{count}} revenus",
+  "categories.bucketPerMonth": "Plafond {{amount}}/mois",
+  "categories.unused": "Pas encore utilisée",
+  "categories.emptyExpenseTitle": "Aucune catégorie de dépense pour l’instant",
+  "categories.emptyExpenseText":
+    "Chaque dépense a besoin d’une catégorie pour que vous voyiez où va votre argent, comme Alimentation ou Loyer. Créez la première pour commencer à enregistrer des dépenses.",
+  "categories.emptyIncomeTitle": "Aucune catégorie de revenu pour l’instant",
+  "categories.emptyIncomeText":
+    "Chaque revenu a besoin d’une catégorie pour que vous voyiez d’où vient votre argent, comme Salaire ou Freelance. Créez la première pour commencer à enregistrer des revenus.",
+  "categories.sheetClose": "Fermer",
   "addCategory.namePlaceholder": "Nom de la catégorie",
   "addCategory.createFailed": "La catégorie n'a pas pu être créée",
+  "categorySheet.expenseType": "Catégorie de dépense",
+  "categorySheet.incomeType": "Catégorie de revenu",
+  "categorySheet.statExpenses": "dépenses",
+  "categorySheet.statIncomes": "revenus",
+  "categorySheet.statTotal": "au total",
+  "categorySheet.statBucket": "plafond / mois",
+  "categorySheet.noBucket": "sans plafond",
+  "categorySheet.name": "Nom",
+  "categorySheet.renameImpactBucket_one":
+    "En enregistrant, <b>1 dépense existante</b> et le plafond de {{amount}} passent de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.renameImpactBucket_other":
+    "En enregistrant, <b>{{count}} dépenses existantes</b> et le plafond de {{amount}} passent de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.renameImpact_one":
+    "En enregistrant, <b>1 dépense existante</b> passe de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.renameImpact_other":
+    "En enregistrant, <b>{{count}} dépenses existantes</b> passent de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.renameImpactIncome_one":
+    "En enregistrant, <b>1 revenu existant</b> passe de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.renameImpactIncome_other":
+    "En enregistrant, <b>{{count}} revenus existants</b> passent de « {{name}} » au nouveau nom. Les appareils synchronisés reçoivent aussi le changement.",
+  "categorySheet.save": "Enregistrer",
+  "categorySheet.saveFailed": "La catégorie n'a pas pu être enregistrée",
+  "categorySheet.dangerZone": "Zone de danger",
+  "categorySheet.deleteHint_one": "En la supprimant, nous vous demanderons où déplacer sa dépense.",
+  "categorySheet.deleteHint_other": "En la supprimant, nous vous demanderons où déplacer ses {{count}} dépenses.",
+  "categorySheet.deleteHintIncome_one": "En la supprimant, nous vous demanderons où déplacer son revenu.",
+  "categorySheet.deleteHintIncome_other": "En la supprimant, nous vous demanderons où déplacer ses {{count}} revenus.",
+  "categorySheet.unusedHint": "Aucune opération n’utilise cette catégorie.",
+  "categorySheet.delete": "Supprimer la catégorie",
+  "categorySheet.duplicateExpense": "Une catégorie de dépense « {{name}} » existe déjà.",
+  "categorySheet.duplicateIncome": "Une catégorie de revenu « {{name}} » existe déjà.",
+  "deleteSheet.title": "Supprimer « {{name}} » ?",
+  "deleteSheet.warningBucket_one":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : 1 dépense passe dans la catégorie choisie ci-dessous et le plafond de {{amount}} est supprimé.",
+  "deleteSheet.warningBucket_other":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : {{count}} dépenses passent dans les catégories choisies ci-dessous et le plafond de {{amount}} est supprimé.",
+  "deleteSheet.warning_one":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : 1 dépense passe dans la catégorie choisie ci-dessous.",
+  "deleteSheet.warning_other":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : {{count}} dépenses passent dans les catégories choisies ci-dessous.",
+  "deleteSheet.warningIncome_one":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : 1 revenu passe dans la catégorie choisie ci-dessous.",
+  "deleteSheet.warningIncome_other":
+    "<b>Action irréversible.</b> Elle modifie vos données existantes : {{count}} revenus passent dans les catégories choisies ci-dessous.",
+  "deleteSheet.setAllExpenses": "Mettre toutes les dépenses dans",
+  "deleteSheet.setAllIncomes": "Mettre tous les revenus dans",
+  "deleteSheet.chooseCategory": "Choisissez une catégorie",
+  "deleteSheet.applyAll": "Appliquer à tout",
+  "deleteSheet.choose": "Choisir…",
+  "deleteSheet.rowLabel": "Catégorie pour {{description}}",
+  "deleteSheet.monthGroup": "{{month}} {{year}}",
+  "deleteSheet.recurring": "Récurrentes",
+  "deleteSheet.stillNeed_one": "1 dépense attend encore une catégorie.",
+  "deleteSheet.stillNeed_other": "{{count}} dépenses attendent encore une catégorie.",
+  "deleteSheet.stillNeedIncome_one": "1 revenu attend encore une catégorie.",
+  "deleteSheet.stillNeedIncome_other": "{{count}} revenus attendent encore une catégorie.",
+  "deleteSheet.confirm_one": "Supprimer et déplacer 1 dépense",
+  "deleteSheet.confirm_other": "Supprimer et déplacer {{count}} dépenses",
+  "deleteSheet.confirmIncome_one": "Supprimer et déplacer 1 revenu",
+  "deleteSheet.confirmIncome_other": "Supprimer et déplacer {{count}} revenus",
+  "deleteSheet.unusedWarning":
+    "<b>Action irréversible.</b> Aucune opération n’utilise cette catégorie, donc rien d’autre ne change.",
+  "deleteSheet.blockedTitle": "Impossible de supprimer « {{name}} » pour l’instant",
+  "deleteSheet.blockedIncome_one":
+    "1 revenu utilise {{name}} et c’est votre seule catégorie de revenu, il n’y a donc nulle part où le déplacer. Ajoutez d’abord une autre catégorie de revenu, puis supprimez celle-ci.",
+  "deleteSheet.blockedIncome_other":
+    "{{count}} revenus utilisent {{name}} et c’est votre seule catégorie de revenu, il n’y a donc nulle part où les déplacer. Ajoutez d’abord une autre catégorie de revenu, puis supprimez celle-ci.",
+  "deleteSheet.blockedExpense_one":
+    "1 dépense utilise {{name}} et c’est votre seule catégorie de dépense, il n’y a donc nulle part où la déplacer. Ajoutez d’abord une autre catégorie de dépense, puis supprimez celle-ci.",
+  "deleteSheet.blockedExpense_other":
+    "{{count}} dépenses utilisent {{name}} et c’est votre seule catégorie de dépense, il n’y a donc nulle part où les déplacer. Ajoutez d’abord une autre catégorie de dépense, puis supprimez celle-ci.",
+  "deleteSheet.deleteFailed": "La catégorie n'a pas pu être supprimée",
+  "addSheet.titleExpense": "Nouvelle catégorie de dépense",
+  "addSheet.titleIncome": "Nouvelle catégorie de revenu",
+  "addSheet.hintExpense": "Le nom doit être unique parmi vos catégories de dépense.",
+  "addSheet.hintIncome": "Le nom doit être unique parmi vos catégories de revenu.",
+  "addSheet.create": "Créer la catégorie",
 
   // Form validation
   "validation.categoryNameEmpty": "Le nom de la catégorie ne peut pas être vide",
-  "validation.categoryExists": "Une catégorie « {{name}} » existe déjà",
   "validation.selectCategory": "Veuillez choisir une catégorie",
   "validation.bucketExists": "Un plafond pour « {{name}} » existe déjà",
   "validation.allowanceInvalid": "Le montant alloué doit être un nombre valide",
@@ -563,6 +652,19 @@ const fr: Translations = {
   "syncReview.enterNumber": "Saisissez un nombre.",
   "syncReview.enterDate": "Saisissez une date.",
   "syncReview.saveAndAccept": "Enregistrer et accepter",
+  "syncReview.categoryRenamed": "Catégorie renommée · pour information",
+  "syncReview.categoryDeleted": "Catégorie supprimée · pour information",
+  "syncReview.renamedBy": "{{type}} · renommée par {{name}} le {{date}}",
+  "syncReview.deletedBy": "{{type}} · supprimée par {{name}} le {{date}}",
+  "syncReview.renamedOn": "{{type}} · renommée le {{date}}",
+  "syncReview.deletedOn": "{{type}} · supprimée le {{date}}",
+  "syncReview.yourEntriesChange": "Vos dépenses qui changent",
+  "syncReview.yourEntriesChangeIncome": "Vos revenus qui changent",
+  "syncReview.yourEntriesMove": "Vos dépenses qui sont déplacées",
+  "syncReview.yourEntriesMoveIncome": "Vos revenus qui sont déplacés",
+  "syncReview.showMore": "Afficher {{count}} de plus",
+  "syncReview.continue": "Continuer",
+  "syncReview.cantReject": "Les changements de catégorie ne peuvent pas être refusés.",
 };
 
 export default fr;

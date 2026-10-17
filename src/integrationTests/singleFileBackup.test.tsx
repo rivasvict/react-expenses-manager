@@ -180,9 +180,10 @@ describe("restore — user-created categories", () => {
 
     await clickNav(user, /categories/i);
 
-    const gifts = await screen.findByTestId("category-gifts");
-    expect(gifts).toHaveTextContent("Gifts");
-    expect(gifts).toHaveTextContent(/no bucket/i);
+    // Restored into the expense categories, unused and without a bucket.
+    expect(
+      await screen.findByRole("button", { name: /^Gifts/ })
+    ).toHaveTextContent(/^Gifts\s*Not used yet/);
   });
 });
 
@@ -472,9 +473,9 @@ describe("round trip — download produces a single JSON file that restores the 
 
     // The standalone category came back.
     await clickNav(user, /categories/i);
-    expect(await screen.findByTestId("category-gifts")).toHaveTextContent(
-      /Gifts.*no bucket/i
-    );
+    expect(
+      await screen.findByRole("button", { name: /^Gifts/ })
+    ).toHaveTextContent(/^Gifts\s*Not used yet/);
 
     // Fixed entries came back and materialise into the month.
     await clickNav(user, /fixed entries/i);
@@ -521,16 +522,17 @@ describe("restore — committed sample backup file", () => {
     // The sample's three user-created categories are restored, each in its
     // right state: "Gifts" is unused (created but filed nowhere), "Hobby" is
     // used on a regular entry, and "Pet Care" is used on a fixed entry above.
+    // None has a bucket.
     await clickNav(user, /categories/i);
-    expect(await screen.findByTestId("category-gifts")).toHaveTextContent(
-      /Gifts.*no bucket/i
+    expect(
+      await screen.findByRole("button", { name: /^Gifts/ })
+    ).toHaveTextContent(/^Gifts\s*Not used yet/);
+    expect(screen.getByRole("button", { name: /^Hobby/ })).toHaveTextContent(
+      /^Hobby\s*1 expense/
     );
-    expect(screen.getByTestId("category-hobby")).toHaveTextContent(
-      /Hobby.*no bucket/i
-    );
-    expect(screen.getByTestId("category-pet care")).toHaveTextContent(
-      /Pet Care.*no bucket/i
-    );
+    expect(
+      screen.getByRole("button", { name: /^Pet Care/ })
+    ).toHaveTextContent(/^Pet Care\s*1 expense/);
 
     // "Hobby" is not just a name in the categories list — it was actually used
     // to file a regular expense, which must show up in the Expenses view.

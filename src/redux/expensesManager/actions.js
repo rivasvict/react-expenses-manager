@@ -17,8 +17,13 @@ import {
   buildBackupEnvelope,
   parseBackupEnvelope,
 } from "../../helpers/backupHelper/backupHelper";
+import { v4 as uuidv4 } from "uuid";
 import { getAddedBy } from "../../services/session";
 import { getDefaultEntryFilters } from "../../helpers/entriesHelper/filterSortHelper";
+import {
+  categoryPathOf,
+  pathMatchesCategory,
+} from "../../helpers/categoryLists/categoryLists";
 export const ADD_OUTCOME = "ADD_OUTCOME";
 export const ADD_INCOME = "ADD_INCOME";
 export const CATEGORY_CHANGE = "CATEGORY_CHANGE";
@@ -33,6 +38,7 @@ export const EDIT_BUCKET = "SET_BUCKET";
 export const ADD_BUCKET = "ADD_BUCKET";
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
+export const CATEGORY_CHANGED = "CATEGORY_CHANGED";
 export const GET_FIXED_ENTRIES = "GET_FIXED_ENTRIES";
 export const SET_FIXED_ENTRY = "SET_FIXED_ENTRY";
 export const RESTORE_BACKUP = "RESTORE_BACKUP";
@@ -226,12 +232,13 @@ const RestoreBackup =
           data.balance,
           data.fixedEntries,
         );
+        const categoryLists = await storage.getCategoryLists();
         dispatch({
           type: RESTORE_BACKUP,
           payload: {
             entries,
             buckets: data.buckets,
-            unbudgetedCategories: data.categories,
+            categoryLists,
             fixedEntries: data.fixedEntries,
           },
         });
@@ -252,6 +259,9 @@ const ClearAllData =
           type: CLEAR_ALL_DATA,
           payload: { entries: getCurrentEmptyMonth() },
         });
+        // With everything gone the category lists start over from the seeds.
+        const categoryLists = await storage.getCategoryLists();
+        dispatch({ type: GET_CATEGORIES, payload: { categoryLists } });
         dispatch(setAppLoading(false));
       } catch (error) {
         console.log(error);
@@ -311,8 +321,7 @@ const EditBucket =
 // Creates a bucket (spending limit) for an already-existing category (issue
 // #100). The storage layer validates that the category is non-empty and does
 // not already have a bucket, so the error is surfaced to the caller (the
-// AddBucket form) to display. Once a category gets a bucket it is no longer a
-// standalone category, so it is removed from `state.unbudgetedCategories`.
+// AddBucket form) to display.
 const AddBucket =
   ({ storage }) =>
   ({ bucket }) => {
@@ -323,10 +332,9 @@ const AddBucket =
           bucket,
           addedBy: getAddedBy(),
         });
-        const [categoryName] = Object.keys(bucket);
         dispatch({
           type: ADD_BUCKET,
-          payload: { buckets: response, categoryName },
+          payload: { buckets: response },
         });
         return response;
       } finally {
@@ -335,43 +343,126 @@ const AddBucket =
     };
   };
 
-// Creates a brand new expense category, independent of any bucket (issue
-// #100/#71). The category becomes selectable right away when adding an
-// expense or creating a bucket.
+// Creates an income or expense category, independent of any bucket (issue
+// #100/#71, category management). It becomes selectable right away when
+// adding an entry of that type or (for expenses) creating a bucket.
 const AddCategory =
   ({ storage }) =>
-  ({ category }) => {
+  ({ type, name }) => {
     return async (dispatch) => {
       dispatch(setAppLoading(true));
       try {
-        const response = await storage.addCategory({ category });
-        dispatch({
-          type: ADD_CATEGORY,
-          payload: { unbudgetedCategories: response },
-        });
-        return response;
+        const categoryLists = await storage.addCategory({ type, name });
+        dispatch({ type: ADD_CATEGORY, payload: { categoryLists } });
+        return categoryLists;
       } finally {
         dispatch(setAppLoading(false));
       }
     };
   };
 
+// Loads the user's category lists (migrating an install that predates them,
+// see LocalStorage's getCategoryListsFromLocalStorage).
 const GetCategories =
   ({ storage }) =>
   () => {
     return async (dispatch) => {
       try {
         dispatch(setAppLoading(true));
-        const response = await storage.getCategories();
-        dispatch({
-          type: GET_CATEGORIES,
-          payload: { unbudgetedCategories: response || [] },
-        });
+        const categoryLists = await storage.getCategoryLists();
+        dispatch({ type: GET_CATEGORIES, payload: { categoryLists } });
         dispatch(setAppLoading(false));
       } catch (error) {
         console.log(error);
       }
     };
+  };
+
+// Persists a category rename or deletion (category management,
+// design/features/category-management/ui/decision.md) and refreshes every
+// slice it touches in one update: the entries tree, the fixed entries, the
+// buckets and the category lists. An entry-list filter on the category
+// follows a rename and is cleared by a deletion.
+const commitCategoryChange = ({ storage, change }) => {
+  return async (dispatch, getState) => {
+    dispatch(setAppLoading(true));
+    try {
+      const next = await storage.applyCategoryChange({ change });
+      const entries = getGroupedFilledEntriesByDate()(
+        next.balance,
+        next.fixedEntries,
+      );
+      dispatch({
+        type: CATEGORY_CHANGED,
+        payload: {
+          entries,
+          buckets: next.buckets,
+          categoryLists: next.categoryLists,
+          fixedEntries: next.fixedEntries,
+        },
+      });
+      const { category } = getState().expensesManager.entryFilters || {};
+      if (category && pathMatchesCategory(category, change.name)) {
+        const filtered =
+          change.kind === "rename" ? categoryPathOf(change.newName) : "";
+        dispatch({ type: SET_ENTRY_FILTERS, payload: { category: filtered } });
+        await storage.setEntryFilters({
+          entryFilters: getState().expensesManager.entryFilters,
+        });
+      }
+      return next;
+    } finally {
+      dispatch(setAppLoading(false));
+    }
+  };
+};
+
+const newCategoryChange = (fields) => {
+  const by = getAddedBy();
+  return { id: uuidv4(), at: Date.now(), ...fields, ...(by ? { by } : {}) };
+};
+
+// Renames a category of `type`: every entry and fixed entry filed under it,
+// and its bucket, move to the new name.
+const RenameCategory =
+  ({ storage }) =>
+  ({ type, name, newName }) =>
+    commitCategoryChange({
+      storage,
+      change: newCategoryChange({
+        kind: "rename",
+        type,
+        name,
+        newName: newName.trim(),
+      }),
+    });
+
+// Deletes a category of `type`. `moves` maps each affected entry / fixed
+// entry id to the category it moves to; its bucket is removed.
+const DeleteCategory =
+  ({ storage }) =>
+  ({ type, name, moves = {} }) => {
+    const targets = Object.values(moves);
+    // Entries another member adds before syncing go where most of these went.
+    const fallback = targets.length
+      ? targets
+          .slice()
+          .sort(
+            (first, second) =>
+              targets.filter((target) => target === second).length -
+              targets.filter((target) => target === first).length,
+          )[0]
+      : undefined;
+    return commitCategoryChange({
+      storage,
+      change: newCategoryChange({
+        kind: "delete",
+        type,
+        name,
+        moves,
+        ...(fallback ? { fallback } : {}),
+      }),
+    });
   };
 
 const GetBucket =
@@ -532,6 +623,8 @@ export const ActionCreators = ({ storage }) => {
     getBucket: GetBucket({ storage }),
     addCategory: AddCategory({ storage }),
     getCategories: GetCategories({ storage }),
+    renameCategory: RenameCategory({ storage }),
+    deleteCategory: DeleteCategory({ storage }),
     setEntryFilters: SetEntryFilters({ storage }),
     clearEntryFilters: ClearEntryFilters({ storage }),
     getEntryFilters: GetEntryFilters({ storage }),

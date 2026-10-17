@@ -5,7 +5,7 @@ import AddEntry from "../common/ExpensesManager/AddEntry";
 import Summary from "../common/ExpensesManager/Summaries/Summary";
 import EntrySummaryWithFilter from "../common/ExpensesManager/Summaries/EntriesSummaryWithFilter";
 
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "../common/Header";
 import "./styles.scss";
@@ -17,7 +17,6 @@ import DataManagement from "../common/ExpensesManager/DataManagement";
 import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
 import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
 import AddBucket from "../common/ExpensesManager/AddBucket";
-import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
 import FixedEntries from "../common/ExpensesManager/FixedEntries";
 import Account from "../Account";
@@ -87,8 +86,15 @@ function Dashboard({ entries, selectedDate }) {
             <Route path={`${match.url}add-bucket`}>
               <AddBucket />
             </Route>
+            {/* The old Add category page: now the add sheet on Categories
+                (design/features/category-management/ui/decision.md). */}
             <Route path={`${match.url}add-category`}>
-              <AddCategory />
+              <Redirect
+                to={{
+                  pathname: `${match.url}categories`,
+                  state: { addCategory: "expense" },
+                }}
+              />
             </Route>
             <Route path={`${match.url}categories`}>
               <Categories />

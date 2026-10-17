@@ -27,10 +27,11 @@ same PR that adds it.
 | Range switch (segmented control of 1M … YTD plus a calendar button; dimmed when out of reach) | Savings trend | `src/components/common/SavingsTrend/RangeSwitch/` |
 | Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip; plots the running total over a zero line on the Total saved tab) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
 | Trend summary (the headline card: tabs on top, then either the "October vs April" amount, percentage pill and caption or the total saved) | Savings trend | `src/components/common/SavingsTrend/TrendSummary/` |
-| View tabs (underline tab pair, Total saved left / Change right, at the top of the headline card) | Savings trend | `src/components/common/SavingsTrend/ViewTabs/` |
+| View tabs (underline tab pair, Total saved left / Change right, at the top of the headline card) | Savings trend | `src/components/common/SavingsTrend/ViewTabs/`, built on Underline tabs |
+| Underline tabs (equal-width tabs over a rule, gold underline on the selected one, optional count badge; arrow keys, Home and End) | Savings trend, Categories | `src/components/common/UnderlineTabs/` |
 | Total figures (label, total saved, month count and monthly average, inside the headline card) | Savings trend | `src/components/common/SavingsTrend/TotalFigures/` (maths: `src/helpers/savingsTrend/savingsTotal.ts`) |
 | Custom range sheet (bottom sheet over a scrim with From / To month selects) | Savings trend | `src/components/common/SavingsTrend/CustomRangeSheet/` |
-| Bottom sheet (scrim, panel, grabber, heading, close chip; focuses its heading, closes on Escape or scrim) | Savings trend, Settings | `src/components/common/BottomSheet/` |
+| Bottom sheet (scrim, panel, grabber, heading with an optional eyebrow, close chip; focuses its heading or a given field, closes on Escape or scrim). **Tall** variant: up to 92vh with a scrolling body; an optional **footer** stays fixed under the body, above a rule | Savings trend, Settings, Categories | `src/components/common/BottomSheet/` (`variant="tall"`, `footer`, `role="alertdialog"`); the category sheets' raised surface is `.category-sheet` in `src/components/common/ExpensesManager/Categories/styles.scss` |
 | Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |
 | Currency tile grid (symbol + code radio tiles in a sheet) | Settings | `src/components/Settings/CurrencySheet/` |
 | History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold action) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |
@@ -38,3 +39,8 @@ same PR that adds it.
 | Hidden figure (a blurred, fixed placeholder with a spoken label, in place of a money figure while Privacy mode hides it) | The dashboard, assembled | `src/components/common/HiddenFigure/`; the placeholders are in `src/privacy/hiddenFigures.ts` |
 | Privacy eye (gold eye chip beside the "Savings" label that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
 | Hidden balance chart (one uniform grey ring and a neutral legend in place of the savings doughnut) | The dashboard, assembled | `src/components/common/HiddenBalanceChart/` |
+| Category row (type chip, name over its usage and bucket, chevron; the whole row is a button that opens the category sheet) | Categories | `src/components/common/ExpensesManager/Categories/CategoryRow/` |
+| Type chip (the money-row chip for a category type: rose up arrow for expenses, green down arrow for incomes) | Categories, Sync review | `src/components/common/ExpensesManager/Categories/TypeChip/` |
+| Usage figures (three-column strip of a bold value over a small label: entries, total, bucket) | Categories | `src/components/common/ExpensesManager/Categories/UsageFigures/` |
+| Callout (tinted note with an icon: amber `warn` before a consequential save, red `danger` for an irreversible action) | Categories | `src/components/common/Callout/` |
+| Category illustration (dashed card, two tags and a gold plus; empty categories and the blocked delete sheet) | Categories | `src/components/common/ExpensesManager/Categories/CategoryIllustration/` |

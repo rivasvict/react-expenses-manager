@@ -10,6 +10,8 @@ interface WizardProgressProps {
   total: number;
   onAcceptAll: () => void;
   onRejectAll: () => void;
+  /** False on a card that can only be acknowledged (a category note). */
+  showBulkActions?: boolean;
 }
 
 /**
@@ -23,6 +25,7 @@ const WizardProgress = ({
   total,
   onAcceptAll,
   onRejectAll,
+  showBulkActions = true,
 }: WizardProgressProps) => {
   const { t } = useTranslation();
   return (
@@ -36,14 +39,16 @@ const WizardProgress = ({
           })}
         </span>
       </div>
-      <div className="wizard-progress__bulk">
-        <Button variant="secondary" onClick={onAcceptAll}>
-          {t("syncReview.acceptAll")}
-        </Button>
-        <Button variant="secondary" onClick={onRejectAll}>
-          {t("syncReview.rejectAll")}
-        </Button>
-      </div>
+      {showBulkActions && (
+        <div className="wizard-progress__bulk">
+          <Button variant="secondary" onClick={onAcceptAll}>
+            {t("syncReview.acceptAll")}
+          </Button>
+          <Button variant="secondary" onClick={onRejectAll}>
+            {t("syncReview.rejectAll")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

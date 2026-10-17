@@ -5,6 +5,48 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.33.0] - 2026-10-17
+
+### Added
+
+- **Manage your categories.** The **Categories** screen now has two tabs,
+  **Expenses** and **Incomes**, each with how many categories it holds, and
+  every category shows how many entries use it and its monthly bucket, if it
+  has one. Tap a category to open it: you see how many entries use it, how
+  much they add up to and its bucket, and you can **rename** it or **delete**
+  it. Add a category from the same screen with **Add expense category** or
+  **Add income category**; names must be unique within a type, but the same
+  name can be both an income and an expense category. A type with no
+  categories shows a short explanation and a button to create the first one.
+- **Income categories are yours too.** Salary, Deposit and Saving are no
+  longer fixed: add, rename or delete income categories like expense ones, and
+  Add income offers exactly your list.
+- **Renaming** a category moves every entry and recurring entry filed under it
+  to the new name, and its bucket keeps its limits under the new name. Before
+  you save, a note says how many existing entries (and which bucket) the change
+  touches.
+- **Deleting** a category no entry uses only asks you to confirm. Deleting one
+  that entries use warns that it cannot be undone and lists every affected
+  entry, grouped by month, so you can send them all to one category with
+  **Apply to all** and still change any of them one by one; nothing is deleted
+  until every entry has somewhere to go. The category's bucket is removed, and
+  the moved spending counts toward the bucket of the category it moves to. The
+  only category of a type that entries still use cannot be deleted until you
+  add another one.
+- **Sync:** a category renamed or deleted by another member of your party
+  shows up in the review wizard as a note, with your entries it changes, that
+  you acknowledge with **Continue**; it cannot be rejected or modified.
+  Available in English, Spanish and French.
+
+### Changed
+
+- Your existing categories carry over on their own the first time you open the
+  app: the starter categories, the ones you created and the ones your buckets
+  and entries use. Nothing in your existing data is rewritten. Backups now
+  include your category lists, and older backups still restore.
+- The separate **Add category** page is gone; adding a category happens in a
+  sheet on the Categories screen (links to the old page open that sheet).
+
 ## [1.32.0] - 2026-10-13
 
 ### Added
