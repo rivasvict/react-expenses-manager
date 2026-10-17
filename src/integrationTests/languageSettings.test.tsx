@@ -128,5 +128,13 @@ describe("language settings", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "El nombre de la categoría no puede estar vacío",
     );
+
+    // A name another expense category already has: "Food" is a seed category.
+    await user.type(screen.getByRole("textbox", { name: "Nombre" }), "Food");
+    await user.click(screen.getByRole("button", { name: "Crear categoría" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Ya existe una categoría de gasto llamada «Food».",
+    );
   });
 });
