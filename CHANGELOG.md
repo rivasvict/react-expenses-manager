@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.32.1] - 2026-10-17
+
+### Changed
+
+- **Contributor guidance.** `CLAUDE.md` now asks for an adversarial review by a
+  sub-agent as soon as a pull request is created, with the model chosen to fit
+  the size and complexity of the change and findings posted on the pull request
+  with a `[bot]` prefix for the author to resolve. No change to the app.
+
 ## [1.32.0] - 2026-10-13
 
 ### Added
