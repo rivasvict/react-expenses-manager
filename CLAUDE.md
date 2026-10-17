@@ -101,6 +101,15 @@ Node version is pinned in `.nvmrc`.
 * A component defined inside another component's file must not exceed **5 lines**. Past that, move it into its own module (a directory with an `index.tsx`, matching `GlyphIcon`/`BrandMark`/`AccountChip` under `src/components/common/`, with a colocated `styles.scss` when it has styles of its own). The 5 lines are a ceiling to design comfortably under, **not** a target to hit: do not cut identifiers short, strip comments, or cram JSX just to get under the number. Use however many lines the implementation needs to stay clean and clear — and if that is more than 5, that is the signal it belongs in its own file.
 * Every pull request must bump the app version: update `"version"` in `package.json` (and `package-lock.json`) and add a corresponding entry to `CHANGELOG.md`, following the existing `Keep a Changelog` format used there. **The one exception is a pull request that changes only files under `design/`**: that is a proposal or an evaluation, not a change to the app, so it gets no version bump and no changelog entry. If a PR touches `design/` and anything else, the usual rule applies to the whole PR, so keep design work in its own PR.
 
+## Adversarial review of pull requests
+
+As soon as a pull request is created, trigger an adversarial review of it from a sub-agent (the `Agent` tool), without waiting to be asked:
+
+* The reviewer's job is to try to break the PR: hunt for correctness bugs, regressions, missed edge cases, untranslated UI text, design-system violations, missing tests, and breaches of the rules in this file. It is read-only: it reports findings and never edits or pushes.
+* Pick the model that fits the PR's size and complexity: a small, mechanical change (docs, copy, a one-file fix) gets a lighter, cheaper model; a large or intricate change (many files, state or storage logic, sync-server code, security-sensitive paths) gets the most capable model available. When in doubt, go one tier up.
+* Every finding is posted as a comment on the PR, and each comment body starts with the prefix `[bot]` (e.g. `[bot] The empty-month case in getGroupedFilledEntriesByDate drops the bucket total.`), so the agent working on the PR can tell review findings apart from human comments and resolve them. Post nothing when there are no findings beyond a single `[bot]` comment saying the review found nothing.
+* The agent that owns the PR treats `[bot]` comments as work to do: fix each one (or reply on its thread explaining why it does not apply), push, and resolve the thread.
+
 ## GitHub issue creation
 
 When creating a new issue via `gh issue create`:
