@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Option A: Sync note</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+    .page-title { margin: 0 0 0.625rem; }
+    .lead { margin: 0 0 0.75rem; text-align: center; font-size: 0.88rem; line-height: 1.45; color: var(--text-secondary); }
+    .stack { display: flex; flex-direction: column; gap: 0.5rem; }
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; padding: 0.25rem; margin: 0 0 0.75rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .seg__item { min-height: 2.6rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: var(--radius-control); font-size: 0.92rem; font-weight: 600; color: var(--text-secondary); }
+    .seg__item--sel { background-color: var(--accent-soft); color: var(--text-primary); box-shadow: inset 0 0 0 1px var(--accent); }
+    .count { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+    .tabs { display: flex; border-bottom: 1px solid var(--border-subtle); margin: 0 0 0.75rem; }
+    .tabs__item { flex: 1; text-align: center; padding: 0.7rem 0.3rem; font-weight: 600; font-size: 0.92rem; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tabs__item--sel { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .row { display: flex; align-items: center; gap: 0.75rem; min-height: 3.5rem; padding: 0.6rem 0.75rem 0.6rem 0.9rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); color: var(--text-primary); }
+    .row__main { flex: 1; min-width: 0; }
+    .row__name { display: block; font-weight: 600; font-size: 0.95rem; overflow-wrap: anywhere; }
+    .row__meta { display: block; font-size: 0.8rem; color: var(--text-secondary); }
+    .row__end { color: var(--text-secondary); font-size: 1.1rem; }
+    .icon-btn { width: 2.75rem; height: 2.75rem; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-secondary); }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn--danger { color: var(--danger); }
+    .badge { display: inline-block; margin-left: 0.35rem; padding: 0 0.45rem; border-radius: var(--radius-pill); background-color: var(--accent-soft); color: var(--accent); font-size: 0.72rem; font-weight: 700; vertical-align: 0.1em; }
+    .section-label { margin: 1rem 0 0.45rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); display: flex; justify-content: space-between; }
+    .callout { display: flex; gap: 0.6rem; padding: 0.75rem 0.85rem; border-radius: var(--radius-control); font-size: 0.86rem; line-height: 1.45; color: var(--text-primary); }
+    .callout svg { flex: none; width: 18px; height: 18px; margin-top: 0.1rem; }
+    .callout--warn { background-color: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, transparent); }
+    .callout--danger { background-color: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); }
+    .callout--info { background-color: var(--highlight); border: 1px solid var(--border-strong); }
+    .callout b { font-weight: 700; }
+    .entry { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.1rem; border-bottom: 1px solid var(--border-subtle); }
+    .entry:last-child { border-bottom: 0; }
+    .entry__main { flex: 1; min-width: 0; }
+    .entry__desc { display: block; font-size: 0.9rem; font-weight: 600; overflow-wrap: anywhere; }
+    .entry__date { display: block; font-size: 0.78rem; color: var(--text-secondary); }
+    .entry__amt { font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+    .mini-select { position: relative; min-height: 2.75rem; min-width: 7.5rem; max-width: 9.5rem; display: flex; align-items: center; padding: 0 1.8rem 0 0.7rem; font-size: 0.84rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); color: var(--text-primary); }
+    .mini-select--empty { color: var(--text-secondary); border-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+    .mini-select::after { content: "▾"; position: absolute; right: 0.6rem; color: var(--text-secondary); }
+    .radio { display: flex; gap: 0.7rem; padding: 0.8rem 0.85rem; border: 1px solid var(--border-subtle); border-radius: var(--radius-control); background-color: var(--bg-surface); }
+    .radio--sel { border-color: var(--accent); background-color: var(--accent-soft); }
+    .radio__dot { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; border-radius: var(--radius-round); border: 2px solid var(--border-strong); }
+    .radio--sel .radio__dot { border: 0.32rem solid var(--accent); }
+    .radio__title { display: block; font-weight: 600; font-size: 0.93rem; }
+    .radio__hint { display: block; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+    .empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.5rem 0.5rem 0.5rem; }
+    .empty svg { width: 132px; height: 112px; margin-bottom: 0.9rem; }
+    .empty__title { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 700; }
+    .empty__text { margin: 0 0 1.1rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); max-width: 21rem; }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; max-height: 88vh; overflow: hidden; padding: 0.6rem 1rem 1rem; background-color: var(--bg-raised); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); display: flex; flex-direction: column; gap: 0.6rem; }
+    .sheet__grab { width: 2.5rem; height: 0.25rem; margin: 0 auto 0.2rem; border-radius: var(--radius-round); background-color: var(--border-strong); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; overflow-wrap: anywhere; }
+    .sheet__close { width: 2.4rem; height: 2.4rem; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--bg-surface); color: var(--text-secondary); }
+    .sheet .mk-btn { margin-top: 0; }
+    .sheet__list { overflow: hidden; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); padding: 0.1rem 0.7rem; }
+    .btn-gap { display: flex; flex-direction: column; gap: 0.5rem; }
+    .linkish { color: var(--accent); font-weight: 600; font-size: 0.88rem; }
+    .muted-note { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
+    .wiz-bar { display: flex; align-items: center; gap: 0.8rem; margin: 0.625rem 0 0; }
+    .wiz-bar__track { flex: 1; height: 0.4rem; border-radius: var(--radius-pill); background-color: var(--track); overflow: hidden; }
+    .wiz-bar__fill { height: 100%; background-color: var(--accent); border-radius: var(--radius-pill); }
+    .wiz-bar__count { font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; }
+    .rename { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; font-size: 1.05rem; font-weight: 700; margin: 0.2rem 0 0.6rem; }
+    .rename__old { color: var(--text-secondary); text-decoration: line-through; font-weight: 600; }
+    .kind { font-size: 0.8rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.4rem; }
+    .kind svg { width: 14px; height: 14px; flex: none; }
+    .by { font-size: 0.8rem; color: var(--text-secondary); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; gap: 0.5rem; }
+    .field-error { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--danger); }
+    .mk-input--error { border-color: var(--danger); box-shadow: 0 0 0 0.2rem var(--danger-soft); }
+
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h1 class="mk-title page-title">Review changes</h1>
+      <div class="wiz-bar"><div class="wiz-bar__track"><div class="wiz-bar__fill" style="width: 28%"></div></div><span class="wiz-bar__count">Item 2 of 7</span></div>
+      <section class="mk-card mk-space-top">
+        <div class="card-head"><span class="kind"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z" stroke-width="2" stroke-linejoin="round" style="fill: none; stroke: currentColor"/><circle cx="7.5" cy="8.5" r="1.5" style="fill: currentColor"/></svg> Category renamed</span><span class="by">By Ana</span></div>
+        <div class="rename"><span class="rename__old">Eating out</span><span aria-hidden="true">→</span><span>Restaurants</span></div>
+        <p class="muted-note" style="margin-bottom:0.75rem">Expense category · 12 of your expenses and the $400.00 bucket now use the new name.</p>
+        <div class="callout callout--info"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" style="fill: var(--text-secondary)"/><path d="M12 11v6M12 7.5v.5" stroke-width="2.2" stroke-linecap="round" style="stroke: var(--bg-page)"/></svg><span>Category changes from your party apply to everyone, so there is nothing to decide here.</span></div>
+        <div class="mk-actions"><button class="mk-btn mk-btn--primary" type="button">Got it, next change</button></div>
+      </section>
+    </div>
+  </main>
+
+</body>
+</html>
