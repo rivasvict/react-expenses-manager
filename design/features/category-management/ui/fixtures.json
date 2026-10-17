@@ -1,0 +1,2325 @@
+{
+  "screens": {
+    "categories.default": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      }
+    },
+    "categories.es": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      }
+    },
+    "categories.empty": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": []
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=/Incomes/]"
+        }
+      ]
+    },
+    "add-sheet.default": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name='Add expense category']"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "category-sheet.default": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "category-sheet.filled": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "fill": [
+            "role=textbox[name='Name']",
+            "Restaurants"
+          ]
+        }
+      ]
+    },
+    "category-sheet.error": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "fill": [
+            "role=textbox[name='Name']",
+            "Food"
+          ]
+        },
+        {
+          "click": "role=button[name='Save changes']"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "category-sheet.unused": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Travel/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "category-sheet.es": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "delete-sheet.default": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=button[name='Delete category']"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "delete-sheet.filled": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=button[name='Delete category']"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=combobox[name='Set every expense to']"
+        },
+        {
+          "click": "role=option[name='Food']"
+        },
+        {
+          "click": "role=button[name='Apply to all']"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "delete-sheet.es": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Eating out/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=button[name='Eliminar categoría']"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "delete-sheet.unused": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Deposit"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i3",
+            "description": "Gift",
+            "date": 1789905600000,
+            "amount": "250",
+            "type": "income",
+            "categories_path": ",deposit,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Travel/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=button[name='Delete category']"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "delete-sheet.blocked": {
+      "route": "/categories",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Food",
+            "Subscriptions",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary"
+          ]
+        },
+        "buckets": {
+          "Eating out": [
+            {
+              "from": "0000-00",
+              "limit": 400
+            }
+          ],
+          "Food": [
+            {
+              "from": "0000-00",
+              "limit": 650
+            }
+          ]
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "description": "Sushi with Ana",
+            "date": 1791806400000,
+            "amount": "64.50",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e2",
+            "description": "Pizza night",
+            "date": 1791115200000,
+            "amount": "38.00",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e3",
+            "description": "Coffee & bagel",
+            "date": 1790596800000,
+            "amount": "9.75",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e4",
+            "description": "Birthday dinner at Le Petit Bistro du Vieux-Port",
+            "date": 1789905600000,
+            "amount": "142.30",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e5",
+            "description": "Tacos",
+            "date": 1788955200000,
+            "amount": "21.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "e6",
+            "description": "Groceries",
+            "date": 1791633600000,
+            "amount": "120.40",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e7",
+            "description": "Farmers market",
+            "date": 1791028800000,
+            "amount": "36.00",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e8",
+            "description": "Groceries",
+            "date": 1790424000000,
+            "amount": "98.15",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "e9",
+            "description": "Bus pass",
+            "date": 1790856000000,
+            "amount": "97.00",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e10",
+            "description": "Taxi",
+            "date": 1789473600000,
+            "amount": "18.50",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "e11",
+            "description": "Music streaming",
+            "date": 1791201600000,
+            "amount": "10.99",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "i1",
+            "description": "October pay",
+            "date": 1790856000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "i2",
+            "description": "September pay",
+            "date": 1788264000000,
+            "amount": "4000",
+            "type": "income",
+            "categories_path": ",salary,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=/Incomes/]"
+        },
+        {
+          "click": "role=button[name=/^Salary/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=button[name='Delete category']"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "sync-note.renamed": {
+      "route": "/sync-review",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      }
+    },
+    "sync-note.deleted": {
+      "route": "/sync-review",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      }
+    }
+  }
+}

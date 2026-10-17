@@ -39,7 +39,7 @@ without breaking the entries, buckets and synced data that already use them.
    let a new user pick starter categories or create their own; this feature
    does not need to anticipate it beyond keeping the empty state simple.
 
-## Assumptions made for the prototype (to confirm)
+## Assumptions (accepted with option D)
 - A **replacement must be of the same type** and already exist. If the
   category is the only one of its type and entries use it, deletion is blocked
   until the user adds another one.

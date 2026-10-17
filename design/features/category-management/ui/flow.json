@@ -1,0 +1,218 @@
+{
+  "screens": [
+    {
+      "id": "settings-nav",
+      "title": "Any screen (Categories in the navigation)",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "categories.default",
+      "title": "Categories, Expenses tab",
+      "route": "/categories"
+    },
+    {
+      "id": "categories.es",
+      "title": "Categories (Spanish)",
+      "route": "/categories"
+    },
+    {
+      "id": "categories.empty",
+      "title": "Incomes tab, no categories",
+      "route": "/categories"
+    },
+    {
+      "id": "add-sheet.default",
+      "title": "New category sheet",
+      "route": "/categories"
+    },
+    {
+      "id": "category-sheet.default",
+      "title": "Category sheet",
+      "route": "/categories"
+    },
+    {
+      "id": "category-sheet.es",
+      "title": "Category sheet (Spanish)",
+      "route": "/categories"
+    },
+    {
+      "id": "category-sheet.filled",
+      "title": "New name typed",
+      "route": "/categories"
+    },
+    {
+      "id": "category-sheet.error",
+      "title": "Name already used",
+      "route": "/categories"
+    },
+    {
+      "id": "category-sheet.unused",
+      "title": "Category no entry uses",
+      "route": "/categories"
+    },
+    {
+      "id": "delete-sheet.default",
+      "title": "Delete: pick categories",
+      "route": "/categories"
+    },
+    {
+      "id": "delete-sheet.es",
+      "title": "Delete (Spanish)",
+      "route": "/categories"
+    },
+    {
+      "id": "delete-sheet.filled",
+      "title": "Delete: every expense assigned",
+      "route": "/categories"
+    },
+    {
+      "id": "delete-sheet.unused",
+      "title": "Delete an unused category",
+      "route": "/categories"
+    },
+    {
+      "id": "delete-sheet.blocked",
+      "title": "Only category of its type",
+      "route": "/categories"
+    },
+    {
+      "id": "sync-review",
+      "title": "Sync review wizard",
+      "route": "/sync-review",
+      "external": true
+    },
+    {
+      "id": "sync-note.renamed",
+      "title": "Sync note: renamed",
+      "route": "/sync-review"
+    },
+    {
+      "id": "sync-note.deleted",
+      "title": "Sync note: deleted",
+      "route": "/sync-review"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "settings-nav",
+      "to": "categories.default",
+      "label": "Tap Categories"
+    },
+    {
+      "from": "categories.default",
+      "to": "categories.es",
+      "label": "With the app in Spanish"
+    },
+    {
+      "from": "categories.default",
+      "to": "categories.empty",
+      "label": "Tap Incomes (none yet)"
+    },
+    {
+      "from": "categories.default",
+      "to": "add-sheet.default",
+      "label": "Tap Add expense category"
+    },
+    {
+      "from": "categories.empty",
+      "to": "add-sheet.default",
+      "label": "Tap Add income category"
+    },
+    {
+      "from": "add-sheet.default",
+      "to": "categories.default",
+      "label": "Tap Create category"
+    },
+    {
+      "from": "categories.default",
+      "to": "category-sheet.default",
+      "label": "Tap Eating out"
+    },
+    {
+      "from": "category-sheet.default",
+      "to": "category-sheet.es",
+      "label": "With the app in Spanish"
+    },
+    {
+      "from": "categories.default",
+      "to": "category-sheet.unused",
+      "label": "Tap Travel"
+    },
+    {
+      "from": "category-sheet.default",
+      "to": "category-sheet.filled",
+      "label": "Type a new name"
+    },
+    {
+      "from": "category-sheet.default",
+      "to": "category-sheet.error",
+      "label": "Type Food and tap Save changes"
+    },
+    {
+      "from": "category-sheet.filled",
+      "to": "categories.default",
+      "label": "Tap Save changes"
+    },
+    {
+      "from": "category-sheet.error",
+      "to": "category-sheet.filled",
+      "label": "Type another name"
+    },
+    {
+      "from": "category-sheet.default",
+      "to": "delete-sheet.default",
+      "label": "Tap Delete category"
+    },
+    {
+      "from": "delete-sheet.default",
+      "to": "delete-sheet.es",
+      "label": "With the app in Spanish"
+    },
+    {
+      "from": "delete-sheet.default",
+      "to": "delete-sheet.filled",
+      "label": "Pick Food and tap Apply to all"
+    },
+    {
+      "from": "delete-sheet.filled",
+      "to": "categories.default",
+      "label": "Tap Delete and move 5 expenses"
+    },
+    {
+      "from": "category-sheet.unused",
+      "to": "delete-sheet.unused",
+      "label": "Tap Delete category"
+    },
+    {
+      "from": "delete-sheet.unused",
+      "to": "categories.default",
+      "label": "Tap Delete category"
+    },
+    {
+      "from": "categories.default",
+      "to": "delete-sheet.blocked",
+      "label": "Incomes: Salary is the only one; tap it, then Delete category"
+    },
+    {
+      "from": "delete-sheet.blocked",
+      "to": "add-sheet.default",
+      "label": "Tap Add income category"
+    },
+    {
+      "from": "sync-review",
+      "to": "sync-note.renamed",
+      "label": "A party member renamed a category"
+    },
+    {
+      "from": "sync-note.renamed",
+      "to": "sync-note.deleted",
+      "label": "Tap Continue (next change deletes one)"
+    },
+    {
+      "from": "sync-note.deleted",
+      "to": "sync-review",
+      "label": "Tap Continue"
+    }
+  ]
+}
