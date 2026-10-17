@@ -1,3 +1,6 @@
+// TODO: This file has no colocated unit test; it was edited, not created,
+// by category management (design/features/category-management/ui/decision.md).
+// Tracked in: https://github.com/rivasvict/react-expenses-manager/issues/187
 import { ActionCreators } from "./actions";
 import storageSelector from "../../services/storageSelector";
 import { STORAGE_TYPES } from "../../constants";
@@ -26,6 +29,8 @@ export const {
   getBucket,
   addCategory,
   getCategories,
+  renameCategory,
+  deleteCategory,
   setEntryFilters,
   clearEntryFilters,
   getEntryFilters,

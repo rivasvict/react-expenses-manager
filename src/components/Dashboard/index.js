@@ -17,7 +17,6 @@ import DataManagement from "../common/ExpensesManager/DataManagement";
 import Buckets from "../common/ExpensesManager/Buckets/index.tsx";
 import { EditBucket } from "../common/ExpensesManager/EditBucket/index.ts";
 import AddBucket from "../common/ExpensesManager/AddBucket";
-import AddCategory from "../common/ExpensesManager/AddCategory";
 import Categories from "../common/ExpensesManager/Categories";
 import FixedEntries from "../common/ExpensesManager/FixedEntries";
 import Account from "../Account";
@@ -86,9 +85,6 @@ function Dashboard({ entries, selectedDate }) {
             </Route>
             <Route path={`${match.url}add-bucket`}>
               <AddBucket />
-            </Route>
-            <Route path={`${match.url}add-category`}>
-              <AddCategory />
             </Route>
             <Route path={`${match.url}categories`}>
               <Categories />

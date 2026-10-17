@@ -1,39 +1,171 @@
 @import '../../../../variables.scss';
 
-.categories-container {
-  .cancel {
-    width: 100%;
+// Categories (design/features/category-management/ui/approved/).
+.categories {
+  &__title {
+    margin: 0 0 0.625rem;
+    text-align: center;
+    font-size: $h1-size-title;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
   }
 
-  .categories-list {
-    margin-top: 0.25rem;
+  &__tabs.underline-tabs {
+    margin: 0 0 0.75rem;
 
-    // Two columns on wide screens halve the scroll depth of long lists.
-    @media (min-width: $nav-breakpoint) {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0 0.6rem;
+    .underline-tabs__tab {
+      height: auto;
+      padding: 0.7rem 0.3rem;
+      font-size: 0.92rem;
+      line-height: 1.5;
     }
+  }
 
-    .list-group-item {
-      background-color: $bg-raised;
-      color: $text-primary;
-      border: 1px solid $border-subtle;
-      border-radius: $radius-card;
-      margin-bottom: $vertical-standard-margin;
-      padding: 0.85rem 1rem;
-      font-weight: 500;
+  &__lead {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: $text-secondary;
+  }
 
-      // Categories that already have a spending limit get the accent marker,
-      // so they stand out from the "(no bucket)" majority at a glance.
-      &.has-bucket {
-        border-left: 3px solid $accent;
-      }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: $vertical-standard-margin;
+
+    .btn {
+      width: 100%;
     }
+  }
+}
 
-    .category-no-bucket {
-      font-size: 0.85rem;
-      font-weight: 400;
+// The category sheets: the shared bottom sheet on the raised surface, with a
+// round close chip, as drawn in the approved screens.
+.bottom-sheet.category-sheet {
+  .bottom-sheet__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 88vh;
+    padding: 0.6rem 1rem 1rem;
+    background-color: $bg-raised;
+  }
+
+  .bottom-sheet__panel--tall {
+    max-height: 92vh;
+    padding-bottom: 0;
+  }
+
+  .bottom-sheet__grabber {
+    width: 2.5rem;
+    height: 0.25rem;
+    margin: 0 auto 0.2rem;
+    border-radius: $radius-round;
+  }
+
+  .bottom-sheet__header {
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .bottom-sheet__heading {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .bottom-sheet__close {
+    @include icon-chip(2.4rem);
+    flex: none;
+    background-color: $bg-surface;
+    border: 0;
+    font-size: 1rem;
+  }
+
+  .bottom-sheet__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .bottom-sheet__footer {
+    padding: 0.6rem 0 1rem;
+    background-color: $bg-raised;
+  }
+
+  .form-label {
+    display: block;
+    line-height: 1.5;
+  }
+
+  .form-control.text {
+    background-color: $bg-raised;
+  }
+
+  .field-hint {
+    margin: 0 0 0.45rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 0;
+
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
+  }
+
+  .category-sheet__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .category-sheet__last-action {
+    margin-bottom: 1rem;
+  }
+
+  .category-sheet__input--error,
+  .category-sheet__input--error:focus {
+    border-color: $danger;
+    box-shadow: 0 0 0 0.2rem $danger-soft;
+  }
+
+  .category-sheet__error {
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    color: $danger;
+  }
+
+  .category-sheet__group-label {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.3rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  .category-sheet__group-label--danger-zone {
+    margin-top: 0.4rem;
+  }
+
+  .category-sheet__note {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: $text-secondary;
   }
 }

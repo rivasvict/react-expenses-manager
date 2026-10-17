@@ -8,13 +8,26 @@
  * persisted localStorage keys 1:1 (balance, buckets, categories,
  * fixedEntries), so export/import never has to lossily flatten the
  * time-aware bucket/fixed-entry histories the way the old CSV backup did.
+ * Category management added two optional keys, `categoryLists` and
+ * `categoryChanges` (design/features/category-management/ui/decision.md):
+ * they are written when present and kept on read when well formed, so the
+ * schema version stays 1 and older backups still restore.
  */
+import { isCategoryLists } from "../categoryLists/categoryLists";
+import { isCategoryChange } from "../categoryChanges/categoryChanges";
 
 const BACKUP_APP_ID = "react-expenses-manager";
 const BACKUP_SCHEMA_VERSION = 1;
 
 // Builds the envelope handed to the user for download.
-const buildBackupEnvelope = ({ balance, buckets, categories, fixedEntries }) => ({
+const buildBackupEnvelope = ({
+  balance,
+  buckets,
+  categories,
+  fixedEntries,
+  categoryLists = undefined,
+  categoryChanges = undefined,
+}) => ({
   app: BACKUP_APP_ID,
   schemaVersion: BACKUP_SCHEMA_VERSION,
   exportedAt: new Date().toISOString(),
@@ -23,6 +36,8 @@ const buildBackupEnvelope = ({ balance, buckets, categories, fixedEntries }) => 
     buckets: buckets || {},
     categories: categories || [],
     fixedEntries: fixedEntries || [],
+    ...(categoryLists ? { categoryLists } : {}),
+    ...(categoryChanges ? { categoryChanges } : {}),
   },
 });
 
@@ -74,6 +89,12 @@ const parseBackupEnvelope = (text) => {
         : {},
     categories: Array.isArray(data.categories) ? data.categories : [],
     fixedEntries: Array.isArray(data.fixedEntries) ? data.fixedEntries : [],
+    ...(isCategoryLists(data.categoryLists)
+      ? { categoryLists: data.categoryLists }
+      : {}),
+    ...(Array.isArray(data.categoryChanges)
+      ? { categoryChanges: data.categoryChanges.filter(isCategoryChange) }
+      : {}),
   };
 };
 

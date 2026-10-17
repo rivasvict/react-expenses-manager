@@ -29,7 +29,7 @@ const AddEntry = ({
   onAddExpense,
   onAddFixedEntry,
   buckets,
-  unbudgetedCategories,
+  categoryLists,
   history,
   location,
 }) => {
@@ -82,14 +82,14 @@ const AddEntry = ({
       allowRecurring={true}
       recurring={Boolean(location?.state?.recurring)}
       buckets={buckets}
-      unbudgetedCategories={unbudgetedCategories}
+      categoryLists={categoryLists}
     />
   );
 };
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  categoryLists: state.expensesManager.categoryLists,
 });
 
 const mapActionToProps = (dispatch) => ({

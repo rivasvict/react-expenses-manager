@@ -1,0 +1,64 @@
+@import '../../../../../variables.scss';
+
+.delete-sheet {
+  &__apply-all {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__set-all {
+    flex: 1;
+    min-width: 0;
+
+    .category-search-select__trigger {
+      background-color: $bg-surface;
+    }
+
+    // Beside Apply to all a longer label (Spanish, French) wraps to a second
+    // line inside the control instead of being cut short.
+    .category-search-select__value {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      white-space: normal;
+      line-height: 1.5;
+    }
+
+    &--empty .category-search-select__value {
+      color: $text-secondary;
+    }
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    &:last-child {
+      margin-bottom: 0.4rem;
+    }
+  }
+
+  &__list {
+    padding: 0.1rem 0.7rem;
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+  }
+
+  &__remaining {
+    margin: 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: $danger;
+  }
+}
+
+// Sized to its label beside the select, not full width like the sheet's
+// other buttons.
+.bottom-sheet.category-sheet .btn.delete-sheet__apply-button {
+  flex: none;
+  width: auto;
+  height: 3rem;
+  padding: 0 1rem;
+}

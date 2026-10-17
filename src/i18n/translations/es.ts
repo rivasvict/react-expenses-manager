@@ -297,21 +297,109 @@ const es: Translations = {
   "editBucket.hint":
     "Los cambios se aplican desde el mes que estás viendo en adelante; los meses anteriores conservan su límite.",
 
-  // Categories
+  // Categories (category management)
   "categories.pageTitle": "Categorías",
-  "categories.subtitle":
-    "Todas las categorías de gasto, con o sin límite",
-  "categories.noBucket": "(sin límite)",
-  "categories.addNew": "Añadir categoría",
-  "addCategory.name": "Nombre",
-  "addCategory.hint":
-    "Las categorías agrupan tus gastos. Más adelante puedes darle a una categoría un límite de gasto.",
+  "categories.tabExpenses": "Gastos",
+  "categories.tabIncomes": "Ingresos",
+  "categories.tabsLabel": "Tipo de categoría",
+  "categories.lead": "Toca una categoría para renombrarla, ver dónde se usa o eliminarla.",
+  "categories.addExpense": "Añadir categoría de gasto",
+  "categories.addIncome": "Añadir categoría de ingreso",
+  "categories.expenseCount_one": "{{count}} gasto",
+  "categories.expenseCount_other": "{{count}} gastos",
+  "categories.incomeCount_one": "{{count}} ingreso",
+  "categories.incomeCount_other": "{{count}} ingresos",
+  "categories.bucketPerMonth": "Límite {{amount}}/mes",
+  "categories.unused": "Sin usar todavía",
+  "categories.emptyExpenseTitle": "Aún no tienes categorías de gasto",
+  "categories.emptyExpenseText":
+    "Cada gasto necesita una categoría para que veas adónde va tu dinero, como Comida o Alquiler. Crea la primera para empezar a registrar gastos.",
+  "categories.emptyIncomeTitle": "Aún no tienes categorías de ingreso",
+  "categories.emptyIncomeText":
+    "Cada ingreso necesita una categoría para que veas de dónde viene tu dinero, como Salario o Freelance. Crea la primera para empezar a registrar ingresos.",
+  "categories.sheetClose": "Cerrar",
   "addCategory.namePlaceholder": "Nombre de la categoría",
   "addCategory.createFailed": "No se pudo crear la categoría",
+  "categorySheet.expenseType": "Categoría de gasto",
+  "categorySheet.incomeType": "Categoría de ingreso",
+  "categorySheet.statExpenses": "gastos",
+  "categorySheet.statIncomes": "ingresos",
+  "categorySheet.statTotal": "en total",
+  "categorySheet.statBucket": "límite / mes",
+  "categorySheet.noBucket": "sin límite",
+  "categorySheet.name": "Nombre",
+  "categorySheet.renameImpactBucket_one":
+    "Al guardar, <b>1 gasto existente</b> y el límite de {{amount}} pasan de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.renameImpactBucket_other":
+    "Al guardar, <b>{{count}} gastos existentes</b> y el límite de {{amount}} pasan de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.renameImpact_one":
+    "Al guardar, <b>1 gasto existente</b> pasa de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.renameImpact_other":
+    "Al guardar, <b>{{count}} gastos existentes</b> pasan de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.renameImpactIncome_one":
+    "Al guardar, <b>1 ingreso existente</b> pasa de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.renameImpactIncome_other":
+    "Al guardar, <b>{{count}} ingresos existentes</b> pasan de «{{name}}» al nuevo nombre. Los dispositivos sincronizados también reciben el cambio.",
+  "categorySheet.save": "Guardar cambios",
+  "categorySheet.saveFailed": "No se pudo guardar la categoría",
+  "categorySheet.dangerZone": "Zona de peligro",
+  "categorySheet.deleteHint_one": "Al eliminarla te preguntaremos adónde mover su gasto.",
+  "categorySheet.deleteHint_other": "Al eliminarla te preguntaremos adónde mover sus {{count}} gastos.",
+  "categorySheet.deleteHintIncome_one": "Al eliminarla te preguntaremos adónde mover su ingreso.",
+  "categorySheet.deleteHintIncome_other": "Al eliminarla te preguntaremos adónde mover sus {{count}} ingresos.",
+  "categorySheet.unusedHint": "Ninguna entrada usa esta categoría.",
+  "categorySheet.delete": "Eliminar categoría",
+  "categorySheet.duplicateExpense": "Ya existe una categoría de gasto llamada «{{name}}».",
+  "categorySheet.duplicateIncome": "Ya existe una categoría de ingreso llamada «{{name}}».",
+  "deleteSheet.title": "¿Eliminar «{{name}}»?",
+  "deleteSheet.warningBucket_one":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: 1 gasto pasa a la categoría que elijas abajo y se elimina el límite de {{amount}}.",
+  "deleteSheet.warningBucket_other":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: {{count}} gastos pasan a las categorías que elijas abajo y se elimina el límite de {{amount}}.",
+  "deleteSheet.warning_one":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: 1 gasto pasa a la categoría que elijas abajo.",
+  "deleteSheet.warning_other":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: {{count}} gastos pasan a las categorías que elijas abajo.",
+  "deleteSheet.warningIncome_one":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: 1 ingreso pasa a la categoría que elijas abajo.",
+  "deleteSheet.warningIncome_other":
+    "<b>No se puede deshacer.</b> Cambia tus datos existentes: {{count}} ingresos pasan a las categorías que elijas abajo.",
+  "deleteSheet.setAllExpenses": "Asignar todos los gastos a",
+  "deleteSheet.setAllIncomes": "Asignar todos los ingresos a",
+  "deleteSheet.chooseCategory": "Elige una categoría",
+  "deleteSheet.applyAll": "Aplicar a todos",
+  "deleteSheet.choose": "Elegir…",
+  "deleteSheet.rowLabel": "Categoría para {{description}}",
+  "deleteSheet.monthGroup": "{{month}} de {{year}}",
+  "deleteSheet.recurring": "Recurrentes",
+  "deleteSheet.stillNeed_one": "Falta 1 gasto por asignar.",
+  "deleteSheet.stillNeed_other": "Faltan {{count}} gastos por asignar.",
+  "deleteSheet.stillNeedIncome_one": "Falta 1 ingreso por asignar.",
+  "deleteSheet.stillNeedIncome_other": "Faltan {{count}} ingresos por asignar.",
+  "deleteSheet.confirm_one": "Eliminar y mover 1 gasto",
+  "deleteSheet.confirm_other": "Eliminar y mover {{count}} gastos",
+  "deleteSheet.confirmIncome_one": "Eliminar y mover 1 ingreso",
+  "deleteSheet.confirmIncome_other": "Eliminar y mover {{count}} ingresos",
+  "deleteSheet.unusedWarning":
+    "<b>No se puede deshacer.</b> Ninguna entrada usa esta categoría, así que nada más cambia.",
+  "deleteSheet.blockedTitle": "Aún no puedes eliminar «{{name}}»",
+  "deleteSheet.blockedIncome_one":
+    "1 ingreso usa {{name}} y es tu única categoría de ingreso, así que no hay adónde moverlo. Añade otra categoría de ingreso y luego elimina esta.",
+  "deleteSheet.blockedIncome_other":
+    "{{count}} ingresos usan {{name}} y es tu única categoría de ingreso, así que no hay adónde moverlos. Añade otra categoría de ingreso y luego elimina esta.",
+  "deleteSheet.blockedExpense_one":
+    "1 gasto usa {{name}} y es tu única categoría de gasto, así que no hay adónde moverlo. Añade otra categoría de gasto y luego elimina esta.",
+  "deleteSheet.blockedExpense_other":
+    "{{count}} gastos usan {{name}} y es tu única categoría de gasto, así que no hay adónde moverlos. Añade otra categoría de gasto y luego elimina esta.",
+  "deleteSheet.deleteFailed": "No se pudo eliminar la categoría",
+  "addSheet.titleExpense": "Nueva categoría de gasto",
+  "addSheet.titleIncome": "Nueva categoría de ingreso",
+  "addSheet.hintExpense": "El nombre no puede repetirse entre tus categorías de gasto.",
+  "addSheet.hintIncome": "El nombre no puede repetirse entre tus categorías de ingreso.",
+  "addSheet.create": "Crear categoría",
 
   // Form validation
   "validation.categoryNameEmpty": "El nombre de la categoría no puede estar vacío",
-  "validation.categoryExists": "Ya existe una categoría «{{name}}»",
   "validation.selectCategory": "Selecciona una categoría",
   "validation.bucketExists": "Ya existe un límite para «{{name}}»",
   "validation.allowanceInvalid": "La asignación debe ser un número válido",
@@ -561,6 +649,19 @@ const es: Translations = {
   "syncReview.enterNumber": "Introduce un número.",
   "syncReview.enterDate": "Introduce una fecha.",
   "syncReview.saveAndAccept": "Guardar y aceptar",
+  "syncReview.categoryRenamed": "Categoría renombrada · para tu información",
+  "syncReview.categoryDeleted": "Categoría eliminada · para tu información",
+  "syncReview.renamedBy": "{{type}} · renombrada por {{name}} el {{date}}",
+  "syncReview.deletedBy": "{{type}} · eliminada por {{name}} el {{date}}",
+  "syncReview.renamedOn": "{{type}} · renombrada el {{date}}",
+  "syncReview.deletedOn": "{{type}} · eliminada el {{date}}",
+  "syncReview.yourEntriesChange": "Tus gastos que cambian",
+  "syncReview.yourEntriesChangeIncome": "Tus ingresos que cambian",
+  "syncReview.yourEntriesMove": "Tus gastos que se mueven",
+  "syncReview.yourEntriesMoveIncome": "Tus ingresos que se mueven",
+  "syncReview.showMore": "Mostrar {{count}} más",
+  "syncReview.continue": "Continuar",
+  "syncReview.cantReject": "Los cambios de categoría no se pueden rechazar.",
 };
 
 export default es;

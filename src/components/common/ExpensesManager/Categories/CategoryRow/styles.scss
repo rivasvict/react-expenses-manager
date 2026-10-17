@@ -1,0 +1,55 @@
+@import '../../../../../variables.scss';
+
+// Category row (design/system/components.md): a raised row like the setting
+// row, with the type chip, the name over its usage, and a chevron.
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.6rem 0.75rem 0.6rem 0.9rem;
+  font: inherit;
+  line-height: 1.5;
+  text-align: left;
+  color: $text-primary;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  cursor: pointer;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+
+  &__chevron {
+    flex: none;
+    font-size: 1.1rem;
+    color: $text-secondary;
+  }
+}

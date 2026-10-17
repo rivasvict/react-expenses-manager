@@ -2,7 +2,6 @@ const {
   EXPENSE_CATEGORIES,
   getExpenseCategoryNames,
   getEntryCategoryOption,
-  getCategoryValidationError,
   getUnbudgetedCategories,
   getBucketValidationError,
   getBucketAllowanceValidationError,
@@ -42,80 +41,31 @@ describe("category/bucket helpers (issue #100)", () => {
   });
 
   describe("getEntryCategoryOption", () => {
-    it("exposes bucketed categories as selectable expense options", () => {
-      const options = getEntryCategoryOption("expense", { Gym: 120 });
-      expect(options).toContainEqual({ name: "Gym", value: "gym" });
+    const categoryLists = { expense: ["Food", "Gym"], income: ["Salary", "Gym"] };
+
+    it("offers the user's categories of the entry's type", () => {
+      expect(getEntryCategoryOption("expense", categoryLists)).toEqual([
+        { name: "Food", value: "food" },
+        { name: "Gym", value: "gym" },
+      ]);
+      expect(getEntryCategoryOption("income", categoryLists)).toEqual([
+        { name: "Salary", value: "salary" },
+        { name: "Gym", value: "gym" },
+      ]);
     });
 
-    it("exposes standalone categories as selectable expense options", () => {
-      const options = getEntryCategoryOption("expense", {}, ["Gym"]);
-      expect(options).toContainEqual({ name: "Gym", value: "gym" });
-    });
-
-    it("leaves income options unaffected by buckets and categories", () => {
-      const options = getEntryCategoryOption("income", { Gym: 120 }, ["Yoga"]);
-      expect(options).toContainEqual({ name: "Salary", value: "salary" });
-      expect(options.find((option) => option.name === "Gym")).toBeUndefined();
-      expect(options.find((option) => option.name === "Yoga")).toBeUndefined();
-    });
-  });
-
-  describe("getCategoryValidationError", () => {
-    it("rejects an empty or whitespace-only name", () => {
-      expect(
-        getCategoryValidationError({ name: "", buckets: {}, unbudgetedCategories: [] })
-      ).toMatch(/cannot be empty/i);
-      expect(
-        getCategoryValidationError({ name: "   ", buckets: {}, unbudgetedCategories: [] })
-      ).toMatch(/cannot be empty/i);
-    });
-
-    it("rejects a name that already exists as a bucket, regardless of case", () => {
-      const error = getCategoryValidationError({
-        name: "food",
-        buckets: { Food: 200 },
-        unbudgetedCategories: [],
-      });
-      expect(error).toMatch(/already exists/i);
-    });
-
-    it("rejects a name that already exists as a standalone category", () => {
-      const error = getCategoryValidationError({
-        name: "gym",
-        buckets: {},
-        unbudgetedCategories: ["Gym"],
-      });
-      expect(error).toMatch(/already exists/i);
-    });
-
-    it("accepts a unique, non-empty name", () => {
-      expect(
-        getCategoryValidationError({
-          name: "Gym",
-          buckets: { Food: 200 },
-          unbudgetedCategories: [],
-        })
-      ).toBeNull();
+    it("offers nothing before the lists are loaded", () => {
+      expect(getEntryCategoryOption("expense")).toEqual([]);
     });
   });
 
   describe("getUnbudgetedCategories", () => {
-    it("includes the seed expense categories that do not already have a bucket", () => {
+    it("lists the expense categories that do not already have a bucket", () => {
       const result = getUnbudgetedCategories({
-        buckets: { Food: 200 },
-        unbudgetedCategories: [],
+        buckets: { food: 200 },
+        categoryLists: { expense: ["Food", "Gym", "Travel"], income: ["Salary"] },
       });
-      expect(result).toContain("Travel");
-      expect(result).not.toContain("Food");
-    });
-
-    it("includes standalone categories that do not already have a bucket", () => {
-      const result = getUnbudgetedCategories({
-        buckets: { Food: 200 },
-        unbudgetedCategories: ["Gym", "Food"],
-      });
-      expect(result).toContain("Gym");
-      expect(result).not.toContain("Food");
+      expect(result).toEqual(["Gym", "Travel"]);
     });
   });
 
@@ -168,18 +118,6 @@ describe("category/bucket helpers (issue #100)", () => {
     const spanish = createTranslator("es");
 
     it("words every message in the given translator's language", () => {
-      expect(
-        getCategoryValidationError(
-          { name: "", buckets: {}, unbudgetedCategories: [] },
-          spanish
-        )
-      ).toBe("El nombre de la categoría no puede estar vacío");
-      expect(
-        getCategoryValidationError(
-          { name: "food", buckets: {}, unbudgetedCategories: [] },
-          spanish
-        )
-      ).toBe("Ya existe una categoría «food»");
       expect(getBucketValidationError({ categoryName: "" }, spanish)).toBe(
         "Selecciona una categoría"
       );

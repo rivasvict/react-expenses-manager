@@ -40,11 +40,13 @@ body.mk {
   background-attachment: fixed;
 }
 
-/* App bar: brand mark + name (the navigation is omitted, see above). */
+/* App bar: brand mark + name (the navigation is omitted, see above). 72px tall
+   like the app's bar (1.125rem + the 40px logo + 0.875rem), so the work area
+   and anything fixed to the viewport, such as a bottom sheet, line up. */
 .mk-header {
   max-width: 40rem;
   margin: 0 auto;
-  padding: 1rem 1rem 0.75rem;
+  padding: 1.125rem 1rem 0.875rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;

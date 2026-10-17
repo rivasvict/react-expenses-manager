@@ -23,6 +23,11 @@ export type Translator = {
    * rules; `{{count}}` is always available as a placeholder.
    */
   plural: (key: PluralKey, count: number, params?: TranslationParams) => string;
+  /**
+   * The `<key>_one` / `<key>_other` key `plural` would pick for `count`, for
+   * text rendered with `Trans` (which takes a key).
+   */
+  pluralKey: (key: PluralKey, count: number) => TranslationKey;
 };
 
 const DICTIONARIES: Record<Language, Record<TranslationKey, string>> = {
@@ -46,12 +51,13 @@ export const createTranslator = (language: Language): Translator => {
   const t: Translator["t"] = (key, params) =>
     interpolate(dictionary[key] ?? en[key] ?? key, params);
 
-  const plural: Translator["plural"] = (key, count, params = {}) => {
-    const form = pluralRules.select(count) === "one" ? "one" : "other";
-    return t(`${key}_${form}` as TranslationKey, { count, ...params });
-  };
+  const pluralKey: Translator["pluralKey"] = (key, count) =>
+    `${key}_${pluralRules.select(count) === "one" ? "one" : "other"}` as TranslationKey;
 
-  return { language, t, plural };
+  const plural: Translator["plural"] = (key, count, params = {}) =>
+    t(pluralKey(key, count), { count, ...params });
+
+  return { language, t, plural, pluralKey };
 };
 
 /**

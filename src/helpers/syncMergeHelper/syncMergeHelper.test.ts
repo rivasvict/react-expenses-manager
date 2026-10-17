@@ -380,3 +380,92 @@ describe("applyItems (RFC §4.3 step 5)", () => {
     expect(merged.buckets).toEqual({ Pets: [{ from: "0000-00", limit: 50 }] });
   });
 });
+
+describe("category changes (design/features/category-management/ui/decision.md)", () => {
+  const rename = {
+    id: "c1",
+    kind: "rename",
+    type: "expense",
+    name: "Eating out",
+    newName: "Restaurants",
+    at: 10,
+    by: { id: "u2", name: "Ana" },
+  };
+
+  const withEntries = (
+    paths: { [id: string]: string },
+    overrides: Partial<BackupData> = {}
+  ): BackupData => ({
+    ...emptyData(),
+    balance: Object.entries(paths).map(([id, path]) =>
+      entry(id, { categories_path: path })
+    ),
+    ...overrides,
+  });
+
+  it("keys a change by its id", () => {
+    const items = extractItems(withEntries({}, { categoryChanges: [rename] }));
+    expect(items).toEqual([
+      expect.objectContaining({ kind: "category", key: "category:c1" }),
+    ]);
+  });
+
+  it("turns a remote rename into one note listing the local entries it moves, not one edit per entry", () => {
+    const localData = withEntries({ e1: ",eating out,", e2: ",food," });
+    const remoteData = withEntries(
+      { e1: ",restaurants,", e2: ",food," },
+      { categoryChanges: [rename] }
+    );
+
+    const incoming = diffSnapshots({ localData, remoteData });
+
+    expect(incoming).toHaveLength(1);
+    expect(incoming[0].kind).toBe("category");
+    expect(incoming[0].category!.affected!.map((item) => item.id)).toEqual(["e1"]);
+    expect(incoming[0].category!.affected![0].target).toBe("Restaurants");
+  });
+
+  it("does not offer the remote's old category back to the device that renamed it", () => {
+    const localData = withEntries(
+      { e1: ",restaurants," },
+      { categoryChanges: [rename] }
+    );
+    const remoteData = withEntries({ e1: ",eating out," });
+
+    expect(diffSnapshots({ localData, remoteData })).toEqual([]);
+    // The rename still has to reach the server.
+    expect(snapshotsContentEqual(localData, remoteData)).toBe(false);
+  });
+
+  it("applies an accepted change before the other items and records it", () => {
+    const localData = withEntries(
+      { e1: ",eating out," },
+      {
+        buckets: { "Eating out": [{ from: "0000-00", limit: 400 }] },
+        categoryLists: { expense: ["Eating out", "Food"], income: [] },
+      }
+    );
+    const remoteData = withEntries(
+      { e1: ",restaurants,", e2: ",restaurants," },
+      { categoryChanges: [rename] }
+    );
+    const incoming = diffSnapshots({ localData, remoteData });
+
+    const merged = applyItems(localData, incoming);
+
+    expect(merged.balance.map((item: any) => item.categories_path)).toEqual([
+      ",restaurants,",
+      ",restaurants,",
+    ]);
+    expect(Object.keys(merged.buckets)).toEqual(["Restaurants"]);
+    expect(merged.categoryLists!.expense).toEqual(["Restaurants", "Food"]);
+    expect(merged.categoryChanges).toEqual([rename]);
+    // Applying it again changes nothing more.
+    expect(applyItems(merged, incoming).categoryChanges).toEqual([rename]);
+  });
+
+  it("treats snapshots without category lists as equal on that point", () => {
+    const local = withEntries({}, { categoryLists: { expense: ["Food"], income: [] } });
+    expect(snapshotsContentEqual(local, withEntries({}))).toBe(true);
+  });
+});

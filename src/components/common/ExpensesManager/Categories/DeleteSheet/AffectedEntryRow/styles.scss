@@ -1,0 +1,71 @@
+@import '../../../../../../variables.scss';
+
+// One affected entry in the delete sheet: chip, description over date and
+// amount, and a compact native select.
+.affected-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.1rem;
+  border-bottom: 1px solid $border-subtle;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__description {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    @include money-figures();
+    display: block;
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  &__amount--expense {
+    color: $expense;
+  }
+
+  &__amount--income {
+    color: $income;
+  }
+
+  &__select {
+    flex: none;
+    // A native select is as wide as its longest option; a fixed width keeps
+    // every row's description the same room.
+    width: 7.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.8rem 0 0.7rem;
+    font: inherit;
+    font-size: 0.84rem;
+    color: $text-primary;
+    background-color: $bg-surface;
+    background-image: $select-chevron;
+    background-repeat: no-repeat;
+    background-position: right 0.55rem center;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    appearance: none;
+    text-overflow: ellipsis;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    &--empty {
+      color: $text-secondary;
+      border-color: rgba($danger, 0.55);
+    }
+  }
+}

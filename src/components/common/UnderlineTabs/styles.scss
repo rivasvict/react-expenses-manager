@@ -1,0 +1,44 @@
+@import '../../../variables.scss';
+
+// Underline tabs (design/system/components.md): equal-width tabs over a
+// subtle rule, the selected one in primary text over a gold underline.
+.underline-tabs {
+  display: flex;
+  border-bottom: 1px solid $border-subtle;
+
+  &__tab {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 2.5rem;
+    margin-bottom: -1px;
+    padding: 0;
+    color: $text-secondary;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color $transition-quick;
+
+    &:hover:not(&--on) {
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    &--on {
+      color: $text-primary;
+      border-bottom-color: $accent;
+    }
+  }
+
+  &__badge {
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $text-secondary;
+  }
+}

@@ -6,13 +6,27 @@
 //   Entry                    entry:{id}                    entry minus id
 //   Fixed-entry history state fixed:{id}:{from}            state minus from
 //   Bucket history state     bucket:{lowercased name}:{from} state minus from
+//   Category rename/deletion category:{id}                the whole change
+//
+// A category change (design/features/category-management/ui/decision.md) is
+// an informational item: it cannot be rejected or modified. The diff applies
+// the changes one side has and the other lacks to the other side's data
+// before comparing, so the entries, fixed entries and buckets a rename or a
+// deletion rewrote never show up as edits of their own.
 //
 // contentHash is FNV-1a over a canonical (recursively key-sorted) JSON
 // serialization — change detection, not security, so it runs identically
 // in jsdom.
 import { BackupData } from "../../services/syncApi/contract";
+import {
+  AffectedEntry,
+  CategoryChange,
+  applyCategoryChange,
+  getAffectedEntries,
+  isCategoryChange,
+} from "../categoryChanges/categoryChanges";
 
-export type SyncItemKind = "entry" | "fixed" | "bucket";
+export type SyncItemKind = "entry" | "fixed" | "bucket" | "category";
 
 export interface SyncItem {
   key: string;
@@ -22,6 +36,9 @@ export interface SyncItem {
   entry?: any; // kind "entry": the full entry (with id)
   fixed?: { id: string; type?: string; state: any }; // state includes `from`
   bucket?: { name: string; state: any }; // state includes `from`
+  // kind "category": the change, and (on an incoming item) this device's
+  // entries it moves, for the review card.
+  category?: { change: CategoryChange; affected?: AffectedEntry[] };
 }
 
 export interface IncomingItem extends SyncItem {
@@ -126,8 +143,48 @@ export const extractItems = (data: BackupData): SyncItem[] => {
     });
   });
 
+  categoryChangesOf(data).forEach((change) => {
+    items.push(categoryItem(change));
+  });
+
   return items;
 };
+
+const categoryChangesOf = (data: BackupData): CategoryChange[] =>
+  (data.categoryChanges || []).filter(isCategoryChange);
+
+const categoryItem = (
+  change: CategoryChange,
+  affected?: AffectedEntry[]
+): SyncItem => ({
+  kind: "category",
+  key: `category:${change.id}`,
+  hash: contentHash(change),
+  category: affected ? { change, affected } : { change },
+});
+
+// Oldest first, so a rename followed by a deletion replays in order.
+const byMoment = (first: CategoryChange, second: CategoryChange) =>
+  first.at - second.at;
+
+// The changes `from` has that `to` lacks, oldest first.
+const missingChanges = (from: BackupData, to: BackupData): CategoryChange[] => {
+  const known = new Set(categoryChangesOf(to).map((change) => change.id));
+  return categoryChangesOf(from)
+    .filter((change) => !known.has(change.id))
+    .sort(byMoment);
+};
+
+// Replays category changes on a snapshot's entries, fixed entries and
+// buckets (its category list too, when it has one).
+const withCategoryChanges = (
+  data: BackupData,
+  changes: CategoryChange[]
+): BackupData =>
+  changes.reduce(
+    (current, change) => applyCategoryChange(current, change),
+    data
+  );
 
 const itemHashByKey = (data: BackupData): Map<string, string> => {
   const map = new Map<string, string>();
@@ -169,10 +226,27 @@ export const diffSnapshots = ({
   remoteData: BackupData;
   rejections?: Rejections;
 }): IncomingItem[] => {
-  const local = itemHashByKey(localData);
-  const localDefinitions = definitionKeys(localData);
+  // Category changes first: the remote ones this device lacks become note
+  // cards (listing the local entries each one moves), and each side's data
+  // is compared as it will be once both have every change.
+  const remoteOnlyChanges = missingChanges(remoteData, localData);
+  const localOnlyChanges = missingChanges(localData, remoteData);
   const incoming: IncomingItem[] = [];
-  extractItems(remoteData).forEach((item) => {
+  let projectedLocal = localData;
+  remoteOnlyChanges.forEach((change) => {
+    incoming.push({
+      ...categoryItem(change, getAffectedEntries(projectedLocal, change)),
+      isChange: false,
+      isNewDefinition: false,
+    });
+    projectedLocal = applyCategoryChange(projectedLocal, change);
+  });
+  const projectedRemote = withCategoryChanges(remoteData, localOnlyChanges);
+
+  const local = itemHashByKey(projectedLocal);
+  const localDefinitions = definitionKeys(projectedLocal);
+  extractItems(projectedRemote).forEach((item) => {
+    if (item.kind === "category") return; // handled above
     if (local.get(item.key) === item.hash) return; // already applied / own
     if ((rejections[item.key] || []).indexOf(item.hash) !== -1) return; // EC-4
     const definitionKey = definitionKeyOf(item);
@@ -257,8 +331,30 @@ export const snapshotsContentEqual = (
   if (!equal) return false;
   const categoriesA = [...(a.categories || [])].sort();
   const categoriesB = [...(b.categories || [])].sort();
-  return canonicalStringify(categoriesA) === canonicalStringify(categoriesB);
+  if (canonicalStringify(categoriesA) !== canonicalStringify(categoriesB))
+    return false;
+  if (
+    missingChanges(a, b).length > 0 ||
+    missingChanges(b, a).length > 0
+  )
+    return false;
+  // A snapshot written before category management has no lists to
+  // compare; they only matter when both sides keep them.
+  if (!a.categoryLists || !b.categoryLists) return true;
+  return (
+    canonicalStringify(sortedCategoryLists(a)) ===
+    canonicalStringify(sortedCategoryLists(b))
+  );
 };
+
+// `categoryLists` compared as sets.
+const sortedCategoryLists = (data: BackupData) =>
+  data.categoryLists
+    ? {
+        expense: [...(data.categoryLists.expense || [])].sort(),
+        income: [...(data.categoryLists.income || [])].sort(),
+      }
+    : null;
 
 const byFromAscending = (first: any, second: any) =>
   first.from < second.from ? -1 : 1;
@@ -269,22 +365,38 @@ const upsertHistoryState = (history: any[], state: any): any[] =>
   );
 
 // Applies accepted incoming items to a local snapshot, returning a new one
-// (RFC §4.3 step 5): entries appended/replaced by id; fixed/bucket states
-// upserted by `from` with histories kept sorted; bucket names matched
-// case-insensitively (local casing wins). Removal tombstones are states
-// like any other. Never mutates its input.
+// (RFC §4.3 step 5): category changes first (oldest first, each replayed on
+// the data and added to the log, see the top of this file); then entries
+// appended/replaced by id; fixed/bucket states upserted by `from` with
+// histories kept sorted; bucket names matched case-insensitively (local
+// casing wins). Removal tombstones are states like any other. Never mutates
+// its input.
 export const applyItems = (
   localData: BackupData,
   items: SyncItem[]
 ): BackupData => {
+  const known = new Set(categoryChangesOf(localData).map((change) => change.id));
+  const changes = items
+    .filter((item) => item.kind === "category" && item.category)
+    .map((item) => item.category!.change)
+    .filter((change) => !known.has(change.id))
+    .sort(byMoment);
+  const changed = withCategoryChanges(localData, changes);
+
   const data: BackupData = {
-    balance: [...(localData.balance || [])],
-    buckets: { ...(localData.buckets || {}) },
-    categories: [...(localData.categories || [])],
-    fixedEntries: (localData.fixedEntries || []).map((definition: any) => ({
+    ...changed,
+    balance: [...(changed.balance || [])],
+    buckets: { ...(changed.buckets || {}) },
+    categories: [...(changed.categories || [])],
+    fixedEntries: (changed.fixedEntries || []).map((definition: any) => ({
       ...definition,
       history: [...(definition.history || [])],
     })),
+    ...(changes.length || localData.categoryChanges
+      ? {
+          categoryChanges: [...(localData.categoryChanges || []), ...changes],
+        }
+      : {}),
   };
 
   items.forEach((item) => {

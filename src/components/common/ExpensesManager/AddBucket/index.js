@@ -25,12 +25,12 @@ const BUCKETS_ROUTE = "/buckets";
  * AddCategory); this form only lists the categories that do not have a
  * bucket yet, since a category needs to exist before it can get one.
  */
-const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
+const AddBucket = ({ buckets, categoryLists, onAddBucket, history }) => {
   const translator = useTranslation();
   const { t } = translator;
   const categoriesWithoutBucket = getUnbudgetedCategories({
     buckets,
-    unbudgetedCategories,
+    categoryLists,
   });
   const [categoryName, setCategoryName] = useState("");
   const [allowance, setAllowance] = useState("");
@@ -81,7 +81,11 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
           <Trans
             i18nKey="addBucket.noCategories"
             components={{
-              link: (label) => <Link to="/add-category">{label}</Link>,
+              link: (label) => (
+                <Link to={{ pathname: "/categories", state: { addCategory: "expense" } }}>
+                  {label}
+                </Link>
+              ),
             }}
           />
         </p>
@@ -164,7 +168,7 @@ const AddBucket = ({ buckets, unbudgetedCategories, onAddBucket, history }) => {
 
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
-  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  categoryLists: state.expensesManager.categoryLists,
 });
 
 const mapActionsToProps = (dispatch) => ({

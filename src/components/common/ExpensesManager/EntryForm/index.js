@@ -50,13 +50,11 @@ class EntryForm extends Component {
   render() {
     const { t } = this.props;
     const entryType = this.state.type;
-    // Pass the user's buckets and standalone categories so newly created
-    // expense categories become selectable here, whether or not they have a
-    // bucket (spending limit) yet (issue #100).
+    // The user's categories of this entry's type (category management),
+    // whether or not they have a bucket (spending limit) yet (issue #100).
     const categoryOptions = getEntryCategoryOption(
       this.state.type,
-      this.props.buckets,
-      this.props.unbudgetedCategories
+      this.props.categoryLists
     );
     // `operation` is "add" | "edit"; the full phrase is one key per
     // combination so each language can order and inflect it naturally.

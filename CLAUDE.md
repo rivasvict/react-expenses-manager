@@ -27,7 +27,7 @@ Node version is pinned in `.nvmrc`.
 **Stack:** React 18, Redux (with redux-thunk), React Router v5, React Bootstrap, SCSS modules (design tokens in `src/styles/tokens.json`, see `design/system/`), TypeScript (partial — most files are `.js`, newer files use `.tsx`/`.ts`).
 
 **State shape** (three Redux slices in `src/redux/`):
-- `expensesManager` — entries (nested by `year → month → {incomes, expenses}`), selected date, buckets
+- `expensesManager` — entries (nested by `year → month → {incomes, expenses}`), selected date, buckets, `categoryLists`
 - `userManager` — authenticated user
 - `commonManager` — shared UI state
 
@@ -42,7 +42,13 @@ Node version is pinned in `.nvmrc`.
 
 **Entries structure in Redux:** `entries[year][month][incomes|expenses]` — `getGroupedFilledEntriesByDate()` in `src/helpers/entriesHelper/entriesHelper.js` transforms a flat array into this nested tree and fills empty months.
 
-**Buckets:** Spending limit containers keyed by category name. Stored in `localStorage` under key `"buckets"` as a flat object `{ [bucketName]: limitAmount }`. Bucket name ↔ `categories_path` matching uses `bucketName.toLowerCase()` against the second comma-delimited segment of `categories_path`.
+**Buckets:** Spending limit containers keyed by category name. Stored in `localStorage` under key `"buckets"` as a flat object `{ [bucketName]: limitAmount }`. Bucket name ↔ `categories_path` matching uses `bucketName.toLowerCase()` against the second comma-delimited segment of `categories_path`. A bucket mirrors its expense category: renaming the category renames the bucket (limit history kept), and deleting the category deletes the bucket.
+
+**Categories:** User-managed, in two separate lists by type, stored in `localStorage` under `"categoryLists"` as `{ expense: string[], income: string[] }` (display names) and held in Redux as `expensesManager.categoryLists`. Names are unique within a type (case-insensitive, trimmed); the same name may exist once in each type. Every category picker (entry forms, filter sheet, Summary, AddBucket, the sync Modify form) reads these lists (most through `getEntryCategoryOption(type, categoryLists)`; AddBucket through `getUnbudgetedCategories`); nothing reads a hardcoded list any more. Helpers live in `src/helpers/categoryLists/` (types, `categoryPathOf`/`pathMatchesCategory`, `getCategoryNameError`, `sortCategoryNames`). Key rules:
+- **Migration:** when `categoryLists` is absent, `buildCategoryListsFromLegacy` builds it once from the seeds (`EXPENSE_CATEGORIES`/`INCOME_CATEGORIES` in `entriesHelper.js`, now used only for this), the legacy `"categories"` key (expense categories without a bucket, read-only now), the bucket names, and any category found in entries' or fixed entries' `categories_path`. Existing data is never rewritten; restoring a backup without lists runs the same migration.
+- **Rename / delete** go through `renameCategory` / `deleteCategory` action creators → `storage.applyCategoryChange`, which uses the pure step in `src/helpers/categoryChanges/` to rewrite every matching entry and fixed entry's `categories_path`, the bucket and the lists at once (one `CATEGORY_CHANGED` reducer update). A delete takes a target category per affected entry; a category in use that is the only one of its type cannot be deleted. Renaming or deleting the category the entry list is filtered by updates or clears `entryFilters`.
+- **Sync:** each rename/delete is also appended to the `"categoryChanges"` log, which travels inside the backup data (both keys optional, schema version 1; the server never reads them). The sync diff replays missing changes on each side before comparing, and the review wizard shows a remote change as a `category` item: an informational note card (`src/components/SyncReview/CategoryNoteCard`) whose only action is Continue — it can never be rejected or modified (`docs/multi-user-sync/RFC.md` §4.1).
+- UI design: `design/features/category-management/`.
 
 **Routes** (all nested under `/`, handled in `src/components/Dashboard/index.js`):
 - `/` and `/dashboard` — DashboardContent
@@ -52,6 +58,7 @@ Node version is pinned in `.nvmrc`.
 - `/summary` — Summary
 - `/savings-trend` — Savings trend (range picker, a Total saved / Change tab pair that opens on Total saved, line chart; reached from the "Trend" link in the dashboard's savings card)
 - `/data-management` — CSV import/export
+- `/categories` — Categories (Expenses / Incomes tabs; add, rename and delete happen in bottom sheets on this screen); navigating here with router state `{ addCategory: "expense" | "income" }` opens the add sheet (AddBucket's "Add a new category" link does this)
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
 - `/settings` — Settings (device preferences, all stored only in `localStorage`: the UI language and the display currency, each a row that opens a bottom sheet — see `src/helpers/currency/currency.ts` — and **Privacy mode**, a switch row; reached from the gear chip in the app bar)
@@ -73,7 +80,7 @@ Node version is pinned in `.nvmrc`.
 
 - Components connect to Redux via `connect()` (class-style HOC pattern, not hooks)
 - Action creators are injected via `mapActionToProps` — components never import storage directly
-- Categories are hardcoded in `src/helpers/entriesHelper/entriesHelper.js` (`getEntryCategoryOption`) and must match the bucket names in the reducer's `initialState`
+- Categories are user data in `categoryLists` (see **Categories** above), never hardcoded: read them from the store, change them only through the category action creators, and never show a category name translated
 - Mixed JS/TS: existing JS files stay `.js`; new components use `.tsx`. TypeScript errors in JSX are sometimes suppressed with `{/* @ts-expect-error */}` or `{/** @ts-ignore */}`
 
 ## Integration test helpers (`src/integrationTests/helpers/`)

@@ -102,6 +102,392 @@
       </div>
     </header>
     <main>
+    <section class="feature" id="feature-category-management" data-status="implemented">
+      <header class="feature__head">
+        <h2>Category management</h2>
+        <span class="badge badge--implemented">Implemented</span>
+      </header>
+      <p class="summary">Add, rename and delete income and expense categories from a tabbed list with bottom sheets, moving existing entries and buckets safely; party changes show as notes in the sync wizard.</p>
+      <nav class="links" aria-label="Category management documents"><a href="features/category-management/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/category-management/ui/flow.html" target="_blank" rel="noopener">Flow</a><a href="features/category-management/ui/decision.md" target="_blank" rel="noopener">Decision</a><a href="features/category-management/ui/fixtures.json" target="_blank" rel="noopener">Fixtures</a></nav>
+      <h3>Approved screens</h3>
+      <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/add-sheet.default.html" target="_blank" rel="noopener" aria-label="Open add-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/add-sheet.default.html" title="add-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>add-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/categories.default.html" target="_blank" rel="noopener" aria-label="Open categories · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/categories.default.html" title="categories · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>categories · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/categories.empty.html" target="_blank" rel="noopener" aria-label="Open categories · empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/categories.empty.html" title="categories · empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>categories · empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/categories.es.html" target="_blank" rel="noopener" aria-label="Open categories · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/categories.es.html" title="categories · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>categories · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/category-sheet.default.html" target="_blank" rel="noopener" aria-label="Open category-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/category-sheet.default.html" title="category-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>category-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/category-sheet.error.html" target="_blank" rel="noopener" aria-label="Open category-sheet · error full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/category-sheet.error.html" title="category-sheet · error" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>category-sheet · error</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/category-sheet.es.html" target="_blank" rel="noopener" aria-label="Open category-sheet · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/category-sheet.es.html" title="category-sheet · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>category-sheet · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/category-sheet.filled.html" target="_blank" rel="noopener" aria-label="Open category-sheet · filled full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/category-sheet.filled.html" title="category-sheet · filled" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>category-sheet · filled</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/category-sheet.unused.html" target="_blank" rel="noopener" aria-label="Open category-sheet · unused full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/category-sheet.unused.html" title="category-sheet · unused" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>category-sheet · unused</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/delete-sheet.blocked.html" target="_blank" rel="noopener" aria-label="Open delete-sheet · blocked full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/delete-sheet.blocked.html" title="delete-sheet · blocked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>delete-sheet · blocked</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/delete-sheet.default.html" target="_blank" rel="noopener" aria-label="Open delete-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/delete-sheet.default.html" title="delete-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>delete-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/delete-sheet.es.html" target="_blank" rel="noopener" aria-label="Open delete-sheet · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/delete-sheet.es.html" title="delete-sheet · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>delete-sheet · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/delete-sheet.filled.html" target="_blank" rel="noopener" aria-label="Open delete-sheet · filled full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/delete-sheet.filled.html" title="delete-sheet · filled" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>delete-sheet · filled</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/delete-sheet.unused.html" target="_blank" rel="noopener" aria-label="Open delete-sheet · unused full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/delete-sheet.unused.html" title="delete-sheet · unused" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>delete-sheet · unused</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/sync-note.deleted.html" target="_blank" rel="noopener" aria-label="Open sync-note · deleted full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/sync-note.deleted.html" title="sync-note · deleted" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>sync-note · deleted</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/approved/sync-note.renamed.html" target="_blank" rel="noopener" aria-label="Open sync-note · renamed full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/approved/sync-note.renamed.html" title="sync-note · renamed" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>sync-note · renamed</figcaption>
+        </figure>
+      </div>
+      <details class="options">
+        <summary>Options (4)</summary>
+        <div class="option">
+          <h4>a-sheets-in-place</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/categories.empty.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · categories.empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/categories.empty.html" title="a-sheets-in-place · categories.empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · categories.empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/categories.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · categories full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/categories.html" title="a-sheets-in-place · categories" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · categories</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/delete-sheet.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · delete-sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/delete-sheet.html" title="a-sheets-in-place · delete-sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · delete-sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/delete-sheet.per-entry.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · delete-sheet.per-entry full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/delete-sheet.per-entry.html" title="a-sheets-in-place · delete-sheet.per-entry" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · delete-sheet.per-entry</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/edit-sheet.error.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · edit-sheet.error full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/edit-sheet.error.html" title="a-sheets-in-place · edit-sheet.error" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · edit-sheet.error</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/edit-sheet.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · edit-sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/edit-sheet.html" title="a-sheets-in-place · edit-sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · edit-sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/a-sheets-in-place/sync-note.html" target="_blank" rel="noopener" aria-label="Open a-sheets-in-place · sync-note full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/a-sheets-in-place/sync-note.html" title="a-sheets-in-place · sync-note" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-sheets-in-place · sync-note</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>b-category-page</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/categories.empty.html" target="_blank" rel="noopener" aria-label="Open b-category-page · categories.empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/categories.empty.html" title="b-category-page · categories.empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · categories.empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/categories.html" target="_blank" rel="noopener" aria-label="Open b-category-page · categories full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/categories.html" title="b-category-page · categories" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · categories</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/category-detail.html" target="_blank" rel="noopener" aria-label="Open b-category-page · category-detail full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/category-detail.html" title="b-category-page · category-detail" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · category-detail</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/reassign.blocked.html" target="_blank" rel="noopener" aria-label="Open b-category-page · reassign.blocked full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/reassign.blocked.html" title="b-category-page · reassign.blocked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · reassign.blocked</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/reassign.html" target="_blank" rel="noopener" aria-label="Open b-category-page · reassign full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/reassign.html" title="b-category-page · reassign" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · reassign</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/b-category-page/sync-note.html" target="_blank" rel="noopener" aria-label="Open b-category-page · sync-note full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/b-category-page/sync-note.html" title="b-category-page · sync-note" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-category-page · sync-note</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>c-guided-steps</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/categories.empty.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · categories.empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/categories.empty.html" title="c-guided-steps · categories.empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · categories.empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/categories.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · categories full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/categories.html" title="c-guided-steps · categories" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · categories</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/delete-1-impact.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · delete-1-impact full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/delete-1-impact.html" title="c-guided-steps · delete-1-impact" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · delete-1-impact</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/delete-2-choose.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · delete-2-choose full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/delete-2-choose.html" title="c-guided-steps · delete-2-choose" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · delete-2-choose</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/delete-2b-one-by-one.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · delete-2b-one-by-one full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/delete-2b-one-by-one.html" title="c-guided-steps · delete-2b-one-by-one" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · delete-2b-one-by-one</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/delete-3-review.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · delete-3-review full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/delete-3-review.html" title="c-guided-steps · delete-3-review" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · delete-3-review</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/rename-inline.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · rename-inline full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/rename-inline.html" title="c-guided-steps · rename-inline" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · rename-inline</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/c-guided-steps/sync-note.html" target="_blank" rel="noopener" aria-label="Open c-guided-steps · sync-note full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/c-guided-steps/sync-note.html" title="c-guided-steps · sync-note" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-guided-steps · sync-note</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>d-tabs-and-sheets <span class="badge badge--approved">Chosen</span></h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/categories.empty.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · categories.empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/categories.empty.html" title="d-tabs-and-sheets · categories.empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · categories.empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/categories.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · categories full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/categories.html" title="d-tabs-and-sheets · categories" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · categories</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/category-sheet.error.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · category-sheet.error full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/category-sheet.error.html" title="d-tabs-and-sheets · category-sheet.error" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · category-sheet.error</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/category-sheet.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · category-sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/category-sheet.html" title="d-tabs-and-sheets · category-sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · category-sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/delete-sheet.blocked.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · delete-sheet.blocked full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/delete-sheet.blocked.html" title="d-tabs-and-sheets · delete-sheet.blocked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · delete-sheet.blocked</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/delete-sheet.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · delete-sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/delete-sheet.html" title="d-tabs-and-sheets · delete-sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · delete-sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/category-management/ui/options/d-tabs-and-sheets/sync-note.html" target="_blank" rel="noopener" aria-label="Open d-tabs-and-sheets · sync-note full size">
+            <div class="frame__viewport">
+              <iframe src="features/category-management/ui/options/d-tabs-and-sheets/sync-note.html" title="d-tabs-and-sheets · sync-note" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-tabs-and-sheets · sync-note</figcaption>
+        </figure>
+          </div>
+        </div>
+      </details>
+    </section>
     <section class="feature" id="feature-example-add-bucket-flow" data-status="approved">
       <header class="feature__head">
         <h2>Example — Add a bucket</h2>
