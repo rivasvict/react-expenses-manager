@@ -29,13 +29,17 @@ without breaking the entries, buckets and synced data that already use them.
 6. **Empty state:** when a type has no categories, show an illustration, a
    short explanation and a CTA to create one.
 
+7. **Seed categories** are ordinary categories: the user can rename or
+   delete them too.
+8. **Buckets mirror their category.** Renaming a category renames its bucket
+   (limit and history kept); deleting a category deletes its bucket; when
+   entries move to another category, their spending moves with them and
+   counts toward that category's bucket, if it has one.
+9. **No "restore starter categories"** action. A future onboarding flow will
+   let a new user pick starter categories or create their own; this feature
+   does not need to anticipate it beyond keeping the empty state simple.
+
 ## Assumptions made for the prototype (to confirm)
-- **Seed categories** become ordinary categories: the user can rename or
-  delete them too.
-- **Buckets follow their category.** Renaming a category renames its bucket
-  (limit and history kept). Deleting a category deletes its bucket; the
-  entries keep their amounts and count toward the replacement's bucket, if it
-  has one.
 - A **replacement must be of the same type** and already exist. If the
   category is the only one of its type and entries use it, deletion is blocked
   until the user adds another one.

@@ -49,7 +49,7 @@ all" control, then **every affected expense grouped by month**, each with its
 own select, and a count of how many still need one. When the category is the
 only one of its type, the reassign page becomes a **blocked** screen asking
 the user to add another category first. The empty state covers "no categories
-at all" and offers **Restore starter categories** next to Create. The sync
+at all" with a single Create action. The sync
 card lists the user's expenses that change.
 
 - **Good at:** the most room and context: the user sees exactly what a
@@ -91,10 +91,12 @@ and where the user's entries went, with "Acknowledge and continue".
 - **Only category of its type** with entries: blocked (drawn in B).
 - **Spanish and French** copy for every new string (`en.ts`, `es.ts`, `fr.ts`).
 
-## Open questions for the owner
+## Owner's answers
 
-1. Can the starter (seed) categories be renamed and deleted like the user's
-   own? The prototype assumes yes.
-2. On delete, should the category's **bucket** be removed (assumed) or moved
-   to the replacement category when that one has no bucket?
-3. Should the starter list be restorable from the empty state (B offers it)?
+1. Starter (seed) categories can be renamed and deleted like the user's own.
+2. Buckets mirror their category: renamed with it, removed with it, and when
+   entries move to another category their spending moves with them into that
+   category's bucket.
+3. No "Restore starter categories" action (removed from B's empty state); a
+   future onboarding flow will handle picking starter categories.
+4. The option is not chosen yet.
