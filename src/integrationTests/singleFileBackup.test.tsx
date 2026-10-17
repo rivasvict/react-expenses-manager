@@ -522,7 +522,8 @@ describe("restore — committed sample backup file", () => {
     // The sample's three user-created categories are restored, each in its
     // right state: "Gifts" is unused (created but filed nowhere), "Hobby" is
     // used on a regular entry, and "Pet Care" is used on a fixed entry above.
-    // None has a bucket.
+    // None of the three has a bucket: the sample's only buckets are Food and
+    // Subscriptions, so no row shows a "Bucket …/mo" figure.
     await clickNav(user, /categories/i);
     expect(
       await screen.findByRole("button", { name: /^Gifts/ })
@@ -533,6 +534,11 @@ describe("restore — committed sample backup file", () => {
     expect(
       screen.getByRole("button", { name: /^Pet Care/ })
     ).toHaveTextContent(/^Pet Care\s*1 expense/);
+    ["Gifts", "Hobby", "Pet Care"].forEach((name) =>
+      expect(
+        screen.getByRole("button", { name: new RegExp(`^${name}`) })
+      ).not.toHaveTextContent(/Bucket/)
+    );
 
     // "Hobby" is not just a name in the categories list — it was actually used
     // to file a regular expense, which must show up in the Expenses view.

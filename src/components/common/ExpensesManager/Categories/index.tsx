@@ -40,7 +40,7 @@ type OpenSheet =
   | { kind: "category" | "delete"; type: CategoryType; name: string }
   | null;
 
-/** Router state that opens the add sheet on arrival (the old /add-category). */
+/** Router state that opens the add sheet on arrival (AddBucket's "Add a new category" link). */
 export interface CategoriesLocationState {
   addCategory?: CategoryType;
 }

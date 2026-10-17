@@ -96,9 +96,10 @@ icon buttons make the list busy and easy to mis-tap.
 - Opens the add sheet for the **active tab's type** (title "New expense
   category" / "New income category"), focus in the field. Create validates as
   above, adds to `categoryLists` and closes; the list shows it.
-- The `/add-category` route stays only as a redirect to `/categories` with the
-  add sheet open (AddBucket's "Add a new category" link uses it), so the old
-  AddCategory page is removed.
+- The old AddCategory page and its `/add-category` route are removed (the
+  owner decided old bookmarks need not keep working). AddBucket's "Add a new
+  category" link goes to `/categories` with router state that opens the add
+  sheet for expenses.
 
 ### Sync review (rename / delete arriving from the party)
 

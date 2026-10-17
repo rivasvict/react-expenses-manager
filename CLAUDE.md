@@ -58,7 +58,7 @@ Node version is pinned in `.nvmrc`.
 - `/summary` — Summary
 - `/savings-trend` — Savings trend (range picker, a Total saved / Change tab pair that opens on Total saved, line chart; reached from the "Trend" link in the dashboard's savings card)
 - `/data-management` — CSV import/export
-- `/categories` — Categories (Expenses / Incomes tabs; add, rename and delete happen in bottom sheets on this screen). `/add-category` only redirects here with the add sheet open
+- `/categories` — Categories (Expenses / Incomes tabs; add, rename and delete happen in bottom sheets on this screen); navigating here with router state `{ addCategory: "expense" | "income" }` opens the add sheet (AddBucket's "Add a new category" link does this)
 - `/buckets` — Buckets list
 - `/edit-bucket/:bucketName` — EditBucket
 - `/settings` — Settings (device preferences, all stored only in `localStorage`: the UI language and the display currency, each a row that opens a bottom sheet — see `src/helpers/currency/currency.ts` — and **Privacy mode**, a switch row; reached from the gear chip in the app bar)

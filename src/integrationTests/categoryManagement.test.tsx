@@ -367,9 +367,20 @@ describe("migration from data saved before category lists", () => {
     // Thirty seed categories make this screen's role queries slow in jsdom.
   }, 30000);
 
-  it("keeps the old Add category page as a way into the add sheet", async () => {
-    seedFixture();
-    await renderApp("/add-category");
+  it("opens the add sheet from Add bucket when every category has a bucket", async () => {
+    localStorage.setItem(
+      "categoryLists",
+      JSON.stringify({ expense: ["Food"], income: ["Salary"] })
+    );
+    localStorage.setItem(
+      "buckets",
+      JSON.stringify({ Food: [{ from: "0000-00", limit: 650 }] })
+    );
+    const { user } = await renderApp("/add-bucket");
+
+    await user.click(
+      await screen.findByRole("link", { name: "Add a new category" })
+    );
 
     expect(
       await screen.findByRole("dialog", { name: "New expense category" })

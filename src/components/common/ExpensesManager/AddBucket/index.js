@@ -81,7 +81,11 @@ const AddBucket = ({ buckets, categoryLists, onAddBucket, history }) => {
           <Trans
             i18nKey="addBucket.noCategories"
             components={{
-              link: (label) => <Link to="/add-category">{label}</Link>,
+              link: (label) => (
+                <Link to={{ pathname: "/categories", state: { addCategory: "expense" } }}>
+                  {label}
+                </Link>
+              ),
             }}
           />
         </p>
