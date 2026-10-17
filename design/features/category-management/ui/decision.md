@@ -1,7 +1,7 @@
 ---
 title: Category management
 summary: Add, rename and delete income and expense categories from a tabbed list with bottom sheets, moving existing entries and buckets safely; party changes show as notes in the sync wizard.
-status: approved
+status: implemented
 chosen: d-tabs-and-sheets
 ---
 
