@@ -58,11 +58,19 @@ describe("LocalStorage.addBucket (issue #100)", () => {
     expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({});
   });
 
-  it("removes the category from the standalone categories list once it gets a bucket", async () => {
+  // Category management: a category keeps its place in `categoryLists` when
+  // it gets a bucket, and the old `categories` key is no longer written.
+  it("leaves the category lists and the old categories key untouched", async () => {
+    const lists = { expense: ["Gym", "Yoga"], income: ["Salary"] };
+    localStorage.setItem("categoryLists", JSON.stringify(lists));
     localStorage.setItem("categories", JSON.stringify(["Gym", "Yoga"]));
 
     await storage.addBucket({ bucket: { Gym: 120 } });
 
-    expect(JSON.parse(localStorage.getItem("categories"))).toEqual(["Yoga"]);
+    expect(JSON.parse(localStorage.getItem("categoryLists"))).toEqual(lists);
+    expect(JSON.parse(localStorage.getItem("categories"))).toEqual([
+      "Gym",
+      "Yoga",
+    ]);
   });
 });

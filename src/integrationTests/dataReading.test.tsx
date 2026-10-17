@@ -4,11 +4,13 @@ import { seedEntries, ts, MARCH, APRIL, MAY } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
 import { openFilterSheet } from "./helpers/filters";
 import { getEntryCategoryOption } from "../helpers/entriesHelper/entriesHelper";
+import { buildCategoryListsFromLegacy } from "../helpers/categoryLists/categoryLists";
 
 // The full seed list of selectable expense categories, derived straight from
 // the app so the coverage below can never drift from what the UI offers.
 const EXPENSE_CATEGORIES: Array<{ name: string; value: string }> =
-  getEntryCategoryOption("expense");
+  // A fresh install's expense categories (the seeds, see categoryLists).
+  getEntryCategoryOption("expense", buildCategoryListsFromLegacy({}));
 
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 

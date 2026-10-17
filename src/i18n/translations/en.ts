@@ -301,20 +301,109 @@ const en = {
   "editBucket.hint":
     "Changes apply from the month you are viewing onward; earlier months keep their previous limit.",
 
-  // Categories
+  // Categories (category management)
   "categories.pageTitle": "Categories",
-  "categories.subtitle": "Every expense category, with or without a bucket",
-  "categories.noBucket": "(no bucket)",
-  "categories.addNew": "Add new category",
-  "addCategory.name": "Name",
-  "addCategory.hint":
-    "Categories group your expenses. You can add a spending limit (bucket) to a category later.",
+  "categories.tabExpenses": "Expenses",
+  "categories.tabIncomes": "Incomes",
+  "categories.tabsLabel": "Category type",
+  "categories.lead": "Tap a category to rename it, see where it is used or delete it.",
+  "categories.addExpense": "Add expense category",
+  "categories.addIncome": "Add income category",
+  "categories.expenseCount_one": "{{count}} expense",
+  "categories.expenseCount_other": "{{count}} expenses",
+  "categories.incomeCount_one": "{{count}} income",
+  "categories.incomeCount_other": "{{count}} incomes",
+  "categories.bucketPerMonth": "Bucket {{amount}}/mo",
+  "categories.unused": "Not used yet",
+  "categories.emptyExpenseTitle": "No expense categories yet",
+  "categories.emptyExpenseText":
+    "Every expense needs a category, so you can see where your money goes, like Food or Rent. Create your first one to start recording expenses.",
+  "categories.emptyIncomeTitle": "No income categories yet",
+  "categories.emptyIncomeText":
+    "Every income needs a category, so you can see where your money comes from, like Salary or Freelance. Create your first one to start recording incomes.",
+  "categories.sheetClose": "Close",
   "addCategory.namePlaceholder": "Category name",
   "addCategory.createFailed": "The category could not be created",
+  "categorySheet.expenseType": "Expense category",
+  "categorySheet.incomeType": "Income category",
+  "categorySheet.statExpenses": "expenses",
+  "categorySheet.statIncomes": "incomes",
+  "categorySheet.statTotal": "in total",
+  "categorySheet.statBucket": "bucket / mo",
+  "categorySheet.noBucket": "no bucket",
+  "categorySheet.name": "Name",
+  "categorySheet.renameImpactBucket_one":
+    "Saving changes <b>1 existing expense</b> and the {{amount}} bucket from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.renameImpactBucket_other":
+    "Saving changes <b>{{count}} existing expenses</b> and the {{amount}} bucket from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.renameImpact_one":
+    "Saving changes <b>1 existing expense</b> from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.renameImpact_other":
+    "Saving changes <b>{{count}} existing expenses</b> from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.renameImpactIncome_one":
+    "Saving changes <b>1 existing income</b> from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.renameImpactIncome_other":
+    "Saving changes <b>{{count}} existing incomes</b> from “{{name}}” to the new name. Synced devices get the change too.",
+  "categorySheet.save": "Save changes",
+  "categorySheet.saveFailed": "The category could not be saved",
+  "categorySheet.dangerZone": "Danger zone",
+  "categorySheet.deleteHint_one": "Deleting asks you where its expense should go.",
+  "categorySheet.deleteHint_other": "Deleting asks you where its {{count}} expenses should go.",
+  "categorySheet.deleteHintIncome_one": "Deleting asks you where its income should go.",
+  "categorySheet.deleteHintIncome_other": "Deleting asks you where its {{count}} incomes should go.",
+  "categorySheet.unusedHint": "No entries use this category.",
+  "categorySheet.delete": "Delete category",
+  "categorySheet.duplicateExpense": "An expense category called “{{name}}” already exists.",
+  "categorySheet.duplicateIncome": "An income category called “{{name}}” already exists.",
+  "deleteSheet.title": "Delete “{{name}}”?",
+  "deleteSheet.warningBucket_one":
+    "<b>This can’t be undone.</b> It changes your existing data: 1 expense moves to the category you pick below, and the {{amount}} bucket is removed.",
+  "deleteSheet.warningBucket_other":
+    "<b>This can’t be undone.</b> It changes your existing data: {{count}} expenses move to the categories you pick below, and the {{amount}} bucket is removed.",
+  "deleteSheet.warning_one":
+    "<b>This can’t be undone.</b> It changes your existing data: 1 expense moves to the category you pick below.",
+  "deleteSheet.warning_other":
+    "<b>This can’t be undone.</b> It changes your existing data: {{count}} expenses move to the categories you pick below.",
+  "deleteSheet.warningIncome_one":
+    "<b>This can’t be undone.</b> It changes your existing data: 1 income moves to the category you pick below.",
+  "deleteSheet.warningIncome_other":
+    "<b>This can’t be undone.</b> It changes your existing data: {{count}} incomes move to the categories you pick below.",
+  "deleteSheet.setAllExpenses": "Set every expense to",
+  "deleteSheet.setAllIncomes": "Set every income to",
+  "deleteSheet.chooseCategory": "Choose a category",
+  "deleteSheet.applyAll": "Apply to all",
+  "deleteSheet.choose": "Choose…",
+  "deleteSheet.rowLabel": "Category for {{description}}",
+  "deleteSheet.monthGroup": "{{month}} {{year}}",
+  "deleteSheet.recurring": "Recurring",
+  "deleteSheet.stillNeed_one": "1 expense still needs a category.",
+  "deleteSheet.stillNeed_other": "{{count}} expenses still need a category.",
+  "deleteSheet.stillNeedIncome_one": "1 income still needs a category.",
+  "deleteSheet.stillNeedIncome_other": "{{count}} incomes still need a category.",
+  "deleteSheet.confirm_one": "Delete and move 1 expense",
+  "deleteSheet.confirm_other": "Delete and move {{count}} expenses",
+  "deleteSheet.confirmIncome_one": "Delete and move 1 income",
+  "deleteSheet.confirmIncome_other": "Delete and move {{count}} incomes",
+  "deleteSheet.unusedWarning":
+    "<b>This can’t be undone.</b> No entries use this category, so nothing else changes.",
+  "deleteSheet.blockedTitle": "Can’t delete “{{name}}” yet",
+  "deleteSheet.blockedIncome_one":
+    "1 income uses {{name}} and it is your only income category, so there is nowhere to move it. Add another income category first, then delete this one.",
+  "deleteSheet.blockedIncome_other":
+    "{{count}} incomes use {{name}} and it is your only income category, so there is nowhere to move them. Add another income category first, then delete this one.",
+  "deleteSheet.blockedExpense_one":
+    "1 expense uses {{name}} and it is your only expense category, so there is nowhere to move it. Add another expense category first, then delete this one.",
+  "deleteSheet.blockedExpense_other":
+    "{{count}} expenses use {{name}} and it is your only expense category, so there is nowhere to move them. Add another expense category first, then delete this one.",
+  "deleteSheet.deleteFailed": "The category could not be deleted",
+  "addSheet.titleExpense": "New expense category",
+  "addSheet.titleIncome": "New income category",
+  "addSheet.hintExpense": "Names must be unique among your expense categories.",
+  "addSheet.hintIncome": "Names must be unique among your income categories.",
+  "addSheet.create": "Create category",
 
   // Form validation
   "validation.categoryNameEmpty": "Category name cannot be empty",
-  "validation.categoryExists": 'A category for "{{name}}" already exists',
   "validation.selectCategory": "Please select a category",
   "validation.bucketExists": 'A bucket for "{{name}}" already exists',
   "validation.allowanceInvalid": "Allowance must be a valid number",
@@ -563,6 +652,19 @@ const en = {
   "syncReview.enterNumber": "Enter a number.",
   "syncReview.enterDate": "Enter a date.",
   "syncReview.saveAndAccept": "Save & accept",
+  "syncReview.categoryRenamed": "Category renamed · for your information",
+  "syncReview.categoryDeleted": "Category deleted · for your information",
+  "syncReview.renamedBy": "{{type}} · renamed by {{name}} on {{date}}",
+  "syncReview.deletedBy": "{{type}} · deleted by {{name}} on {{date}}",
+  "syncReview.renamedOn": "{{type}} · renamed on {{date}}",
+  "syncReview.deletedOn": "{{type}} · deleted on {{date}}",
+  "syncReview.yourEntriesChange": "Your expenses that change",
+  "syncReview.yourEntriesChangeIncome": "Your incomes that change",
+  "syncReview.yourEntriesMove": "Your expenses that move",
+  "syncReview.yourEntriesMoveIncome": "Your incomes that move",
+  "syncReview.showMore": "Show {{count}} more",
+  "syncReview.continue": "Continue",
+  "syncReview.cantReject": "Category changes can’t be rejected.",
 };
 
 export type TranslationKey = keyof typeof en;

@@ -13,9 +13,24 @@ import {
   getEmptyFixedEntries,
 } from "../../../helpers/fixedEntriesHelper/fixedEntriesHelper";
 import { getDefaultEntryFilters } from "../../../helpers/entriesHelper/filterSortHelper";
+import {
+  buildCategoryListsFromLegacy,
+  findCategoryName,
+  isCategoryLists,
+  isCategoryType,
+  withCategoriesFromData,
+} from "../../../helpers/categoryLists/categoryLists";
+import {
+  applyCategoryChange,
+  isCategoryChange,
+} from "../../../helpers/categoryChanges/categoryChanges";
 const BALANCE = "balance";
 const BUCKET = "buckets";
+// The unbudgeted expense categories from before category management. Only
+// read now, by the one-time `categoryLists` migration and by backups.
 const CATEGORIES = "categories";
+const CATEGORY_LISTS = "categoryLists";
+const CATEGORY_CHANGES = "categoryChanges";
 const FIXED_ENTRIES = "fixedEntries";
 const ENTRY_FILTERS = "entryFilters";
 
@@ -50,9 +65,48 @@ const storeBalanceInLocalStorage = storeInLocalStorageFactory({
 const storeBucketsInLocalStorage = storeInLocalStorageFactory({
   itemType: BUCKET,
 });
-const storeCategoriesInLocalStorage = storeInLocalStorageFactory({
-  itemType: CATEGORIES,
+const storeCategoryListsInLocalStorage = storeInLocalStorageFactory({
+  itemType: CATEGORY_LISTS,
 });
+const storeCategoryChangesInLocalStorage = storeInLocalStorageFactory({
+  itemType: CATEGORY_CHANGES,
+});
+
+const parseStoredJson = (key) => {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch (error) {
+    return null;
+  }
+};
+
+// The log of category renames and deletions made here or accepted through
+// sync; it is what carries them to the other party members.
+const getCategoryChangesFromLocalStorage = async () => {
+  const stored = parseStoredJson(CATEGORY_CHANGES);
+  return Array.isArray(stored) ? stored.filter(isCategoryChange) : [];
+};
+
+const bucketsAsObject = (buckets) =>
+  buckets && !Array.isArray(buckets) ? buckets : {};
+
+// The user's income and expense categories (category management,
+// design/features/category-management/ui/decision.md). An install that
+// predates them has no `categoryLists` key yet: it is built once from the
+// seeds, the old unbudgeted `categories`, the buckets and every category the
+// entries use, and stored, without rewriting any existing data.
+const getCategoryListsFromLocalStorage = async () => {
+  const stored = parseStoredJson(CATEGORY_LISTS);
+  if (isCategoryLists(stored)) return stored;
+  const migrated = buildCategoryListsFromLegacy({
+    categories: (await getCategoriesFromLocalStorage()) || [],
+    buckets: bucketsAsObject(await getBucketsFromLocalStorage()),
+    balance: await getBalanceFromLocalStorage(),
+    fixedEntries: await getFixedEntriesFromLocalStorage(),
+  });
+  await storeCategoryListsInLocalStorage({ data: migrated });
+  return migrated;
+};
 
 // Fixed (recurring) incomes/expenses are stored under their own key as a flat
 // list of recurring-entry definitions (issue #103). The empty value is an
@@ -171,33 +225,52 @@ const editBucketForMonth = async ({
   return newBuckets;
 };
 
-// Creates a brand new expense category, independent of any bucket (issue #100).
-// The category becomes selectable when adding a bucket or an expense entry,
-// without requiring a spending limit to be set right away.
-const addCategoryData = async ({ category }) => {
-  const trimmedName = (category || "").trim();
+// Creates a category of one type, independent of any bucket (issue #100).
+// Names are unique within a type (case-insensitive, trimmed); the same name
+// may exist once as an income and once as an expense category.
+const addCategoryData = async ({ type, name }) => {
+  if (!isCategoryType(type)) throw new Error("A category type is required");
+  const trimmedName = (name || "").trim();
   if (!trimmedName) throw new Error("Category name cannot be empty");
 
-  const storedCategories = (await getCategoriesFromLocalStorage()) || [];
-  const storedBuckets = (await getBucketsFromLocalStorage()) || {};
-  const alreadyExists = [
-    ...storedCategories,
-    ...Object.keys(storedBuckets),
-  ].some((existingName) => existingName.toLowerCase() === trimmedName.toLowerCase());
-  if (alreadyExists) {
+  const categoryLists = await getCategoryListsFromLocalStorage();
+  if (findCategoryName(categoryLists[type], trimmedName)) {
     throw new Error(`A category for "${trimmedName}" already exists`);
   }
 
-  const newCategories = [...storedCategories, trimmedName];
-  await storeCategoriesInLocalStorage({ data: newCategories });
-  return newCategories;
+  const newCategoryLists = {
+    ...categoryLists,
+    [type]: [...categoryLists[type], trimmedName],
+  };
+  await storeCategoryListsInLocalStorage({ data: newCategoryLists });
+  return newCategoryLists;
+};
+
+// Renames or deletes a category (see applyCategoryChange): rewrites the
+// affected entries and fixed entries, the category list and the bucket in
+// one go, and records the change in the log sync carries.
+const applyCategoryChangeData = async ({ change }) => {
+  if (!isCategoryChange(change)) throw new Error("Invalid category change");
+  const current = {
+    balance: await getBalanceFromLocalStorage(),
+    fixedEntries: await getFixedEntriesFromLocalStorage(),
+    buckets: bucketsAsObject(await getBucketsFromLocalStorage()),
+    categoryLists: await getCategoryListsFromLocalStorage(),
+  };
+  const next = applyCategoryChange(current, change);
+  await storeBalanceInLocalStorage({ data: next.balance });
+  await storeFixedEntriesInLocalStorage({ data: next.fixedEntries });
+  await storeBucketsInLocalStorage({ data: next.buckets });
+  await storeCategoryListsInLocalStorage({ data: next.categoryLists });
+  const changes = await getCategoryChangesFromLocalStorage();
+  await storeCategoryChangesInLocalStorage({ data: [...changes, change] });
+  return next;
 };
 
 // Adds a bucket (a spending limit) for an existing category (issue #100). The
 // category name must be non-empty and unique among buckets (case-insensitive)
 // so we never create orphan or duplicated buckets. Existing buckets are edited
-// via editBucket. Once a category gets a bucket, it is removed from the
-// standalone categories list so it does not show up twice.
+// via editBucket.
 const addBucketData = async ({ bucket, addedBy }) => {
   if (!bucket) throw new Error("No bucket data was set");
 
@@ -226,15 +299,6 @@ const addBucketData = async ({ bucket, addedBy }) => {
     ],
   };
   await storeBucketsInLocalStorage({ data: newBuckets });
-
-  const storedCategories = (await getCategoriesFromLocalStorage()) || [];
-  const remainingCategories = storedCategories.filter(
-    (categoryName) => categoryName.toLowerCase() !== trimmedName.toLowerCase()
-  );
-  if (remainingCategories.length !== storedCategories.length) {
-    await storeCategoriesInLocalStorage({ data: remainingCategories });
-  }
-
   return newBuckets;
 };
 
@@ -250,21 +314,48 @@ const exportAllData = async () => {
     getCategoriesFromLocalStorage(),
     getFixedEntriesFromLocalStorage(),
   ]);
+  const categoryLists = await getCategoryListsFromLocalStorage();
+  const categoryChanges = await getCategoryChangesFromLocalStorage();
   return {
     balance,
     buckets: Array.isArray(buckets) ? {} : buckets,
     categories,
     fixedEntries,
+    categoryLists,
+    categoryChanges,
   };
+};
+
+// The category lists a restored (or synced) snapshot should have: its own
+// when it carries them, otherwise migrated from its data exactly like an
+// install that predates category management; either way, every category its
+// entries use is listed.
+const categoryListsFor = ({ balance, buckets, categories, fixedEntries, categoryLists }) => {
+  const sources = { balance, buckets: bucketsAsObject(buckets), categories, fixedEntries };
+  return isCategoryLists(categoryLists)
+    ? withCategoriesFromData(categoryLists, sources)
+    : buildCategoryListsFromLegacy(sources);
 };
 
 // Replaces the whole persisted state from a single-file backup (issue #109):
 // every key is overwritten wholesale so the app matches the file exactly,
-// rather than merging with whatever was there before.
-const importAllData = async ({ balance, buckets, categories, fixedEntries }) => {
+// rather than merging with whatever was there before. The old unbudgeted
+// `categories` key is folded into `categoryLists` and no longer written.
+const importAllData = async (data) => {
+  const { balance, buckets, fixedEntries, categoryChanges } = data;
   await storeBalanceInLocalStorage({ data: balance || [] });
   await storeBucketsInLocalStorage({ data: buckets || {} });
-  await storeCategoriesInLocalStorage({ data: categories || [] });
+  localStorage.removeItem(CATEGORIES);
+  await storeCategoryListsInLocalStorage({
+    data: categoryListsFor({
+      ...data,
+      balance: balance || [],
+      fixedEntries: fixedEntries || [],
+    }),
+  });
+  await storeCategoryChangesInLocalStorage({
+    data: Array.isArray(categoryChanges) ? categoryChanges : [],
+  });
   await storeFixedEntriesInLocalStorage({
     data: fixedEntries || getEmptyFixedEntries(),
   });
@@ -328,10 +419,11 @@ const LocalStorage = () => ({
   addBucket: async ({ bucket, addedBy }) => {
     return addBucketData({ bucket, addedBy });
   },
-  getCategories: async () => getCategoriesFromLocalStorage(),
-  addCategory: async ({ category }) => {
-    return addCategoryData({ category });
-  },
+  getCategoryLists: async () => getCategoryListsFromLocalStorage(),
+  addCategory: async ({ type, name }) => addCategoryData({ type, name }),
+  // Renames or deletes a category; see applyCategoryChangeData.
+  applyCategoryChange: async ({ change }) =>
+    applyCategoryChangeData({ change }),
   // Filters & sorting for the entry lists (search, scope, category, sortKey).
   getEntryFilters: async () => getEntryFiltersFromLocalStorage(),
   setEntryFilters: async ({ entryFilters }) =>

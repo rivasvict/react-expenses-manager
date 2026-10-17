@@ -9,6 +9,7 @@ import AmountInput from "../common/AmountInput";
 import CategorySelector from "../common/ExpensesManager/CategorySelector";
 import { getEntryCategoryOption } from "../../helpers/entriesHelper/entriesHelper";
 import { IncomingItem } from "../../helpers/syncMergeHelper/syncMergeHelper";
+import { CategoryLists } from "../../helpers/categoryLists/categoryLists";
 import { getItemFacts } from "./itemFacts";
 import { useTranslation } from "../../i18n";
 
@@ -18,7 +19,7 @@ interface ReviewItemCardProps {
   // an entry or an edit, N for a brand-new fixed entry / bucket.
   stateCount?: number;
   buckets: any;
-  unbudgetedCategories: string[];
+  categoryLists: CategoryLists;
   onAccept: (item: IncomingItem, modified: boolean) => void;
   onReject: () => void;
   onCancelReview: () => void;
@@ -30,13 +31,13 @@ interface ReviewItemCardProps {
 const ModifyForm = ({
   item,
   buckets,
-  unbudgetedCategories,
+  categoryLists,
   onSave,
   onCancel,
 }: {
   item: IncomingItem;
   buckets: any;
-  unbudgetedCategories: string[];
+  categoryLists: CategoryLists;
   onSave: (edited: IncomingItem) => void;
   onCancel: () => void;
 }) => {
@@ -98,7 +99,7 @@ const ModifyForm = ({
 
   const categoryOptions = useMemo(() => {
     const options =
-      getEntryCategoryOption(entryType, buckets, unbudgetedCategories) || [];
+      getEntryCategoryOption(entryType, categoryLists) || [];
     if (!ownCategory) return options;
     // CategorySelector wraps an option's value as `,{value},`, so the extra
     // option is only representable for the canonical `,category,` format.
@@ -110,7 +111,7 @@ const ModifyForm = ({
     return isKnown
       ? options
       : [...options, { name: ownCategory.name, value: ownValue }];
-  }, [entryType, buckets, unbudgetedCategories, ownCategory]);
+  }, [entryType, categoryLists, ownCategory]);
 
   const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
@@ -249,7 +250,7 @@ const ReviewItemCard = ({
   item,
   stateCount = 1,
   buckets,
-  unbudgetedCategories,
+  categoryLists,
   onAccept,
   onReject,
   onCancelReview,
@@ -273,7 +274,7 @@ const ReviewItemCard = ({
         <ModifyForm
           item={item}
           buckets={buckets}
-          unbudgetedCategories={unbudgetedCategories}
+          categoryLists={categoryLists}
           onSave={(edited) => {
             setIsModifying(false);
             onAccept(edited, true);

@@ -28,7 +28,7 @@ const EditEntry = ({
   selectedDate,
   history,
   buckets,
-  unbudgetedCategories,
+  categoryLists,
   fixedEntries,
   onGetEntry,
   onSaveEntry,
@@ -139,7 +139,7 @@ const EditEntry = ({
       onCancel={navigateBack}
       allowRecurring={true}
       buckets={buckets}
-      unbudgetedCategories={unbudgetedCategories}
+      categoryLists={categoryLists}
     />
   ) : (
     <>{t("entryForm.notFound")}</>
@@ -149,7 +149,7 @@ const EditEntry = ({
 const mapStateToProps = (state) => ({
   entries: state.expensesManager.entries,
   buckets: state.expensesManager.buckets,
-  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  categoryLists: state.expensesManager.categoryLists,
   fixedEntries: state.expensesManager.fixedEntries,
 });
 

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Option A: Name already used</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+    .page-title { margin: 0 0 0.625rem; }
+    .lead { margin: 0 0 0.75rem; text-align: center; font-size: 0.88rem; line-height: 1.45; color: var(--text-secondary); }
+    .stack { display: flex; flex-direction: column; gap: 0.5rem; }
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; padding: 0.25rem; margin: 0 0 0.75rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .seg__item { min-height: 2.6rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; border-radius: var(--radius-control); font-size: 0.92rem; font-weight: 600; color: var(--text-secondary); }
+    .seg__item--sel { background-color: var(--accent-soft); color: var(--text-primary); box-shadow: inset 0 0 0 1px var(--accent); }
+    .count { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+    .tabs { display: flex; border-bottom: 1px solid var(--border-subtle); margin: 0 0 0.75rem; }
+    .tabs__item { flex: 1; text-align: center; padding: 0.7rem 0.3rem; font-weight: 600; font-size: 0.92rem; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tabs__item--sel { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .row { display: flex; align-items: center; gap: 0.75rem; min-height: 3.5rem; padding: 0.6rem 0.75rem 0.6rem 0.9rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); color: var(--text-primary); }
+    .row__main { flex: 1; min-width: 0; }
+    .row__name { display: block; font-weight: 600; font-size: 0.95rem; overflow-wrap: anywhere; }
+    .row__meta { display: block; font-size: 0.8rem; color: var(--text-secondary); }
+    .row__end { color: var(--text-secondary); font-size: 1.1rem; }
+    .icon-btn { width: 2.75rem; height: 2.75rem; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-secondary); }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn--danger { color: var(--danger); }
+    .badge { display: inline-block; margin-left: 0.35rem; padding: 0 0.45rem; border-radius: var(--radius-pill); background-color: var(--accent-soft); color: var(--accent); font-size: 0.72rem; font-weight: 700; vertical-align: 0.1em; }
+    .section-label { margin: 1rem 0 0.45rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-secondary); display: flex; justify-content: space-between; }
+    .callout { display: flex; gap: 0.6rem; padding: 0.75rem 0.85rem; border-radius: var(--radius-control); font-size: 0.86rem; line-height: 1.45; color: var(--text-primary); }
+    .callout svg { flex: none; width: 18px; height: 18px; margin-top: 0.1rem; }
+    .callout--warn { background-color: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--warning) 40%, transparent); }
+    .callout--danger { background-color: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); }
+    .callout--info { background-color: var(--highlight); border: 1px solid var(--border-strong); }
+    .callout b { font-weight: 700; }
+    .entry { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.1rem; border-bottom: 1px solid var(--border-subtle); }
+    .entry:last-child { border-bottom: 0; }
+    .entry__main { flex: 1; min-width: 0; }
+    .entry__desc { display: block; font-size: 0.9rem; font-weight: 600; overflow-wrap: anywhere; }
+    .entry__date { display: block; font-size: 0.78rem; color: var(--text-secondary); }
+    .entry__amt { font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+    .mini-select { position: relative; min-height: 2.75rem; min-width: 7.5rem; max-width: 9.5rem; display: flex; align-items: center; padding: 0 1.8rem 0 0.7rem; font-size: 0.84rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); color: var(--text-primary); }
+    .mini-select--empty { color: var(--text-secondary); border-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+    .mini-select::after { content: "▾"; position: absolute; right: 0.6rem; color: var(--text-secondary); }
+    .radio { display: flex; gap: 0.7rem; padding: 0.8rem 0.85rem; border: 1px solid var(--border-subtle); border-radius: var(--radius-control); background-color: var(--bg-surface); }
+    .radio--sel { border-color: var(--accent); background-color: var(--accent-soft); }
+    .radio__dot { flex: none; width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; border-radius: var(--radius-round); border: 2px solid var(--border-strong); }
+    .radio--sel .radio__dot { border: 0.32rem solid var(--accent); }
+    .radio__title { display: block; font-weight: 600; font-size: 0.93rem; }
+    .radio__hint { display: block; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+    .empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.5rem 0.5rem 0.5rem; }
+    .empty svg { width: 132px; height: 112px; margin-bottom: 0.9rem; }
+    .empty__title { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 700; }
+    .empty__text { margin: 0 0 1.1rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary); max-width: 21rem; }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; max-height: 88vh; overflow: hidden; padding: 0.6rem 1rem 1rem; background-color: var(--bg-raised); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); display: flex; flex-direction: column; gap: 0.6rem; }
+    .sheet__grab { width: 2.5rem; height: 0.25rem; margin: 0 auto 0.2rem; border-radius: var(--radius-round); background-color: var(--border-strong); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; overflow-wrap: anywhere; }
+    .sheet__close { width: 2.4rem; height: 2.4rem; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); background-color: var(--bg-surface); color: var(--text-secondary); }
+    .sheet .mk-btn { margin-top: 0; }
+    .sheet__list { overflow: hidden; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); padding: 0.1rem 0.7rem; }
+    .btn-gap { display: flex; flex-direction: column; gap: 0.5rem; }
+    .linkish { color: var(--accent); font-weight: 600; font-size: 0.88rem; }
+    .muted-note { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45; margin: 0; }
+    .wiz-bar { display: flex; align-items: center; gap: 0.8rem; margin: 0.625rem 0 0; }
+    .wiz-bar__track { flex: 1; height: 0.4rem; border-radius: var(--radius-pill); background-color: var(--track); overflow: hidden; }
+    .wiz-bar__fill { height: 100%; background-color: var(--accent); border-radius: var(--radius-pill); }
+    .wiz-bar__count { font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; }
+    .rename { display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; font-size: 1.05rem; font-weight: 700; margin: 0.2rem 0 0.6rem; }
+    .rename__old { color: var(--text-secondary); text-decoration: line-through; font-weight: 600; }
+    .kind { font-size: 0.8rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.4rem; }
+    .kind svg { width: 14px; height: 14px; flex: none; }
+    .by { font-size: 0.8rem; color: var(--text-secondary); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; gap: 0.5rem; }
+    .field-error { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--danger); }
+    .mk-input--error { border-color: var(--danger); box-shadow: 0 0 0 0.2rem var(--danger-soft); }
+
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h1 class="mk-title page-title">Categories</h1>
+      <div class="seg" role="tablist"><span class="seg__item seg__item--sel" role="tab">Expenses <span class="count">6</span></span><span class="seg__item " role="tab">Incomes <span class="count">3</span></span></div>
+      <div class="stack">
+<div class="row"><span class="row__main"><span class="row__name">Eating out</span><span class="row__meta">12 expenses · Bucket $400.00/mo</span></span><span class="icon-btn" role="button" aria-label="Options for Eating out"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+<div class="row"><span class="row__main"><span class="row__name">Food</span><span class="row__meta">31 expenses · Bucket $650.00/mo</span></span><span class="icon-btn" role="button" aria-label="Options for Food"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+<div class="row"><span class="row__main"><span class="row__name">Transportation</span><span class="row__meta">8 expenses</span></span><span class="icon-btn" role="button" aria-label="Options for Transportation"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+<div class="row"><span class="row__main"><span class="row__name">Subscriptions</span><span class="row__meta">5 expenses · Bucket $60.00/mo</span></span><span class="icon-btn" role="button" aria-label="Options for Subscriptions"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+<div class="row"><span class="row__main"><span class="row__name">Mobile phone plan</span><span class="row__meta">4 expenses</span></span><span class="icon-btn" role="button" aria-label="Options for Mobile phone plan"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+<div class="row"><span class="row__main"><span class="row__name">Travel</span><span class="row__meta">Not used yet</span></span><span class="icon-btn" role="button" aria-label="Options for Travel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2" style="fill: currentColor"/><circle cx="12" cy="12" r="2" style="fill: currentColor"/><circle cx="19" cy="12" r="2" style="fill: currentColor"/></svg></span></div>
+      </div>
+      <div class="mk-actions btn-gap">
+        <button class="mk-btn mk-btn--primary" type="button">Add expense category</button>
+        <button class="mk-btn mk-btn--secondary" type="button">Go Back</button>
+      </div>
+    </div>
+  </main>
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="sheet" role="dialog" aria-labelledby="t">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head"><h2 class="sheet__title" id="t">Edit category</h2><span class="sheet__close" aria-label="Close"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-width="2.2" stroke-linecap="round" style="stroke: currentColor"/></svg></span></div>
+    <div>
+      <label class="mk-label" for="n">Name</label>
+      <div class="mk-input mk-input--error" id="n">Food</div>
+      <p class="field-error" role="alert">An expense category called “Food” already exists.</p>
+    </div>
+    <div class="callout callout--warn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20z" style="fill: var(--warning)"/><path d="M12 10v5M12 17.5v.5" stroke-width="2.2" stroke-linecap="round" style="stroke: var(--text-on-accent)"/></svg><span>Renaming changes <b>12 existing expenses</b> from “Eating out” to the new name. Its <b>$400.00 bucket</b> is renamed too.</span></div>
+    <div class="btn-gap">
+      <button class="mk-btn mk-btn--primary" type="button">Save and update 12 expenses</button>
+      <button class="mk-btn mk-btn--danger" type="button">Delete category</button>
+    </div>
+  </div>
+</body>
+</html>

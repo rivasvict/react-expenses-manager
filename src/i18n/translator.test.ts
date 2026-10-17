@@ -35,6 +35,12 @@ describe("createTranslator", () => {
     expect(french.plural("entries.count", 3)).toBe("3 opérations");
   });
 
+  it("names the plural key it would pick, for Trans", () => {
+    expect(english.pluralKey("entries.count", 1)).toBe("entries.count_one");
+    expect(english.pluralKey("entries.count", 2)).toBe("entries.count_other");
+    expect(french.pluralKey("entries.count", 0)).toBe("entries.count_one");
+  });
+
   it("exposes its language", () => {
     expect(spanish.language).toBe("es");
   });

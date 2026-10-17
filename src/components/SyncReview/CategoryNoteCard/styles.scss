@@ -1,0 +1,144 @@
+@import '../../../variables.scss';
+
+// A category change from another party member, in the review wizard
+// (design/features/category-management/ui/approved/sync-note.*).
+.category-note {
+  @include card();
+  padding: 0.9rem 1rem;
+  margin-top: $vertical-standard-margin;
+
+  &__kind {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    &--rename {
+      color: $accent;
+    }
+
+    &--delete {
+      color: $danger;
+    }
+  }
+
+  &__names {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0.2rem 0 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  &__old {
+    color: $text-secondary;
+    font-weight: 600;
+    text-decoration: line-through;
+  }
+
+  &__by {
+    margin: 0 0 0.6rem;
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+
+  &__section {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0.1rem 0.7rem;
+    list-style: none;
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+  }
+
+  &__entry {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.55rem 0.1rem;
+    border-bottom: 1px solid $border-subtle;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__description {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__date {
+    @include money-figures();
+    display: block;
+    font-size: 0.78rem;
+    color: $text-secondary;
+  }
+
+  &__end {
+    @include money-figures();
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &--expense {
+      color: $expense;
+    }
+
+    &--income {
+      color: $income;
+    }
+  }
+
+  &__more {
+    display: block;
+    margin: 0 auto;
+    padding: 0.5rem 0 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: $accent;
+    background: none;
+    border: 0;
+    cursor: pointer;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  .btn.category-note__continue {
+    width: 100%;
+    margin-top: $vertical-standard-margin;
+  }
+
+  &__fine-print {
+    margin: 0.5rem 0 0;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: $text-secondary;
+  }
+}

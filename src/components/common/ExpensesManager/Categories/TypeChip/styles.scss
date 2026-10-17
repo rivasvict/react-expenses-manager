@@ -1,0 +1,18 @@
+@import '../../../../../variables.scss';
+
+// The money-row chip (design/system/components.md), tinted by type.
+.type-chip {
+  @include icon-chip(1.9rem);
+  flex: none;
+  font-size: 1rem;
+
+  &--income {
+    color: $income;
+    background-color: $income-soft;
+  }
+
+  &--expense {
+    color: $expense;
+    background-color: $expense-soft;
+  }
+}

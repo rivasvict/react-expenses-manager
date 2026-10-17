@@ -231,12 +231,15 @@ export const completeReview =
       merged.balance,
       merged.fixedEntries
     );
+    // importData lists every category the merged entries and buckets use,
+    // so the lists are read back rather than taken from `merged`.
+    const categoryLists = await storage.getCategoryLists();
     dispatch({
       type: RESTORE_BACKUP,
       payload: {
         entries,
         buckets: merged.buckets,
-        unbudgetedCategories: merged.categories,
+        categoryLists,
         fixedEntries: merged.fixedEntries,
       },
     });

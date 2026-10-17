@@ -1,0 +1,51 @@
+@import '../../../../../variables.scss';
+
+.category-illustration {
+  width: 132px;
+  height: 112px;
+
+  &__shadow {
+    fill: $highlight;
+  }
+
+  &__card {
+    fill: $bg-raised;
+    stroke: $border-strong;
+    stroke-width: 2;
+    stroke-dasharray: 6 5;
+  }
+
+  &__tag {
+    stroke-width: 2;
+    stroke-linejoin: round;
+
+    &--income {
+      fill: $income-soft;
+      stroke: $income;
+    }
+
+    &--accent {
+      fill: $accent-soft;
+      stroke: $accent;
+    }
+  }
+
+  &__hole--income {
+    fill: $income;
+  }
+
+  &__hole--accent {
+    fill: $accent;
+  }
+
+  &__plus-disc {
+    fill: $accent;
+  }
+
+  &__plus {
+    fill: none;
+    stroke: $text-on-accent;
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+}

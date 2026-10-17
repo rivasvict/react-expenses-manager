@@ -2,6 +2,7 @@
 // by the EN/ES translations change. Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { Component } from "react";
+import { uniqBy } from "lodash";
 import ContentTileSection from "../../../ContentTitleSection";
 import { FormSelect } from "../../../Forms";
 import { MainContentContainer } from "../../../MainContentContainer";
@@ -298,14 +299,21 @@ class Summary extends Component {
           ? ENTRY_TYPES_SINGULAR.EXPENSE
           : "net";
     // One filter drives both lists, so the category picker offers both kinds.
-    const categoryOptions = [
-      ...getEntryCategoryOption(ENTRY_TYPES_SINGULAR.INCOME),
-      ...getEntryCategoryOption(
-        ENTRY_TYPES_SINGULAR.EXPENSE,
-        this.props.buckets,
-        this.props.unbudgetedCategories
-      ),
-    ];
+    // A name used by both types is offered once: the filter matches the
+    // `categories_path`, which is the same for both.
+    const categoryOptions = uniqBy(
+      [
+        ...getEntryCategoryOption(
+          ENTRY_TYPES_SINGULAR.INCOME,
+          this.props.categoryLists
+        ),
+        ...getEntryCategoryOption(
+          ENTRY_TYPES_SINGULAR.EXPENSE,
+          this.props.categoryLists
+        ),
+      ],
+      "value"
+    );
     return (
       <MainContentContainer
         className="summary-container"
@@ -410,7 +418,7 @@ class Summary extends Component {
 const mapStateToProps = (state) => ({
   entryFilters: state.expensesManager.entryFilters,
   buckets: state.expensesManager.buckets,
-  unbudgetedCategories: state.expensesManager.unbudgetedCategories,
+  categoryLists: state.expensesManager.categoryLists,
 });
 
 const mapActionsToProps = (dispatch) => ({
