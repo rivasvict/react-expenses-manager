@@ -80,6 +80,31 @@ and where the user's entries went, with "Acknowledge and continue".
   are easy to mis-tap; an inline editor in a list is harder to build
   accessibly.
 
+### d-tabs-and-sheets
+
+Requested by the owner: **everything in B**, with **C's underline
+Expenses / Incomes tabs** and the category page and the delete flow as
+**bottom sheets, as in A**. `/categories` shows one type at a time under the
+tabs (with counts), each row with its income/expense chip, usage and a
+chevron. Tapping a row opens a **category sheet**: type and name, the usage
+figures (entries, total, bucket), the name field with the impact note, Save
+changes, and a Danger zone with Delete. Delete swaps it for a **tall delete
+sheet**: the "can't be undone" warning, "Set every expense to … / Apply to
+all", then every affected expense grouped by month with its own select; the
+list scrolls inside the sheet while the "1 expense still needs a category"
+count and the red Delete button stay fixed at its foot. When the category is
+the only one of its type, the sheet becomes a **blocked** sheet ("Add income
+category"). The empty state is per tab. The sync card is B's (rename with the
+user's affected expenses, Continue, "can't be rejected").
+
+- **Good at:** B's context and its combined "apply to all, then adjust"
+  reassignment, without new routes; the user never leaves the list, and the
+  tabs keep each list short.
+- **Costs:** a long reassignment list scrolls inside a sheet (a fixed footer
+  keeps the action reachable, but there is less room than B's full page); the
+  sheet holds more than the Settings sheets do, so its scroll and focus
+  handling need care.
+
 ## States still to draw at approval
 
 - **Empty:** per type (A, C) or for the whole screen (B); whichever wins, also
