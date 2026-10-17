@@ -3,6 +3,7 @@ import { UserEvent } from "@testing-library/user-event";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, SEPTEMBER, OCTOBER } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
+import { goToPrevMonth } from "./helpers/navigation";
 
 /**
  * Category management (design/features/category-management/ui/decision.md):
@@ -281,6 +282,25 @@ describe("deleting a category", () => {
     expect(await row("Travel")).toHaveTextContent("Travel1 expense");
     expect(await row("Subscriptions")).toHaveTextContent("Subscriptions2 expenses");
     expect(await row("Food")).toHaveTextContent("Food6 expenses");
+
+    // Each expense now sits in the category picked for it: the entry list's
+    // rows show the category above the description.
+    const entryRow = (description: string) =>
+      screen.findByRole("link", { name: new RegExp(description) });
+    const openExpenses = async () =>
+      user.click(await screen.findByRole("link", { name: /^Expenses \$/ }));
+    await user.click(await screen.findByRole("link", { name: /home/i }));
+    await openExpenses();
+    expect(await entryRow("Sushi with Ana")).toHaveTextContent(/^Food\s*Sushi with Ana/);
+    expect(await entryRow("Pizza night")).toHaveTextContent(/^Food\s*Pizza night/);
+
+    // The month switch lives on the dashboard; September holds the other three.
+    await user.click(await screen.findByRole("link", { name: /home/i }));
+    await goToPrevMonth(user, "September 2026");
+    await openExpenses();
+    expect(await entryRow("Coffee & bagel")).toHaveTextContent(/^Travel\s*Coffee & bagel/);
+    expect(await entryRow("Birthday dinner")).toHaveTextContent(/^Food\s*Birthday dinner/);
+    expect(await entryRow("Tacos")).toHaveTextContent(/^Subscriptions\s*Tacos/);
   });
 
   it("blocks deleting the only category of a type that entries use", async () => {
