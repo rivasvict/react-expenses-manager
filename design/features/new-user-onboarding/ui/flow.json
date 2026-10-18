@@ -1,0 +1,212 @@
+{
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard (existing users never see the wizard)",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "preferences.default",
+      "title": "Preferences",
+      "route": "/welcome"
+    },
+    {
+      "id": "preferences.es",
+      "title": "Preferences (Spanish, Español · € EUR, Privacy on)",
+      "route": "/welcome"
+    },
+    {
+      "id": "expenses.default",
+      "title": "Expense categories, 8 chosen (7 from the list + 1 own)",
+      "route": "/welcome"
+    },
+    {
+      "id": "expenses.es",
+      "title": "Expense categories (Spanish)",
+      "route": "/welcome"
+    },
+    {
+      "id": "expenses.empty",
+      "title": "Expense categories, none chosen",
+      "route": "/welcome"
+    },
+    {
+      "id": "expenses.error",
+      "title": "Expense categories, duplicate name typed",
+      "route": "/welcome"
+    },
+    {
+      "id": "incomes.default",
+      "title": "Income categories, 3 chosen (2 from the list + 1 own)",
+      "route": "/welcome"
+    },
+    {
+      "id": "incomes.es",
+      "title": "Income categories (Spanish)",
+      "route": "/welcome"
+    },
+    {
+      "id": "incomes.empty",
+      "title": "Income categories, none chosen",
+      "route": "/welcome"
+    },
+    {
+      "id": "buckets.default",
+      "title": "Buckets, 3 limits set",
+      "route": "/welcome"
+    },
+    {
+      "id": "buckets.es",
+      "title": "Buckets (Spanish)",
+      "route": "/welcome"
+    },
+    {
+      "id": "buckets.empty",
+      "title": "Buckets, no expense categories",
+      "route": "/welcome"
+    },
+    {
+      "id": "buckets.error",
+      "title": "Buckets, limit of zero",
+      "route": "/welcome"
+    },
+    {
+      "id": "review.default",
+      "title": "Review",
+      "route": "/welcome"
+    },
+    {
+      "id": "review.es",
+      "title": "Review (Spanish)",
+      "route": "/welcome"
+    },
+    {
+      "id": "review.empty",
+      "title": "Review, nothing chosen",
+      "route": "/welcome"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard",
+      "to": "preferences.default",
+      "label": "First launch on a device with no data (new user)"
+    },
+    {
+      "from": "preferences.default",
+      "to": "expenses.default",
+      "label": "Tap Next"
+    },
+    {
+      "from": "preferences.default",
+      "to": "preferences.es",
+      "label": "Pick Español (the wizard switches language at once)"
+    },
+    {
+      "from": "preferences.es",
+      "to": "expenses.es",
+      "label": "Tap Siguiente"
+    },
+    {
+      "from": "preferences.default",
+      "to": "dashboard",
+      "label": "Tap Skip setup"
+    },
+    {
+      "from": "expenses.default",
+      "to": "expenses.error",
+      "label": "Add a category whose name already exists"
+    },
+    {
+      "from": "expenses.error",
+      "to": "expenses.default",
+      "label": "Change the name or clear it"
+    },
+    {
+      "from": "expenses.default",
+      "to": "expenses.empty",
+      "label": "Tap Clear"
+    },
+    {
+      "from": "expenses.empty",
+      "to": "expenses.default",
+      "label": "Tap Select all, or pick chips"
+    },
+    {
+      "from": "expenses.default",
+      "to": "incomes.default",
+      "label": "Tap Next"
+    },
+    {
+      "from": "expenses.empty",
+      "to": "incomes.empty",
+      "label": "Tap Next with none chosen"
+    },
+    {
+      "from": "expenses.es",
+      "to": "incomes.es",
+      "label": "Tap Siguiente"
+    },
+    {
+      "from": "incomes.default",
+      "to": "incomes.empty",
+      "label": "Tap Clear"
+    },
+    {
+      "from": "incomes.default",
+      "to": "buckets.default",
+      "label": "Tap Next"
+    },
+    {
+      "from": "incomes.empty",
+      "to": "buckets.empty",
+      "label": "Tap Next (no expense categories were chosen)"
+    },
+    {
+      "from": "incomes.es",
+      "to": "buckets.es",
+      "label": "Tap Siguiente"
+    },
+    {
+      "from": "buckets.default",
+      "to": "buckets.error",
+      "label": "Tick a category and leave its limit at 0, then tap Next"
+    },
+    {
+      "from": "buckets.error",
+      "to": "buckets.default",
+      "label": "Enter a limit above zero"
+    },
+    {
+      "from": "buckets.default",
+      "to": "review.default",
+      "label": "Tap Next"
+    },
+    {
+      "from": "buckets.empty",
+      "to": "review.empty",
+      "label": "Tap Next"
+    },
+    {
+      "from": "buckets.es",
+      "to": "review.es",
+      "label": "Tap Siguiente"
+    },
+    {
+      "from": "review.default",
+      "to": "dashboard",
+      "label": "Tap Start tracking"
+    },
+    {
+      "from": "review.empty",
+      "to": "dashboard",
+      "label": "Tap Start tracking"
+    },
+    {
+      "from": "review.es",
+      "to": "dashboard",
+      "label": "Tap Empezar a registrar"
+    }
+  ]
+}

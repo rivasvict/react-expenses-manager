@@ -1,0 +1,903 @@
+{
+  "screens": {
+    "preferences.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "blur": true
+        }
+      ]
+    },
+    "preferences.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "blur": true
+        }
+      ]
+    },
+    "expenses.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "expenses.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "expenses.empty": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "expenses.error": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "incomes.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "incomes.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "incomes.empty": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.empty": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.error": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Transportation\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Transportation\"]",
+            "0"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "review.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "review.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Siguiente\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "review.empty": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ]
+    }
+  }
+}
