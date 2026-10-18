@@ -51,10 +51,31 @@ optional Buckets. Choosing Start empty finishes straight away.
   want a subset; the fixed starter list is shown as a whole before it is edited.
 - **Empty state drawn:** Start empty selected.
 
+### d-pinned-footer: option A with the actions pinned
+Same four steps as A, changed for long screens (the category list is 29 chips
+and grows with the user's own). The step bar stays pinned at the top; **Back /
+Next (or Start tracking) are pinned in a footer** that never scrolls away, with
+a live summary above them ("10 selected · 9 expenses, 1 income"). The chips fade
+out above the footer, so a half-cut row signals there is more below. "Add your
+own category" moves above the list so it never hides at the bottom.
+- **Good at:** answers "can I continue / is there more below?" on any screen
+  height; the primary action is always one tap away; the count confirms what
+  was chosen across both tabs.
+- **Costs:** the footer takes about 7rem of a short phone's height; a fixed
+  footer needs care with the on-screen keyboard (the footer must sit above it
+  or hide while the Add field is focused); the wizard is full-screen, so the
+  bottom tab bar is hidden during it (it would stack under the footer).
+- **Empty states drawn:** none chosen (summary reads "none is fine") and
+  Buckets with no expense categories.
+- Behaviour for the implementer: the fade shows only while content is below;
+  the footer summary is shown on the Categories and Buckets steps only.
+
 ## Recommendation
-**a-step-by-step** for a first-run experience: it is the clearest and the most
-forgiving for non-technical newcomers. If it feels long, **c** is the best
-shortcut. The review step in A could be dropped without changing the rest.
+**d-pinned-footer**: it keeps A's one-decision-at-a-time flow and fixes the
+main weakness of A on long screens, where the Next button sits at the end of the
+list and is easy to miss. A pinned primary action is the standard pattern for
+long steps in a wizard. If it still feels long, **c** is the best shortcut. The
+review step could be dropped without changing the rest.
 
 ## Open questions for the owner
 - Should Privacy mode be in the wizard or only offered as a link afterwards?
