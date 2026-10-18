@@ -1,0 +1,28 @@
+@import "../../../../variables.scss";
+
+.preferences-step {
+  &__lead {
+    margin: 0 0 0.9rem;
+    color: $text-secondary;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  &__label {
+    margin: 0.8rem 0 0.35rem;
+    color: $text-secondary;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  &__hint {
+    color: $text-muted;
+    font-weight: 400;
+  }
+
+  // The wizard's card is the surface colour, so its rows are raised from it.
+  .switch-row {
+    background-color: $bg-raised;
+  }
+}

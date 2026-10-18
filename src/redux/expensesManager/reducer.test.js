@@ -2,6 +2,7 @@ const { reducer } = require("./reducer");
 const {
   ADD_BUCKET,
   ADD_CATEGORY,
+  ONBOARDING_APPLIED,
   GET_CATEGORIES,
   CATEGORY_CHANGED,
   SET_ENTRY_FILTERS,
@@ -148,5 +149,23 @@ describe("expensesManager reducer - entry filters (filters & sorting)", () => {
     });
 
     expect(nextState.entryFilters).toEqual(persistedFilters);
+  });
+});
+
+describe("expensesManager reducer - ONBOARDING_APPLIED (new-user onboarding)", () => {
+  it("replaces the category lists and the buckets", () => {
+    const lists = { expense: ["Food"], income: [] };
+    const buckets = { Food: [{ from: "0000-00", limit: 5 }] };
+
+    const nextState = reducer(
+      {
+        buckets: { Old: [{ from: "0000-00", limit: 1 }] },
+        categoryLists: { expense: ["Old"], income: ["Salary"] },
+      },
+      { type: ONBOARDING_APPLIED, payload: { categoryLists: lists, buckets } }
+    );
+
+    expect(nextState.categoryLists).toEqual(lists);
+    expect(nextState.buckets).toEqual(buckets);
   });
 });

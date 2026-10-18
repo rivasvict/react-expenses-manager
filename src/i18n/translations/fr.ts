@@ -398,6 +398,71 @@ const fr: Translations = {
   "addSheet.hintIncome": "Le nom doit être unique parmi vos catégories de revenu.",
   "addSheet.create": "Créer la catégorie",
 
+  // Onboarding wizard (new users only)
+  "onboarding.ariaLabel": "Configurez votre espace",
+  "onboarding.step": "Étape {{n}} sur {{total}}",
+  "onboarding.skip": "Passer la configuration",
+  "onboarding.next": "Suivant",
+  "onboarding.back": "Retour",
+  "onboarding.start": "Commencer le suivi",
+  "onboarding.welcome": "Bienvenue ! Configurons votre espace",
+  "onboarding.prefsLead":
+    "Trois choix rapides. Vous pourrez tous les modifier plus tard dans les Réglages.",
+  "onboarding.currencyHint": "symbole uniquement, rien n’est converti",
+  "onboarding.privacy": "Confidentialité",
+  "onboarding.privacyHint":
+    "Masque les montants du tableau de bord jusqu’à ce que vous touchiez l’œil",
+  "onboarding.expensesTitle": "Vos dépenses, c’est quoi ?",
+  "onboarding.expensesLead":
+    "Choisissez des catégories de dépense dans notre liste ou ajoutez les vôtres.",
+  "onboarding.incomesTitle": "D’où vient l’argent ?",
+  "onboarding.incomesLead":
+    "Choisissez des catégories de revenu dans notre liste ou ajoutez les vôtres.",
+  "onboarding.ownLabel": "Ajoutez la vôtre",
+  "onboarding.add": "Ajouter",
+  "onboarding.selectAll": "Tout",
+  "onboarding.clear": "Aucune",
+  "onboarding.selectedOf": "{{selected}} sur {{total}} choisies",
+  "onboarding.selected": "{{count}} choisies",
+  "onboarding.selectedNone": "0 choisie · aucune, c’est bien aussi",
+  "onboarding.expensesNone":
+    "Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant une dépense.",
+  "onboarding.incomesNone":
+    "Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant un revenu.",
+  "onboarding.bucketsTitle": "Définissez des plafonds mensuels",
+  "onboarding.optional": "(facultatif)",
+  "onboarding.bucketsLead":
+    "Un plafond fixe ce que vous prévoyez de dépenser dans une catégorie de dépense chaque mois.",
+  "onboarding.limit": "Plafond",
+  "onboarding.limitFor": "Plafond mensuel de {{category}}",
+  "onboarding.bucketsSummary_one": "{{count}} plafond · {{amount}} par mois",
+  "onboarding.bucketsSummary_other": "{{count}} plafonds · {{amount}} par mois",
+  "onboarding.bucketsEmptyTitle": "Aucune catégorie de dépense à budgéter",
+  "onboarding.bucketsEmptyText":
+    "Les plafonds portent sur des catégories de dépense : il n’y a donc encore rien à définir. Vous pouvez en ajouter à tout moment depuis Plafonds.",
+  "onboarding.reviewTitle": "Tout est prêt",
+  "onboarding.reviewLead":
+    "Voici ce que nous allons créer. Rien n’est enregistré avant la fin.",
+  "onboarding.edit": "Modifier",
+  "onboarding.editSection": "Modifier {{section}}",
+  "onboarding.reviewPreferences": "Préférences",
+  "onboarding.reviewExpenses_one": "{{count}} catégorie de dépense",
+  "onboarding.reviewExpenses_other": "{{count}} catégories de dépense",
+  "onboarding.reviewIncomes_one": "{{count}} catégorie de revenu",
+  "onboarding.reviewIncomes_other": "{{count}} catégories de revenu",
+  "onboarding.reviewOwn": "Les vôtres : {{names}}",
+  "onboarding.reviewBuckets_one": "{{count}} plafond",
+  "onboarding.reviewBuckets_other": "{{count}} plafonds",
+  "onboarding.reviewBucketsTotal": "{{amount}} par mois au total",
+  "onboarding.reviewNoExpenses": "Aucune catégorie de dépense",
+  "onboarding.reviewNoIncomes": "Aucune catégorie de revenu",
+  "onboarding.reviewNoCategoriesHint":
+    "Ajoutez-en à tout moment depuis Catégories",
+  "onboarding.reviewNoBuckets": "Aucun plafond",
+  "onboarding.reviewNoBucketsHint": "Ajoutez-en à tout moment depuis Plafonds",
+  "onboarding.privacyOn": "Mode confidentialité activé",
+  "onboarding.privacyOff": "Mode confidentialité désactivé",
+
   // Form validation
   "validation.categoryNameEmpty": "Le nom de la catégorie ne peut pas être vide",
   "validation.selectCategory": "Veuillez choisir une catégorie",

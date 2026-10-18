@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.34.0] - 2026-10-18
+
+### Added
+
+- **A first-run wizard for new users.** The first time the app opens on a
+  device with no data, it walks you through setting up in five short steps
+  instead of dropping you on an empty dashboard: **Preferences** (language,
+  currency and Privacy mode), **Expenses** and **Incomes** (pick categories
+  from our starter list, keep some or all of them, or add your own), optional
+  **Buckets** (a monthly limit for the expense categories you chose) and a
+  **Review** of everything before it is saved. Every step is optional: you can
+  choose no categories and no buckets, tap **Skip setup** at any time (it leaves
+  you with no categories and no buckets, keeping only the language you picked),
+  and add or change all of it later. Back and Next stay pinned at the bottom with a
+  count of what you have chosen, so the way forward is always in view, even on
+  a long list. The wizard is in English, Spanish and French, switches language
+  as soon as you pick one, and is shown once: people who already use the app
+  never see it.
+
 ## [1.33.0] - 2026-10-17
 
 ### Added

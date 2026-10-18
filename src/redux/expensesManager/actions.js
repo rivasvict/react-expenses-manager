@@ -38,6 +38,7 @@ export const EDIT_BUCKET = "SET_BUCKET";
 export const ADD_BUCKET = "ADD_BUCKET";
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_CATEGORIES = "GET_CATEGORIES";
+export const ONBOARDING_APPLIED = "ONBOARDING_APPLIED";
 export const CATEGORY_CHANGED = "CATEGORY_CHANGED";
 export const GET_FIXED_ENTRIES = "GET_FIXED_ENTRIES";
 export const SET_FIXED_ENTRY = "SET_FIXED_ENTRY";
@@ -361,6 +362,27 @@ const AddCategory =
     };
   };
 
+// Saves the first-run wizard's categories and buckets (design/features/
+// new-user-onboarding/ui/decision.md) and replaces them in the store.
+const ApplyOnboarding =
+  ({ storage }) =>
+  ({ categoryLists, buckets }) => {
+    return async (dispatch) => {
+      dispatch(setAppLoading(true));
+      try {
+        const saved = await storage.applyOnboarding({
+          categoryLists,
+          buckets,
+          addedBy: getAddedBy(),
+        });
+        dispatch({ type: ONBOARDING_APPLIED, payload: saved });
+        return saved;
+      } finally {
+        dispatch(setAppLoading(false));
+      }
+    };
+  };
+
 // Loads the user's category lists (migrating an install that predates them,
 // see LocalStorage's getCategoryListsFromLocalStorage).
 const GetCategories =
@@ -623,6 +645,7 @@ export const ActionCreators = ({ storage }) => {
     getBucket: GetBucket({ storage }),
     addCategory: AddCategory({ storage }),
     getCategories: GetCategories({ storage }),
+    applyOnboarding: ApplyOnboarding({ storage }),
     renameCategory: RenameCategory({ storage }),
     deleteCategory: DeleteCategory({ storage }),
     setEntryFilters: SetEntryFilters({ storage }),

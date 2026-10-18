@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { setupStore } from "../../redux/store";
 import WithBalance from "../../components/WithBalance";
 import WithDataDisclaimer from "../../components/Dashboard/WithDataDisclaimer";
+import WithOnboarding from "../../components/Onboarding/WithOnboarding";
 import Dashboard from "../../components/Dashboard";
 import { setSession, SyncSession } from "../../services/session";
 import { LanguageProvider } from "../../i18n";
@@ -19,14 +20,21 @@ interface RenderAppResult extends RenderResult {
 interface RenderAppOptions {
   /** Start the app already logged in (pre-writes sync.session). */
   session?: SyncSession;
+  /**
+   * Start as a brand-new user, so the first-run wizard shows. Off by default:
+   * every other test is about an app that is already set up.
+   */
+  newUser?: boolean;
 }
 
 export async function renderApp(
   initialRoute = "/",
-  { session }: RenderAppOptions = {}
+  { session, newUser = false }: RenderAppOptions = {}
 ): Promise<RenderAppResult> {
   // Suppress the first-run data disclaimer modal
   localStorage.setItem("everShowDataDisclaimer", "0");
+  // Without this flag a device with no data is a new user and gets the wizard.
+  if (!newUser) localStorage.setItem("onboarding.completed", "1");
 
   // Must be written before the store is created — the syncManager slice
   // hydrates from localStorage (that is what makes logins survive reloads).
@@ -52,8 +60,10 @@ export async function renderApp(
             >
               <WithBalance>
                 <WithDataDisclaimer>
-                  {/** @ts-ignore */}
-                  <Dashboard />
+                  <WithOnboarding>
+                    {/** @ts-ignore */}
+                    <Dashboard />
+                  </WithOnboarding>
                 </WithDataDisclaimer>
               </WithBalance>
             </MemoryRouter>

@@ -14,7 +14,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "preferences.es": {
       "route": "/welcome",
@@ -32,7 +36,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "expenses.default": {
       "route": "/welcome",
@@ -81,7 +89,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "expenses.es": {
       "route": "/welcome",
@@ -132,7 +144,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "expenses.empty": {
       "route": "/welcome",
@@ -151,7 +167,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "expenses.error": {
       "route": "/welcome",
@@ -209,7 +229,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "incomes.default": {
       "route": "/welcome",
@@ -259,9 +283,28 @@
           "click": "button:text-is(\"Next\")"
         },
         {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "incomes.es": {
       "route": "/welcome",
@@ -313,9 +356,28 @@
           "click": "button:text-is(\"Siguiente\")"
         },
         {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Añadir\")"
+        },
+        {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "incomes.empty": {
       "route": "/welcome",
@@ -337,7 +399,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "buckets.default": {
       "route": "/welcome",
@@ -414,6 +480,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Eating out\"]"
         },
         {
@@ -421,6 +490,9 @@
             "input[name=\"limit-Eating out\"]",
             "300.00"
           ]
+        },
+        {
+          "blur": true
         },
         {
           "click": "role=checkbox[name=\"Food\"]"
@@ -433,8 +505,15 @@
         },
         {
           "blur": true
+        },
+        {
+          "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "buckets.es": {
       "route": "/welcome",
@@ -513,6 +592,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Eating out\"]"
         },
         {
@@ -520,6 +602,9 @@
             "input[name=\"limit-Eating out\"]",
             "300.00"
           ]
+        },
+        {
+          "blur": true
         },
         {
           "click": "role=checkbox[name=\"Food\"]"
@@ -532,8 +617,15 @@
         },
         {
           "blur": true
+        },
+        {
+          "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "buckets.empty": {
       "route": "/welcome",
@@ -558,7 +650,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "buckets.error": {
       "route": "/welcome",
@@ -635,6 +731,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Eating out\"]"
         },
         {
@@ -642,6 +741,9 @@
             "input[name=\"limit-Eating out\"]",
             "300.00"
           ]
+        },
+        {
+          "blur": true
         },
         {
           "click": "role=checkbox[name=\"Food\"]"
@@ -653,6 +755,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Transportation\"]"
         },
         {
@@ -662,12 +767,19 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "button:text-is(\"Next\")"
         },
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "review.default": {
       "route": "/welcome",
@@ -744,6 +856,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Eating out\"]"
         },
         {
@@ -751,6 +866,9 @@
             "input[name=\"limit-Eating out\"]",
             "300.00"
           ]
+        },
+        {
+          "blur": true
         },
         {
           "click": "role=checkbox[name=\"Food\"]"
@@ -762,12 +880,19 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "button:text-is(\"Next\")"
         },
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "review.es": {
       "route": "/welcome",
@@ -846,6 +971,9 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "role=checkbox[name=\"Eating out\"]"
         },
         {
@@ -853,6 +981,9 @@
             "input[name=\"limit-Eating out\"]",
             "300.00"
           ]
+        },
+        {
+          "blur": true
         },
         {
           "click": "role=checkbox[name=\"Food\"]"
@@ -864,12 +995,19 @@
           ]
         },
         {
+          "blur": true
+        },
+        {
           "click": "button:text-is(\"Siguiente\")"
         },
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     },
     "review.empty": {
       "route": "/welcome",
@@ -897,7 +1035,11 @@
         {
           "blur": true
         }
-      ]
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
     }
   }
 }

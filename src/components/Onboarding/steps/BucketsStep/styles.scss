@@ -1,0 +1,40 @@
+@import "../../../../variables.scss";
+
+.buckets-step {
+  &__lead {
+    margin: 0 0 0.9rem;
+    color: $text-secondary;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__empty {
+    padding: 1.4rem 0.5rem 0.6rem;
+    text-align: center;
+
+    svg {
+      display: block;
+      margin: 0 auto 0.6rem;
+    }
+
+    h2 {
+      margin: 0 0 0.3rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    p {
+      margin: 0;
+      color: $text-secondary;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+@import "../../../variables.scss";
+
+.step-bar {
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.3rem 0 0.2rem;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__skip {
+    display: flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: $radius-control;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    &:hover {
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__track {
+    display: flex;
+    gap: 0.3rem;
+    margin: 0.2rem 0 0.8rem;
+  }
+
+  &__segment {
+    flex: 1;
+    height: 0.28rem;
+    border-radius: $radius-pill;
+    background-color: $track;
+
+    &--done {
+      background-color: $accent;
+    }
+  }
+}
