@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import {
   FormValidation,
   FormModel,
   ValidateField,
 } from "../../helpers/form-validation/";
-import { FormButton, InputPassword, InputText } from "../common/Forms";
+import { FormButton, InputEmail, InputPassword } from "../common/Forms";
 import { MainContentContainer } from "../common/MainContentContainer";
+import ContentTileSection from "../common/ContentTitleSection";
 import { signIn } from "../../redux/syncManager/actionCreators";
 import {
   SYNC_ERROR_CODES,
@@ -68,63 +69,76 @@ const SignInScreen = ({ onSignIn }: { onSignIn: (payload: any) => Promise<void> 
 
   return (
     <MainContentContainer pageTitle={t("account.signIn")}>
+      <ContentTileSection>{t("account.signIn")}</ContentTileSection>
       <FormValidation
         formModel={userModel}
-        className="app-form"
+        className="app-form row"
         CustomFormComponent={Form}
         render={({ dispatchFormStateChange, formState }: any) => (
           <React.Fragment>
-            <Form.Group>
-              <ValidateField>
-                <InputText
-                  name="email"
-                  placeholder={t("auth.email")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
+            <Row className="top-container container-fluid">
+              <Col xs={12} className="top-content">
+                <Form.Group>
+                  <Form.Label htmlFor="auth-email">{t("auth.email")}</Form.Label>
+                  <ValidateField>
+                    <InputEmail
+                      id="auth-email"
+                      name="email"
+                      autoComplete="username"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="auth-password">{t("auth.password")}</Form.Label>
+                  <ValidateField>
+                    <InputPassword
+                      id="auth-password"
+                      name="password"
+                      autoComplete="current-password"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="bottom-container container-fluid vertical-standard-space">
+              <Col xs={12} className="bottom-content">
+                {error && (
+                  <p
+                    className="restore-backup-error text-danger vertical-standard-space"
+                    role="alert"
+                  >
+                    {/* AC-1.5: deliberately generic — never says which field
+                        was wrong. */}
+                    {error.code === SYNC_ERROR_CODES.INVALID_CREDENTIALS
+                      ? t("signIn.invalidCredentials")
+                      : getSyncErrorMessage(error, translator, "signIn.failed")}
+                  </p>
+                )}
+                <FormButton
+                  variant="primary"
+                  type="submit"
+                  onClick={(event: any) =>
+                    handleSubmit({ event, values: formState.values })
                   }
-                />
-              </ValidateField>
-            </Form.Group>
-            <Form.Group>
-              <ValidateField>
-                <InputPassword
-                  name="password"
-                  placeholder={t("auth.password")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            {error && (
-              <p
-                className="restore-backup-error text-danger vertical-standard-space"
-                role="alert"
-              >
-                {/* AC-1.5: deliberately generic — never says which field
-                    was wrong. */}
-                {error.code === SYNC_ERROR_CODES.INVALID_CREDENTIALS
-                  ? t("signIn.invalidCredentials")
-                  : getSyncErrorMessage(error, translator, "signIn.failed")}
-              </p>
-            )}
-            <FormButton
-              variant="primary"
-              type="submit"
-              onClick={(event: any) =>
-                handleSubmit({ event, values: formState.values })
-              }
-              disabled={!formState.isModelValid || isLoading}
-            >
-              {isLoading ? t("signIn.submitting") : t("account.signIn")}
-            </FormButton>
-            <FormButton
-              variant="secondary"
-              className="vertical-standard-space"
-              onClick={handleCancel}
-            >
-              {t("common.cancel")}
-            </FormButton>
+                  disabled={!formState.isModelValid || isLoading}
+                >
+                  {isLoading ? t("signIn.submitting") : t("account.signIn")}
+                </FormButton>
+                <FormButton
+                  variant="secondary"
+                  className="vertical-standard-space"
+                  onClick={handleCancel}
+                >
+                  {t("common.cancel")}
+                </FormButton>
+              </Col>
+            </Row>
           </React.Fragment>
         )}
       />

@@ -37,16 +37,16 @@ const RowContent = ({ isLink, children, label, value }) => {
  * comes from a `tile-tone--income` / `tile-tone--expense` className, and a
  * neutral (zero) total keeps the default surface.
  *
- * `label` and `value` carry explicit `= undefined` defaults on purpose. This
+ * `to`, `label` and `value` carry explicit `= undefined` defaults on purpose. This
  * file is untyped JS, so TypeScript infers prop optionality from whether a
  * destructured parameter has a default; without one it treats both as
  * *required*, and every `.tsx` caller rendering the plain (non-total) variant
- * fails with TS2739. The defaults are runtime-neutral — an omitted prop is
+ * (or a static one, without `to`) fails with TS2739. The defaults are runtime-neutral — an omitted prop is
  * `undefined` either way — and `isTotal` below still tells the variants apart.
  */
 const ContentTileSection = ({
   title = "",
-  to,
+  to = undefined,
   className = "",
   label = undefined,
   value = undefined,

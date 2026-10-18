@@ -78,7 +78,6 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
       {hasBuckets ? (
         <>
           <NavigableMonthHeader />
-          {/*@ts-expect-error temporarily ignore this typescript error */}
           <ContentTileSection title={t("common.summary")}>
             {t("buckets.allocation", {
               month: screenTitle,

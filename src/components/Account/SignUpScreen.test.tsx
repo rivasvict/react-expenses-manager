@@ -59,11 +59,11 @@ const fillForm = async (
   user: UserEvent,
   { retype = jane.password }: { retype?: string } = {}
 ) => {
-  await user.type(screen.getByPlaceholderText("First Name"), jane.firstName);
-  await user.type(screen.getByPlaceholderText("Last Name"), jane.lastName);
-  await user.type(screen.getByPlaceholderText("Email"), jane.email);
-  await user.type(screen.getByPlaceholderText("Password"), jane.password);
-  await user.type(screen.getByPlaceholderText("Retype Password"), retype);
+  await user.type(screen.getByLabelText("First Name"), jane.firstName);
+  await user.type(screen.getByLabelText("Last Name"), jane.lastName);
+  await user.type(screen.getByLabelText("Email"), jane.email);
+  await user.type(screen.getByLabelText("Password"), jane.password);
+  await user.type(screen.getByLabelText("Retype Password"), retype);
 };
 
 // Submitting resolves/rejects the mocked thunk and then sets state, so the
@@ -84,8 +84,8 @@ describe("SignUpScreen", () => {
     renderSignUp();
 
     ["First Name", "Last Name", "Email", "Password", "Retype Password"].forEach(
-      (placeholder) =>
-        expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument()
+      (label) =>
+        expect(screen.getByLabelText(label)).toBeInTheDocument()
     );
   });
 

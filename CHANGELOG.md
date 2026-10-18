@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.34.1] - 2026-10-18
+
+### Changed
+
+- **Sign in and Sign up look like the rest of the app.** Both screens now open
+  with the same heading card as the other forms, show a label above every field
+  (they used to rely on placeholder text that disappeared while typing), line
+  the fields up with the buttons, and use the right keyboard and autofill hints
+  for email and passwords.
+
 ## [1.34.0] - 2026-10-18
 
 ### Added
