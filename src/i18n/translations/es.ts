@@ -398,6 +398,71 @@ const es: Translations = {
   "addSheet.hintIncome": "El nombre no puede repetirse entre tus categorías de ingreso.",
   "addSheet.create": "Crear categoría",
 
+  // Onboarding wizard (new users only)
+  "onboarding.ariaLabel": "Configura tu app",
+  "onboarding.step": "Paso {{n}} de {{total}}",
+  "onboarding.skip": "Omitir configuración",
+  "onboarding.next": "Siguiente",
+  "onboarding.back": "Atrás",
+  "onboarding.start": "Empezar a registrar",
+  "onboarding.welcome": "¡Te damos la bienvenida! Vamos a configurarlo",
+  "onboarding.prefsLead":
+    "Tres elecciones rápidas. Puedes cambiarlas después en Ajustes.",
+  "onboarding.currencyHint": "solo símbolo, no se convierte nada",
+  "onboarding.privacy": "Privacidad",
+  "onboarding.privacyHint":
+    "Oculta las cifras del panel hasta que toques el ojo",
+  "onboarding.expensesTitle": "¿En qué gastas?",
+  "onboarding.expensesLead":
+    "Elige categorías de gasto de nuestra lista o añade las tuyas.",
+  "onboarding.incomesTitle": "¿De dónde entra el dinero?",
+  "onboarding.incomesLead":
+    "Elige categorías de ingreso de nuestra lista o añade las tuyas.",
+  "onboarding.ownLabel": "Añade la tuya",
+  "onboarding.add": "Añadir",
+  "onboarding.selectAll": "Todas",
+  "onboarding.clear": "Ninguna",
+  "onboarding.selectedOf": "{{selected}} de {{total}} elegidas",
+  "onboarding.selected": "{{count}} seleccionadas",
+  "onboarding.selectedNone": "0 seleccionadas · ninguna también vale",
+  "onboarding.expensesNone":
+    "Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un gasto.",
+  "onboarding.incomesNone":
+    "Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un ingreso.",
+  "onboarding.bucketsTitle": "Define límites mensuales",
+  "onboarding.optional": "(opcional)",
+  "onboarding.bucketsLead":
+    "Un límite fija cuánto planeas gastar en una categoría de gasto cada mes.",
+  "onboarding.limit": "Límite",
+  "onboarding.limitFor": "Límite mensual de {{category}}",
+  "onboarding.bucketsSummary_one": "{{count}} límite · {{amount}} al mes",
+  "onboarding.bucketsSummary_other": "{{count}} límites · {{amount}} al mes",
+  "onboarding.bucketsEmptyTitle": "No hay categorías de gasto que presupuestar",
+  "onboarding.bucketsEmptyText":
+    "Los límites se fijan sobre categorías de gasto, así que aún no hay nada que definir. Puedes añadirlos cuando quieras desde Límites.",
+  "onboarding.reviewTitle": "Todo listo",
+  "onboarding.reviewLead":
+    "Esto es lo que vamos a crear. No se guarda nada hasta que termines.",
+  "onboarding.edit": "Editar",
+  "onboarding.editSection": "Editar {{section}}",
+  "onboarding.reviewPreferences": "Preferencias",
+  "onboarding.reviewExpenses_one": "{{count}} categoría de gasto",
+  "onboarding.reviewExpenses_other": "{{count}} categorías de gasto",
+  "onboarding.reviewIncomes_one": "{{count}} categoría de ingreso",
+  "onboarding.reviewIncomes_other": "{{count}} categorías de ingreso",
+  "onboarding.reviewOwn": "Las tuyas: {{names}}",
+  "onboarding.reviewBuckets_one": "{{count}} límite",
+  "onboarding.reviewBuckets_other": "{{count}} límites",
+  "onboarding.reviewBucketsTotal": "{{amount}} al mes en total",
+  "onboarding.reviewNoExpenses": "Sin categorías de gasto",
+  "onboarding.reviewNoIncomes": "Sin categorías de ingreso",
+  "onboarding.reviewNoCategoriesHint":
+    "Añádelas cuando quieras desde Categorías",
+  "onboarding.reviewNoBuckets": "Sin límites",
+  "onboarding.reviewNoBucketsHint": "Añádelos cuando quieras desde Límites",
+  "onboarding.privacyOn": "Modo privacidad activado",
+  "onboarding.privacyOff": "Modo privacidad desactivado",
+
   // Form validation
   "validation.categoryNameEmpty": "El nombre de la categoría no puede estar vacío",
   "validation.selectCategory": "Selecciona una categoría",

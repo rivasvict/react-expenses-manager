@@ -1,0 +1,88 @@
+@import "../../../variables.scss";
+
+.bucket-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 3.2rem;
+  padding: 0.4rem 0.8rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+
+  &__main {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  &__check {
+    flex: none;
+    appearance: none;
+    position: relative;
+    width: 1.3rem;
+    height: 1.3rem;
+    margin: 0;
+    background-color: transparent;
+    border: 1.5px solid $border-strong;
+    border-radius: calc(#{$radius-control} / 2);
+    cursor: pointer;
+
+    &:checked {
+      background-color: $accent;
+      border-color: $accent;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0.38rem;
+        top: 0.12rem;
+        width: 0.35rem;
+        height: 0.65rem;
+        border: solid $text-on-accent;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &--off &__name {
+    color: $text-secondary;
+    font-weight: 400;
+  }
+
+  // The field is smaller than the app's 3rem text input: it shares the row.
+  &__limit.form-control.text {
+    flex: none;
+    width: 5.6rem;
+    height: 2.4rem;
+    padding: 0.4em 0.7em;
+    font-size: 0.9rem;
+    text-align: right;
+    @include money-figures();
+  }
+
+  &__limit--invalid.form-control.text {
+    border-color: $danger;
+  }
+
+  &__error {
+    margin: 0.3rem 0.1rem 0.2rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+}

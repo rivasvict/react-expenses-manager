@@ -11,6 +11,7 @@ import { Provider, connect } from "react-redux";
 import { setUser } from "./redux/userManager/actionCreators";
 import WithBalance from "./components/WithBalance";
 import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
+import WithOnboarding from "./components/Onboarding/WithOnboarding";
 import { LanguageProvider } from "./i18n";
 import { PrivacyProvider } from "./privacy";
 
@@ -40,7 +41,9 @@ const Routes = connect(
       {/* <AuthenticatedApp /> */}
       <WithBalance>
         <WithDataDisclaimer>
-          <Dashboard />
+          <WithOnboarding>
+            <Dashboard />
+          </WithOnboarding>
         </WithDataDisclaimer>
       </WithBalance>
     </>

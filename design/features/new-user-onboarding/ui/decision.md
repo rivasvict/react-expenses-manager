@@ -1,7 +1,7 @@
 ---
 title: New-user onboarding wizard
 summary: A skippable five-step first-run wizard for brand-new users (preferences, expense categories, income categories, buckets, review) with a pinned Back/Next footer; zero categories and zero buckets are valid.
-status: approved
+status: implemented
 chosen: e-split-categories
 ---
 
@@ -41,10 +41,12 @@ Why the others did not win:
   Any route redirects to `/welcome` while the user is new and unfinished.
 - **Start tracking** and **Skip setup** both set `onboarding.completed` so the
   wizard never returns, then go to `/`. It is not reachable from Settings.
-- **Skip setup** asks nothing and applies **nothing**: nothing is written until
-  Start tracking (the Review step says so), except that the language, which
-  applies at once so the wizard itself switches, is stored as soon as it is
-  picked, like on `/settings`. Skip keeps that language and discards the rest.
+- **Skip setup** asks nothing and leaves the user with **no categories and no
+  buckets**: it saves empty category lists (so the seed lists are not built for
+  them) and no buckets, and discards the currency and Privacy mode choices. The
+  language, which applies at once so the wizard itself switches, is stored as
+  soon as it is picked, like on `/settings`, and Skip keeps it. Everything else
+  is written only by Start tracking (the Review step says so).
 - Closing the tab mid-wizard keeps the wizard's draft only in memory: the user
   starts again at step 1 (language and currency, which were already stored,
   come back preselected).
@@ -83,10 +85,11 @@ Why the others did not win:
   The same name may exist once in each type.
 - **Footer.** The summary line shows the count of selected categories
   ("8 selected"); with none it reads "0 selected · none is fine". On Buckets it
-  shows "N buckets · {amount} a month" (sum of the limits, formatted in the
-  chosen currency) and nothing when there are none. Back is absent on step 1.
-  The footer sits above the on-screen keyboard (or hides while the Add field is
-  focused), never behind it.
+  shows "N buckets · {amount} a month" (the count and sum of the rows with a
+  valid limit, formatted in the chosen currency) and nothing when there are
+  none. Back is absent on step 1. **The footer hides while a text field has
+  focus** (so it never sits on the on-screen keyboard) and returns when the
+  field loses focus.
 - **Scroll cue.** The fade above the footer is drawn only while content remains
   below; at the end of the list it disappears. The step bar stays pinned at the
   top. Nothing important is placed within 7rem of the bottom: the screens end
@@ -102,10 +105,11 @@ Why the others did not win:
   Next is enabled; going back and adding a category repopulates the list.
   Changing the chosen categories on a previous step drops the limits of
   categories no longer chosen.
-- **Step 5 Review.** One row per section with an **Edit** link that returns to
-  that step with its draft intact (and then Next returns to Review, not
-  through the intervening steps again). With nothing chosen the rows read "No
-  categories" and "No buckets", with a hint where to add them later.
+- **Step 5 Review.** One row per section (Preferences, Expenses, Incomes,
+  Buckets) with an **Edit** link that returns to that step with its draft
+  intact (and then Next returns to Review, not through the intervening steps
+  again). With nothing chosen the rows read "No expense categories", "No income
+  categories" and "No buckets", each with a hint where to add them later.
   **Start tracking** is the only primary action and is always enabled.
 - **Skip setup** on any step leaves the wizard immediately (see above).
 - **Long text.** Spanish and French run about 30% longer: titles wrap, the
@@ -138,13 +142,13 @@ Why the others did not win:
   `src/components/` with a colocated `styles.scss` and test, and the wizard
   steps are separate modules (none defined inside another component's file).
 
-### New text (add to `en.ts`, `es.ts` and `fr.ts`; keys prefixed `onboarding.`)
-Spanish matches the mockups; French follows the app's tone. Reused keys are
-listed last.
+### New text (added to `en.ts`, `es.ts` and `fr.ts`; keys prefixed `onboarding.`)
+As built. Plural pairs (`_one` / `_other`) use `plural(key, count)`.
 
 | Key | English | Spanish | French |
 |---|---|---|---|
-| `step` | Step {{n}} of 5 | Paso {{n}} de 5 | Étape {{n}} sur 5 |
+| `ariaLabel` | Set up your tracker | Configura tu app | Configurez votre espace |
+| `step` | Step {{n}} of {{total}} | Paso {{n}} de {{total}} | Étape {{n}} sur {{total}} |
 | `skip` | Skip setup | Omitir configuración | Passer la configuration |
 | `next` | Next | Siguiente | Suivant |
 | `back` | Back | Atrás | Retour |
@@ -153,44 +157,55 @@ listed last.
 | `prefsLead` | Three quick choices. You can change all of them later in Settings. | Tres elecciones rápidas. Puedes cambiarlas después en Ajustes. | Trois choix rapides. Vous pourrez tous les modifier plus tard dans les Réglages. |
 | `currencyHint` | symbol only, nothing is converted | solo símbolo, no se convierte nada | symbole uniquement, rien n’est converti |
 | `privacy` | Privacy | Privacidad | Confidentialité |
-| `privHint` | Hide the dashboard's amounts until you tap the eye | Oculta las cifras del panel hasta que toques el ojo | Masque les montants du tableau de bord jusqu’à ce que vous touchiez l’œil |
-| `expTitle` | What do you spend on? | ¿En qué gastas? | Vos dépenses, c’est quoi ? |
-| `expLead` | Pick expense categories from our list or add your own. | Elige categorías de gasto de nuestra lista o añade las tuyas. | Choisissez des catégories de dépense dans notre liste ou ajoutez les vôtres. |
-| `incTitle` | Where does money come in? | ¿De dónde entra el dinero? | D’où vient l’argent ? |
-| `incLead` | Pick income categories from our list or add your own. | Elige categorías de ingreso de nuestra lista o añade las tuyas. | Choisissez des catégories de revenu dans notre liste ou ajoutez les vôtres. |
-| `own` | Add your own | Añade la tuya | Ajoutez la vôtre |
+| `privacyHint` | Hide the dashboard's amounts until you tap the eye | Oculta las cifras del panel hasta que toques el ojo | Masque les montants du tableau de bord jusqu’à ce que vous touchiez l’œil |
+| `expensesTitle` | What do you spend on? | ¿En qué gastas? | Vos dépenses, c’est quoi ? |
+| `expensesLead` | Pick expense categories from our list or add your own. | Elige categorías de gasto de nuestra lista o añade las tuyas. | Choisissez des catégories de dépense dans notre liste ou ajoutez les vôtres. |
+| `incomesTitle` | Where does money come in? | ¿De dónde entra el dinero? | D’où vient l’argent ? |
+| `incomesLead` | Pick income categories from our list or add your own. | Elige categorías de ingreso de nuestra lista o añade las tuyas. | Choisissez des catégories de revenu dans notre liste ou ajoutez les vôtres. |
+| `ownLabel` | Add your own | Añade la tuya | Ajoutez la vôtre |
 | `add` | Add | Añadir | Ajouter |
 | `selectAll` | Select all | Todas | Tout |
 | `clear` | Clear | Ninguna | Aucune |
-| `selectedOf` | {{a}} of {{b}} selected | {{a}} de {{b}} elegidas | {{a}} sur {{b}} choisies |
+| `selectedOf` | {{selected}} of {{total}} selected | {{selected}} de {{total}} elegidas | {{selected}} sur {{total}} choisies |
 | `selected` | {{count}} selected | {{count}} seleccionadas | {{count}} choisies |
 | `selectedNone` | 0 selected · none is fine | 0 seleccionadas · ninguna también vale | 0 choisie · aucune, c’est bien aussi |
-| `expNone` | Starting with none is fine. Add them later from Categories, or while adding an expense. | Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un gasto. | Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant une dépense. |
-| `incNone` | Starting with none is fine. Add them later from Categories, or while adding an income. | Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un ingreso. | Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant un revenu. |
+| `expensesNone` | Starting with none is fine. Add them later from Categories, or while adding an expense. | Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un gasto. | Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant une dépense. |
+| `incomesNone` | Starting with none is fine. Add them later from Categories, or while adding an income. | Empezar sin ninguna está bien. Añádelas después en Categorías o al registrar un ingreso. | Commencer sans catégorie, c’est très bien. Ajoutez-en plus tard depuis Catégories ou en saisissant un revenu. |
 | `bucketsTitle` | Set monthly limits | Define límites mensuales | Définissez des plafonds mensuels |
 | `optional` | (optional) | (opcional) | (facultatif) |
 | `bucketsLead` | A bucket caps how much you plan to spend in an expense category each month. | Un límite fija cuánto planeas gastar en una categoría de gasto cada mes. | Un plafond fixe ce que vous prévoyez de dépenser dans une catégorie de dépense chaque mois. |
 | `limit` | Limit | Límite | Plafond |
-| `bucketsSummary` | {{count}} buckets · {{amount}} a month | {{count}} límites · {{amount}} al mes | {{count}} plafonds · {{amount}} par mois |
+| `limitFor` | Monthly limit for {{category}} | Límite mensual de {{category}} | Plafond mensuel de {{category}} |
+| `bucketsSummary_one` | {{count}} bucket · {{amount}} a month | {{count}} límite · {{amount}} al mes | {{count}} plafond · {{amount}} par mois |
+| `bucketsSummary_other` | {{count}} buckets · {{amount}} a month | {{count}} límites · {{amount}} al mes | {{count}} plafonds · {{amount}} par mois |
 | `bucketsEmptyTitle` | No expense categories to budget | No hay categorías de gasto que presupuestar | Aucune catégorie de dépense à budgéter |
 | `bucketsEmptyText` | Buckets are limits on expense categories, so there is nothing to set yet. You can add buckets any time from Buckets. | Los límites se fijan sobre categorías de gasto, así que aún no hay nada que definir. Puedes añadirlos cuando quieras desde Límites. | Les plafonds portent sur des catégories de dépense : il n’y a donc encore rien à définir. Vous pouvez en ajouter à tout moment depuis Plafonds. |
-| `doneTitle` | All set | Todo listo | Tout est prêt |
-| `doneLead` | Here is what we will create. Nothing is saved until you finish. | Esto es lo que vamos a crear. No se guarda nada hasta que termines. | Voici ce que nous allons créer. Rien n’est enregistré avant la fin. |
+| `reviewTitle` | All set | Todo listo | Tout est prêt |
+| `reviewLead` | Here is what we will create. Nothing is saved until you finish. | Esto es lo que vamos a crear. No se guarda nada hasta que termines. | Voici ce que nous allons créer. Rien n’est enregistré avant la fin. |
 | `edit` | Edit | Editar | Modifier |
-| `reviewExpenses` (plural pair) | {{count}} expense categories | {{count}} categorías de gasto | {{count}} catégories de dépense |
-| `reviewIncomes` (plural pair) | {{count}} income categories | {{count}} categorías de ingreso | {{count}} catégories de revenu |
+| `editSection` | Edit {{section}} | Editar {{section}} | Modifier {{section}} |
+| `reviewPreferences` | Preferences | Preferencias | Préférences |
+| `reviewExpenses_one` | {{count}} expense category | {{count}} categoría de gasto | {{count}} catégorie de dépense |
+| `reviewExpenses_other` | {{count}} expense categories | {{count}} categorías de gasto | {{count}} catégories de dépense |
+| `reviewIncomes_one` | {{count}} income category | {{count}} categoría de ingreso | {{count}} catégorie de revenu |
+| `reviewIncomes_other` | {{count}} income categories | {{count}} categorías de ingreso | {{count}} catégories de revenu |
 | `reviewOwn` | Your own: {{names}} | Las tuyas: {{names}} | Les vôtres : {{names}} |
-| `reviewBuckets` (plural pair) | {{count}} buckets | {{count}} límites | {{count}} plafonds |
+| `reviewBuckets_one` | {{count}} bucket | {{count}} límite | {{count}} plafond |
+| `reviewBuckets_other` | {{count}} buckets | {{count}} límites | {{count}} plafonds |
 | `reviewBucketsTotal` | {{amount}} a month in total | {{amount}} al mes en total | {{amount}} par mois au total |
-| `reviewNoCategories` / `…Hint` | No categories / Add them any time from Categories | Sin categorías / Añádelas cuando quieras desde Categorías | Aucune catégorie / Ajoutez-en à tout moment depuis Catégories |
-| `reviewNoBuckets` / `…Hint` | No buckets / Add them any time from Buckets | Sin límites / Añádelos cuando quieras desde Límites | Aucun plafond / Ajoutez-en à tout moment depuis Plafonds |
-| `privacyOn` / `privacyOff` | Privacy mode on / off | Modo privacidad activado / desactivado | Mode confidentialité activé / désactivé |
+| `reviewNoExpenses` | No expense categories | Sin categorías de gasto | Aucune catégorie de dépense |
+| `reviewNoIncomes` | No income categories | Sin categorías de ingreso | Aucune catégorie de revenu |
+| `reviewNoCategoriesHint` | Add them any time from Categories | Añádelas cuando quieras desde Categorías | Ajoutez-en à tout moment depuis Catégories |
+| `reviewNoBuckets` | No buckets | Sin límites | Aucun plafond |
+| `reviewNoBucketsHint` | Add them any time from Buckets | Añádelos cuando quieras desde Límites | Ajoutez-en à tout moment depuis Plafonds |
+| `privacyOn` | Privacy mode on | Modo privacidad activado | Mode confidentialité activé |
+| `privacyOff` | Privacy mode off | Modo privacidad desactivado | Mode confidentialité désactivé |
 
-Reused keys: `settings.language.title`, `settings.currency.title`,
-`settings.privacy.title`, `categorySheet.duplicateExpense`,
-`categorySheet.duplicateIncome`, `validation.categoryNameEmpty`,
-`validation.allowanceInvalid`, `validation.allowancePositive`. Plural pairs use
-`_one` / `_other` through `plural(key, count)`.
+Reused keys: `header.appName`, `header.logoTitle`, `settings.language.title`,
+`settings.currency.title`, `settings.privacy.title`, `currency.*`,
+`categorySheet.duplicateExpense`, `categorySheet.duplicateIncome`,
+`validation.categoryNameEmpty`, `validation.allowanceInvalid`,
+`validation.allowancePositive`.
 
 ### Tests to add with the build
 Integration tests (English by default, one Spanish run through `/settings`'
@@ -199,7 +214,7 @@ entries, or seeded `categoryLists`) goes straight to the dashboard; finishing
 with nothing chosen leaves the Categories and Buckets screens empty and the
 dashboard usable; picking one seed category and one own category and a bucket
 shows them on `/categories` and `/buckets`; Skip keeps the chosen language and
-creates nothing; a duplicate own name shows the error; a zero limit blocks
+leaves no categories and no buckets; a duplicate own name shows the error; a zero limit blocks
 Next; Back and the Review Edit links keep the draft. Unit tests for the
 new-user detection helper and for the wizard's draft-to-storage mapping.
 
@@ -306,3 +321,15 @@ step is short (3 seed chips), so it never needs to scroll.
 - Buckets stays after Expenses and Incomes. With no expense category chosen it
   still appears, showing the empty state (one tap to continue), so the step
   count is always 5.
+
+## As built
+
+Checked with `npm run design:review -- --feature new-user-onboarding`: all 16
+approved screens match the built app (0.06% to 1.63% of pixels differ, allowed
+2%). `fixtures.json` compares the wizard card (`region`: `.wizard-shell__card`
+against `.mk-work-area`) because the wizard has no app bar or tab bar. Where the
+build and the first drawing differed, the drawing was corrected to the
+implementation: the review rows when nothing is chosen, the empty Buckets
+illustration (the shared `CategoryIllustration`), raised currency tiles and
+Privacy row on the wizard's surface card, the check mark as an icon, and limits
+shown as typed (`1200.00`).

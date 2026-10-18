@@ -15,6 +15,7 @@ import {
   ADD_BUCKET,
   ADD_CATEGORY,
   GET_CATEGORIES,
+  ONBOARDING_APPLIED,
   CATEGORY_CHANGED,
   GET_FIXED_ENTRIES,
   SET_FIXED_ENTRY,
@@ -180,6 +181,14 @@ export const reducer = (state, action) => {
       return {
         ...state,
         categoryLists: payload.categoryLists,
+      };
+    // The first-run wizard replaces both wholesale: the new user had no buckets
+    // and the lists are exactly what they chose.
+    case ONBOARDING_APPLIED:
+      return {
+        ...state,
+        categoryLists: payload.categoryLists,
+        buckets: payload.buckets,
       };
     // A category rename or deletion rewrites entries, fixed entries, buckets
     // and the category lists together; each slice is replaced wholesale so a

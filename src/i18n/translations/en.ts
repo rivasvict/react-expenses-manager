@@ -402,6 +402,71 @@ const en = {
   "addSheet.hintIncome": "Names must be unique among your income categories.",
   "addSheet.create": "Create category",
 
+  // Onboarding wizard (new users only)
+  "onboarding.ariaLabel": "Set up your tracker",
+  "onboarding.step": "Step {{n}} of {{total}}",
+  "onboarding.skip": "Skip setup",
+  "onboarding.next": "Next",
+  "onboarding.back": "Back",
+  "onboarding.start": "Start tracking",
+  "onboarding.welcome": "Welcome! Let’s set things up",
+  "onboarding.prefsLead":
+    "Three quick choices. You can change all of them later in Settings.",
+  "onboarding.currencyHint": "symbol only, nothing is converted",
+  "onboarding.privacy": "Privacy",
+  "onboarding.privacyHint":
+    "Hide the dashboard's amounts until you tap the eye",
+  "onboarding.expensesTitle": "What do you spend on?",
+  "onboarding.expensesLead":
+    "Pick expense categories from our list or add your own.",
+  "onboarding.incomesTitle": "Where does money come in?",
+  "onboarding.incomesLead":
+    "Pick income categories from our list or add your own.",
+  "onboarding.ownLabel": "Add your own",
+  "onboarding.add": "Add",
+  "onboarding.selectAll": "Select all",
+  "onboarding.clear": "Clear",
+  "onboarding.selectedOf": "{{selected}} of {{total}} selected",
+  "onboarding.selected": "{{count}} selected",
+  "onboarding.selectedNone": "0 selected · none is fine",
+  "onboarding.expensesNone":
+    "Starting with none is fine. Add them later from Categories, or while adding an expense.",
+  "onboarding.incomesNone":
+    "Starting with none is fine. Add them later from Categories, or while adding an income.",
+  "onboarding.bucketsTitle": "Set monthly limits",
+  "onboarding.optional": "(optional)",
+  "onboarding.bucketsLead":
+    "A bucket caps how much you plan to spend in an expense category each month.",
+  "onboarding.limit": "Limit",
+  "onboarding.limitFor": "Monthly limit for {{category}}",
+  "onboarding.bucketsSummary_one": "{{count}} bucket · {{amount}} a month",
+  "onboarding.bucketsSummary_other": "{{count}} buckets · {{amount}} a month",
+  "onboarding.bucketsEmptyTitle": "No expense categories to budget",
+  "onboarding.bucketsEmptyText":
+    "Buckets are limits on expense categories, so there is nothing to set yet. You can add buckets any time from Buckets.",
+  "onboarding.reviewTitle": "All set",
+  "onboarding.reviewLead":
+    "Here is what we will create. Nothing is saved until you finish.",
+  "onboarding.edit": "Edit",
+  "onboarding.editSection": "Edit {{section}}",
+  "onboarding.reviewPreferences": "Preferences",
+  "onboarding.reviewExpenses_one": "{{count}} expense category",
+  "onboarding.reviewExpenses_other": "{{count}} expense categories",
+  "onboarding.reviewIncomes_one": "{{count}} income category",
+  "onboarding.reviewIncomes_other": "{{count}} income categories",
+  "onboarding.reviewOwn": "Your own: {{names}}",
+  "onboarding.reviewBuckets_one": "{{count}} bucket",
+  "onboarding.reviewBuckets_other": "{{count}} buckets",
+  "onboarding.reviewBucketsTotal": "{{amount}} a month in total",
+  "onboarding.reviewNoExpenses": "No expense categories",
+  "onboarding.reviewNoIncomes": "No income categories",
+  "onboarding.reviewNoCategoriesHint":
+    "Add them any time from Categories",
+  "onboarding.reviewNoBuckets": "No buckets",
+  "onboarding.reviewNoBucketsHint": "Add them any time from Buckets",
+  "onboarding.privacyOn": "Privacy mode on",
+  "onboarding.privacyOff": "Privacy mode off",
+
   // Form validation
   "validation.categoryNameEmpty": "Category name cannot be empty",
   "validation.selectCategory": "Please select a category",

@@ -1,0 +1,72 @@
+@import "../../../../variables.scss";
+
+.categories-step {
+  &__lead {
+    margin: 0 0 0.7rem;
+    color: $text-secondary;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  &__add {
+    display: flex;
+    gap: 0.5rem;
+
+    .form-control.text {
+      flex: 1;
+      min-width: 0;
+      height: 2.8rem;
+    }
+
+    .btn {
+      flex: none;
+      width: 5.4rem;
+      height: 2.8rem;
+      border-color: rgba($accent, 0.5);
+      color: $accent;
+    }
+  }
+
+  &__input--invalid.form-control.text {
+    border-color: $danger;
+  }
+
+  &__error {
+    margin: 0.4rem 0.1rem 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  &__tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin: 0.8rem 0 0.5rem;
+    color: $text-secondary;
+    font-size: 0.85rem;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.2rem;
+    margin-left: 0.9rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: $radius-control;
+    color: $accent;
+    font-weight: 600;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}

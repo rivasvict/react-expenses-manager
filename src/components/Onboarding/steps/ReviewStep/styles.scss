@@ -1,0 +1,16 @@
+@import "../../../../variables.scss";
+
+.review-step {
+  &__lead {
+    margin: 0 0 0.9rem;
+    color: $text-secondary;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

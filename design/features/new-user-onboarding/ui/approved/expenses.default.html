@@ -30,9 +30,9 @@ p.lead{margin:0 0 .9rem;font-size:.92rem;line-height:1.5;color:var(--text-second
 .seg b.sel{background-color:var(--accent-soft);color:var(--text-primary);box-shadow:inset 0 0 0 1px var(--accent)}
 .lab{margin:.8rem 0 .35rem;font-size:.8rem;font-weight:600;letter-spacing:.02em;color:var(--text-secondary)}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem}
-.tile{min-height:3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-control)}
-.tile--sel{background-color:var(--accent-soft);border-color:var(--accent)}
-.tile b{font-size:.95rem}.tile small{font-size:.7rem;color:var(--text-secondary)}
+.tile{min-height:3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-control)}
+.tile--sel{background-color:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.tile b{font-size:1rem}.tile small{font-size:.74rem;color:var(--text-secondary)}
 .tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border-subtle);margin-bottom:.7rem}
 .tabs span{text-align:center;padding:.6rem 0;font-weight:600;font-size:.92rem;color:var(--text-secondary);border-bottom:2px solid transparent}
 .tabs span.sel{color:var(--text-primary);border-bottom-color:var(--accent)}
@@ -65,7 +65,7 @@ p.lead{margin:0 0 .9rem;font-size:.92rem;line-height:1.5;color:var(--text-second
 .opt--sel .rd{border:.34rem solid var(--accent)}
 .opt b{display:block;font-size:.98rem}.opt span{display:block;font-size:.84rem;line-height:1.4;color:var(--text-secondary);margin-top:.1rem}
 .sum{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.75rem .9rem;background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-control);min-height:3.4rem}
-.sum b{font-size:.95rem;display:block}.sum small{font-size:.8rem;color:var(--text-secondary)}
+.sum b{font-size:.95rem;font-weight:600;display:block}.sum small{font-size:.8rem;color:var(--text-secondary)}
 .sum a{color:var(--accent);font-weight:600;font-size:.9rem;min-height:2.5rem;display:flex;align-items:center}
 .sec{margin:1rem 0 .4rem;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
 .scrim{position:fixed;inset:0;background-color:var(--bg-page);opacity:.8}
@@ -80,8 +80,14 @@ p.lead{margin:0 0 .9rem;font-size:.92rem;line-height:1.5;color:var(--text-second
 .foot__sum{display:flex;justify-content:space-between;gap:.6rem;margin:0 0 .5rem;font-size:.85rem;color:var(--text-secondary)}
 .foot__sum b{color:var(--text-primary)}
 .foot__btns{display:flex;gap:.5rem}
-.foot__btns .mk-btn:first-child{flex:1}.foot__btns .mk-btn:last-child{flex:2}
+.foot__btns .mk-btn{width:auto;padding:0 .75rem}.foot__btns .mk-btn:first-child{flex:1}.foot__btns .mk-btn:last-child{flex:2}
 .tail{height:9rem}
+
+.ck{flex:none;width:.85rem;height:.85rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chip{padding:.3rem .8rem;line-height:1.3;overflow-wrap:anywhere}
+.empty{text-align:center;padding:1.4rem .5rem .6rem}
+.empty svg{display:block;width:132px;height:112px;margin:0 auto .6rem}
+.empty h3{margin:0 0 .3rem;font-size:1.05rem;font-weight:600;line-height:1.5}
 
 .mk-input--error{border-color:var(--danger)}
 .msg{margin:.4rem .1rem 0;font-size:.85rem;line-height:1.45;color:var(--text-validation)}
@@ -96,7 +102,7 @@ p.lead{margin:0 0 .9rem;font-size:.92rem;line-height:1.5;color:var(--text-second
   </header>
   <main class="mk-shell">
     <div class="mk-work-area">
-<div class="stk"><div class="top"><span class="step">Step 2 of 5</span><a class="skip">Skip setup</a></div><div class="bar" role="progressbar" aria-valuenow="2" aria-valuemax="5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div></div><h2 class="h">What do you spend on?</h2><p class="lead" style="margin-bottom:.6rem">Pick expense categories from our list or add your own.</p><div class="add"><div class="mk-input "><span style="color:var(--text-muted)">Add your own</span></div><button type="button">Add</button></div><div class="tools" style="margin-top:.8rem"><span>8 of 30 selected</span><span><a>Select all</a><a>Clear</a></span></div><div class="chips"><span class="chip chip--sel">✓ House (Rent)</span><span class="chip chip--sel">✓ Transportation</span><span class="chip ">Mobile phone plan</span><span class="chip chip--sel">✓ Subscriptions</span><span class="chip ">Bank fees</span><span class="chip ">Laundry</span><span class="chip chip--sel">✓ Internet</span><span class="chip ">Hydro</span><span class="chip ">Donation</span><span class="chip chip--sel">✓ Eating out</span><span class="chip ">Fun activities</span><span class="chip chip--sel">✓ Food</span><span class="chip ">Alcohol</span><span class="chip ">Travel</span><span class="chip ">Sports</span><span class="chip ">House stuff</span><span class="chip ">Unexpected</span><span class="chip ">Beauty</span><span class="chip ">Person 1 bucket</span><span class="chip ">Person 2 bucket</span><span class="chip ">Education</span><span class="chip ">Insurance House</span><span class="chip chip--sel">✓ Health</span><span class="chip ">Baby Stuff</span><span class="chip ">Car</span><span class="chip ">Car parking</span><span class="chip ">Car insurance</span><span class="chip ">Gas</span><span class="chip ">Car expenses</span><span class="chip chip--sel chip--own">✓ Pet food</span></div><div class="tail"></div>
+<div class="stk"><div class="top"><span class="step">Step 2 of 5</span><a class="skip">Skip setup</a></div><div class="bar" role="progressbar" aria-valuenow="2" aria-valuemax="5"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div></div><h2 class="h">What do you spend on?</h2><p class="lead" style="margin-bottom:.6rem">Pick expense categories from our list or add your own.</p><div class="add"><div class="mk-input "><span style="color:var(--text-muted)">Add your own</span></div><button type="button">Add</button></div><div class="tools" style="margin-top:.8rem"><span>8 of 30 selected</span><span><a>Select all</a><a>Clear</a></span></div><div class="chips"><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>House (Rent)</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Transportation</span><span class="chip ">Mobile phone plan</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Subscriptions</span><span class="chip ">Bank fees</span><span class="chip ">Laundry</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Internet</span><span class="chip ">Hydro</span><span class="chip ">Donation</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Eating out</span><span class="chip ">Fun activities</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Food</span><span class="chip ">Alcohol</span><span class="chip ">Travel</span><span class="chip ">Sports</span><span class="chip ">House stuff</span><span class="chip ">Unexpected</span><span class="chip ">Beauty</span><span class="chip ">Person 1 bucket</span><span class="chip ">Person 2 bucket</span><span class="chip ">Education</span><span class="chip ">Insurance House</span><span class="chip chip--sel"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Health</span><span class="chip ">Baby Stuff</span><span class="chip ">Car</span><span class="chip ">Car parking</span><span class="chip ">Car insurance</span><span class="chip ">Gas</span><span class="chip ">Car expenses</span><span class="chip chip--sel chip--own"><svg viewBox="0 0 16 16" aria-hidden="true" class="ck"><path d="M3 8.5 6.5 12 13 4.5"/></svg>Pet food</span></div><div class="tail"></div>
     </div>
   </main>
 <div class="foot"><div class="foot__sum"><span><b>8</b> selected</span></div><div class="foot__btns"><button class="mk-btn mk-btn--secondary" type="button">Back</button><button class="mk-btn mk-btn--primary" type="button">Next</button></div></div>

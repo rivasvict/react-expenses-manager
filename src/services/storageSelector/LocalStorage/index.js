@@ -302,6 +302,31 @@ const addBucketData = async ({ bucket, addedBy }) => {
   return newBuckets;
 };
 
+// Saves what the first-run wizard collected (design/features/new-user-onboarding):
+// the chosen category lists, even when empty (so the default seed lists are not
+// rebuilt for this user) and a bucket for each category the user gave a limit.
+// The wizard only runs on a device with no data, so both are written whole.
+const applyOnboardingData = async ({ categoryLists, buckets, addedBy }) => {
+  if (!isCategoryLists(categoryLists)) {
+    throw new Error("Category lists are required");
+  }
+  const newBuckets = Object.fromEntries(
+    Object.entries(buckets || {}).map(([name, limit]) => [
+      name.trim(),
+      [
+        {
+          from: "0000-00",
+          limit: Number(limit) || 0,
+          ...(addedBy ? { addedBy } : {}),
+        },
+      ],
+    ])
+  );
+  await storeCategoryListsInLocalStorage({ data: categoryLists });
+  await storeBucketsInLocalStorage({ data: newBuckets });
+  return { categoryLists, buckets: newBuckets };
+};
+
 // Reads the whole persisted state for a single-file backup (issue #109).
 // `buckets` is normalized to an object: the empty-state getter returns `[]`
 // (see the TODO above `getItemFromLocalStorageFactory`), and `{...[]}` is
@@ -420,6 +445,9 @@ const LocalStorage = () => ({
     return addBucketData({ bucket, addedBy });
   },
   getCategoryLists: async () => getCategoryListsFromLocalStorage(),
+  // The first-run wizard's result; see applyOnboardingData.
+  applyOnboarding: async ({ categoryLists, buckets, addedBy }) =>
+    applyOnboardingData({ categoryLists, buckets, addedBy }),
   addCategory: async ({ type, name }) => addCategoryData({ type, name }),
   // Renames or deletes a category; see applyCategoryChangeData.
   applyCategoryChange: async ({ change }) =>
