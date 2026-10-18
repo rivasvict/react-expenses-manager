@@ -1,0 +1,25 @@
+@import "../../../variables.scss";
+
+.info-note {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.8rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  color: $text-secondary;
+  font-size: 0.85rem;
+  line-height: 1.45;
+
+  &__icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 0.1rem;
+    fill: none;
+    stroke: $text-secondary;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+}

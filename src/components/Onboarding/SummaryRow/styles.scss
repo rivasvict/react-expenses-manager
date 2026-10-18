@@ -1,0 +1,48 @@
+@import "../../../variables.scss";
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  min-height: 3.4rem;
+  padding: 0.75rem 0.9rem;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__hint {
+    color: $text-secondary;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  &__edit {
+    flex: none;
+    display: flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 0.2rem;
+    background: none;
+    border: 0;
+    border-radius: $radius-control;
+    color: $accent;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+}

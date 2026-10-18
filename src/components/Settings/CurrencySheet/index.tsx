@@ -1,11 +1,8 @@
 import React from "react";
 import BottomSheet from "../../common/BottomSheet";
 import { useTranslation } from "../../../i18n";
-import {
-  Currency,
-  CURRENCY_SYMBOLS,
-  SUPPORTED_CURRENCIES,
-} from "../../../helpers/currency/currency";
+import { Currency } from "../../../helpers/currency/currency";
+import CurrencyTileGrid from "../CurrencyTileGrid";
 import "./styles.scss";
 
 interface CurrencySheetProps {
@@ -32,33 +29,13 @@ const CurrencySheet = ({ current, onPick, onClose }: CurrencySheetProps) => {
         <legend className="field-hint">
           {t("settings.currency.description")}
         </legend>
-        <div className="currency-sheet__grid">
-          {SUPPORTED_CURRENCIES.map((currency) => (
-            <label
-              key={currency}
-              className={`currency-tile${
-                currency === current ? " currency-tile--selected" : ""
-              }`}
-            >
-              <input
-                type="radio"
-                name="currency"
-                className="currency-tile__input"
-                value={currency}
-                aria-label={t(`currency.${currency}`)}
-                checked={currency === current}
-                onChange={() => {
-                  onPick(currency);
-                  onClose();
-                }}
-              />
-              <span className="currency-tile__symbol">
-                {CURRENCY_SYMBOLS[currency]}
-              </span>
-              <span className="currency-tile__code">{currency}</span>
-            </label>
-          ))}
-        </div>
+        <CurrencyTileGrid
+          current={current}
+          onPick={(currency) => {
+            onPick(currency);
+            onClose();
+          }}
+        />
       </fieldset>
     </BottomSheet>
   );

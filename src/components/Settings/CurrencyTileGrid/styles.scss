@@ -1,0 +1,71 @@
+@import "../../../variables.scss";
+
+.currency-tile-grid {
+  display: grid;
+  gap: 0.4rem;
+
+  &--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Four to a row (the onboarding wizard) leaves less room for each tile.
+  &--4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35rem;
+
+    .currency-tile {
+      min-height: 3rem;
+    }
+  }
+}
+
+.currency-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4rem;
+  margin: 0;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  color: $text-primary;
+  cursor: pointer;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-within {
+    @include focus-ring();
+  }
+
+  &--selected,
+  &--selected:hover {
+    background-color: $accent-soft;
+    border-color: rgba($accent, 0.28);
+  }
+
+  &__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  &__symbol {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  &__code {
+    font-size: 0.74rem;
+    color: $text-secondary;
+  }
+}

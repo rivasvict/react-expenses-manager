@@ -1,0 +1,116 @@
+@import "../../../variables.scss";
+
+.wizard-shell {
+  max-width: $shell-max-width;
+  margin: 0 auto;
+  padding: 0 0 1.875rem;
+  min-height: 100vh;
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.125rem 1rem 0.875rem;
+  }
+
+  &__name {
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  &__card {
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-shell;
+    box-shadow: $shadow-card;
+    padding: 0.625rem 1.75rem;
+    // Fills the screen above where the tab bar would be, like the work area.
+    min-height: calc(100vh - 9.5rem);
+  }
+
+  // The step bar and Skip stay put while the content scrolls under them.
+  &__top {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 -1.75rem;
+    padding: 0 1.75rem;
+    background-color: $bg-surface;
+  }
+
+  &__title {
+    margin: 0.2rem 0 0.3rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  // Lets the last item scroll clear of the pinned footer.
+  &__spacer {
+    height: 9rem;
+  }
+
+  &__footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    max-width: $shell-max-width;
+    margin: 0 auto;
+    padding: 0.6rem 1.75rem calc(1rem + env(safe-area-inset-bottom, 0px));
+    background-color: $bg-surface;
+    border-top: 1px solid $border-subtle;
+
+    // The fade tells the user there is more list under the footer.
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      height: 2.6rem;
+      background: linear-gradient(transparent, $bg-surface);
+      pointer-events: none;
+    }
+  }
+
+  // While a text field has the on-screen keyboard open, the footer steps aside
+  // instead of sitting on top of it.
+  &--typing &__footer {
+    display: none;
+  }
+
+  &__summary {
+    margin: 0 0 0.5rem;
+    color: $text-secondary;
+    font-size: 0.85rem;
+    @include money-figures();
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .btn {
+      flex: 2;
+
+      &.btn-secondary {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.wizard-shell__optional {
+  color: $text-muted;
+  font-size: 0.9rem;
+  font-weight: 400;
+}

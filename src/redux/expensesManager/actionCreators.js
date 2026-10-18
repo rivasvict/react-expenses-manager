@@ -29,6 +29,7 @@ export const {
   getBucket,
   addCategory,
   getCategories,
+  applyOnboarding,
   renameCategory,
   deleteCategory,
   setEntryFilters,
