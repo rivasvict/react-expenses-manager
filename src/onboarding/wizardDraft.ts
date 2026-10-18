@@ -208,6 +208,12 @@ export const getBucketCount = (draft: WizardDraft): number =>
     (limit) => !getBucketAllowanceValidationError(limit)
   ).length;
 
+/** What Skip setup saves: no categories and no buckets. */
+export const getEmptyOnboardingResult = (): OnboardingResult => ({
+  categoryLists: { expense: [], income: [] },
+  buckets: {},
+});
+
 export const toOnboardingResult = (draft: WizardDraft): OnboardingResult => ({
   categoryLists: {
     expense: chosenNamesOf(draft, "expense"),

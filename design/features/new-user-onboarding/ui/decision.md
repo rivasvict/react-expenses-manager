@@ -41,10 +41,12 @@ Why the others did not win:
   Any route redirects to `/welcome` while the user is new and unfinished.
 - **Start tracking** and **Skip setup** both set `onboarding.completed` so the
   wizard never returns, then go to `/`. It is not reachable from Settings.
-- **Skip setup** asks nothing and applies **nothing**: nothing is written until
-  Start tracking (the Review step says so), except that the language, which
-  applies at once so the wizard itself switches, is stored as soon as it is
-  picked, like on `/settings`. Skip keeps that language and discards the rest.
+- **Skip setup** asks nothing and leaves the user with **no categories and no
+  buckets**: it saves empty category lists (so the seed lists are not built for
+  them) and no buckets, and discards the currency and Privacy mode choices. The
+  language, which applies at once so the wizard itself switches, is stored as
+  soon as it is picked, like on `/settings`, and Skip keeps it. Everything else
+  is written only by Start tracking (the Review step says so).
 - Closing the tab mid-wizard keeps the wizard's draft only in memory: the user
   starts again at step 1 (language and currency, which were already stored,
   come back preselected).
@@ -212,7 +214,7 @@ entries, or seeded `categoryLists`) goes straight to the dashboard; finishing
 with nothing chosen leaves the Categories and Buckets screens empty and the
 dashboard usable; picking one seed category and one own category and a bucket
 shows them on `/categories` and `/buckets`; Skip keeps the chosen language and
-creates nothing; a duplicate own name shows the error; a zero limit blocks
+leaves no categories and no buckets; a duplicate own name shows the error; a zero limit blocks
 Next; Back and the Review Edit links keep the draft. Unit tests for the
 new-user detection helper and for the wizard's draft-to-storage mapping.
 

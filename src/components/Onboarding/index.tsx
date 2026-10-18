@@ -9,6 +9,7 @@ import {
   chosenNamesOf,
   createWizardDraft,
   getBucketCount,
+  getEmptyOnboardingResult,
   getBucketErrors,
   getBucketsTotal,
   OnboardingResult,
@@ -44,8 +45,9 @@ interface OnboardingProps {
 /**
  * The first-run wizard for a new user (design/features/new-user-onboarding):
  * Preferences, Expenses, Incomes, Buckets and Review, with the choices held in
- * a draft until Start tracking saves them. Skip setup leaves at once and saves
- * nothing but the language, which already applied when it was picked.
+ * a draft until Start tracking saves them. Skip setup leaves at once with no
+ * categories and no buckets, keeping only the language, which already applied
+ * when it was picked.
  */
 const Onboarding = ({ onApplyOnboarding, onDone }: OnboardingProps) => {
   const translator = useTranslation();
@@ -77,9 +79,18 @@ const Onboarding = ({ onApplyOnboarding, onDone }: OnboardingProps) => {
     }
   };
 
-  const skip = () => {
-    markOnboardingCompleted();
-    onDone();
+  // Skipping leaves the user with no categories and no buckets (not the seed
+  // lists), so the empty lists are saved like a finished wizard's.
+  const skip = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      await onApplyOnboarding(getEmptyOnboardingResult());
+      markOnboardingCompleted();
+      onDone();
+    } finally {
+      setSaving(false);
+    }
   };
 
   const goTo = (nextStep: number) => {

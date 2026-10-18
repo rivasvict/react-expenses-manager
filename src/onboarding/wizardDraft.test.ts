@@ -4,6 +4,7 @@ import {
   clearCategories,
   createWizardDraft,
   getBucketCount,
+  getEmptyOnboardingResult,
   getBucketErrors,
   getBucketsTotal,
   isBucketTicked,
@@ -19,6 +20,13 @@ import {
 const emptyDraft = () => createWizardDraft({ currency: "USD", privacyMode: false });
 
 describe("wizardDraft", () => {
+  it("describes a skipped wizard as no categories and no buckets", () => {
+    expect(getEmptyOnboardingResult()).toEqual({
+      categoryLists: { expense: [], income: [] },
+      buckets: {},
+    });
+  });
+
   it("starts with nothing chosen", () => {
     const draft = emptyDraft();
     expect(chosenNamesOf(draft, "expense")).toEqual([]);

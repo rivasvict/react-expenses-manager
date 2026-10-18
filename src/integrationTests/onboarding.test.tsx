@@ -14,7 +14,7 @@ import {
 /**
  * The first-run wizard for brand-new users (design/features/new-user-onboarding/
  * ui/decision.md): who sees it, its five steps, what Start tracking saves and
- * what Skip setup leaves alone.
+ * what Skip setup leaves empty.
  */
 
 const PINNED_DATE = new Date("2026-10-15T12:00:00");
@@ -304,7 +304,7 @@ describe("moving around", () => {
 });
 
 describe("Skip setup", () => {
-  it("leaves the wizard at once, keeping nothing but the language", async () => {
+  it("leaves the wizard at once, keeping only the language", async () => {
     const { user } = await renderApp("/", { newUser: true });
     await user.click(await screen.findByRole("radio", { name: "Español" }));
     expect(await findStepHeading("¡Te damos la bienvenida! Vamos a configurarlo")).toBeInTheDocument();
@@ -315,13 +315,25 @@ describe("Skip setup", () => {
     expect(screen.queryByText(/Paso 1 de 5/)).not.toBeInTheDocument();
   });
 
-  it("does not ask for the wizard again after skipping", async () => {
+  it("leaves no categories and no buckets, not the default list", async () => {
     const { user } = await renderApp("/", { newUser: true });
     await user.click(await screen.findByRole("button", { name: "Skip setup" }));
 
     expect(await screen.findByText("Monthly Balance")).toBeInTheDocument();
     await openNavLink(user, "Categories");
-    expect(await screen.findByText("Food")).toBeInTheDocument();
+    expect(await screen.findByText("No expense categories yet")).toBeInTheDocument();
+    expect(screen.queryByText("Food")).not.toBeInTheDocument();
+
+    await openNavLink(user, "Buckets");
+    expect(await screen.findByText(/no buckets yet/i)).toBeInTheDocument();
+  });
+
+  it("does not ask for the wizard again after skipping", async () => {
+    const { user } = await renderApp("/", { newUser: true });
+    await user.click(await screen.findByRole("button", { name: "Skip setup" }));
+
+    expect(await screen.findByText("Monthly Balance")).toBeInTheDocument();
+    expect(screen.queryByText("Step 1 of 5")).not.toBeInTheDocument();
   });
 });
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
@@ -60,17 +60,21 @@ describe("Onboarding", () => {
     expect(localStorage.getItem("onboarding.completed")).toBe("1");
   });
 
-  it("saves nothing but the language when skipped", async () => {
+  it("leaves no categories and no buckets, and keeps only the language, when skipped", async () => {
     const onDone = openWizard();
 
     await userEvent.click(screen.getByRole("radio", { name: "Français" }));
     await userEvent.click(screen.getByRole("radio", { name: "Euro" }));
     await userEvent.click(screen.getByRole("button", { name: "Passer la configuration" }));
 
-    expect(onDone).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     expect(localStorage.getItem("settings.language")).toBe("fr");
     expect(localStorage.getItem("settings.currency")).toBeNull();
-    expect(localStorage.getItem("categoryLists")).toBeNull();
+    expect(JSON.parse(localStorage.getItem("categoryLists") || "")).toEqual({
+      expense: [],
+      income: [],
+    });
+    expect(JSON.parse(localStorage.getItem("buckets") || "")).toEqual({});
     expect(localStorage.getItem("onboarding.completed")).toBe("1");
   });
 });
