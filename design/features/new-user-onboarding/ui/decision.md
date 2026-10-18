@@ -70,8 +70,28 @@ own category" moves above the list so it never hides at the bottom.
 - Behaviour for the implementer: the fade shows only while content is below;
   the footer summary is shown on the Categories and Buckets steps only.
 
+### e-split-categories: option D with expenses and incomes as separate steps
+D's pinned footer, but five steps: Preferences, **Expenses**, **Incomes**,
+Buckets, Review. The Expenses / Incomes tabs are gone; each type gets its own
+screen with a plain-language heading ("What do you spend on?", "Where does money
+come in?"), its own Select all / Clear, add-your-own field and count. The Incomes
+step is short (3 seed chips), so it never needs to scroll.
+- **Good at:** one question per screen, nothing hidden behind a tab (a count on
+  an unseen tab was the weakest cue in A and D), and the two lists stay
+  independent, matching how the app stores them.
+- **Costs:** one more step (five instead of four), so a longer path for someone
+  who wants neither list; an almost empty Incomes screen under a pinned footer.
+- **Empty states drawn:** Expenses none, Incomes none, and Buckets with no
+  expense categories.
+- Behaviour for the implementer: Buckets stays after Expenses and Incomes, and
+  when no expense category was chosen it is skipped automatically (the empty
+  screen above is only reached if the user goes Back and clears them, so the
+  step count then reads 4 of 4). Moving Buckets directly after Expenses is an
+  alternative order; Incomes is not related to buckets, so it was left out of
+  the way.
+
 ## Recommendation
-**d-pinned-footer**: it keeps A's one-decision-at-a-time flow and fixes the
+**d-pinned-footer** (or **e-split-categories** if you prefer one type per step): it keeps A's one-decision-at-a-time flow and fixes the
 main weakness of A on long screens, where the Next button sits at the end of the
 list and is easy to miss. A pinned primary action is the standard pattern for
 long steps in a wizard. If it still feels long, **c** is the best shortcut. The
