@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import _ from "lodash";
 import {
   FormValidation,
   FormModel,
   ValidateField,
 } from "../../helpers/form-validation/";
-import { FormButton, InputPassword, InputText } from "../common/Forms";
+import {
+  FormButton,
+  InputEmail,
+  InputPassword,
+  InputText,
+} from "../common/Forms";
 import { MainContentContainer } from "../common/MainContentContainer";
+import ContentTileSection from "../common/ContentTitleSection";
 import { signUp } from "../../redux/syncManager/actionCreators";
 import {
   SYNC_ERROR_CODES,
@@ -90,99 +96,118 @@ const SignUpScreen = ({ onSignUp }: { onSignUp: (payload: any) => Promise<void> 
 
   return (
     <MainContentContainer pageTitle={t("account.signUp")}>
+      <ContentTileSection>{t("account.signUp")}</ContentTileSection>
       <FormValidation
         formModel={userModel}
-        className="app-form"
+        className="app-form row"
         CustomFormComponent={Form}
         render={({ dispatchFormStateChange, formState }: any) => (
           <React.Fragment>
-            <Form.Group>
-              <ValidateField>
-                <InputText
-                  name="firstName"
-                  placeholder={t("auth.firstName")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            <Form.Group>
-              <ValidateField>
-                <InputText
-                  name="lastName"
-                  placeholder={t("auth.lastName")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            <Form.Group>
-              <ValidateField>
-                <InputText
-                  name="email"
-                  placeholder={t("auth.email")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            <Form.Group>
-              <ValidateField>
-                <InputPassword
-                  name="password"
-                  placeholder={t("auth.password")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            <Form.Group>
-              <ValidateField>
-                <InputPassword
-                  name="password-retype"
-                  placeholder={t("auth.retypePassword")}
-                  onChange={(event: any) =>
-                    handleChange({ event, dispatchFormStateChange })
-                  }
-                />
-              </ValidateField>
-            </Form.Group>
-            {error && (
-              <p
-                className="restore-backup-error text-danger vertical-standard-space"
-                role="alert"
-              >
-                {error.code === SYNC_ERROR_CODES.EMAIL_TAKEN ? (
-                  <React.Fragment>
-                    {t("signUp.emailTaken")}{" "}
-                    <Link to="/sign-in">{t("account.signIn")}</Link>
-                  </React.Fragment>
-                ) : (
-                  getSyncErrorMessage(error, translator, "signUp.failed")
+            <Row className="top-container container-fluid">
+              <Col xs={12} className="top-content">
+                <Form.Group>
+                  <Form.Label htmlFor="auth-firstName">{t("auth.firstName")}</Form.Label>
+                  <ValidateField>
+                    <InputText
+                      id="auth-firstName"
+                      name="firstName"
+                      autoComplete="given-name"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="auth-lastName">{t("auth.lastName")}</Form.Label>
+                  <ValidateField>
+                    <InputText
+                      id="auth-lastName"
+                      name="lastName"
+                      autoComplete="family-name"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="auth-email">{t("auth.email")}</Form.Label>
+                  <ValidateField>
+                    <InputEmail
+                      id="auth-email"
+                      name="email"
+                      autoComplete="email"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="auth-password">{t("auth.password")}</Form.Label>
+                  <ValidateField>
+                    <InputPassword
+                      id="auth-password"
+                      name="password"
+                      autoComplete="new-password"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+                <Form.Group className="vertical-standard-space">
+                  <Form.Label htmlFor="auth-password-retype">{t("auth.retypePassword")}</Form.Label>
+                  <ValidateField>
+                    <InputPassword
+                      id="auth-password-retype"
+                      name="password-retype"
+                      autoComplete="new-password"
+                      onChange={(event: any) =>
+                        handleChange({ event, dispatchFormStateChange })
+                      }
+                    />
+                  </ValidateField>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="bottom-container container-fluid vertical-standard-space">
+              <Col xs={12} className="bottom-content">
+                {error && (
+                  <p
+                    className="restore-backup-error text-danger vertical-standard-space"
+                    role="alert"
+                  >
+                    {error.code === SYNC_ERROR_CODES.EMAIL_TAKEN ? (
+                      <React.Fragment>
+                        {t("signUp.emailTaken")}{" "}
+                        <Link to="/sign-in">{t("account.signIn")}</Link>
+                      </React.Fragment>
+                    ) : (
+                      getSyncErrorMessage(error, translator, "signUp.failed")
+                    )}
+                  </p>
                 )}
-              </p>
-            )}
-            <FormButton
-              variant="primary"
-              type="submit"
-              onClick={(event: any) =>
-                handleSubmit({ event, values: formState.values })
-              }
-              disabled={!formState.isModelValid || isLoading}
-            >
-              {isLoading ? t("signUp.submitting") : t("account.signUp")}
-            </FormButton>
-            <FormButton
-              variant="secondary"
-              className="vertical-standard-space"
-              onClick={handleCancel}
-            >
-              {t("common.cancel")}
-            </FormButton>
+                <FormButton
+                  variant="primary"
+                  type="submit"
+                  onClick={(event: any) =>
+                    handleSubmit({ event, values: formState.values })
+                  }
+                  disabled={!formState.isModelValid || isLoading}
+                >
+                  {isLoading ? t("signUp.submitting") : t("account.signUp")}
+                </FormButton>
+                <FormButton
+                  variant="secondary"
+                  className="vertical-standard-space"
+                  onClick={handleCancel}
+                >
+                  {t("common.cancel")}
+                </FormButton>
+              </Col>
+            </Row>
           </React.Fragment>
         )}
       />

@@ -54,8 +54,8 @@ const fillCredentials = async (
   user: UserEvent,
   { email = "jane@example.com", password = "hunter22!" } = {}
 ) => {
-  await user.type(screen.getByPlaceholderText("Email"), email);
-  await user.type(screen.getByPlaceholderText("Password"), password);
+  await user.type(screen.getByLabelText("Email"), email);
+  await user.type(screen.getByLabelText("Password"), password);
 };
 
 // Submitting resolves/rejects the mocked thunk and then sets state, so the
@@ -75,8 +75,8 @@ describe("SignInScreen", () => {
   it("renders the email and password fields", () => {
     renderSignIn();
 
-    expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Sign in" })
     ).toBeInTheDocument();
@@ -88,10 +88,10 @@ describe("SignInScreen", () => {
 
     expect(submitButton).toBeDisabled();
 
-    await user.type(screen.getByPlaceholderText("Email"), "jane@example.com");
+    await user.type(screen.getByLabelText("Email"), "jane@example.com");
     expect(submitButton).toBeDisabled();
 
-    await user.type(screen.getByPlaceholderText("Password"), "hunter22!");
+    await user.type(screen.getByLabelText("Password"), "hunter22!");
     expect(submitButton).toBeEnabled();
   });
 

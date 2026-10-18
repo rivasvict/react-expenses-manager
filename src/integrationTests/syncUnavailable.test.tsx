@@ -240,7 +240,7 @@ describe("sync screens while the sync server is offline", () => {
     serverIsOnline();
     await waitForNextProbe();
 
-    expect(await screen.findByPlaceholderText("Email")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Email")).toBeInTheDocument();
   });
 });
 
@@ -254,7 +254,7 @@ describe("while the sync server is available", () => {
     expect(screen.queryByText(OFFLINE_NOTE)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("link", { name: "Sign in" }));
-    expect(await screen.findByPlaceholderText("Email")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Email")).toBeInTheDocument();
   });
 });
 

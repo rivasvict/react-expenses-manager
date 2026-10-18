@@ -20,6 +20,10 @@ const InputPassword = (props) => (
   <GenericInput {...{ ...props, type: "password" }} />
 );
 
+const InputEmail = (props) => (
+  <GenericInput {...{ ...props, type: "email" }} />
+);
+
 // Native date input (multi-user sync review wizard, DESIGN 4.3.2) — the
 // smallest date control that fits the existing Forms.js look.
 const InputDate = (props) => <GenericInput {...{ ...props, type: "date" }} />;
@@ -53,6 +57,7 @@ const FormContent = ({ children, render, formProps = {} }) => (
 export {
   InputText,
   InputPassword,
+  InputEmail,
   InputNumber,
   InputDate,
   FormButton,

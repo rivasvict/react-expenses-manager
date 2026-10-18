@@ -42,11 +42,11 @@ const signUpThroughUi = async (user: any) => {
   await user.click(await screen.findByRole("link", { name: "Account" }));
   await user.click(await screen.findByRole("link", { name: "Sign up" }));
 
-  await user.type(await screen.findByPlaceholderText("First Name"), jane.firstName);
-  await user.type(screen.getByPlaceholderText("Last Name"), jane.lastName);
-  await user.type(screen.getByPlaceholderText("Email"), jane.email);
-  await user.type(screen.getByPlaceholderText("Password"), jane.password);
-  await user.type(screen.getByPlaceholderText("Retype Password"), jane.password);
+  await user.type(await screen.findByLabelText("First Name"), jane.firstName);
+  await user.type(screen.getByLabelText("Last Name"), jane.lastName);
+  await user.type(screen.getByLabelText("Email"), jane.email);
+  await user.type(screen.getByLabelText("Password"), jane.password);
+  await user.type(screen.getByLabelText("Retype Password"), jane.password);
   await user.click(screen.getByRole("button", { name: "Sign up" }));
 };
 
@@ -69,11 +69,11 @@ describe("accounts", () => {
     server.seedUser(jane);
     const { user } = await renderApp("/sign-up");
 
-    await user.type(await screen.findByPlaceholderText("First Name"), "Janet");
-    await user.type(screen.getByPlaceholderText("Last Name"), "Doe");
-    await user.type(screen.getByPlaceholderText("Email"), jane.email);
-    await user.type(screen.getByPlaceholderText("Password"), "another-pass");
-    await user.type(screen.getByPlaceholderText("Retype Password"), "another-pass");
+    await user.type(await screen.findByLabelText("First Name"), "Janet");
+    await user.type(screen.getByLabelText("Last Name"), "Doe");
+    await user.type(screen.getByLabelText("Email"), jane.email);
+    await user.type(screen.getByLabelText("Password"), "another-pass");
+    await user.type(screen.getByLabelText("Retype Password"), "another-pass");
     await user.click(screen.getByRole("button", { name: "Sign up" }));
 
     const alert = await screen.findByRole("alert");
@@ -90,8 +90,8 @@ describe("accounts", () => {
     server.seedUser(jane);
     const { user } = await renderApp("/sign-in");
 
-    await user.type(await screen.findByPlaceholderText("Email"), jane.email);
-    await user.type(screen.getByPlaceholderText("Password"), "wrong-password");
+    await user.type(await screen.findByLabelText("Email"), jane.email);
+    await user.type(screen.getByLabelText("Password"), "wrong-password");
     await user.click(screen.getByRole("button", { name: "Sign in" }));
 
     const alert = await screen.findByRole("alert");
@@ -102,8 +102,8 @@ describe("accounts", () => {
     server.seedUser(jane);
     const { user } = await renderApp("/sign-in");
 
-    await user.type(await screen.findByPlaceholderText("Email"), jane.email);
-    await user.type(screen.getByPlaceholderText("Password"), jane.password);
+    await user.type(await screen.findByLabelText("Email"), jane.email);
+    await user.type(screen.getByLabelText("Password"), jane.password);
     await user.click(screen.getByRole("button", { name: "Sign in" }));
 
     expect(await screen.findByText("Jane Doe")).toBeInTheDocument();
