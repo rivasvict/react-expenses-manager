@@ -1,0 +1,244 @@
+{
+  "screens": {
+    "header.default": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "onboarding.completed": "1",
+        "balance": [
+          {
+            "id": "s1",
+            "date": 1742040000000,
+            "amount": "2000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s2",
+            "date": 1742040000000,
+            "amount": "120",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "s3",
+            "date": 1792065600000,
+            "amount": "3000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s4",
+            "date": 1792065600000,
+            "amount": "86.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          }
+        ]
+      },
+      "actions": []
+    },
+    "picker.default": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "onboarding.completed": "1",
+        "balance": [
+          {
+            "id": "s1",
+            "date": 1742040000000,
+            "amount": "2000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s2",
+            "date": 1742040000000,
+            "amount": "120",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "s3",
+            "date": 1792065600000,
+            "amount": "3000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s4",
+            "date": 1792065600000,
+            "amount": "86.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": ".month-header__title button"
+        },
+        {
+          "wait": 400
+        }
+      ]
+    },
+    "picker.first-year": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "onboarding.completed": "1",
+        "balance": [
+          {
+            "id": "s1",
+            "date": 1742040000000,
+            "amount": "2000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s2",
+            "date": 1742040000000,
+            "amount": "120",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "s3",
+            "date": 1792065600000,
+            "amount": "3000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s4",
+            "date": 1792065600000,
+            "amount": "86.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": ".month-header__title button"
+        },
+        {
+          "wait": 400
+        },
+        {
+          "click": "button[aria-label='Previous year']"
+        },
+        {
+          "wait": 200
+        }
+      ]
+    },
+    "picker.es": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "onboarding.completed": "1",
+        "balance": [
+          {
+            "id": "s1",
+            "date": 1742040000000,
+            "amount": "2000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s2",
+            "date": 1742040000000,
+            "amount": "120",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "s3",
+            "date": 1792065600000,
+            "amount": "3000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s4",
+            "date": 1792065600000,
+            "amount": "86.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": ".month-header__title button"
+        },
+        {
+          "wait": 400
+        }
+      ]
+    },
+    "picker.one-month": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "onboarding.completed": "1",
+        "balance": [
+          {
+            "id": "s3",
+            "date": 1792065600000,
+            "amount": "3000",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "s4",
+            "date": 1792065600000,
+            "amount": "86.40",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": ".month-header__title button"
+        },
+        {
+          "wait": 400
+        }
+      ]
+    }
+  }
+}

@@ -8,10 +8,41 @@
   justify-content: space-between;
   gap: 0.5rem;
 
-  .screen-title {
+  // The title is a pill that opens the month picker.
+  .month-header__title {
     flex: 1 1 auto;
-    // ScreenTitle is a bootstrap Row; neutralise its negative margins here.
+    min-width: 0;
     margin: 0;
+  }
+
+  .month-header__pill {
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0 0.9rem;
+    font: inherit;
+    color: $text-primary;
+    background-color: $bg-raised;
+    border: 1px solid $border-strong;
+    border-radius: $radius-pill;
+    cursor: pointer;
+    transition: background-color $transition-quick, border-color $transition-quick;
+
+    svg {
+      flex: 0 0 auto;
+      color: $accent;
+    }
+
+    &:hover {
+      background-color: $bg-raised-hover;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
   }
 
   .month-header__step {

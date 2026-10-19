@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.35.0] - 2026-10-19
+
+### Added
+
+- **Jump to any month from the month title.** On the Dashboard, Buckets, Fixed
+  entries and Savings trend, tapping the month title now opens a "Go to month"
+  sheet with a year stepper and a grid of months. One tap on a month goes
+  there. Months with no data yet are dimmed. Previous and Next work as before.
+
 ## [1.34.1] - 2026-10-18
 
 ### Changed

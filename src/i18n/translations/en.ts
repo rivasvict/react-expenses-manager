@@ -100,6 +100,12 @@ const en = {
   // Month stepper
   "monthHeader.previous": "Previous month",
   "monthHeader.next": "Next month",
+  "monthHeader.picker.title": "Go to month",
+  "monthHeader.picker.close": "Close",
+  "monthHeader.picker.previousYear": "Previous year",
+  "monthHeader.picker.nextYear": "Next year",
+  "monthHeader.picker.legendSelected": "Selected",
+  "monthHeader.picker.legendDimmed": "Dimmed: no data yet",
 
   // Dashboard
   "dashboard.pageTitle": "Monthly Balance",
