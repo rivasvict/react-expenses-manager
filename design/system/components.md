@@ -15,7 +15,8 @@ same PR that adds it.
 | Money row + icon chip | Money rows | `src/components/common/ExpensesManager/Summaries/EntriesSummary.scss`; `@mixin icon-chip`, `@mixin money-figures` in `src/variables.scss` |
 | Budget bucket (progress card) | Budget buckets | `src/components/common/ExpensesManager/Buckets/components/Bucket/` |
 | App navigation / bottom tab bar | Navigation | `.app-nav` in `src/components/common/Header.scss` |
-| Month header (prev/next) | Navigation | `src/components/common/NavigableMonthHeader/` |
+| Month header (prev/next, with the month title as a pill that opens the month picker) | Navigation | `src/components/common/NavigableMonthHeader/` |
+| Month picker sheet (bottom sheet with a year stepper over a 4x3 grid of months; months without data are dimmed, the selected one is gold; opened by the month title's pill) | Navigation | `src/components/common/NavigableMonthHeader/MonthPickerSheet/` (availability rules: `NavigableMonthHeader/utils/monthAvailability.ts`) |
 | Doughnut chart | Categorical chart palette | `src/components/common/DoughnutChart/` |
 | Version label (quiet app-version caption) | Masthead | `src/components/common/VersionLabel/`; version from `src/version.ts` |
 | Brand mark | Masthead | `src/components/common/BrandMark/` |

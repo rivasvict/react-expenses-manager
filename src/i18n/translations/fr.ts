@@ -100,6 +100,12 @@ const fr: Translations = {
   // Month stepper
   "monthHeader.previous": "Mois précédent",
   "monthHeader.next": "Mois suivant",
+  "monthHeader.picker.title": "Aller à un mois",
+  "monthHeader.picker.close": "Fermer",
+  "monthHeader.picker.previousYear": "Année précédente",
+  "monthHeader.picker.nextYear": "Année suivante",
+  "monthHeader.picker.legendSelected": "Sélectionné",
+  "monthHeader.picker.legendDimmed": "Grisé : pas encore de données",
 
   // Dashboard
   "dashboard.pageTitle": "Bilan mensuel",

@@ -1,0 +1,61 @@
+{
+  "screens": [
+    {
+      "id": "header.default",
+      "title": "Month header with the picker pill",
+      "route": "/"
+    },
+    {
+      "id": "picker.default",
+      "title": "Month picker",
+      "route": "/"
+    },
+    {
+      "id": "picker.first-year",
+      "title": "First year with data",
+      "route": "/"
+    },
+    {
+      "id": "picker.es",
+      "title": "Month picker (Spanish)",
+      "route": "/"
+    },
+    {
+      "id": "picker.one-month",
+      "title": "Only one month of data",
+      "route": "/"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "header.default",
+      "to": "picker.default",
+      "label": "Tap the month title"
+    },
+    {
+      "from": "picker.default",
+      "to": "picker.first-year",
+      "label": "Tap Previous year until the first year with data"
+    },
+    {
+      "from": "picker.first-year",
+      "to": "header.default",
+      "label": "Tap a month: the sheet closes on that month"
+    },
+    {
+      "from": "picker.default",
+      "to": "header.default",
+      "label": "Tap a month, the close button or the scrim"
+    },
+    {
+      "from": "header.default",
+      "to": "picker.es",
+      "label": "Same, with the app in Spanish"
+    },
+    {
+      "from": "header.default",
+      "to": "picker.one-month",
+      "label": "Same, with data in a single month"
+    }
+  ]
+}
