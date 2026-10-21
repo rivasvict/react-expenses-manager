@@ -1,0 +1,147 @@
+{
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard (savings card with the Trend link)",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "savings.default",
+      "title": "Savings trend, switch on Savings",
+      "route": "/savings-trend"
+    },
+    {
+      "id": "categories.expenses",
+      "title": "Categories, expenses ranked",
+      "route": "/category-trends"
+    },
+    {
+      "id": "categories.incomes",
+      "title": "Categories, incomes ranked",
+      "route": "/category-trends"
+    },
+    {
+      "id": "categories.empty",
+      "title": "Categories, no expenses in range",
+      "route": "/category-trends"
+    },
+    {
+      "id": "categories.es",
+      "title": "Categories (Spanish)",
+      "route": "/category-trends"
+    },
+    {
+      "id": "category.per-month",
+      "title": "One category, per month",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category.change",
+      "title": "One category, change",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category.income-change",
+      "title": "One income category, change",
+      "route": "/category-trends/income/:name"
+    },
+    {
+      "id": "category.es",
+      "title": "One category (Spanish)",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category.no-entries",
+      "title": "One category, no entries in range",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category-picker.default",
+      "title": "Choose a category",
+      "route": "/category-trends/expense/:name"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard",
+      "to": "savings.default",
+      "label": "Tap Trend \u203a"
+    },
+    {
+      "from": "savings.default",
+      "to": "categories.expenses",
+      "label": "Tap Categories"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "savings.default",
+      "label": "Tap Savings"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "categories.incomes",
+      "label": "Tap Incomes"
+    },
+    {
+      "from": "categories.incomes",
+      "to": "categories.expenses",
+      "label": "Tap Expenses"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "categories.empty",
+      "label": "Range with no expenses"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "categories.es",
+      "label": "Language set to Spanish"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "category.per-month",
+      "label": "Tap Eating out"
+    },
+    {
+      "from": "categories.incomes",
+      "to": "category.income-change",
+      "label": "Tap Freelance, then Change"
+    },
+    {
+      "from": "categories.es",
+      "to": "category.es",
+      "label": "Tap Eating out, then Cambio"
+    },
+    {
+      "from": "category.per-month",
+      "to": "category.change",
+      "label": "Tap Change"
+    },
+    {
+      "from": "category.change",
+      "to": "category.per-month",
+      "label": "Tap Per month"
+    },
+    {
+      "from": "category.per-month",
+      "to": "category-picker.default",
+      "label": "Tap the category row"
+    },
+    {
+      "from": "category-picker.default",
+      "to": "category.no-entries",
+      "label": "Choose Travel"
+    },
+    {
+      "from": "category.no-entries",
+      "to": "category-picker.default",
+      "label": "Tap Choose another category"
+    },
+    {
+      "from": "category.per-month",
+      "to": "categories.expenses",
+      "label": "Tap All categories"
+    }
+  ]
+}

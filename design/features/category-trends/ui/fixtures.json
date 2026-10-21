@@ -1,0 +1,3301 @@
+{
+  "screens": {
+    "savings.default": {
+      "route": "/savings-trend",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "categories.expenses": {
+      "route": "/category-trends",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "categories.incomes": {
+      "route": "/category-trends",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=\"Incomes\"]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "categories.es": {
+      "route": "/category-trends",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "categories.empty": {
+      "route": "/category-trends",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category.per-month": {
+      "route": "/category-trends/expense/eating%20out",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category.change": {
+      "route": "/category-trends/expense/eating%20out",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=\"Change\"]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category.income-change": {
+      "route": "/category-trends/income/freelance",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=\"Change\"]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category.es": {
+      "route": "/category-trends/expense/eating%20out",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "click": "role=tab[name=\"Cambio\"]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category.no-entries": {
+      "route": "/category-trends/expense/travel",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "category-picker.default": {
+      "route": "/category-trends/expense/eating%20out",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en",
+        "balance": [
+          {
+            "id": "seed-1",
+            "date": 1776254400000,
+            "amount": "380",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-2",
+            "date": 1778846400000,
+            "amount": "420",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-3",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-4",
+            "date": 1784116800000,
+            "amount": "460",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-5",
+            "date": 1786795200000,
+            "amount": "410",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-6",
+            "date": 1789473600000,
+            "amount": "520",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-7",
+            "date": 1792065600000,
+            "amount": "540",
+            "type": "expense",
+            "categories_path": ",eating out,"
+          },
+          {
+            "id": "seed-8",
+            "date": 1776254400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-9",
+            "date": 1778846400000,
+            "amount": "40",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-10",
+            "date": 1781524800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-11",
+            "date": 1784116800000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-12",
+            "date": 1786795200000,
+            "amount": "55",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-13",
+            "date": 1789473600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-14",
+            "date": 1792065600000,
+            "amount": "60",
+            "type": "expense",
+            "categories_path": ",subscriptions,"
+          },
+          {
+            "id": "seed-15",
+            "date": 1776254400000,
+            "amount": "720",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-16",
+            "date": 1778846400000,
+            "amount": "700",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-17",
+            "date": 1781524800000,
+            "amount": "690",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-18",
+            "date": 1784116800000,
+            "amount": "640",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-19",
+            "date": 1786795200000,
+            "amount": "650",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-20",
+            "date": 1789473600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-21",
+            "date": 1792065600000,
+            "amount": "610",
+            "type": "expense",
+            "categories_path": ",food,"
+          },
+          {
+            "id": "seed-22",
+            "date": 1776254400000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-23",
+            "date": 1778846400000,
+            "amount": "140",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-24",
+            "date": 1781524800000,
+            "amount": "160",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-25",
+            "date": 1784116800000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-26",
+            "date": 1786795200000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-27",
+            "date": 1789473600000,
+            "amount": "150",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-28",
+            "date": 1792065600000,
+            "amount": "145",
+            "type": "expense",
+            "categories_path": ",transportation,"
+          },
+          {
+            "id": "seed-29",
+            "date": 1776254400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-30",
+            "date": 1778846400000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-31",
+            "date": 1781524800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-32",
+            "date": 1784116800000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-33",
+            "date": 1786795200000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-34",
+            "date": 1789473600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-35",
+            "date": 1792065600000,
+            "amount": "3200",
+            "type": "income",
+            "categories_path": ",salary,"
+          },
+          {
+            "id": "seed-36",
+            "date": 1776254400000,
+            "amount": "200",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-37",
+            "date": 1781524800000,
+            "amount": "350",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-38",
+            "date": 1784116800000,
+            "amount": "300",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-39",
+            "date": 1786795200000,
+            "amount": "400",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-40",
+            "date": 1789473600000,
+            "amount": "500",
+            "type": "income",
+            "categories_path": ",freelance,"
+          },
+          {
+            "id": "seed-41",
+            "date": 1792065600000,
+            "amount": "650",
+            "type": "income",
+            "categories_path": ",freelance,"
+          }
+        ],
+        "categoryLists": {
+          "expense": [
+            "Eating out",
+            "Subscriptions",
+            "Food",
+            "Transportation",
+            "Travel"
+          ],
+          "income": [
+            "Salary",
+            "Freelance"
+          ]
+        },
+        "onboarding.completed": true
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/Eating out/]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    }
+  }
+}
