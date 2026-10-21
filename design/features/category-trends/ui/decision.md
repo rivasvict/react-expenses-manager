@@ -47,6 +47,22 @@ savings change?" without choosing a category first and surfaces what the user
 did not know to look for. *Costs:* one more screen, the most copy, and a
 list that needs a cap and an empty story.
 
+### d-scope-switch-in-title
+
+C's overview and detail, with a more noticeable way to move between the two
+views. The static "SAVINGS TREND" eyebrow becomes a compact two-segment
+switch, **Savings | Categories**, with a small icon on each segment. It
+takes the eyebrow's slot, so the screen gains no height, and it is always
+visible without scrolling (C's link sat below the chart). The selected
+segment uses the gold-soft wash with a gold outline, so the gold range
+switch below stays the only solid gold control. Month and range carry over
+when the user flips, and the screen opens on Savings as today. Inside a
+category, the switch stays on Categories and an "‹ All categories" link
+returns to the list. *Good at:* the second view is discoverable at a glance
+and costs one tap each way. *Costs:* it changes the existing screen's top
+(a small risk to Savings trend's design review) and the category detail is
+the tallest screen (switch, back link, picker, range, card, chart).
+
 ## Other states
 
 Every option needs, and the approved package will draw: **empty** (no entries
