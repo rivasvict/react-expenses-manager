@@ -1,7 +1,7 @@
 ---
 title: Category trends
 summary: A Savings | Categories switch at the top of the trend screen opens a ranked list of category changes and a per-category trend that reuses the Savings trend's range, tabs and chart.
-status: approved
+status: implemented
 chosen: d-scope-switch-in-title
 ---
 
@@ -44,6 +44,32 @@ the switch). Its approved screens in `../../savings-trend/ui/` and
 `../../savings-trend-total/ui/` keep their content; they gain the switch.
 `approved/savings.default.html` shows the combination. Update those packages'
 screens (or their fixtures) in the implementation PR.
+
+## As built
+
+Implemented in version 1.36.0. Where the build differs from the first draft of
+these screens, the screens were updated to match the shipped components (the
+design review compares the two):
+
+- The month title is the **"Go to month" button** added by
+  `../../month-year-picker/`, which shipped while this was designed.
+- Change pills carry a **sign** as well as the arrow (`ChangePill`'s rule:
+  colour is never the only cue), in the list as in the headline card.
+- The tabs, list rows, history notice and picker sheet use the real
+  `UnderlineTabs`, `HistoryNotice` and category-sheet sizes.
+- The Spanish list subtitle starts with a capital ("Octubre frente a abril,
+  mayor cambio primero."); chart ticks use the app's short month names
+  ("abr"), as on the Savings trend.
+- On Change, the legend reads **Less, More** for both types; the colours
+  flip for incomes.
+- A category that had nothing in the reference month shows a grey **New**
+  pill instead of a percentage, and ranks first.
+
+The Savings trend's own approved screens (`../../savings-trend/` and
+`../../savings-trend-total/`) were updated to show the switch and the month
+button. `savings-trend`'s `trend.up`, `trend.down`, `trend.year`,
+`trend.tooltip` and `trend.custom` screens were already out of date before this
+change (they predate the Total saved tab) and still differ.
 
 ## For the implementer
 

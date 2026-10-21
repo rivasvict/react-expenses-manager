@@ -20,3 +20,18 @@ describe("HistoryNotice", () => {
     expect(onClick).toHaveBeenCalled();
   });
 });
+
+describe("HistoryNotice options", () => {
+  it("can show a secondary action and an icon", () => {
+    render(
+      <HistoryNotice
+        title="t"
+        body="b"
+        icon={<span data-testid="mark" />}
+        action={{ label: "Choose another category", onClick: jest.fn(), variant: "secondary" }}
+      />
+    );
+    expect(screen.getByTestId("mark")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Choose another category" })).toHaveClass("btn-secondary");
+  });
+});

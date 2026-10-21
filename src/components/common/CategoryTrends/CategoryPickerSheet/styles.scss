@@ -1,0 +1,71 @@
+@import '../../../../variables.scss';
+
+// The "Choose a category" sheet: radio rows grouped by type.
+.category-picker-sheet {
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  &__label {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.5rem 0.85rem;
+    font: inherit;
+    text-align: left;
+    color: $text-primary;
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control;
+    cursor: pointer;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    &--on {
+      background-color: $accent-soft;
+      border-color: $accent;
+    }
+  }
+
+  &__dot {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 2px solid $border-strong;
+    border-radius: $radius-round;
+  }
+
+  &__option--on &__dot {
+    border: 0.32rem solid $accent;
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.93rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__amount {
+    @include money-figures();
+    flex: none;
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+}

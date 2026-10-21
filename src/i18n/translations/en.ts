@@ -180,6 +180,100 @@ const en = {
   "savingsTrend.sheet.show": "Show trend",
   "savingsTrend.sheet.close": "Close",
 
+  // Category trends (Savings trend's Categories view)
+  "categoryTrends.pageTitle":
+    "Category trends",
+  "categoryTrends.scope.group":
+    "Trend of",
+  "categoryTrends.scope.savings":
+    "Savings",
+  "categoryTrends.scope.categories":
+    "Categories",
+  "categoryTrends.subtitle":
+    "{{end}} vs {{reference}}, biggest change first.",
+  "categoryTrends.was":
+    "was {{amount}}",
+  "categoryTrends.new":
+    "New",
+  "categoryTrends.hint":
+    "Tap a category for its full trend.",
+  "categoryTrends.back":
+    "All categories",
+  "categoryTrends.rowLabel":
+    "{{name}}, {{amount}}, {{change}} vs {{reference}}",
+  "categoryTrends.rowLabelNew":
+    "{{name}}, {{amount}}, new, was {{was}}",
+  "categoryTrends.view.perMonth":
+    "Per month",
+  "categoryTrends.kind.expense":
+    "Expense category",
+  "categoryTrends.kind.income":
+    "Income category",
+  "categoryTrends.headline.perMonth":
+    "{{category}}, {{span}}",
+  "categoryTrends.headline.change":
+    "{{category}}, {{end}} vs {{reference}}",
+  "categoryTrends.key.spent":
+    "Spent in {{reference}}",
+  "categoryTrends.key.earned":
+    "Earned in {{reference}}",
+  "categoryTrends.key.spentMonth":
+    "Spent that month",
+  "categoryTrends.key.earnedMonth":
+    "Earned that month",
+  "categoryTrends.key.less":
+    "Less",
+  "categoryTrends.key.more":
+    "More",
+  "categoryTrends.note.perMonth.expense":
+    "Each point is what you spent on this category in that month.",
+  "categoryTrends.note.perMonth.income":
+    "Each point is what you earned in this category in that month.",
+  "categoryTrends.note.change.expense":
+    "Green where you spent less than in {{reference}}, red where you spent more.",
+  "categoryTrends.note.change.income":
+    "Green where you earned more than in {{reference}}, red where you earned less.",
+  "categoryTrends.chartLabel.perMonth":
+    "{{category}} per month, {{from}} to {{to}}",
+  "categoryTrends.chartLabel.change":
+    "{{category}} against {{reference}}, {{from}} to {{to}}",
+  "categoryTrends.table.caption":
+    "Monthly amounts",
+  "categoryTrends.table.month":
+    "Month",
+  "categoryTrends.table.amount":
+    "Amount",
+  "categoryTrends.empty.expense.title":
+    "No expenses between {{from}} and {{to}}",
+  "categoryTrends.empty.expense.body":
+    "Add an expense and its category will show up here with its trend.",
+  "categoryTrends.empty.expense.action":
+    "Add expense",
+  "categoryTrends.empty.income.title":
+    "No incomes between {{from}} and {{to}}",
+  "categoryTrends.empty.income.body":
+    "Add an income and its category will show up here with its trend.",
+  "categoryTrends.empty.income.action":
+    "Add income",
+  "categoryTrends.none.expense.title":
+    "Nothing spent on {{category}} in this range",
+  "categoryTrends.none.expense.body":
+    "There are no expenses in this category between {{from}} and {{to}}. Pick a wider range or another category.",
+  "categoryTrends.none.income.title":
+    "Nothing earned on {{category}} in this range",
+  "categoryTrends.none.income.body":
+    "There are no incomes in this category between {{from}} and {{to}}. Pick a wider range or another category.",
+  "categoryTrends.none.action":
+    "Choose another category",
+  "categoryTrends.picker.title":
+    "Choose a category",
+  "categoryTrends.picker.expenses":
+    "Expense categories",
+  "categoryTrends.picker.incomes":
+    "Income categories",
+  "categoryTrends.picker.rowLabel":
+    "{{kind}}: {{name}}. Change",
+
   // Add / edit entry form
   "entryForm.pageTitle.income": "Income entry",
   "entryForm.pageTitle.expense": "Expense entry",
