@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
-import { seedEntries, SeedEntry, ts, APRIL } from "./helpers/seed";
+import { seedEntries, SeedEntry, ts, APRIL, OCTOBER } from "./helpers/seed";
 import { LANGUAGE_STORAGE_KEY } from "../i18n/languagePreference";
 import { showChange } from "./helpers/trendView";
 
@@ -191,6 +191,28 @@ describe("one category's trend", () => {
     const headline = await screen.findByRole("group", { name: "Freelance, October vs April" });
     expect(headline).toHaveTextContent("+$450.00");
     expect(within(headline).getByText("+225.0%")).toHaveClass("change-pill--good");
+  });
+
+  it("shows less earned on an income category in red, in the list and on Change", async () => {
+    seedEntries([
+      { date: ts(2026, APRIL), amount: "500", type: "income", categories_path: ",bonus," },
+      { date: ts(2026, OCTOBER), amount: "300", type: "income", categories_path: ",bonus," },
+    ]);
+    localStorage.setItem("categoryLists", JSON.stringify({ expense: [], income: ["Bonus"] }));
+    const { user } = await renderApp("/category-trends");
+
+    await user.click(await screen.findByRole("tab", { name: "Incomes" }));
+    const row = screen.getByRole("link", { name: "Bonus, $300.00, −40% vs April" });
+    expect(within(row).getByText("−40%")).toHaveClass("change-pill--bad");
+
+    await user.click(row);
+    await showChange(user);
+    const headline = await screen.findByRole("group", { name: "Bonus, October vs April" });
+    expect(headline).toHaveTextContent("−$200.00");
+    expect(within(headline).getByText("−40.0%")).toHaveClass("change-pill--bad");
+    expect(
+      screen.getByText("Green where you earned more than in April, red where you earned less.")
+    ).toBeInTheDocument();
   });
 
   it("lists every month of the range for screen readers", async () => {
