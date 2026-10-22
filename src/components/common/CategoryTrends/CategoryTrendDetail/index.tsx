@@ -7,11 +7,11 @@ import { NavigableMonthHeader } from "../../NavigableMonthHeader";
 import type { MonthDate } from "../../../../helpers/savingsChange/savingsChange";
 import {
   CategoryType,
-  findCategoryName,
   isCategoryType,
 } from "../../../../helpers/categoryLists/categoryLists";
 import {
   categoryTrendPath,
+  findCategoryInPath,
   getCategoryTrend,
   hasEntriesInRange,
 } from "../../../../helpers/categoryTrends/categoryTrends";
@@ -53,7 +53,7 @@ const CategoryTrendDetail = ({
   const pickerRef = useRef<HTMLButtonElement>(null);
   const range = useTrendRange(entries, selectedDate);
   const type: CategoryType | null = isCategoryType(params.type) ? params.type : null;
-  const name = type && findCategoryName(categoryLists[type], params.name);
+  const name = type && findCategoryInPath(categoryLists[type], params.name);
 
   // The lists load from storage after the first render: until a list has a
   // name in it there is nothing to look the category up in yet.

@@ -1,5 +1,6 @@
 import {
   categoryTrendPath,
+  findCategoryInPath,
   formatWholePercent,
   getCategoryTrend,
   getRankedCategoryTrends,
@@ -121,5 +122,26 @@ describe("formatWholePercent", () => {
 describe("categoryTrendPath", () => {
   it("encodes the category name", () => {
     expect(categoryTrendPath("expense", "Eating out")).toBe("/category-trends/expense/Eating%20out");
+  });
+});
+
+describe("findCategoryInPath", () => {
+  const NAMES = ["Rent/Mortgage", "Café & bar", "50% off", "a?b#c", "x=y", "Food"];
+
+  // What the router hands over for categoryTrendPath(type, name): history 4
+  // runs decodeURI on the path, which leaves reserved characters encoded.
+  const asRouted = (name: string) => decodeURI(encodeURIComponent(name));
+
+  it.each(NAMES)("finds %s from its path segment", (name) => {
+    expect(findCategoryInPath(NAMES, asRouted(name))).toBe(name);
+  });
+
+  it("ignores case, like category names do", () => {
+    expect(findCategoryInPath(NAMES, "FOOD")).toBe("Food");
+  });
+
+  it("finds nothing for a name that is not listed", () => {
+    expect(findCategoryInPath(NAMES, "Holidays")).toBeUndefined();
+    expect(findCategoryInPath(NAMES, "%E0%A4%A")).toBeUndefined();
   });
 });

@@ -272,6 +272,21 @@ describe("one category's trend", () => {
     expect(listedNames()).toEqual(["Freelance", "Salary"]);
   });
 
+  it.each(["Rent/Mortgage", "Café & bar", "50% off", "Q&A?#1"])(
+    "opens a category named %s, whatever characters its name holds",
+    async (name) => {
+      seedEntries([
+        { date: ts(2026, APRIL), amount: "100", type: "expense", categories_path: `,${name.toLowerCase()},` },
+        { date: ts(2026, OCTOBER), amount: "120", type: "expense", categories_path: `,${name.toLowerCase()},` },
+      ]);
+      localStorage.setItem("categoryLists", JSON.stringify({ expense: [name], income: [] }));
+      const { user } = await renderApp("/category-trends");
+
+      await user.click(await screen.findByRole("link", { name: `${name}, $120.00, +20% vs April` }));
+      expect(await screen.findByRole("group", { name: `${name}, Apr – Oct` })).toHaveTextContent("$220.00");
+    }
+  );
+
   it("sends a category that no longer exists back to the list", async () => {
     seed();
     await renderApp("/category-trends/expense/Holidays");

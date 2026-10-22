@@ -2,6 +2,7 @@ import { getSum } from "../entriesHelper/entriesHelper";
 import {
   CategoryLists,
   CategoryType,
+  findCategoryName,
   pathMatchesCategory,
 } from "../categoryLists/categoryLists";
 import type {
@@ -147,3 +148,21 @@ export const formatWholePercent = (percent: number) =>
 /** `/category-trends/expense/Eating%20out`: one category's trend. */
 export const categoryTrendPath = (type: CategoryType, name: string) =>
   `/category-trends/${type}/${encodeURIComponent(name)}`;
+
+const decodeSegment = (segment: string) => {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    // A bare "%" ("50% off") is already as decoded as it gets.
+    return segment;
+  }
+};
+
+/**
+ * The category a `categoryTrendPath` segment names, as the router hands it
+ * over. The router (history 4) decodes the path only partly, so "Café & bar"
+ * arrives as "Café %26 bar" and "Rent/Mortgage" as "Rent%2FMortgage"; the
+ * segment is matched as given first, then fully decoded.
+ */
+export const findCategoryInPath = (names: string[], segment: string) =>
+  findCategoryName(names, segment) ?? findCategoryName(names, decodeSegment(segment));
