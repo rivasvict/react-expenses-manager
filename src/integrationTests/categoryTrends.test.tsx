@@ -215,13 +215,24 @@ describe("one category's trend", () => {
     ).toBeInTheDocument();
   });
 
-  it("lists every month of the range for screen readers", async () => {
+  it("gives screen readers each month's amount, since the chart itself is a picture", async () => {
     seed();
     await renderApp("/category-trends/expense/Eating%20out");
 
+    // The chart is drawn for the eye only; a visually hidden table beside it
+    // holds a header row, then one row per month of the 6M range (April to October).
     const table = await screen.findByRole("table", { name: "Monthly amounts" });
-    expect(within(table).getAllByRole("row")).toHaveLength(8);
-    expect(within(table).getByRole("row", { name: "October 2026 $540.00" })).toBeInTheDocument();
+    const rows = within(table).getAllByRole("row").map((row) => row.textContent);
+    expect(rows).toEqual([
+      "MonthAmount",
+      "April 2026$380.00",
+      "May 2026$420.00",
+      "June 2026$350.00",
+      "July 2026$460.00",
+      "August 2026$410.00",
+      "September 2026$520.00",
+      "October 2026$540.00",
+    ]);
   });
 
   it("switches category from the picker and keeps the tab", async () => {
