@@ -11,12 +11,14 @@
   font-weight: 700;
   line-height: 1.5;
 
-  &--up {
+  &--up,
+  &--good {
     color: $income;
     background-color: $income-soft;
   }
 
-  &--down {
+  &--down,
+  &--bad {
     color: $expense;
     background-color: $expense-soft;
   }

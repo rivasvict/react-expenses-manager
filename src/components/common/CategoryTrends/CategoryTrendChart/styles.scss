@@ -1,0 +1,160 @@
+@import '../../../../variables.scss';
+
+// Category trend chart (design/system/components.md): the Savings trend
+// chart's look; gold on Per month, good/bad tints on Change.
+.category-trend-chart {
+  @include card();
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 0.5rem 0.5rem;
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__baseline {
+    stroke: $border-strong;
+    stroke-width: 1;
+  }
+
+  &--change &__baseline {
+    stroke-dasharray: 3 3;
+  }
+
+  &__area--month {
+    fill: $accent;
+    fill-opacity: 0.14;
+  }
+
+  &__area--good {
+    fill: $income;
+    fill-opacity: 0.2;
+  }
+
+  &__area--bad {
+    fill: $expense;
+    fill-opacity: 0.16;
+  }
+
+  // The hatch keeps "worse" readable without colour.
+  &__hatch {
+    stroke: $expense;
+    stroke-opacity: 0.55;
+    stroke-width: 1.5;
+  }
+
+  &__line--month,
+  &__line--good,
+  &__line--bad {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  &__line--month {
+    stroke: $accent;
+  }
+
+  &__line--good {
+    stroke: $income;
+  }
+
+  &__line--bad {
+    stroke: $expense;
+  }
+
+  &__tick {
+    fill: $text-secondary;
+    font-size: 11px;
+  }
+
+  &__tick--reference {
+    fill: $text-primary;
+    font-weight: 600;
+  }
+
+  &__dot-reference {
+    fill: $bg-raised;
+    stroke: $text-secondary;
+    stroke-width: 2;
+  }
+
+  &__dot {
+    stroke: $bg-raised;
+    stroke-width: 2;
+
+    &--month {
+      fill: $accent;
+    }
+
+    &--good {
+      fill: $income;
+    }
+
+    &--bad {
+      fill: $expense;
+    }
+
+    &--flat {
+      fill: $text-secondary;
+    }
+  }
+
+  &__end-label {
+    @include money-figures();
+    fill: $text-primary;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    padding: 0.5rem 0.5rem 0;
+    color: $text-secondary;
+    font-size: 12px;
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 12px;
+    height: 8px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    border-radius: $radius-pill;
+
+    &--month {
+      background-color: $accent-soft;
+      border: 1px solid $accent;
+    }
+
+    &--reference {
+      width: 14px;
+      height: 0;
+      border-top: 2px dashed $border-strong;
+      border-radius: 0;
+    }
+
+    &--good {
+      background-color: $income-soft;
+      border: 1px solid $income;
+    }
+
+    &--bad {
+      background-color: $expense-soft;
+      border: 1px solid $expense;
+    }
+  }
+
+  &__note {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+  }
+}

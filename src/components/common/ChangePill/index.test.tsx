@@ -22,4 +22,9 @@ describe("ChangePill", () => {
     render(<ChangePill kind="up" percent="1.0%" aria-hidden />);
     expect(screen.getByText("+1.0%")).toHaveAttribute("aria-hidden", "true");
   });
+
+  it("colours by tone when given one, keeping the direction's sign", () => {
+    render(<ChangePill kind="up" tone="bad" percent="42.1%" />);
+    expect(screen.getByText("+42.1%")).toHaveClass("change-pill--bad");
+  });
 });

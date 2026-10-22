@@ -16,15 +16,21 @@ interface ChangePillProps {
   kind: ChangeKind;
   /** Already formatted, e.g. "12.5%" */
   percent: string;
+  /**
+   * Colours by good or bad news instead of by direction, where a rise is bad
+   * (more spent on an expense category). The arrow still shows the direction.
+   */
+  tone?: "good" | "bad" | "flat";
   "aria-hidden"?: boolean;
 }
 
 /**
  * A tinted pill with an arrow and a signed percentage: green ▲ when savings
- * went up, red ▼ when they went down, a grey dash when nothing changed.
+ * went up, red ▼ when they went down, a grey dash when nothing changed. With
+ * a `tone`, the colour follows the tone and the arrow the direction.
  */
-const ChangePill = ({ kind, percent, "aria-hidden": ariaHidden }: ChangePillProps) => (
-  <span className={`change-pill change-pill--${kind}`} aria-hidden={ariaHidden}>
+const ChangePill = ({ kind, percent, tone, "aria-hidden": ariaHidden }: ChangePillProps) => (
+  <span className={`change-pill change-pill--${tone ?? kind}`} aria-hidden={ariaHidden}>
     <svg className="change-pill__icon" viewBox="0 0 12 12" aria-hidden="true">
       <path d={ICON_PATHS[kind]} />
     </svg>

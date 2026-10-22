@@ -28,6 +28,9 @@ import JoinScreen from "../Party/JoinScreen";
 import SyncReview from "../SyncReview";
 import Settings from "../Settings";
 import SavingsTrend from "../common/SavingsTrend";
+import { TrendRangeProvider } from "../common/SavingsTrend/TrendRangeContext";
+import CategoryTrends from "../common/CategoryTrends";
+import CategoryTrendDetail from "../common/CategoryTrends/CategoryTrendDetail";
 import SyncGate from "../common/SyncGate";
 import { SyncAvailabilityProvider } from "../common/SyncAvailability";
 
@@ -48,108 +51,117 @@ function Dashboard({ entries, selectedDate }) {
       <Header />
       <Container fluid className="dashboard-container">
         <WorkAreaContentContainer>
-          <Switch>
-            <Route path={`${match.url}add-income`}>
-              <AddEntry entryType="income" selectedDate={selectedDate} />
-            </Route>
-            <Route path={`${match.url}edit-income/:entryId`}>
-              <EditEntry entryType="income" selectedDate={selectedDate} />
-            </Route>
-            <Route path={`${match.url}add-expense`}>
-              <AddEntry entryType="expense" selectedDate={selectedDate} />
-            </Route>
-            <Route path={`${match.url}edit-expense/:entryId`}>
-              <EditEntry entryType="income" selectedDate={selectedDate} />
-            </Route>
-            <Route path={`${match.url}incomes`}>
-              <EntrySummaryWithFilter
-                selectedDate={selectedDate}
-                entryType="income"
-              />
-            </Route>
-            <Route path={`${match.url}expenses`}>
-              <EntrySummaryWithFilter
-                selectedDate={selectedDate}
-                entryType="expense"
-              />
-            </Route>
-            <Route path={`${match.url}summary`}>
-              {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
-              <Summary entries={entries} selectedDate={selectedDate} />
-            </Route>
-            <Route path={`${match.url}savings-trend`}>
-              <SavingsTrend />
-            </Route>
-            <Route path={`${match.url}data-management`}>
-              <DataManagement />
-            </Route>
-            <Route path={`${match.url}add-bucket`}>
-              <AddBucket />
-            </Route>
-            <Route path={`${match.url}categories`}>
-              <Categories />
-            </Route>
-            <Route path={`${match.url}fixed-entries`}>
-              <FixedEntries />
-            </Route>
-            <Route path={`${match.url}buckets`}>
-              <Buckets selectedDate={selectedDate} />
-            </Route>
-            {/* Account/auth screens (multi-user sync,
+          {/* The trend screens share the picked range (TrendRangeProvider). */}
+          <TrendRangeProvider>
+            <Switch>
+              <Route path={`${match.url}add-income`}>
+                <AddEntry entryType="income" selectedDate={selectedDate} />
+              </Route>
+              <Route path={`${match.url}edit-income/:entryId`}>
+                <EditEntry entryType="income" selectedDate={selectedDate} />
+              </Route>
+              <Route path={`${match.url}add-expense`}>
+                <AddEntry entryType="expense" selectedDate={selectedDate} />
+              </Route>
+              <Route path={`${match.url}edit-expense/:entryId`}>
+                <EditEntry entryType="income" selectedDate={selectedDate} />
+              </Route>
+              <Route path={`${match.url}incomes`}>
+                <EntrySummaryWithFilter
+                  selectedDate={selectedDate}
+                  entryType="income"
+                />
+              </Route>
+              <Route path={`${match.url}expenses`}>
+                <EntrySummaryWithFilter
+                  selectedDate={selectedDate}
+                  entryType="expense"
+                />
+              </Route>
+              <Route path={`${match.url}summary`}>
+                {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
+                <Summary entries={entries} selectedDate={selectedDate} />
+              </Route>
+              <Route path={`${match.url}savings-trend`}>
+                <SavingsTrend />
+              </Route>
+              <Route path={`${match.url}category-trends/:type/:name`}>
+                <CategoryTrendDetail />
+              </Route>
+              <Route path={`${match.url}category-trends`}>
+                <CategoryTrends />
+              </Route>
+              <Route path={`${match.url}data-management`}>
+                <DataManagement />
+              </Route>
+              <Route path={`${match.url}add-bucket`}>
+                <AddBucket />
+              </Route>
+              <Route path={`${match.url}categories`}>
+                <Categories />
+              </Route>
+              <Route path={`${match.url}fixed-entries`}>
+                <FixedEntries />
+              </Route>
+              <Route path={`${match.url}buckets`}>
+                <Buckets selectedDate={selectedDate} />
+              </Route>
+              {/* Account/auth screens (multi-user sync,
                 docs/multi-user-sync/DESIGN.md §2). Additive: no existing route
                 is gated by the session (AC-1.7,
                 docs/multi-user-sync/PRD.md). */}
-            <Route path={`${match.url}account`}>
-              <SyncGate allowOffline>
-                <Account />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}sign-up`}>
-              <SyncGate>
-                <SignUpScreen />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}sign-in`}>
-              <SyncGate>
-                <SignInScreen />
-              </SyncGate>
-            </Route>
-            {/* Party screens (multi-user sync, DESIGN §3). The specific
+              <Route path={`${match.url}account`}>
+                <SyncGate allowOffline>
+                  <Account />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}sign-up`}>
+                <SyncGate>
+                  <SignUpScreen />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}sign-in`}>
+                <SyncGate>
+                  <SignInScreen />
+                </SyncGate>
+              </Route>
+              {/* Party screens (multi-user sync, DESIGN §3). The specific
                 sub-routes must precede the bare /party path. */}
-            <Route path={`${match.url}party/invite`}>
-              <SyncGate>
-                <InviteScreen />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}party/join`}>
-              <SyncGate>
-                <JoinScreen />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}party`}>
-              <SyncGate>
-                <Party />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}sync-review`}>
-              <SyncGate keepWhileMounted>
-                <SyncReview />
-              </SyncGate>
-            </Route>
-            <Route path={`${match.url}settings`}>
-              <Settings />
-            </Route>
-            {/** TODO: Work with a bucketId instead of a bucketName */}
-            <Route path={`${match.url}edit-bucket/:bucketName`}>
-              <EditBucket />
-            </Route>
-            <Route path={`${match.url}dashboard`}>
-              <DashboardContent {...{ entries, match }} />
-            </Route>
-            <Route exact path={`${match.url}`}>
-              <DashboardContent {...{ entries, match }} />
-            </Route>
-          </Switch>
+              <Route path={`${match.url}party/invite`}>
+                <SyncGate>
+                  <InviteScreen />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}party/join`}>
+                <SyncGate>
+                  <JoinScreen />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}party`}>
+                <SyncGate>
+                  <Party />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}sync-review`}>
+                <SyncGate keepWhileMounted>
+                  <SyncReview />
+                </SyncGate>
+              </Route>
+              <Route path={`${match.url}settings`}>
+                <Settings />
+              </Route>
+              {/** TODO: Work with a bucketId instead of a bucketName */}
+              <Route path={`${match.url}edit-bucket/:bucketName`}>
+                <EditBucket />
+              </Route>
+              <Route path={`${match.url}dashboard`}>
+                <DashboardContent {...{ entries, match }} />
+              </Route>
+              <Route exact path={`${match.url}`}>
+                <DashboardContent {...{ entries, match }} />
+              </Route>
+            </Switch>
+          </TrendRangeProvider>
         </WorkAreaContentContainer>
       </Container>
     </main>

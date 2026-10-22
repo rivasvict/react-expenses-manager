@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.36.0] - 2026-10-21
+
+### Added
+
+- **Category trends.** The Savings trend screen now opens with a **Savings |
+  Categories** switch in place of its title. Categories shows your expense or
+  income categories for the same month and range, ranked by how much each one
+  changed since the range's first month, with a small line of its months and a
+  change pill. Tap a category to see its own trend: a Per month tab with the
+  range's total and monthly average, and a Change tab comparing the month with
+  the first one. Spending less, or earning more, shows in green. Pick another
+  category from the row at the top. The range you pick carries over between
+  Savings and Categories.
+
 ## [1.35.0] - 2026-10-19
 
 ### Added

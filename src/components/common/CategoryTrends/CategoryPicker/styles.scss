@@ -1,0 +1,57 @@
+@import '../../../../variables.scss';
+
+// Category picker row (design/system/components.md): a raised row that names
+// the category a trend is about and opens the sheet to pick another.
+.category-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  min-height: 3rem;
+  margin: 0 0 0.75rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.8rem;
+  font: inherit;
+  text-align: left;
+  color: $text-primary;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  cursor: pointer;
+  transition: background-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__kind {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  &__name {
+    display: block;
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  &__chevron {
+    flex: none;
+    color: $text-secondary;
+  }
+}
