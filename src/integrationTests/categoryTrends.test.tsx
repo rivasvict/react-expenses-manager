@@ -168,6 +168,21 @@ describe("one category's trend", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows less spent on an expense category in green, in the list and on Change", async () => {
+    seed();
+    const { user } = await renderApp("/category-trends");
+
+    const row = await screen.findByRole("link", { name: "Food, $610.00, −15% vs April" });
+    expect(within(row).getByText("−15%")).toHaveClass("change-pill--good");
+
+    await user.click(row);
+    await showChange(user);
+    const headline = await screen.findByRole("group", { name: "Food, October vs April" });
+    expect(headline).toHaveTextContent("−$110.00");
+    expect(within(headline).getByText("−15.3%")).toHaveClass("change-pill--good");
+    expect(headline).toHaveTextContent("$610.00 vs $720.00");
+  });
+
   it("shows a rise in an income category in green", async () => {
     seed();
     const { user } = await renderApp("/category-trends/income/Freelance");
