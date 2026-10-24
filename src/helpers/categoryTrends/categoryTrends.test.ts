@@ -140,6 +140,23 @@ describe("categoryTrendPath", () => {
   it("encodes the category name", () => {
     expect(categoryTrendPath("expense", "Eating out")).toBe("/category-trends/expense/Eating%20out");
   });
+
+  // What history 4 does on navigation (decodeURI on the pushed path), what the
+  // browser then shows (spaces and non-ASCII escaped, "%" left alone), and what
+  // history reads back on a reload.
+  const NAMES = ["50% off", "Rent/Mortgage", "Café & bar", "Q&A?#1", "a%26b", "Food"];
+  const pushed = (path: string) => decodeURI(path);
+  const addressBar = (path: string) =>
+    path.replace(/[^\x21-\x7e]/gu, (character) => encodeURIComponent(character));
+
+  it.each(NAMES)("leaves a valid address for %s that opens it again on reload", (name) => {
+    const inApp = pushed(categoryTrendPath("expense", name));
+    const url = addressBar(inApp);
+    expect(() => decodeURI(url)).not.toThrow();
+    const segmentOf = (path: string) => path.split("/").pop()!;
+    expect(findCategoryInPath(NAMES, segmentOf(inApp))).toBe(name);
+    expect(findCategoryInPath(NAMES, segmentOf(decodeURI(url)))).toBe(name);
+  });
 });
 
 describe("findCategoryInPath", () => {

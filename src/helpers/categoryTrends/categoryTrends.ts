@@ -153,9 +153,15 @@ export const formatWholePercent = (percent: number) => {
   return whole >= PERCENT_CAP ? `>${PERCENT_CAP - 1}%` : `${whole}%`;
 };
 
-/** `/category-trends/expense/Eating%20out`: one category's trend. */
+/**
+ * `/category-trends/expense/Eating%20out`: one category's trend. The router
+ * (history 4) runs `decodeURI` on a path before it reaches the address bar, so
+ * an encoded "%" ("%25") would land there bare ("50%%20off"): a URL history
+ * itself cannot decode again on reload. It is encoded twice so a "%25"
+ * survives; `findCategoryInPath` decodes the segment back.
+ */
 export const categoryTrendPath = (type: CategoryType, name: string) =>
-  `/category-trends/${type}/${encodeURIComponent(name)}`;
+  `/category-trends/${type}/${encodeURIComponent(name).replace(/%25/g, "%2525")}`;
 
 const decodeSegment = (segment: string) => {
   try {
