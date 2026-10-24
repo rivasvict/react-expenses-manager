@@ -42,6 +42,7 @@ const CategoryTrendDetail = ({
   entries,
   selectedDate,
   categoryLists,
+  categoryListsLoaded,
   onSelectedDateChange,
 }: CategoryTrendDetailProps) => {
   const { t, language } = useTranslation();
@@ -55,9 +56,9 @@ const CategoryTrendDetail = ({
   const type: CategoryType | null = isCategoryType(params.type) ? params.type : null;
   const name = type && findCategoryInPath(categoryLists[type], params.name);
 
-  // The lists load from storage after the first render: until a list has a
-  // name in it there is nothing to look the category up in yet.
-  if (type && !name && categoryLists[type].length === 0) return null;
+  // The lists load from storage after the first render: until then there is
+  // nothing to look the category up in yet.
+  if (type && !name && !categoryListsLoaded) return null;
   if (!type || !name) return <Redirect to={SCOPE_ROUTES.categories} />;
 
   const { resolved } = range;
@@ -65,7 +66,11 @@ const CategoryTrendDetail = ({
     resolved.status === "ready"
       ? getCategoryTrend(entries, type, name, selectedDate, resolved.monthsBack)
       : null;
-  const monthName = (date: MonthDate) => getMonthLabel(date.month, language, "sentence");
+  // With the year when the range crosses one ("November 2025"), as elsewhere.
+  const monthName = (date: MonthDate) =>
+    `${getMonthLabel(date.month, language, "sentence")}${
+      trend && trend.reference.year !== trend.end.year ? ` ${date.year}` : ""
+    }`;
   const closePicker = () => {
     setIsPickerOpen(false);
     pickerRef.current?.focus();

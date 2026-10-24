@@ -68,6 +68,20 @@ describe("getCategoryTrend", () => {
     expect(getCategoryTrend(ENTRIES, "expense", "FOOD", JUNE, 0).end.amount).toBe(610);
   });
 
+  it("rounds each month to cents, so float noise is not a change", () => {
+    const entries: EntriesTree = {
+      2026: {
+        4: { expenses: [expense(10.1, ",gym,"), expense(20.2, ",gym,")] },
+        5: { expenses: [expense(30.3, ",gym,")] },
+      },
+    };
+    const trend = getCategoryTrend(entries, "expense", "Gym", JUNE, 1);
+    expect(trend.points.map((point) => point.amount)).toEqual([30.3, 30.3]);
+    expect(trend.difference).toBe(0);
+    expect(trend.change).toEqual({ kind: "flat", percent: 0 });
+    expect(trend.tone).toBe("flat");
+  });
+
   it("is flat for a category that stayed at nothing", () => {
     const trend = getCategoryTrend(ENTRIES, "expense", "Travel", JUNE, 2);
     expect(trend.change).toEqual({ kind: "flat", percent: 0 });
@@ -116,6 +130,9 @@ describe("formatWholePercent", () => {
     expect(formatWholePercent(42.1)).toBe("42%");
     expect(formatWholePercent(2.5)).toBe("3%");
     expect(formatWholePercent(1000)).toBe(">999%");
+    // Rounded first: 999.6% would otherwise read "1000%".
+    expect(formatWholePercent(999.6)).toBe(">999%");
+    expect(formatWholePercent(999.4)).toBe("999%");
   });
 });
 

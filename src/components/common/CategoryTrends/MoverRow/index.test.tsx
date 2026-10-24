@@ -31,6 +31,12 @@ describe("MoverRow", () => {
     expect(screen.getByText("−15%")).toHaveClass("change-pill--good");
   });
 
+  it("shows a change under half a percent as no change, in grey", () => {
+    renderRow(makeTrend("expense", "Rent", [1000, 1004]));
+    expect(screen.getByRole("link", { name: "Rent, $1,004.00, 0% vs April" })).toBeInTheDocument();
+    expect(screen.getByText("0%")).toHaveClass("change-pill--flat");
+  });
+
   it("marks a category that had nothing in the reference month as new", () => {
     renderRow(makeTrend("expense", "Gym", [0, 30]));
     expect(screen.getByRole("link", { name: "Gym, $30.00, new, was $0.00" })).toHaveTextContent("New");

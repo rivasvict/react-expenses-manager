@@ -7,7 +7,7 @@ import {
   formatWholePercent,
 } from "../../../../helpers/categoryTrends/categoryTrends";
 import { formatSavings } from "../../../../helpers/savingsTrend/formatters";
-import ChangePill from "../../ChangePill";
+import ChangePill, { ChangeKind } from "../../ChangePill";
 import Sparkline from "../Sparkline";
 import "./styles.scss";
 
@@ -28,7 +28,11 @@ const MoverRow = ({ trend, reference }: MoverRowProps) => {
   const amount = formatSavings(trend.end.amount);
   const was = formatSavings(trend.reference.amount);
   const hasPercent = change.kind === "up" || change.kind === "down" || change.kind === "flat";
-  const sign = change.kind === "up" ? "+" : change.kind === "down" ? "−" : "";
+  // The rows show whole percentages: under 0.5% reads as no change, in grey.
+  const kind: ChangeKind | null = hasPercent
+    ? Math.round(change.percent) === 0 ? "flat" : change.kind
+    : null;
+  const sign = kind === "up" ? "+" : kind === "down" ? "−" : "";
   const label = hasPercent
     ? t("categoryTrends.rowLabel", {
         name,
@@ -47,8 +51,12 @@ const MoverRow = ({ trend, reference }: MoverRowProps) => {
       <Sparkline values={trend.points.map((point) => point.amount)} tone={tone} />
       <span className="mover-row__figures">
         <span className="mover-row__amount">{amount}</span>
-        {hasPercent ? (
-          <ChangePill kind={change.kind} tone={tone} percent={formatWholePercent(change.percent)} />
+        {hasPercent && kind ? (
+          <ChangePill
+            kind={kind}
+            tone={kind === "flat" ? "flat" : tone}
+            percent={formatWholePercent(change.percent)}
+          />
         ) : (
           <span className="change-pill change-pill--flat">{t("categoryTrends.new")}</span>
         )}

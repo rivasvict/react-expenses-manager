@@ -1,4 +1,13 @@
-import { screen } from "@testing-library/react";
+import React from "react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
+import { Route, Router } from "react-router-dom";
+import { createMemoryHistory } from "history";
+import CategoryTrends from ".";
+import WithBalance from "../../WithBalance";
+import { setupStore } from "../../../redux/store";
+import { LanguageProvider } from "../../../i18n";
 import { renderApp } from "../../../integrationTests/helpers/renderApp";
 import { seedEntries, ts, APRIL, OCTOBER } from "../../../integrationTests/helpers/seed";
 
@@ -43,5 +52,38 @@ describe("CategoryTrends", () => {
     await user.click(await screen.findByRole("tab", { name: "Incomes" }));
     expect(screen.getByText("No incomes between April and October")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Add income" })).toBeInTheDocument();
+  });
+
+  it("keeps the picked tab when the user comes back with the browser's Back", async () => {
+    seedEntries([
+      entry(APRIL, "100", ",food,"),
+      entry(OCTOBER, "120", ",food,"),
+      { date: ts(2026, APRIL), amount: "500", type: "income", categories_path: ",bonus," },
+      { date: ts(2026, OCTOBER), amount: "300", type: "income", categories_path: ",bonus," },
+    ]);
+    localStorage.setItem("categoryLists", JSON.stringify({ expense: ["Food"], income: ["Bonus"] }));
+    const history = createMemoryHistory({ initialEntries: ["/category-trends"] });
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+    render(
+      <Provider store={setupStore()}>
+        <LanguageProvider>
+          <Router history={history}>
+            <WithBalance>
+              <Route exact path="/category-trends">
+                <CategoryTrends />
+              </Route>
+            </WithBalance>
+          </Router>
+        </LanguageProvider>
+      </Provider>
+    );
+
+    await user.click(await screen.findByRole("tab", { name: "Incomes" }));
+    await user.click(screen.getByRole("link", { name: /^Bonus/ }));
+    expect(history.location.pathname).toBe("/category-trends/income/Bonus");
+    act(() => history.goBack());
+
+    expect(await screen.findByRole("tab", { name: "Incomes" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("link", { name: /^Bonus/ })).toBeInTheDocument();
   });
 });

@@ -38,6 +38,9 @@ const staticInitialState = {
   // design/features/category-management/ui/decision.md), loaded from
   // localStorage on start.
   categoryLists: getEmptyCategoryLists(),
+  // False until the lists have been read from storage, so a screen can tell
+  // "still loading" from "loaded and empty".
+  categoryListsLoaded: false,
   // Fixed (recurring) incomes/expenses per category, time-aware so edits and
   // removals propagate from a month forward (issue #103). Empty by default.
   fixedEntries: getEmptyFixedEntries(),
@@ -181,6 +184,7 @@ export const reducer = (state, action) => {
       return {
         ...state,
         categoryLists: payload.categoryLists,
+        categoryListsLoaded: true,
       };
     // The first-run wizard replaces both wholesale: the new user had no buckets
     // and the lists are exactly what they chose.

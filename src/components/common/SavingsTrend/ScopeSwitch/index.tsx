@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "../../../../i18n";
 import "./styles.scss";
 
@@ -11,6 +11,11 @@ export const SCOPE_ROUTES: Record<TrendScope, string> = {
 };
 
 const SCOPES: TrendScope[] = ["savings", "categories"];
+
+/** Router state that asks the switch to take focus once its view opens. */
+interface ScopeSwitchLocationState {
+  focusScope?: boolean;
+}
 
 const ICONS: Record<TrendScope, string> = {
   savings: "M1.5 12 6 7.5l3 3 5.5-6M10.5 4.5h4v4",
@@ -25,14 +30,30 @@ interface ScopeSwitchProps {
 /**
  * The Savings | Categories switch at the top of the trend screens, in place of
  * the eyebrow (design/features/category-trends/ui/approved/). Each segment
- * opens its view; arrow keys, Home and End move between them.
+ * opens its view; arrow keys, Home and End move between them. Each view is a
+ * screen of its own, so a switch made from the keyboard asks the next view's
+ * switch to take focus back.
  */
 const ScopeSwitch = ({ active }: ScopeSwitchProps) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const location = useLocation<ScopeSwitchLocationState | undefined>();
   const tabRefs = useRef<Partial<Record<TrendScope, HTMLButtonElement | null>>>({});
 
-  const open = (scope: TrendScope) => history.push(SCOPE_ROUTES[scope]);
+  useEffect(
+    () => {
+      if (location.state?.focusScope) tabRefs.current[active]?.focus();
+    },
+    // Only when the view opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const open = (scope: TrendScope, fromKeyboard = false) => {
+    // Tapping the open view again adds no history entry.
+    if (location.pathname === SCOPE_ROUTES[scope]) return;
+    history.push(SCOPE_ROUTES[scope], fromKeyboard ? { focusScope: true } : undefined);
+  };
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const target =
       event.key === "ArrowRight" || event.key === "End" ? "categories"
@@ -41,7 +62,7 @@ const ScopeSwitch = ({ active }: ScopeSwitchProps) => {
     if (!target) return;
     event.preventDefault();
     tabRefs.current[target]?.focus();
-    if (target !== active) open(target);
+    if (target !== active) open(target, true);
   };
 
   return (

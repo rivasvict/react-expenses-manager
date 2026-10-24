@@ -81,7 +81,12 @@ const CategoryTrendSummary = ({ trend, view, onViewChange }: CategoryTrendSummar
           </span>
           <span className="trend-summary__delta">
             {(change.kind === "up" || change.kind === "down" || change.kind === "flat") && (
-              <ChangePill kind={change.kind} tone={tone} percent={formatPercent(change.percent)} />
+              <ChangePill
+                kind={change.kind}
+                // "0.0%" is no change, whatever a few cents of difference say.
+                tone={change.kind === "flat" ? "flat" : tone}
+                percent={formatPercent(change.percent)}
+              />
             )}
             {change.kind === "new" && (
               <span className="change-pill change-pill--flat">{t("categoryTrends.new")}</span>

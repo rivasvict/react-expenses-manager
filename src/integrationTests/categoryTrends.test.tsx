@@ -82,6 +82,19 @@ describe("the Savings | Categories switch", () => {
     expect(screen.getByText("October vs July, biggest change first.")).toBeInTheDocument();
   });
 
+  it("starts again on the default range after leaving the trend screens", async () => {
+    seed();
+    const { user } = await renderApp("/savings-trend");
+
+    await user.click(await screen.findByRole("button", { name: "Last month" }));
+    await user.click(screen.getByRole("tab", { name: "Categories" }));
+    expect(await screen.findByRole("button", { name: "Last month" })).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(screen.getByRole("link", { name: "Home" }));
+    await user.click(await screen.findByRole("link", { name: "Savings trend" }));
+    expect(await screen.findByRole("button", { name: "Last 6 months" })).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("goes back to Savings", async () => {
     seed();
     const { user } = await renderApp("/category-trends");
@@ -286,6 +299,33 @@ describe("one category's trend", () => {
       expect(await screen.findByRole("group", { name: `${name}, Apr – Oct` })).toHaveTextContent("$220.00");
     }
   );
+
+  it("sends a category link back to the list when that type has no categories at all", async () => {
+    seedEntries([
+      { date: ts(2026, APRIL), amount: "100", type: "expense", categories_path: ",food," },
+      { date: ts(2026, OCTOBER), amount: "120", type: "expense", categories_path: ",food," },
+    ]);
+    localStorage.setItem("categoryLists", JSON.stringify({ expense: ["Food"], income: [] }));
+    await renderApp("/category-trends/income/Salary");
+
+    expect(await screen.findByText("October vs April, biggest change first.")).toBeInTheDocument();
+  });
+
+  it("gives the years when a category's empty range crosses one", async () => {
+    seedEntries([
+      { date: ts(2025, OCTOBER), amount: "100", type: "expense", categories_path: ",food," },
+      { date: ts(2026, OCTOBER), amount: "120", type: "expense", categories_path: ",food," },
+    ]);
+    localStorage.setItem("categoryLists", JSON.stringify({ expense: ["Food", "Travel"], income: [] }));
+    const { user } = await renderApp("/category-trends/expense/Travel");
+
+    await user.click(await screen.findByRole("button", { name: "Last 12 months" }));
+    expect(
+      await screen.findByText(
+        "There are no expenses in this category between October 2025 and October 2026. Pick a wider range or another category."
+      )
+    ).toBeInTheDocument();
+  });
 
   it("sends a category that no longer exists back to the list", async () => {
     seed();

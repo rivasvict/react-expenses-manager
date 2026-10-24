@@ -36,6 +36,11 @@ describe("CategoryTrendSummary", () => {
     expect(card).toHaveTextContent("$540.00 vs $380.00");
   });
 
+  it("shows 0.0% in grey even when a few cents changed", () => {
+    renderSummary("change", makeTrend("expense", "Rent", [1000, 1000.4]));
+    expect(screen.getByText("0.0%")).toHaveClass("change-pill--flat");
+  });
+
   it("says New when the reference month had nothing", () => {
     renderSummary("change", makeTrend("expense", "Gym", [0, 30]));
     expect(screen.getByText("New")).toBeInTheDocument();

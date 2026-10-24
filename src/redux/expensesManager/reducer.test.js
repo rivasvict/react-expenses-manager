@@ -60,6 +60,15 @@ describe("expensesManager reducer - ADD_CATEGORY / GET_CATEGORIES (category mana
     expect(nextState.categoryLists).toEqual(lists);
   });
 
+  it("marks the category lists as loaded on GET_CATEGORIES, even when empty", () => {
+    expect(reducer(undefined, { type: "@@INIT" }).categoryListsLoaded).toBe(false);
+    const state = reducer(undefined, {
+      type: GET_CATEGORIES,
+      payload: { categoryLists: { expense: [], income: [] } },
+    });
+    expect(state.categoryListsLoaded).toBe(true);
+  });
+
   it("replaces entries, buckets, lists and fixed entries on CATEGORY_CHANGED", () => {
     const previous = {
       entries: { 2026: { 4: { incomes: [], expenses: [{ id: "e1" }] } } },

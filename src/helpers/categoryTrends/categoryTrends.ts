@@ -26,6 +26,10 @@ const LIST_KEY = { expense: "expenses", income: "incomes" } as const;
 // One decimal, so "0.0%" is exactly what reads as "no change".
 const roundToTenth = (value: number) => Math.round(value * 10) / 10;
 
+// Amounts are money: summing floats ($10.10 + $20.20) leaves noise such as
+// 30.299999999999997, which would read as a change against $30.30.
+const roundToCents = (value: number) => Math.round(value * 100) / 100;
+
 const getCategoryEntries = (
   entries: EntriesTree,
   type: CategoryType,
@@ -52,11 +56,13 @@ const toPoint = (
     ...date,
     // Expenses sum as negative amounts; a category shows what it cost.
     amount: matching.length
-      ? Math.abs(
-          getSum({
-            entryType: LIST_KEY[type],
-            entries: { [LIST_KEY[type]]: matching },
-          })
+      ? roundToCents(
+          Math.abs(
+            getSum({
+              entryType: LIST_KEY[type],
+              entries: { [LIST_KEY[type]]: matching },
+            })
+          )
         )
       : 0,
     hasEntries: matching.length > 0,
@@ -91,8 +97,8 @@ export const getCategoryTrend = (
   );
   const reference = points[0];
   const endPoint = points[points.length - 1];
-  const total = points.reduce((sum, point) => sum + point.amount, 0);
-  const difference = endPoint.amount - reference.amount;
+  const total = roundToCents(points.reduce((sum, point) => sum + point.amount, 0));
+  const difference = roundToCents(endPoint.amount - reference.amount);
   return {
     type,
     name,
@@ -142,8 +148,10 @@ export const getRankedCategoryTrends = (
 const PERCENT_CAP = 1000;
 
 /** "42%": the list rows round to whole percentages; ">999%" past the cap. */
-export const formatWholePercent = (percent: number) =>
-  percent >= PERCENT_CAP ? `>${PERCENT_CAP - 1}%` : `${Math.round(percent)}%`;
+export const formatWholePercent = (percent: number) => {
+  const whole = Math.round(percent);
+  return whole >= PERCENT_CAP ? `>${PERCENT_CAP - 1}%` : `${whole}%`;
+};
 
 /** `/category-trends/expense/Eating%20out`: one category's trend. */
 export const categoryTrendPath = (type: CategoryType, name: string) =>

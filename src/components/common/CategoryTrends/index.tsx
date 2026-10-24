@@ -57,10 +57,16 @@ const CategoryTrends = ({
 }: CategoryTrendsProps) => {
   const { t, language } = useTranslation();
   const history = useHistory();
-  const { state } = useLocation<CategoryTrendsLocationState | undefined>();
+  const location = useLocation<CategoryTrendsLocationState | undefined>();
   const [type, setType] = useState<CategoryType>(
-    isCategoryType(state?.type) ? state!.type : "expense"
+    isCategoryType(location.state?.type) ? location.state!.type : "expense"
   );
+  // The tab is kept in this history entry too, so Back from a category
+  // returns to it.
+  const showType = (next: CategoryType) => {
+    setType(next);
+    history.replace({ ...location, state: { ...location.state, type: next } });
+  };
   const range = useTrendRange(entries, selectedDate);
   const { resolved } = range;
   const monthsBack = resolved.status === "ready" ? resolved.monthsBack : null;
@@ -92,7 +98,7 @@ const CategoryTrends = ({
             ariaLabel={t("categories.tabsLabel")}
             tabs={CATEGORY_TYPES.map((id) => ({ id, label: t(TAB_LABELS[id]) }))}
             active={type}
-            onChange={setType}
+            onChange={showType}
           />
           {trends.length > 0 ? (
             <>
@@ -138,11 +144,13 @@ export const mapStateToProps = (state: {
     entries: EntriesTree;
     selectedDate: MonthDate;
     categoryLists: CategoryLists;
+    categoryListsLoaded: boolean;
   };
 }) => ({
   entries: state.expensesManager.entries,
   selectedDate: state.expensesManager.selectedDate,
   categoryLists: state.expensesManager.categoryLists,
+  categoryListsLoaded: state.expensesManager.categoryListsLoaded,
 });
 
 export const mapActionsToProps = (dispatch: Dispatch) => ({
