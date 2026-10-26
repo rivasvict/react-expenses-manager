@@ -23,7 +23,7 @@ same PR that adds it.
 | Dashboard composition | The dashboard, assembled | `src/components/Dashboard/components/DashboardContent/` |
 | Sync server status note (offline dot + label + explanation, in place of an action that needs the server) | Sync unavailable | `src/components/common/SyncOfflineNote/` |
 | Savings change badge (▲/▼ percentage pill + "vs <month>" caption, in the savings card's footer) | The dashboard, assembled | `src/components/common/SavingsChangeBadge/`; computed by `src/helpers/savingsChange/` |
-| Savings change pill (arrow + signed percentage on a green / red / grey tint) | The dashboard, assembled | `src/components/common/ChangePill/` |
+| Savings change pill (arrow + signed percentage on a green / red / grey tint; an optional `tone` colours it by good or bad news instead of direction) | The dashboard, assembled, Category trends | `src/components/common/ChangePill/` |
 | Savings trend link (gold "Trend ›" with a trending-up chip, in the savings card's footer) | The dashboard, assembled | `src/components/common/SavingsTrendLink/` |
 | Range switch (segmented control of 1M … YTD plus a calendar button; dimmed when out of reach) | Savings trend | `src/components/common/SavingsTrend/RangeSwitch/` |
 | Trend chart (SVG line over a dashed baseline, green above and red hatched below, with a month tooltip; plots the running total over a zero line on the Total saved tab) | Savings trend | `src/components/common/SavingsTrend/TrendChart/` (tooltip: `TrendChart/ChartTooltip/`) |
@@ -35,7 +35,7 @@ same PR that adds it.
 | Bottom sheet (scrim, panel, grabber, heading with an optional eyebrow, close chip; focuses its heading or a given field, closes on Escape or scrim). **Tall** variant: up to 92vh with a scrolling body; an optional **footer** stays fixed under the body, above a rule | Savings trend, Settings, Categories | `src/components/common/BottomSheet/` (`variant="tall"`, `footer`, `role="alertdialog"`); the category sheets' raised surface is `.category-sheet` in `src/components/common/ExpensesManager/Categories/styles.scss` |
 | Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |
 | Currency tile grid (symbol + code radio tiles; 3 columns in the Settings sheet, 4 in the onboarding wizard) | Settings, Onboarding | `src/components/Settings/CurrencyTileGrid/`, placed in a sheet by `src/components/Settings/CurrencySheet/` |
-| History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold action) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |
+| History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold or secondary action and icon) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |
 | Switch row (label, hint and an on/off switch in the same raised row as a setting row; the whole row is the switch) | Settings | `src/components/Settings/SwitchRow/` |
 | Hidden figure (a blurred, fixed placeholder with a spoken label, in place of a money figure while Privacy mode hides it) | The dashboard, assembled | `src/components/common/HiddenFigure/`; the placeholders are in `src/privacy/hiddenFigures.ts` |
 | Privacy eye (gold eye chip beside the "Savings" label that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
@@ -52,3 +52,10 @@ same PR that adds it.
 | Bucket row (checkbox, category name and a monthly limit field, with the validation message under the row) | Onboarding | `src/components/Onboarding/BucketRow/` |
 | Summary row (title, small hint and an Edit link; the review step's one line per section) | Onboarding | `src/components/Onboarding/SummaryRow/` |
 | Info note (quiet neutral note with an info icon, for reassurance rather than a warning) | Onboarding | `src/components/Onboarding/InfoNote/` |
+| Scope switch (two-segment Savings \| Categories pill in the trend screens' eyebrow slot; gold-soft wash on the selected one; arrow keys, Home and End) | Category trends | `src/components/common/SavingsTrend/ScopeSwitch/` |
+| Range controls (the range switch plus the custom range sheet it opens; the range is shared across the trend screens) | Savings trend, Category trends | `src/components/common/SavingsTrend/RangeControls/`, state in `src/components/common/SavingsTrend/TrendRangeContext/`, notices in `RangeNotice/` |
+| Category mover row (name over "was $380.00", sparkline, end-month amount and a whole-percent change pill; the row is a link) | Category trends | `src/components/common/CategoryTrends/MoverRow/` |
+| Sparkline (60×26 decorative line, green / red / grey by good or bad news) | Category trends | `src/components/common/CategoryTrends/Sparkline/` |
+| Category picker row (type chip, "Expense category" over the name, chevron; opens the "Choose a category" sheet of radio rows) | Category trends | `src/components/common/CategoryTrends/CategoryPicker/`, `CategoryPickerSheet/` |
+| Back link (gold "‹ All categories") | Category trends | `src/components/common/CategoryTrends/BackLink/` |
+| Category trend chart (gold line over a zero line on Per month; on Change, green / red hatched against the reference month, flipped for incomes) | Category trends | `src/components/common/CategoryTrends/CategoryTrendChart/` (legend: `ChartKey/`), headline card `CategoryTrendSummary/`; maths in `src/helpers/categoryTrends/` |

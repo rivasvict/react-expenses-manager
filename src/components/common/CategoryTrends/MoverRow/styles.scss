@@ -1,0 +1,70 @@
+@import '../../../../variables.scss';
+
+// Category mover row (design/system/components.md): a raised row like the
+// category row, with a sparkline and the end month's figures on the right.
+.mover-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0.6rem 0.75rem 0.6rem 0.9rem;
+  line-height: 1.5;
+  color: $text-primary;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  text-decoration: none;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    color: $text-primary;
+    background-color: $bg-raised-hover;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    @include money-figures();
+    display: block;
+    font-size: 0.8rem;
+    color: $text-secondary;
+  }
+
+  &__figures {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 5.5rem;
+  }
+
+  &__amount {
+    @include money-figures();
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  // The list's pills are smaller than the headline card's.
+  .change-pill {
+    padding: 0 0.45rem;
+    font-size: 0.74rem;
+    gap: 0.2rem;
+  }
+}

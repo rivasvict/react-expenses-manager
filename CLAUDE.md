@@ -56,7 +56,9 @@ Node version is pinned in `.nvmrc`.
 - `/edit-income/:entryId`, `/edit-expense/:entryId` — EditEntry
 - `/incomes`, `/expenses` — EntriesSummaryWithFilter
 - `/summary` — Summary
-- `/savings-trend` — Savings trend (range picker, a Total saved / Change tab pair that opens on Total saved, line chart; reached from the "Trend" link in the dashboard's savings card)
+- `/savings-trend` — Savings trend (range picker, a Total saved / Change tab pair that opens on Total saved, line chart; reached from the "Trend" link in the dashboard's savings card). A **Savings | Categories** switch at the top moves to the category trends; the picked range is shared across these screens (`TrendRangeProvider` in `src/components/common/SavingsTrend/TrendRangeContext/`)
+- `/category-trends` — Category trends: Expenses / Incomes tabs, categories ranked by how much they changed between the range's first month and the end month (opens on the tab in router state `{ type }`)
+- `/category-trends/:type/:name` — One category's trend (category picker sheet, Per month / Change tabs, line chart); `:name` is the display name, URL-encoded (`categoryTrendPath` in `src/helpers/categoryTrends/`); an unknown category redirects to the list. Design: `design/features/category-trends/`
 - `/data-management` — CSV import/export
 - `/categories` — Categories (Expenses / Incomes tabs; add, rename and delete happen in bottom sheets on this screen); navigating here with router state `{ addCategory: "expense" | "income" }` opens the add sheet (AddBucket's "Add a new category" link does this)
 - `/buckets` — Buckets list

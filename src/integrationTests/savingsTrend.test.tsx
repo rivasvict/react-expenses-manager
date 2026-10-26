@@ -414,7 +414,8 @@ describe("total saved tab", () => {
     seedMonths(SAVINGS);
     await renderApp("/savings-trend");
 
-    const tabs = await screen.findAllByRole("tab");
+    // The Savings | Categories switch above is a tab list of its own.
+    const tabs = within(await screen.findByRole("tablist", { name: "Show" })).getAllByRole("tab");
     expect(tabs.map((tab) => tab.textContent)).toEqual(["Total saved", "Change"]);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
     expect(tabs[1]).toHaveAttribute("aria-selected", "false");

@@ -43,6 +43,15 @@
     .tip { position: absolute; padding: 0.35rem 0.6rem; font-size: 0.78rem; line-height: 1.35; background-color: var(--bg-raised-hover); border: 1px solid var(--border-strong); border-radius: var(--radius-control); box-shadow: var(--shadow-pop); white-space: nowrap; }
     .tip strong { display: block; font-size: 0.85rem; }
 
+
+    /* The Savings | Categories switch in the eyebrow's place, and the month
+       title button (design/features/category-trends/, month-year-picker). */
+    .scope { align-self: center; display: inline-flex; padding: 0.2rem; gap: 0.15rem; margin: 0 0 0.1rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-pill); }
+    .scope__item { min-height: 2.5rem; padding: 0 1.1rem; display: flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; font-weight: 600; color: var(--text-secondary); border-radius: var(--radius-pill); }
+    .scope__item svg { width: 1rem; height: 1rem; }
+    .scope__item--on { color: var(--text-primary); background-color: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+    .mpill { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 0.4rem; height: 2.5rem; padding: 0 0.9rem; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); background-color: var(--bg-raised); border: 1px solid var(--border-strong); border-radius: var(--radius-pill); }
+    .mpill svg { flex: 0 0 auto; color: var(--accent); }
   </style>
 </head>
 <body class="mk">
@@ -56,10 +65,10 @@
   </header>
   <main class="mk-shell">
     <div class="mk-work-area">
-      <h3 class="mk-eyebrow">Savings trend</h3>
+      <div class="scope" role="tablist" aria-label="Trend of"><span class="scope__item scope__item--on" role="tab" aria-selected="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m2 11 4-4 3 3 5-6M10.5 4H14v3.5" style="fill: none; stroke: currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Savings</span><span class="scope__item" role="tab" aria-selected="false"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1.2" style="fill: none; stroke: currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1.2" style="fill: none; stroke: currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1.2" style="fill: none; stroke: currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1.2" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg>Categories</span></div>
       <div class="month-header">
         <span class="step" role="button" aria-label="Previous month"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span>
-        <h1 class="mk-title">October 2026</h1>
+        <span class="mpill" role="button" aria-haspopup="dialog" aria-label="October 2026">October 2026<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" style="fill:none;stroke:currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         <span class="step step--disabled" role="button" aria-label="Next month"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span>
       </div>
       <div class="seg" role="group" aria-label="Range"><span class="seg__item" role="button" aria-pressed="false" aria-label="Last month">1M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 2 months">2M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 3 months">3M</span><span class="seg__item" role="button" aria-pressed="false" aria-label="Last 6 months">6M</span><span class="seg__item seg__item--on" role="button" aria-pressed="true" aria-label="Last 12 months">1Y</span><span class="seg__item" role="button" aria-pressed="false" aria-label="This year so far">YTD</span><span class="seg__item" role="button" aria-label="Custom range"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2" style="fill: none; stroke: currentColor" stroke-width="1.5"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>

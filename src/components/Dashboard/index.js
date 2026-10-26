@@ -28,6 +28,9 @@ import JoinScreen from "../Party/JoinScreen";
 import SyncReview from "../SyncReview";
 import Settings from "../Settings";
 import SavingsTrend from "../common/SavingsTrend";
+import { TrendRangeProvider } from "../common/SavingsTrend/TrendRangeContext";
+import CategoryTrends from "../common/CategoryTrends";
+import CategoryTrendDetail from "../common/CategoryTrends/CategoryTrendDetail";
 import SyncGate from "../common/SyncGate";
 import { SyncAvailabilityProvider } from "../common/SyncAvailability";
 
@@ -77,8 +80,27 @@ function Dashboard({ entries, selectedDate }) {
               {/* TODO: Fix the issue that appears when the screen is refreshed on the summary route */}
               <Summary entries={entries} selectedDate={selectedDate} />
             </Route>
-            <Route path={`${match.url}savings-trend`}>
-              <SavingsTrend />
+            {/* The trend screens share the picked range while the user
+                moves between them; leaving them resets it to the default. */}
+            <Route
+              path={[
+                `${match.url}savings-trend`,
+                `${match.url}category-trends`,
+              ]}
+            >
+              <TrendRangeProvider>
+                <Switch>
+                  <Route path={`${match.url}savings-trend`}>
+                    <SavingsTrend />
+                  </Route>
+                  <Route path={`${match.url}category-trends/:type/:name`}>
+                    <CategoryTrendDetail />
+                  </Route>
+                  <Route path={`${match.url}category-trends`}>
+                    <CategoryTrends />
+                  </Route>
+                </Switch>
+              </TrendRangeProvider>
             </Route>
             <Route path={`${match.url}data-management`}>
               <DataManagement />

@@ -176,6 +176,100 @@ const fr: Translations = {
   "savingsTrend.sheet.show": "Afficher l'évolution",
   "savingsTrend.sheet.close": "Fermer",
 
+  // Category trends (Savings trend's Categories view)
+  "categoryTrends.pageTitle":
+    "Évolution par catégorie",
+  "categoryTrends.scope.group":
+    "Évolution de",
+  "categoryTrends.scope.savings":
+    "Épargne",
+  "categoryTrends.scope.categories":
+    "Catégories",
+  "categoryTrends.subtitle":
+    "{{end}} vs {{reference}}, plus forte variation d'abord.",
+  "categoryTrends.was":
+    "avant {{amount}}",
+  "categoryTrends.new":
+    "Nouveau",
+  "categoryTrends.hint":
+    "Touchez une catégorie pour voir toute son évolution.",
+  "categoryTrends.back":
+    "Toutes les catégories",
+  "categoryTrends.rowLabel":
+    "{{name}}, {{amount}}, {{change}} vs {{reference}}",
+  "categoryTrends.rowLabelNew":
+    "{{name}}, {{amount}}, nouveau, avant {{was}}",
+  "categoryTrends.view.perMonth":
+    "Par mois",
+  "categoryTrends.kind.expense":
+    "Catégorie de dépense",
+  "categoryTrends.kind.income":
+    "Catégorie de revenu",
+  "categoryTrends.headline.perMonth":
+    "{{category}}, {{span}}",
+  "categoryTrends.headline.change":
+    "{{category}}, {{end}} vs {{reference}}",
+  "categoryTrends.key.spent":
+    "Dépensé en {{reference}}",
+  "categoryTrends.key.earned":
+    "Perçu en {{reference}}",
+  "categoryTrends.key.spentMonth":
+    "Dépensé ce mois-là",
+  "categoryTrends.key.earnedMonth":
+    "Perçu ce mois-là",
+  "categoryTrends.key.less":
+    "Moins",
+  "categoryTrends.key.more":
+    "Plus",
+  "categoryTrends.note.perMonth.expense":
+    "Chaque point est ce que vous avez dépensé dans cette catégorie ce mois-là.",
+  "categoryTrends.note.perMonth.income":
+    "Chaque point est ce que vous avez perçu dans cette catégorie ce mois-là.",
+  "categoryTrends.note.change.expense":
+    "Vert quand vous avez dépensé moins qu'en {{reference}}, rouge quand vous avez dépensé plus.",
+  "categoryTrends.note.change.income":
+    "Vert quand vous avez perçu plus qu'en {{reference}}, rouge quand vous avez perçu moins.",
+  "categoryTrends.chartLabel.perMonth":
+    "{{category}} par mois, de {{from}} à {{to}}",
+  "categoryTrends.chartLabel.change":
+    "{{category}} par rapport à {{reference}}, de {{from}} à {{to}}",
+  "categoryTrends.table.caption":
+    "Montants mensuels",
+  "categoryTrends.table.month":
+    "Mois",
+  "categoryTrends.table.amount":
+    "Montant",
+  "categoryTrends.empty.expense.title":
+    "Aucune dépense entre {{from}} et {{to}}",
+  "categoryTrends.empty.expense.body":
+    "Ajoutez une dépense et sa catégorie apparaîtra ici avec son évolution.",
+  "categoryTrends.empty.expense.action":
+    "Ajouter une dépense",
+  "categoryTrends.empty.income.title":
+    "Aucun revenu entre {{from}} et {{to}}",
+  "categoryTrends.empty.income.body":
+    "Ajoutez un revenu et sa catégorie apparaîtra ici avec son évolution.",
+  "categoryTrends.empty.income.action":
+    "Ajouter un revenu",
+  "categoryTrends.none.expense.title":
+    "Aucune dépense en {{category}} sur cette période",
+  "categoryTrends.none.expense.body":
+    "Il n'y a aucune dépense dans cette catégorie entre {{from}} et {{to}}. Choisissez une période plus large ou une autre catégorie.",
+  "categoryTrends.none.income.title":
+    "Aucun revenu en {{category}} sur cette période",
+  "categoryTrends.none.income.body":
+    "Il n'y a aucun revenu dans cette catégorie entre {{from}} et {{to}}. Choisissez une période plus large ou une autre catégorie.",
+  "categoryTrends.none.action":
+    "Choisir une autre catégorie",
+  "categoryTrends.picker.title":
+    "Choisissez une catégorie",
+  "categoryTrends.picker.expenses":
+    "Catégories de dépense",
+  "categoryTrends.picker.incomes":
+    "Catégories de revenu",
+  "categoryTrends.picker.rowLabel":
+    "{{kind}} : {{name}}. Modifier",
+
   // Add / edit entry form
   "entryForm.pageTitle.income": "Revenu",
   "entryForm.pageTitle.expense": "Dépense",

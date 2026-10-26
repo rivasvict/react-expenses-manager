@@ -1,0 +1,27 @@
+@import '../../../../variables.scss';
+
+// Sparkline (design/system/components.md): decorative, coloured by tone.
+.sparkline {
+  flex: none;
+  width: 3.6rem;
+  height: 1.6rem;
+
+  polyline {
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  &--good polyline {
+    stroke: $income;
+  }
+
+  &--bad polyline {
+    stroke: $expense;
+  }
+
+  &--flat polyline {
+    stroke: $text-secondary;
+  }
+}

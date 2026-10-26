@@ -8,6 +8,12 @@
   padding: 1rem 1.15rem;
   text-align: center;
 
+  &__icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
   &__title {
     font-size: 1.05rem;
     font-weight: 600;
