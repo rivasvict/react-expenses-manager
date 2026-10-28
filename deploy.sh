@@ -5,7 +5,7 @@
 #
 #   1. pick the revision to deploy (latest master, a ref, or what is checked out)
 #   2. stop anything already serving (tailscale serve + sync server)
-#   3. build the CRA bundle pointed at the tailnet origin, and the server
+#   3. build the Vite bundle pointed at the tailnet origin, and the server
 #   4. start the sync server (detached, with logs)
 #   5. publish / and /api through `tailscale serve`
 #
@@ -82,20 +82,16 @@ load_nvm() {
   . "$nvm_script"
 }
 
-# Runs a command under the Node version pinned by the .nvmrc in $1. The switch
-# stays in effect afterwards, so every caller states the directory it wants
-# rather than relying on whatever ran last.
-run_with_node_from() {
-  local nvmrc_dir="$1"
-  shift
+# Switches to the Node version pinned by .nvmrc, which the frontend build and
+# the sync server share. Run it after select_revision, since the revision
+# being deployed may pin a different version than the one checked out before.
+use_pinned_node() {
   local version
-  version="$(tr -d '[:space:]' <"$nvmrc_dir/.nvmrc")"
-  [ -n "$version" ] || die "$nvmrc_dir/.nvmrc is empty — cannot pick a Node version."
+  version="$(tr -d '[:space:]' <"$REPO_DIR/.nvmrc")"
+  [ -n "$version" ] || die "$REPO_DIR/.nvmrc is empty — cannot pick a Node version."
 
   nvm use "$version" >/dev/null 2>&1 ||
-    die "Node $version (pinned by $nvmrc_dir/.nvmrc) is not installed. Run: nvm install $version"
-
-  "$@"
+    die "Node $version (pinned by .nvmrc) is not installed. Run: nvm install $version"
 }
 
 # --- revision selection -----------------------------------------------------
@@ -179,12 +175,23 @@ resolve_server_url() {
 
 # --- build ------------------------------------------------------------------
 
+# Reinstalls whenever the lockfile or the Node version differs from the last
+# install, so a revision that changes either is never built against stale
+# node_modules. `npm ci` installs exactly the lockfile and never rewrites it,
+# which would leave the worktree dirty for the next deploy.
 install_dependencies() {
-  if [ ! -d "$REPO_DIR/node_modules" ]; then
-    info "Installing npm dependencies…"
-    (cd "$REPO_DIR" && npm install --no-audit --no-fund) ||
-      die "npm install failed."
+  local stamp_file="$DEPLOY_DIR/dependencies.stamp"
+  local stamp
+  stamp="$(node --version) $(git -C "$REPO_DIR" hash-object "$REPO_DIR/package-lock.json")"
+
+  if [ -d "$REPO_DIR/node_modules" ] && [ "$(cat "$stamp_file" 2>/dev/null)" = "$stamp" ]; then
+    return
   fi
+
+  info "Installing npm dependencies…"
+  (cd "$REPO_DIR" && npm ci --no-audit --no-fund) ||
+    die "npm ci failed."
+  echo "$stamp" >"$stamp_file"
 }
 
 build_frontend() {
@@ -209,16 +216,24 @@ start_sync_server() {
   info "Starting the sync server on 127.0.0.1:$SYNC_PORT…"
   : >"$LOG_FILE"
 
-  # The caller has already selected server/.nvmrc's Node version, so resolve
-  # its binary by absolute path: the detached shell below does not inherit
-  # nvm, and `npm run sync-server` would recompile the server under this
-  # version instead of keeping the build made above.
+  # main has already selected the .nvmrc Node version, so resolve its binary
+  # by absolute path: the detached shell below does not inherit nvm, and
+  # `npm run sync-server` would recompile the server that was just built.
+  # `exec` makes the server take over the wrapper shell, so the PID recorded
+  # for stop.sh is the server's own.
   local node_bin
   node_bin="$(command -v node)"
-  local run_cmd="cd $(printf '%q' "$REPO_DIR") && $(printf '%q' "$node_bin") server/dist/index.js"
+  local run_cmd="cd $(printf '%q' "$REPO_DIR") && exec $(printf '%q' "$node_bin") server/dist/index.js"
 
   if command -v tmux >/dev/null 2>&1; then
-    tmux new-session -d -s "$TMUX_SESSION" \
+    # When a tmux server is already running (e.g. deploying from inside tmux),
+    # the new session gets that server's environment rather than this
+    # script's, so pass the variables the sync server reads explicitly.
+    local env_flags=() name
+    for name in NODE_ENV HOST PORT CORS_ORIGIN TOKEN_SECRET ENCRYPTION_KEY; do
+      env_flags+=(-e "$name=${!name}")
+    done
+    tmux new-session -d -s "$TMUX_SESSION" "${env_flags[@]}" \
       "$run_cmd 2>&1 | tee -a $(printf '%q' "$LOG_FILE")" ||
       die "Could not start the sync server in tmux."
     ATTACH_COMMAND="tmux attach -t $TMUX_SESSION"
@@ -294,17 +309,16 @@ main() {
   resolve_server_url
   stop_running_services
 
-  # Builds run under the repo-root .nvmrc; the server process runs under
-  # server/.nvmrc (server/README.md explains why the two differ).
-  run_with_node_from "$REPO_DIR" install_dependencies
-  run_with_node_from "$REPO_DIR" build_frontend
-  run_with_node_from "$REPO_DIR" build_server
+  use_pinned_node
+  install_dependencies
+  build_frontend
+  build_server
 
   export NODE_ENV=production
   export HOST=127.0.0.1
   export PORT="$SYNC_PORT"
   export CORS_ORIGIN="$SERVER_URL"
-  run_with_node_from "$REPO_DIR/server" start_sync_server
+  start_sync_server
   wait_for_sync_server
 
   publish_through_tailscale

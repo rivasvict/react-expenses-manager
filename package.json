@@ -1,22 +1,18 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",
     "@iconify/react": "^1.1.4",
     "@reduxjs/toolkit": "^1.8.5",
-    "@types/jest": "^29.1.1",
-    "@types/node": "^18.8.0",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "bootstrap": "^5.2.2",
     "chart.js": "^4.4.4",
-    "create-react-app": "^1.2.1",
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "node-sass": "^7.0.3",
     "prop-types": "^15.7.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.4",
@@ -24,22 +20,22 @@
     "react-icons": "^4.3.1",
     "react-redux": "^8.0.4",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "^5.0.1",
     "react-test-renderer": "^18.2.0",
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
-    "typescript": "^4.8.4",
+    "sass": "^1.106.1",
     "uuid": "^10.0.0",
     "workbox-window": "^6.6.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
     "postbuild": "workbox generateSW workbox-config.js",
-    "test": "react-scripts test",
-    "test:debug": "react-scripts --inspect=0.0.0.0 test --runInBand --no-cache",
-    "eject": "react-scripts eject",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --no-cache",
     "typecheck": "tsc --noEmit",
     "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix",
@@ -50,9 +46,6 @@
     "build:server": "tsc -p server/tsconfig.json",
     "sync-server": "npm run build:server && node server/dist/index.js",
     "test:server": "npm run build:server && node server/dist/testRunner.js"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -66,21 +59,33 @@
       "last 1 safari version"
     ]
   },
-  "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!@iconify-icons/)"
-    ]
-  },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^14.3.1",
     "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.5",
+    "@vitejs/plugin-react": "^6.1.2",
+    "autoprefixer": "^10.6.2",
+    "babel-jest": "^30.5.2",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
     "playwright": "^1.63.0",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.3.3",
     "stylelint": "^15.11.0",
+    "typescript": "~5.9",
+    "vite": "^8.3.5",
     "workbox-cli": "^6.6.0"
+  },
+  "engines": {
+    "node": ">=26"
   }
 }

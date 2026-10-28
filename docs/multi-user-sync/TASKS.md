@@ -1,7 +1,7 @@
 # Multi-User Sync — PR Breakdown
 
 Six stacked PRs, based on and merged into `sync` (never `master`). Every
-PR leaves the app green — `npm test -- --testPathPattern="integrationTests"`
+PR leaves the app green — `npm test -- --testPathPatterns="integrationTests"`
 (existing tests unmodified, NFR-3), `npm run typecheck`, `npm run lint` —
 and makes the version bump + `CHANGELOG.md` entry listed per PR. New
 frontend code is TS where practical; server code is dep-free plain Node.

@@ -5,12 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm start          # Dev server at http://localhost:3000
-npm test           # Run tests in watch mode
-npm test -- --watchAll=false  # Run tests once (CI mode)
+npm start          # Vite dev server at http://localhost:3000
+npm test           # Run the Jest suites once (CI mode)
+npm run test:watch # Run tests in watch mode
 npm test -- -t "test name"    # Run a single test by name
-npm test -- --testPathPattern="integrationTests"
-npm run build      # Production build
+npm test -- --testPathPatterns="integrationTests"
+npm run build      # Production build (Vite → build/, then the workbox service worker)
 npm run typecheck  # TypeScript type check (no emit)
 npm run lint       # Check linting
 npm run lint:fix   # Auto-fix lint issues
@@ -20,11 +20,11 @@ npm run gallery:build # Validate design/features/*/ui/ packages; regenerate desi
 npm run design:review -- --feature <slug>  # Compare a built feature with its approved design (needs `npm run build`, Node 18+ and a Chromium: `npx playwright install chromium`)
 ```
 
-Node version is pinned in `.nvmrc`.
+Node version is pinned in `.nvmrc` — one version for the frontend, the sync server, CI and `deploy.sh`.
 
 ## Architecture
 
-**Stack:** React 18, Redux (with redux-thunk), React Router v5, React Bootstrap, SCSS modules (design tokens in `src/styles/tokens.json`, see `design/system/`), TypeScript (partial — most files are `.js`, newer files use `.tsx`/`.ts`).
+**Stack:** Vite (dev server and build, `vite.config.mjs`), Jest (`jest.config.js`, helpers in `config/jest/`), React 18, Redux (with redux-thunk), React Router v5, React Bootstrap, SCSS modules (design tokens in `src/styles/tokens.json`, see `design/system/`), TypeScript (partial — most files are `.js`, newer files use `.tsx`/`.ts`).
 
 **State shape** (three Redux slices in `src/redux/`):
 - `expensesManager` — entries (nested by `year → month → {incomes, expenses}`), selected date, buckets, `categoryLists`
@@ -72,7 +72,7 @@ Node version is pinned in `.nvmrc`.
 
 **Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed.
 
-**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; CRA's Jest config does not scan `server/`.
+**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; `jest.config.js` only scans `src/`.
 
 ## Key patterns
 
@@ -101,7 +101,7 @@ Node version is pinned in `.nvmrc`.
 
 ## General guidelines for development
 
-* Make sure to run `npm test -- --testPathPattern="integrationTests"` on every edition such that we make sure no functionality is broken.
+* Make sure to run `npm test -- --testPathPatterns="integrationTests"` on every edition such that we make sure no functionality is broken.
 * Make sure to run `npm run typecheck` on every edition to catch TypeScript errors early.
 * Use arrow functions by default. Only use regular `function` declarations when syntax requires it (e.g. generator functions, methods that need their own `this` binding in class components).
 * In integration tests, verify behaviour through what the user sees on screen (`screen.findByText`, `screen.getByRole`, etc.) rather than inspecting Redux store state or `localStorage` directly. Raw data-structure checks are an implementation detail; UI assertions test what actually matters.

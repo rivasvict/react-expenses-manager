@@ -17,7 +17,7 @@ zero deps). Calls `server/core` directly: status/error-code/body, plus
 reading `server/.data/*.json` for secrets-at-rest checks.
 
 **(b) Frontend integration** — `npm test --
---testPathPattern="integrationTests"` (jsdom, `renderApp`). All sync
+--testPathPatterns="integrationTests"` (jsdom, `renderApp`). All sync
 fetches route through `fakeSyncServer.ts` stubbing `window.fetch`; no live
 network. Assertions use `screen.findByText`/`getByRole` (NFR-5,
 `CLAUDE.md`), never Redux/`localStorage` reads — except the one pattern
@@ -384,7 +384,7 @@ Run after PR5 (feature-complete) and again after PR6:
 1. `npm run typecheck` — zero errors.
 2. `npm run lint` — zero errors.
 3. `npm run test:server` (`node --test server/`) — all SC-x pass.
-4. `npm test -- --testPathPattern="integrationTests" --watchAll=false` —
+4. `npm test -- --testPathPatterns="integrationTests" --watchAll=false` —
    all TC-x/UT-4.x pass; all §4 files pass unmodified.
 5. **Manual exploratory:**
    - MX-1: `npm run sync-server` — listens on `:4000`, no crash;

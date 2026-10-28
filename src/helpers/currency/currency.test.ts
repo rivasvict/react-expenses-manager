@@ -69,7 +69,10 @@ describe("currency", () => {
     it("tells the dollars and pesos apart", () => {
       expect(formatCurrency(10, "CAD")).toBe("CA$10.00");
       expect(formatCurrency(10, "MXN")).toBe("MX$10.00");
-      expect(formatCurrency(10, "COP")).toBe("COL$10.00");
+      // The decimals come from the runtime's CLDR data, which gives COP two
+      // up to CLDR 47 and none from CLDR 48 (Node 26); only the symbol is
+      // ours.
+      expect(formatCurrency(10, "COP")).toMatch(/^COL\$10(\.00)?$/);
     });
 
     it("drops the decimals for currencies that have none", () => {
