@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **CI runs on every pull request**, not only those into `master`, so a pull
   request stacked on another branch gets its checks too.
 
+### Fixed
+
+- **`deploy.sh` runs under macOS's bash 3.2.** In a UTF-8 locale that bash
+  read `$SERVER_URL…` and `$SYNC_PORT…` as unset variables and stopped
+  before the build, so both are now braced.
+
 ## [1.37.0] - 2026-10-27
 
 ### Changed
