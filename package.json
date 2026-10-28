@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.37.0",
+  "version": "1.37.1",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",
@@ -25,8 +25,8 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
     "sass": "^1.106.1",
-    "uuid": "^10.0.0",
-    "workbox-window": "^6.6.0"
+    "uuid": "^14.0.3",
+    "workbox-window": "^7.4.1"
   },
   "scripts": {
     "start": "vite",
@@ -73,6 +73,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.6.2",
     "babel-jest": "^30.5.2",
+    "deepmerge": "file:vendor/deepmerge",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
     "jest": "^30.5.2",
@@ -83,7 +84,11 @@
     "stylelint": "^15.11.0",
     "typescript": "~5.9",
     "vite": "^8.3.5",
-    "workbox-cli": "^6.6.0"
+    "workbox-cli": "^7.4.1"
+  },
+  "overrides": {
+    "deepmerge": "$deepmerge",
+    "tmp": "^0.2.7"
   },
   "engines": {
     "node": ">=26"

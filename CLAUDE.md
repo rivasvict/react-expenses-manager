@@ -72,7 +72,7 @@ Node version is pinned in `.nvmrc` — one version for the frontend, the sync se
 
 **Environment:** Copy `.env.template` to `.env` and set `REACT_APP_API_HOST` (defaults to `http://localhost:9000`) when backend is needed.
 
-**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; `jest.config.js` only scans `src/`.
+**Server (`server/`):** The local multi-user sync backend is written in strict TypeScript, compiled ahead of run rather than via `ts-node` (`server/tsconfig.json` → `server/dist/`, wired through `npm run build:server`/`sync-server`/`test:server`). The compiled output must stay dependency-free — only Node builtins, no npm packages at runtime — since it's what gets deployed. Tests are colocated (`core/crypto.ts` ↔ `core/crypto.test.ts`) and run with the Node built-in test runner, not Jest; `jest.config.js` only scans `src/` (and `vendor/`, where patched third-party copies keep their tests).
 
 ## Key patterns
 

@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.1] - 2026-10-27
+
+### Security
+
+- **`npm install` reports no vulnerabilities.** Transitive dependencies are
+  updated to their patched releases; `uuid` moves to 14 (ES modules only, so
+  Jest compiles it like `@iconify-icons`), and `workbox-cli` and
+  `workbox-window` to 7.4, which drops the vulnerable `rollup-plugin-terser`
+  and `update-notifier` chains. `tmp`, still pulled in through `workbox-cli`'s
+  `inquirer`, is overridden to 0.2.7.
+- **`deepmerge` is vendored with a fix.** No release of `deepmerge` fixes
+  GHSA-gcqx-w48m-w2h4 (prototype poisoning in `mergeObject()`), and Jest and
+  the Workbox build both depend on it, so `vendor/deepmerge/` holds 4.3.1 with
+  each key written as an own property, plus a regression test. An `overrides`
+  entry points every `deepmerge` at it until upstream ships a fix.
+
 ## [1.37.0] - 2026-10-27
 
 ### Changed
