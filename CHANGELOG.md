@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   each key written as an own property, plus a regression test. An `overrides`
   entry points every `deepmerge` at it until upstream ships a fix.
 
+### Changed
+
+- **CI runs on every pull request**, not only those into `master`, so a pull
+  request stacked on another branch gets its checks too.
+
 ## [1.37.0] - 2026-10-27
 
 ### Changed

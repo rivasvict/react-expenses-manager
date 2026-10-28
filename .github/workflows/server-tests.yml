@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - master
+  # Every pull request, including one stacked on another branch.
   pull_request:
-    branches:
-      - master
 
 jobs:
   server-tests:
