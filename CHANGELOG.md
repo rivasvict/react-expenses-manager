@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Jest compiles it like `@iconify-icons`), and `workbox-cli` and
   `workbox-window` to 7.4, which drops the vulnerable `rollup-plugin-terser`
   and `update-notifier` chains. `tmp`, still pulled in through `workbox-cli`'s
-  `inquirer`, is overridden to 0.2.7.
+  `inquirer`, is overridden to 0.2.7, and the Jest coverage and Workbox
+  packages that pinned glob 10 and 11 (flagged by `npm install` as having
+  known vulnerabilities) now use glob 13, the version Jest already runs on.
 - **`deepmerge` is vendored with a fix.** No release of `deepmerge` fixes
   GHSA-gcqx-w48m-w2h4 (prototype poisoning in `mergeObject()`), and Jest and
   the Workbox build both depend on it, so `vendor/deepmerge/` holds 4.3.1 with
