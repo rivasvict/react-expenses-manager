@@ -179,17 +179,22 @@ resolve_server_url() {
 # install, so a revision that changes either is never built against stale
 # node_modules. `npm ci` installs exactly the lockfile and never rewrites it,
 # which would leave the worktree dirty for the next deploy.
+#
+# The build tools (vite, workbox-cli, typescript) are devDependencies, which
+# npm skips when NODE_ENV=production is exported or omit=dev is configured, so
+# they are included explicitly. The flag is part of the stamp so an install
+# made without them is never reused.
 install_dependencies() {
   local stamp_file="$DEPLOY_DIR/dependencies.stamp"
   local stamp
-  stamp="$(node --version) $(git -C "$REPO_DIR" hash-object "$REPO_DIR/package-lock.json")"
+  stamp="$(node --version) $(git -C "$REPO_DIR" hash-object "$REPO_DIR/package-lock.json") include=dev"
 
   if [ -d "$REPO_DIR/node_modules" ] && [ "$(cat "$stamp_file" 2>/dev/null)" = "$stamp" ]; then
     return
   fi
 
   info "Installing npm dependencies…"
-  (cd "$REPO_DIR" && npm ci --no-audit --no-fund) ||
+  (cd "$REPO_DIR" && npm ci --include=dev --no-audit --no-fund) ||
     die "npm ci failed."
   echo "$stamp" >"$stamp_file"
 }

@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `PORT`, `NODE_ENV`, `TOKEN_SECRET`, `ENCRYPTION_KEY` and friends, so the
   sync server started with its development defaults. `stop.sh` now also stops
   a server started without tmux on systems without `fuser`.
+- **`deploy.sh` installs the build tools under `NODE_ENV=production`.** Vite
+  and the other build tools are devDependencies, which `npm ci` skipped when
+  `NODE_ENV=production` was exported, so the build failed with
+  `vite: not found`. The install now always includes them.
 
 ## [1.36.0] - 2026-10-21
 
