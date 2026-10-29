@@ -1,7 +1,7 @@
 @import '../../../../variables.scss';
 
 // Category trend chart (design/system/components.md): the Savings trend
-// chart's look; gold on Per month, good/bad tints on Change.
+// chart's look; good/bad/flat tints on both tabs.
 .category-trend-chart {
   @include card();
   margin: 0 0 0.75rem;
@@ -23,8 +23,8 @@
     stroke-dasharray: 3 3;
   }
 
-  &__area--month {
-    fill: $accent;
+  &__area--flat {
+    fill: $text-secondary;
     fill-opacity: 0.14;
   }
 
@@ -45,7 +45,7 @@
     stroke-width: 1.5;
   }
 
-  &__line--month,
+  &__line--flat,
   &__line--good,
   &__line--bad {
     fill: none;
@@ -54,8 +54,8 @@
     stroke-linecap: round;
   }
 
-  &__line--month {
-    stroke: $accent;
+  &__line--flat {
+    stroke: $text-secondary;
   }
 
   &__line--good {
@@ -85,10 +85,6 @@
   &__dot {
     stroke: $bg-raised;
     stroke-width: 2;
-
-    &--month {
-      fill: $accent;
-    }
 
     &--good {
       fill: $income;
@@ -127,9 +123,9 @@
     vertical-align: middle;
     border-radius: $radius-pill;
 
-    &--month {
-      background-color: $accent-soft;
-      border: 1px solid $accent;
+    &--flat {
+      background-color: $highlight;
+      border: 1px solid $text-secondary;
     }
 
     &--reference {

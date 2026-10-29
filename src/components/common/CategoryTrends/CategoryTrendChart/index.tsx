@@ -24,10 +24,11 @@ const MAX_TICKS = 7;
 const MAX_TICKS_WITH_YEAR = 5;
 
 /**
- * A category's monthly amounts as a line. `perMonth` draws it in gold over a
- * zero line; `change` draws it against a dashed line at the reference month,
- * green where the month was better news (less spent, more earned) and red,
- * hatched, where it was worse.
+ * A category's monthly amounts as a line. `perMonth` draws it over a zero line
+ * in one tone, the news of the whole range (less spent or more earned is green,
+ * the reverse red, no change grey); `change` draws it against a dashed line at
+ * the reference month, green where the month was better news and red, hatched,
+ * where it was worse.
  */
 const CategoryTrendChart = ({ trend, view }: CategoryTrendChartProps) => {
   const { t, language } = useTranslation();
@@ -47,6 +48,10 @@ const CategoryTrendChart = ({ trend, view }: CategoryTrendChartProps) => {
     `${getMonthLabel(point.month, language, style)} ${point.year}`;
   const referenceName = `${getMonthLabel(points[0].month, language, "sentence")}${
     crossesYears ? ` ${points[0].year}` : ""
+  }`;
+
+  const endName = `${getMonthLabel(points[last].month, language, "sentence")}${
+    crossesYears ? ` ${points[last].year}` : ""
   }`;
 
   const polyline = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(" ");
@@ -97,8 +102,8 @@ const CategoryTrendChart = ({ trend, view }: CategoryTrendChartProps) => {
               </>
             ) : (
               <>
-                <polygon className="category-trend-chart__area--month" points={area} />
-                <polyline className="category-trend-chart__line--month" points={polyline} />
+                <polygon className={`category-trend-chart__area--${trend.tone}`} points={area} />
+                <polyline className={`category-trend-chart__line--${trend.tone}`} points={polyline} />
               </>
             )}
             {getTickIndexes(points.length, crossesYears ? MAX_TICKS_WITH_YEAR : MAX_TICKS).map((i) => (
@@ -114,7 +119,7 @@ const CategoryTrendChart = ({ trend, view }: CategoryTrendChartProps) => {
             ))}
             <circle className="category-trend-chart__dot-reference" cx={xs[0]} cy={ys[0]} r="4.5" />
             <circle
-              className={`category-trend-chart__dot category-trend-chart__dot--${isChange ? toneOf(values[last]) : "month"}`}
+              className={`category-trend-chart__dot category-trend-chart__dot--${isChange ? toneOf(values[last]) : trend.tone}`}
               cx={xs[last]}
               cy={ys[last]}
               r="5"
@@ -141,10 +146,13 @@ const CategoryTrendChart = ({ trend, view }: CategoryTrendChartProps) => {
             ))}
           </tbody>
         </table>
-        <ChartKey view={view} type={type} reference={referenceName} />
+        <ChartKey view={view} type={type} tone={trend.tone} reference={referenceName} />
       </div>
       <p className="category-trend-chart__note">
-        {t(`categoryTrends.note.${view}.${type}`, { reference: referenceName })}
+        {t(`categoryTrends.note.${view}.${type}`, {
+          reference: referenceName,
+          end: endName,
+        })}
       </p>
     </>
   );

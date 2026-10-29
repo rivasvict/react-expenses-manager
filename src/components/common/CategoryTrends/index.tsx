@@ -127,10 +127,6 @@ const CategoryTrends = ({
                 to: monthName(selectedDate, "sentence"),
               })}
               body={t(`categoryTrends.empty.${type}.body`)}
-              action={{
-                label: t(`categoryTrends.empty.${type}.action`),
-                onClick: () => history.push(type === "income" ? "/add-income" : "/add-expense"),
-              }}
             />
           )}
         </>

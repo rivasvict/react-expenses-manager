@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.36.1] - 2026-10-29
+
+### Changed
+
+- **Category trends, tidier.** On a category's trend, "All categories" and the
+  category picker now sit together in one card instead of the link floating on
+  its own row. The Per month chart now draws the whole line in red when you
+  spent more (or earned less) since the range's first month and in green when
+  you spent less (or earned more), instead of gold, with a line under the chart
+  saying which way it went. When no category has entries in the range, the
+  empty card no longer offers to add an expense or an income.
+
 ## [1.36.0] - 2026-10-21
 
 ### Added

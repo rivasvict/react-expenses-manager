@@ -212,18 +212,26 @@ const es: Translations = {
     "Gastado en {{reference}}",
   "categoryTrends.key.earned":
     "Ingresado en {{reference}}",
-  "categoryTrends.key.spentMonth":
-    "Gastado ese mes",
-  "categoryTrends.key.earnedMonth":
-    "Ingresado ese mes",
+  "categoryTrends.key.spendingUp":
+    "El gasto ha subido desde {{reference}}",
+  "categoryTrends.key.spendingDown":
+    "El gasto ha bajado desde {{reference}}",
+  "categoryTrends.key.spendingFlat":
+    "El gasto es igual que en {{reference}}",
+  "categoryTrends.key.incomeUp":
+    "Los ingresos han subido desde {{reference}}",
+  "categoryTrends.key.incomeDown":
+    "Los ingresos han bajado desde {{reference}}",
+  "categoryTrends.key.incomeFlat":
+    "Los ingresos son iguales que en {{reference}}",
   "categoryTrends.key.less":
     "Menos",
   "categoryTrends.key.more":
     "Más",
   "categoryTrends.note.perMonth.expense":
-    "Cada punto es lo que gastaste en esta categoría ese mes.",
+    "Rojo cuando gastaste más en {{end}} que en {{reference}}, verde cuando gastaste menos.",
   "categoryTrends.note.perMonth.income":
-    "Cada punto es lo que ingresaste en esta categoría ese mes.",
+    "Verde cuando ingresaste más en {{end}} que en {{reference}}, rojo cuando ingresaste menos.",
   "categoryTrends.note.change.expense":
     "Verde donde gastaste menos que en {{reference}}, rojo donde gastaste más.",
   "categoryTrends.note.change.income":
@@ -241,15 +249,11 @@ const es: Translations = {
   "categoryTrends.empty.expense.title":
     "Sin gastos entre {{from}} y {{to}}",
   "categoryTrends.empty.expense.body":
-    "Añade un gasto y su categoría aparecerá aquí con su tendencia.",
-  "categoryTrends.empty.expense.action":
-    "Añadir gasto",
+    "Nada que comparar en este rango todavía.",
   "categoryTrends.empty.income.title":
     "Sin ingresos entre {{from}} y {{to}}",
   "categoryTrends.empty.income.body":
-    "Añade un ingreso y su categoría aparecerá aquí con su tendencia.",
-  "categoryTrends.empty.income.action":
-    "Añadir ingreso",
+    "Nada que comparar en este rango todavía.",
   "categoryTrends.none.expense.title":
     "No hay gastos en {{category}} en este rango",
   "categoryTrends.none.expense.body":

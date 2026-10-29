@@ -213,18 +213,26 @@ const fr: Translations = {
     "Dépensé en {{reference}}",
   "categoryTrends.key.earned":
     "Perçu en {{reference}}",
-  "categoryTrends.key.spentMonth":
-    "Dépensé ce mois-là",
-  "categoryTrends.key.earnedMonth":
-    "Perçu ce mois-là",
+  "categoryTrends.key.spendingUp":
+    "Les dépenses ont augmenté depuis {{reference}}",
+  "categoryTrends.key.spendingDown":
+    "Les dépenses ont diminué depuis {{reference}}",
+  "categoryTrends.key.spendingFlat":
+    "Les dépenses sont identiques à celles de {{reference}}",
+  "categoryTrends.key.incomeUp":
+    "Les revenus ont augmenté depuis {{reference}}",
+  "categoryTrends.key.incomeDown":
+    "Les revenus ont diminué depuis {{reference}}",
+  "categoryTrends.key.incomeFlat":
+    "Les revenus sont identiques à ceux de {{reference}}",
   "categoryTrends.key.less":
     "Moins",
   "categoryTrends.key.more":
     "Plus",
   "categoryTrends.note.perMonth.expense":
-    "Chaque point est ce que vous avez dépensé dans cette catégorie ce mois-là.",
+    "Rouge quand vous avez dépensé plus en {{end}} qu’en {{reference}}, vert quand vous avez dépensé moins.",
   "categoryTrends.note.perMonth.income":
-    "Chaque point est ce que vous avez perçu dans cette catégorie ce mois-là.",
+    "Vert quand vous avez perçu plus en {{end}} qu’en {{reference}}, rouge quand vous avez perçu moins.",
   "categoryTrends.note.change.expense":
     "Vert quand vous avez dépensé moins qu'en {{reference}}, rouge quand vous avez dépensé plus.",
   "categoryTrends.note.change.income":
@@ -242,15 +250,11 @@ const fr: Translations = {
   "categoryTrends.empty.expense.title":
     "Aucune dépense entre {{from}} et {{to}}",
   "categoryTrends.empty.expense.body":
-    "Ajoutez une dépense et sa catégorie apparaîtra ici avec son évolution.",
-  "categoryTrends.empty.expense.action":
-    "Ajouter une dépense",
+    "Rien à comparer sur cette période pour l’instant.",
   "categoryTrends.empty.income.title":
     "Aucun revenu entre {{from}} et {{to}}",
   "categoryTrends.empty.income.body":
-    "Ajoutez un revenu et sa catégorie apparaîtra ici avec son évolution.",
-  "categoryTrends.empty.income.action":
-    "Ajouter un revenu",
+    "Rien à comparer sur cette période pour l’instant.",
   "categoryTrends.none.expense.title":
     "Aucune dépense en {{category}} sur cette période",
   "categoryTrends.none.expense.body":

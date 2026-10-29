@@ -133,13 +133,13 @@ describe("the category list", () => {
     expect(screen.getByRole("link", { name: "Freelance, $650.00, +225% vs April" })).toBeInTheDocument();
   });
 
-  it("says so, and offers to add an expense, when the range has no expenses", async () => {
+  it("says so, without offering to add an expense, when the range has no expenses", async () => {
     seed(["Salary"]);
     const { user } = await renderApp("/category-trends");
 
     expect(await screen.findByText("No expenses between April and October")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Add expense" }));
-    expect(await screen.findByText("Expense entry")).toBeInTheDocument();
+    expect(screen.getByText("Nothing to compare in this range yet.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Add expense" })).not.toBeInTheDocument();
   });
 
   it("shows the list in Spanish, with category names as stored", async () => {
@@ -164,7 +164,8 @@ describe("one category's trend", () => {
     expect(headline).toHaveTextContent("$3,080.00");
     expect(headline).toHaveTextContent("7 months · $440.00 avg per month");
     expect(screen.getByRole("tab", { name: "Per month" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Each point is what you spent on this category in that month.")).toBeInTheDocument();
+    expect(screen.getByText("Red when you spent more in October than in April, green when you spent less.")).toBeInTheDocument();
+    expect(screen.getByText("Spending is up from April")).toBeInTheDocument();
   });
 
   it("compares the end month with the first month on Change, a rise in spending in red", async () => {

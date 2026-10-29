@@ -1,7 +1,7 @@
 ---
 title: Category trends polish
 summary: No add-entry CTA on an empty category list, a back link grouped with the category picker, and a red/green Per month chart.
-status: approved
+status: implemented
 chosen: d-combined
 ---
 
@@ -57,8 +57,7 @@ single tone on Per month, not gold).
 
 - **Per month tone** = the trend's `tone` (end vs reference). `up`/`down` copy comes from the sign of
   `difference`. Flat (equal): grey line and dot, legend "Spending is the same as in April".
-- Area fill uses the same tone at the existing tint opacities (`good` 0.2, `bad` 0.16 on Change; Per month
-  uses 0.16 for both and grey 0.14 for flat; match the mockup).
+- Area fill uses the chart's existing tints (`good` 0.2, `bad` 0.16, grey 0.14), shared with the Change tab.
 - Remove the gold Per month styles (`--month` classes) and the "Spent that month" keys.
 - **Empty list:** no button, no navigation to Add entry.
 - Long category names wrap in the picker (`overflow-wrap: anywhere`); the back strip never wraps.
