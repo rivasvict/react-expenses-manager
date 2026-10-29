@@ -5,6 +5,35 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.2] - 2026-10-29
+
+### Security
+
+- **`npm install` reports no vulnerabilities.** Transitive dependencies are
+  updated to their patched releases; `uuid` moves to 14 (ES modules only, so
+  Jest compiles it like `@iconify-icons`), and `workbox-cli` and
+  `workbox-window` to 7.4, which drops the vulnerable `rollup-plugin-terser`
+  and `update-notifier` chains. `tmp`, still pulled in through `workbox-cli`'s
+  `inquirer`, is overridden to 0.2.7, and the Jest coverage and Workbox
+  packages that pinned glob 10 and 11 (flagged by `npm install` as having
+  known vulnerabilities) now use glob 13, the version Jest already runs on.
+- **`deepmerge` is vendored with a fix.** No release of `deepmerge` fixes
+  GHSA-gcqx-w48m-w2h4 (prototype poisoning in `mergeObject()`), and Jest and
+  the Workbox build both depend on it, so `vendor/deepmerge/` holds 4.3.1 with
+  each key written as an own property, plus a regression test. An `overrides`
+  entry points every `deepmerge` at it until upstream ships a fix.
+
+### Changed
+
+- **CI runs on every pull request**, not only those into `master`, so a pull
+  request stacked on another branch gets its checks too.
+
+### Fixed
+
+- **`deploy.sh` runs under macOS's bash 3.2.** In a UTF-8 locale that bash
+  read `$SERVER_URL…` and `$SYNC_PORT…` as unset variables and stopped
+  before the build, so both are now braced.
+
 ## [1.37.1] - 2026-10-29
 
 ### Fixed

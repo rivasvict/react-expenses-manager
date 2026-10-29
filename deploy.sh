@@ -207,7 +207,7 @@ install_dependencies() {
 }
 
 build_frontend() {
-  info "Building the frontend against $SERVER_URL…"
+  info "Building the frontend against ${SERVER_URL}…"
   (cd "$REPO_DIR" && REACT_APP_SYNC_API_HOST="$SERVER_URL" npm run build) ||
     die "The frontend build failed — see the output above."
   [ -f "$REPO_DIR/build/index.html" ] ||
@@ -225,7 +225,7 @@ build_server() {
 # --- run --------------------------------------------------------------------
 
 start_sync_server() {
-  info "Starting the sync server on 127.0.0.1:$SYNC_PORT…"
+  info "Starting the sync server on 127.0.0.1:${SYNC_PORT}…"
   : >"$LOG_FILE"
 
   # main has already selected the .nvmrc Node version, so resolve its binary
