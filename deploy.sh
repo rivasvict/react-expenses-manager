@@ -179,18 +179,30 @@ resolve_server_url() {
 # install, so a revision that changes either is never built against stale
 # node_modules. `npm ci` installs exactly the lockfile and never rewrites it,
 # which would leave the worktree dirty for the next deploy.
+#
+# The build tools (vite, workbox-cli, typescript) are devDependencies, which
+# npm skips when NODE_ENV=production is exported or omit=dev is configured, so
+# they are included explicitly. The flag is part of the stamp so an install
+# made without them is never reused.
+#
+# The stamp only says what the last install was asked for; node_modules can be
+# changed afterwards (a manual `npm install` under NODE_ENV=production prunes
+# the devDependencies), so the build tool itself is checked too.
 install_dependencies() {
   local stamp_file="$DEPLOY_DIR/dependencies.stamp"
+  local build_tool="$REPO_DIR/node_modules/.bin/vite"
   local stamp
-  stamp="$(node --version) $(git -C "$REPO_DIR" hash-object "$REPO_DIR/package-lock.json")"
+  stamp="$(node --version) $(git -C "$REPO_DIR" hash-object "$REPO_DIR/package-lock.json") include=dev"
 
-  if [ -d "$REPO_DIR/node_modules" ] && [ "$(cat "$stamp_file" 2>/dev/null)" = "$stamp" ]; then
+  if [ -x "$build_tool" ] && [ "$(cat "$stamp_file" 2>/dev/null)" = "$stamp" ]; then
     return
   fi
 
   info "Installing npm dependencies…"
-  (cd "$REPO_DIR" && npm ci --no-audit --no-fund) ||
+  (cd "$REPO_DIR" && npm ci --include=dev --no-audit --no-fund) ||
     die "npm ci failed."
+  [ -x "$build_tool" ] ||
+    die "npm ci finished but $build_tool is missing. Check \`npm config get omit\` and \`npm config get bin-links\` (it must be true)."
   echo "$stamp" >"$stamp_file"
 }
 
