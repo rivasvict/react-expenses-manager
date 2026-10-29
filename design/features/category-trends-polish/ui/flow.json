@@ -1,0 +1,72 @@
+{
+  "screens": [
+    {
+      "id": "categories.expenses",
+      "title": "Categories, expenses ranked",
+      "route": "/category-trends",
+      "external": true
+    },
+    {
+      "id": "categories.empty",
+      "title": "Categories, no expenses in range",
+      "route": "/category-trends"
+    },
+    {
+      "id": "categories.empty-incomes",
+      "title": "Categories, no incomes in range",
+      "route": "/category-trends"
+    },
+    {
+      "id": "category.per-month",
+      "title": "Eating out, spending up (red)",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category.per-month-down",
+      "title": "Food, spending down (green)",
+      "route": "/category-trends/expense/:name"
+    },
+    {
+      "id": "category.per-month-income",
+      "title": "Freelance, income up (green)",
+      "route": "/category-trends/income/:name"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "categories.expenses",
+      "to": "category.per-month",
+      "label": "Tap Eating out"
+    },
+    {
+      "from": "categories.expenses",
+      "to": "category.per-month-down",
+      "label": "Tap Food"
+    },
+    {
+      "from": "category.per-month",
+      "to": "categories.expenses",
+      "label": "Tap All categories"
+    },
+    {
+      "from": "category.per-month",
+      "to": "category.per-month-down",
+      "label": "Pick Food in the category sheet"
+    },
+    {
+      "from": "category.per-month",
+      "to": "category.per-month-income",
+      "label": "Pick Freelance in the category sheet"
+    },
+    {
+      "from": "categories.empty",
+      "to": "categories.empty-incomes",
+      "label": "Tap Incomes"
+    },
+    {
+      "from": "categories.empty-incomes",
+      "to": "categories.empty",
+      "label": "Tap Expenses"
+    }
+  ]
+}
