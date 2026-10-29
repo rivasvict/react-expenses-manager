@@ -27,10 +27,9 @@ A feature slug: a folder in `design/features/`. If none is given, ask.
    `node_modules` is missing, then `npm run build` (use the Node version in
    `.nvmrc`).
 3. **Run the comparison**: `npm run design:review -- --feature <slug>`.
-   - It needs Node 18+ and a Chromium; Playwright itself comes with
-     `npm ci` (dev dependency). If the build needs Node 16 and the reviewer
-     needs 18+, run each step with the right Node (the build output is plain
-     files). On a normal machine, fetch the browser once with
+   - It needs Node 18+ (the `.nvmrc` version qualifies) and a Chromium;
+     Playwright itself comes with `npm ci` (dev dependency). On a normal
+     machine, fetch the browser once with
      `npx playwright install chromium`. In the Claude Code web sandbox,
      Chromium is already under `/opt/pw-browsers`: set
      `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` and **never run
@@ -56,7 +55,7 @@ A feature slug: a folder in `design/features/`. If none is given, ask.
      (a state or behaviour that was never drawn). Say what is missing.
 6. **Run the repo checks** and include their results: `npm run typecheck`,
    `npm run lint`, `npm run lint:styles`, and
-   `npm test -- --testPathPattern="integrationTests" --watchAll=false`.
+   `npm test -- --testPathPatterns="integrationTests" --watchAll=false`.
    Check that every new visible string has an English **and** a Spanish key
    (`src/i18n/translations/en.ts` / `es.ts`) and that no screen hardcodes text.
 7. **Walk the flow** in `design/features/<slug>/ui/flow.json`: confirm the

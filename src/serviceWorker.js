@@ -4,10 +4,9 @@
 // least once. See docs/deployment/tailscale-sync.md for the deployment
 // context (secure-context requirement satisfied via the *.ts.net origin).
 //
-// react-scripts@^5 does not auto-generate a service worker for a plain
-// (non-PWA-template) CRA app, so this only registers something real once
-// `npm run build` has produced build/service-worker.js via the postbuild
-// hook — it is a no-op in development (`npm start`).
+// Vite does not generate a service worker, so this only registers something
+// real once `npm run build` has produced build/service-worker.js via the
+// postbuild hook — it is a no-op in development (`npm start`).
 import { Workbox } from "workbox-window";
 
 export const register = () => {

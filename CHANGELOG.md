@@ -5,6 +5,33 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.0] - 2026-10-27
+
+### Changed
+
+- **Runs on Node 26.** The app, the sync server, CI and `deploy.sh` now all
+  use Node 26.12.1, pinned once in `.nvmrc` (the server's own `.nvmrc`, which
+  pinned Node 18, is gone).
+- **Vite replaces Create React App.** `npm start` and `npm run build` now run
+  Vite (`vite.config.mjs`) and the tests run on Jest 30 directly
+  (`jest.config.js`). The build still lands in `build/` with its service
+  worker, so deploying works as before. `npm test` now runs the suites once;
+  `npm run test:watch` is the watch mode, and Jest's `--testPathPattern`
+  option is now `--testPathPatterns`. `node-sass` is replaced by `sass`,
+  TypeScript moves to 5.9 and the GitHub Actions to their current versions.
+
+### Fixed
+
+- **`deploy.sh` passes its settings to the sync server under tmux.** When a
+  tmux server was already running, the new session did not get the exported
+  `PORT`, `NODE_ENV`, `TOKEN_SECRET`, `ENCRYPTION_KEY` and friends, so the
+  sync server started with its development defaults. `stop.sh` now also stops
+  a server started without tmux on systems without `fuser`.
+- **`deploy.sh` installs the build tools under `NODE_ENV=production`.** Vite
+  and the other build tools are devDependencies, which `npm ci` skipped when
+  `NODE_ENV=production` was exported, so the build failed with
+  `vite: not found`. The install now always includes them.
+
 ## [1.36.0] - 2026-10-21
 
 ### Added

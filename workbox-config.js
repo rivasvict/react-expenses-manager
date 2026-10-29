@@ -1,4 +1,4 @@
-// Generates build/service-worker.js from the finished CRA build/ output.
+// Generates build/service-worker.js from the finished Vite build/ output.
 // Run as a postbuild step (see package.json "postbuild") so it always
 // precaches the final, content-hashed filenames.
 //

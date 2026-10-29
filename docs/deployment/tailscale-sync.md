@@ -31,7 +31,7 @@ Linux box (tailnet member)
    ├─ tailscale serve   → terminates TLS for <hostname>.<tailnet>.ts.net,
    │                       auto-provisions/renews the Let's Encrypt cert
    │
-   ├─ /            → serves the CRA build/ output (static, single origin)
+   ├─ /            → serves the Vite build/ output (static, single origin)
    └─ /api/*       → reverse-proxied to 127.0.0.1:4000 (the sync server)
 ```
 

@@ -4,8 +4,8 @@
 // pointed at this tree portably. Node 18 expands a *directory* argument
 // recursively but rejects glob patterns; Node 20+ does the reverse, treating
 // positionals as globs and failing on a bare directory with "Cannot find
-// module". CI pins Node 18 (.nvmrc) while local dev runs Node 22, so neither
-// form works everywhere. Listing one glob per directory did work on both, but
+// module" — so neither form survives a change of the Node version pinned in
+// .nvmrc. Listing one glob per directory did work on both, but
 // silently skipped every test in any directory nobody remembered to add — so
 // this walks the compiled output instead and passes explicit file paths,
 // which all supported versions accept.
