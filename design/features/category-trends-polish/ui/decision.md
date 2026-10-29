@@ -45,6 +45,21 @@ bundles an answer to all three points; any point can be mixed across options.
   month is grey. Bars suit "amount per month" and make colour unambiguous.
   *Costs:* different look from the Savings trend line.
 
+### d-combined
+
+The owner's mix: **a's empty state** (card kept, add button removed, "Nothing to
+compare in this range yet."), **b's back link** (the selected "Categories"
+segment of the scope switch shows a ‹ and returns to the list; no separate row,
+so the detail screen is about 3rem shorter than today's) and **b's chart** (one
+colour for the whole line and fill by overall direction from the first to the
+last month: red when an expense category is up, green when down; flipped for
+incomes; grey when equal).
+
+Implementer notes: the segment's accessible name is "All categories" while on
+a category (it navigates to `/category-trends`); on the list it stays a plain
+selected tab. The legend reads "Spending is up from {{reference}}" / "Spending
+is down from {{reference}}" (incomes: "Income is up/down from ...").
+
 ## Notes for any option
 
 - Per month colours compare with the **previous month**; Change keeps comparing
