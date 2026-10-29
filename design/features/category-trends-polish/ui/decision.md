@@ -48,17 +48,19 @@ bundles an answer to all three points; any point can be mixed across options.
 ### d-combined
 
 The owner's mix: **a's empty state** (card kept, add button removed, "Nothing to
-compare in this range yet."), **b's back link** (the selected "Categories"
-segment of the scope switch shows a ‹ and returns to the list; no separate row,
-so the detail screen is about 3rem shorter than today's) and **b's chart** (one
-colour for the whole line and fill by overall direction from the first to the
-last month: red when an expense category is up, green when down; flipped for
-incomes; grey when equal).
+compare in this range yet."), **c's back link** ("‹ All categories" and the
+category picker share one raised card, the link as a quiet header strip above a
+hairline, so the pair reads as "where am I"; the screen keeps today's height)
+and **b's chart** (one colour for the whole line and fill by overall direction
+from the first to the last month: red when an expense category is up, green
+when down; flipped for incomes; grey when equal).
 
-Implementer notes: the segment's accessible name is "All categories" while on
-a category (it navigates to `/category-trends`); on the list it stays a plain
-selected tab. The legend reads "Spending is up from {{reference}}" / "Spending
-is down from {{reference}}" (incomes: "Income is up/down from ...").
+Implementer notes: the card is one container (`BackLink` strip on `--bg-surface`
+over the picker row, hairline between); the strip is the link, the picker row
+the button, each at least 2.5rem tall. The scope switch stays a plain
+Savings | Categories control. The legend reads "Spending is up from
+{{reference}}" / "Spending is down from {{reference}}" (incomes: "Income is
+up/down from ...").
 
 ## Notes for any option
 
