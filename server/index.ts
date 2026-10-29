@@ -1,6 +1,6 @@
 // Local dev sync server (docs/multi-user-sync/RFC.md §6, and NFR-4 in
 // docs/multi-user-sync/PRD.md): node:http adapter around the framework-free
-// core, with CORS for the CRA dev server and on-disk JSON storage under
+// core, with CORS for the Vite dev server and on-disk JSON storage under
 // server/.data/ (gitignored).
 //
 // Run with: npm run sync-server   (defaults to port 4000)

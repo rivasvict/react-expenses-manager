@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.36.1] - 2026-10-29
+## [1.37.3] - 2026-10-29
 
 ### Changed
 
@@ -16,6 +16,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   you spent less (or earned more), instead of gold, with a line under the chart
   saying which way it went. When no category has entries in the range, the
   empty card no longer offers to add an expense or an income.
+## [1.37.2] - 2026-10-29
+
+### Security
+
+- **`npm install` reports no vulnerabilities.** Transitive dependencies are
+  updated to their patched releases; `uuid` moves to 14 (ES modules only, so
+  Jest compiles it like `@iconify-icons`), and `workbox-cli` and
+  `workbox-window` to 7.4, which drops the vulnerable `rollup-plugin-terser`
+  and `update-notifier` chains. `tmp`, still pulled in through `workbox-cli`'s
+  `inquirer`, is overridden to 0.2.7, and the Jest coverage and Workbox
+  packages that pinned glob 10 and 11 (flagged by `npm install` as having
+  known vulnerabilities) now use glob 13, the version Jest already runs on.
+- **`deepmerge` is vendored with a fix.** No release of `deepmerge` fixes
+  GHSA-gcqx-w48m-w2h4 (prototype poisoning in `mergeObject()`), and Jest and
+  the Workbox build both depend on it, so `vendor/deepmerge/` holds 4.3.1 with
+  each key written as an own property, plus a regression test. An `overrides`
+  entry points every `deepmerge` at it until upstream ships a fix.
+
+### Changed
+
+- **CI runs on every pull request**, not only those into `master`, so a pull
+  request stacked on another branch gets its checks too.
+
+### Fixed
+
+- **`deploy.sh` runs under macOS's bash 3.2.** In a UTF-8 locale that bash
+  read `$SERVER_URL…` and `$SYNC_PORT…` as unset variables and stopped
+  before the build, so both are now braced.
+
+## [1.37.1] - 2026-10-29
+
+### Fixed
+
+- **`deploy.sh` reinstalls when the build tools are missing.** It skipped
+  `npm ci` whenever the lockfile and Node version matched the last install,
+  even if `node_modules` had lost Vite since (a manual `npm install` under
+  `NODE_ENV=production` prunes it), so the build failed with
+  `vite: not found`. It now also checks that Vite is installed, and stops
+  with a clear message if `npm ci` does not provide it.
+
+## [1.37.0] - 2026-10-27
+
+### Changed
+
+- **Runs on Node 26.** The app, the sync server, CI and `deploy.sh` now all
+  use Node 26.12.1, pinned once in `.nvmrc` (the server's own `.nvmrc`, which
+  pinned Node 18, is gone).
+- **Vite replaces Create React App.** `npm start` and `npm run build` now run
+  Vite (`vite.config.mjs`) and the tests run on Jest 30 directly
+  (`jest.config.js`). The build still lands in `build/` with its service
+  worker, so deploying works as before. `npm test` now runs the suites once;
+  `npm run test:watch` is the watch mode, and Jest's `--testPathPattern`
+  option is now `--testPathPatterns`. `node-sass` is replaced by `sass`,
+  TypeScript moves to 5.9 and the GitHub Actions to their current versions.
+
+### Fixed
+
+- **`deploy.sh` passes its settings to the sync server under tmux.** When a
+  tmux server was already running, the new session did not get the exported
+  `PORT`, `NODE_ENV`, `TOKEN_SECRET`, `ENCRYPTION_KEY` and friends, so the
+  sync server started with its development defaults. `stop.sh` now also stops
+  a server started without tmux on systems without `fuser`.
+- **`deploy.sh` installs the build tools under `NODE_ENV=production`.** Vite
+  and the other build tools are devDependencies, which `npm ci` skipped when
+  `NODE_ENV=production` was exported, so the build failed with
+  `vite: not found`. The install now always includes them.
 
 ## [1.36.0] - 2026-10-21
 

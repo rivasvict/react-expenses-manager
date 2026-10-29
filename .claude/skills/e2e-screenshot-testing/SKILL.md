@@ -309,7 +309,7 @@ Alongside (or before) the visual walkthrough, run the actual tests so the
 report can state both facts independently:
 
 ```bash
-npm test -- --testPathPattern="<name-fragment>" --watchAll=false
+npm test -- --testPathPatterns="<name-fragment>" --watchAll=false
 ```
 
 ## Where screenshots go

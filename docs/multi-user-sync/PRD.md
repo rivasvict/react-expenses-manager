@@ -220,7 +220,7 @@ mine, entry by entry, so we stay in sync without losing anyone's edits.*
       clear error, no partial merge (AC-3.11, EC-3).
 - [ ] Existing Download Backup / Restore Backup / Clear All Data behave
       identically to before (AC-3.7, NFR-3).
-- [ ] `npm test -- --testPathPattern="integrationTests"` passes, including
+- [ ] `npm test -- --testPathPatterns="integrationTests"` passes, including
       new tests, with no live third-party network calls (NFR-4, NFR-5).
 - [ ] `npm run typecheck` and `npm run lint` pass.
 - [ ] No password or invitation token/password appears in plaintext in
