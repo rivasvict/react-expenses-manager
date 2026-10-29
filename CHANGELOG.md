@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.1] - 2026-10-29
+
+### Fixed
+
+- **`deploy.sh` reinstalls when the build tools are missing.** It skipped
+  `npm ci` whenever the lockfile and Node version matched the last install,
+  even if `node_modules` had lost Vite since (a manual `npm install` under
+  `NODE_ENV=production` prunes it), so the build failed with
+  `vite: not found`. It now also checks that Vite is installed, and stops
+  with a clear message if `npm ci` does not provide it.
+
 ## [1.37.0] - 2026-10-27
 
 ### Changed
