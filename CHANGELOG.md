@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.3] - 2026-10-31
+
+### Changed
+
+- **Claude Code hooks enforce the mechanical project rules.** Linting and
+  token regeneration run after an edit, typecheck and the design gallery build
+  run once when a turn ends, generated files cannot be edited by hand, and a
+  push or pull request that changes the app without a version bump and
+  changelog entry is refused. `CLAUDE.md` documents the hooks and the agent
+  pull-request workflow (subscribe after opening, merge once `rivasvict`
+  approves).
+
 ## [1.37.2] - 2026-10-29
 
 ### Security
