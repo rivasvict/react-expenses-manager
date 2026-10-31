@@ -1,6 +1,6 @@
 {
   "name": "react-expenses-manager",
-  "version": "1.37.5",
+  "version": "1.37.6",
   "private": true,
   "dependencies": {
     "@iconify-icons/codicon": "^1.1.26",

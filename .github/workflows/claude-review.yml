@@ -4,16 +4,31 @@ on:
   # Every pull request, including one stacked on another branch.
   # Add "synchronize" to review every push.
   pull_request:
-    types: [opened, reopened, ready_for_review]
-
-concurrency:
-  group: claude-review-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+    types: [opened, reopened, ready_for_review, labeled]
+  # Manual request: comment "@claude review" on a pull request.
+  issue_comment:
+    types: [created]
 
 jobs:
   review:
-    # Explicit allowlist of GitHub logins.
-    if: contains(fromJSON('["rivasvict", "rivasvictron"]'), github.actor)
+    # Explicit allowlist of GitHub logins. On top of that: a "labeled" event
+    # only counts for the "claude-review" label (adding it re-requests a
+    # review at any time), and a comment only counts on a pull request and
+    # when it contains "@claude review".
+    if: >-
+      contains(fromJSON('["rivasvict", "rivasvictron"]'), github.actor) &&
+      (
+        (github.event_name == 'pull_request' &&
+          (github.event.action != 'labeled' || github.event.label.name == 'claude-review')) ||
+        (github.event_name == 'issue_comment' &&
+          github.event.issue.pull_request &&
+          contains(github.event.comment.body, '@claude review'))
+      )
+    # Job level, so a comment or label that skips the job never cancels a
+    # review that is already running.
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -32,7 +47,7 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number || github.event.issue.number }}"
           claude_args: |
             --max-turns 20
             --model claude-sonnet-5-5
