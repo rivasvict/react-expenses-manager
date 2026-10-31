@@ -1,0 +1,55 @@
+{
+  "id": "all-hallows",
+  "name": "All Hallows",
+  "scheme": "dark",
+  "inspiration": "Halloween",
+  "description": {
+    "en": "A witching-hour purple night lit by jack-o'-lanterns.",
+    "es": "Una noche morada de brujas iluminada por calabazas.",
+    "fr": "Une nuit violette de sorcières éclairée par des citrouilles."
+  },
+  "color": {
+    "bg-page": "#0f0a14",
+    "bg-surface": "#170f1f",
+    "bg-raised": "#21162c",
+    "bg-raised-hover": "#2a1c38",
+    "border-subtle": "rgba(234, 220, 255, 0.08)",
+    "border-strong": "rgba(234, 220, 255, 0.16)",
+    "track": "rgba(234, 220, 255, 0.1)",
+    "highlight": "rgba(234, 220, 255, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#ff7a1a",
+    "accent-hover": "#ff9445",
+    "accent-soft": "rgba(255, 122, 26, 0.12)",
+    "income": "#7fe36a",
+    "income-soft": "rgba(127, 227, 106, 0.12)",
+    "expense": "#ff5277",
+    "expense-soft": "rgba(255, 82, 119, 0.12)",
+    "danger": "#ff4d5e",
+    "danger-soft": "rgba(255, 77, 94, 0.14)",
+    "warning": "#ffd23f",
+    "text-primary": "#f5effa",
+    "text-secondary": "#bfb1cf",
+    "text-muted": "#a596b8",
+    "text-on-accent": "#1d0b00",
+    "text-validation": "#ffa48a",
+    "brand-mark-shade": "#8f5bd6"
+  },
+  "chart": {
+    "chart-income": "#5fcf4f",
+    "chart-expense": "#ff3f66",
+    "chart-warning": "#f2c21c",
+    "chart-categorical-1": "#59d6f0",
+    "chart-categorical-2": "#ff7a1a",
+    "chart-categorical-3": "#a970ff",
+    "chart-categorical-4": "#ff4f6e",
+    "chart-categorical-5": "#8fe34f",
+    "chart-categorical-6": "#2fbfa0",
+    "chart-categorical-7": "#ffd23f",
+    "chart-categorical-8": "#d9cbb0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "yuletide",
+  "name": "Yuletide",
+  "scheme": "dark",
+  "inspiration": "Christmas",
+  "description": {
+    "en": "A pine-green Christmas night: star gold, cranberry red and fresh snow.",
+    "es": "Una noche de Navidad verde pino: oro de estrella, rojo arándano y nieve fresca.",
+    "fr": "Une nuit de Noël vert sapin : or d'étoile, rouge canneberge et neige fraîche."
+  },
+  "color": {
+    "bg-page": "#0b1712",
+    "bg-surface": "#10211a",
+    "bg-raised": "#172d23",
+    "bg-raised-hover": "#1e382c",
+    "border-subtle": "rgba(232, 243, 236, 0.08)",
+    "border-strong": "rgba(232, 243, 236, 0.16)",
+    "track": "rgba(232, 243, 236, 0.1)",
+    "highlight": "rgba(232, 243, 236, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#f2c14e",
+    "accent-hover": "#f7d27a",
+    "accent-soft": "rgba(242, 193, 78, 0.12)",
+    "income": "#74dd98",
+    "income-soft": "rgba(116, 221, 152, 0.12)",
+    "expense": "#ff6170",
+    "expense-soft": "rgba(255, 97, 112, 0.12)",
+    "danger": "#ff5a5a",
+    "danger-soft": "rgba(255, 90, 90, 0.14)",
+    "warning": "#ffa94d",
+    "text-primary": "#f6f8f3",
+    "text-secondary": "#b6c6bb",
+    "text-muted": "#9aad9f",
+    "text-on-accent": "#1f1500",
+    "text-validation": "#ffab91",
+    "brand-mark-shade": "#d6334a"
+  },
+  "chart": {
+    "chart-income": "#4cc77a",
+    "chart-expense": "#fb5e6c",
+    "chart-warning": "#f0963a",
+    "chart-categorical-1": "#5aa9ff",
+    "chart-categorical-2": "#ff9a3c",
+    "chart-categorical-3": "#b48cf0",
+    "chart-categorical-4": "#ff6170",
+    "chart-categorical-5": "#a5d65a",
+    "chart-categorical-6": "#4fd1c5",
+    "chart-categorical-7": "#f2c14e",
+    "chart-categorical-8": "#ff8fb8"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

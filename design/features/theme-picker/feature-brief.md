@@ -22,6 +22,9 @@ truth for the app, for `design/system/themes.css` and for these mockups.
 | Super Saiyan | Dragon Ball Z | dark |
 | Ocarina | The Legend of Zelda: Ocarina of Time | dark |
 | Wisteria | Demon Slayer | dark |
+| Yuletide | Christmas | dark |
+| All Hallows | Halloween | dark |
+| Pumpkin King | The Nightmare Before Christmas | dark |
 | Tokyo Night | Omarchy | dark |
 | Catppuccin | Omarchy (Mocha) | dark |
 | Gruvbox | Omarchy | dark |

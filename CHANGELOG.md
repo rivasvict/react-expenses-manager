@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- **Theme catalog, with designs for the theme picker.** Ten themes are defined
-  in `src/themes/catalog/`, one JSON file each: Midnight Gold (today's look,
-  the default), four inspired by anime and games (Moon Prism, Super Saiyan,
-  Ocarina and Wisteria), and five from Omarchy (Tokyo Night, Catppuccin,
+- **Theme catalog, with designs for the theme picker.** Thirteen themes are
+  defined in `src/themes/catalog/`, one JSON file each: Midnight Gold (today's
+  look, the default), four inspired by anime and games (Moon Prism, Super
+  Saiyan, Ocarina and Wisteria), three seasonal ones (Yuletide for Christmas,
+  All Hallows for Halloween, and Pumpkin King for The Nightmare Before
+  Christmas), and five from Omarchy (Tokyo Night, Catppuccin,
   Gruvbox, Nord and Flexoki Light). `npm run tokens:build` also generates
   `design/system/themes.css` from them. A unit test holds every theme to the
   default's contrast rules and requires it to set every color, chart and

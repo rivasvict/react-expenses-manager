@@ -1,0 +1,55 @@
+{
+  "id": "pumpkin-king",
+  "name": "Pumpkin King",
+  "scheme": "dark",
+  "inspiration": "The Nightmare Before Christmas",
+  "description": {
+    "en": "Halloween Town by moonlight, stitched together with Sally's patchwork.",
+    "es": "Halloween Town a la luz de la luna, cosida con los retazos de Sally.",
+    "fr": "Halloween Town au clair de lune, cousue avec les pièces de Sally."
+  },
+  "color": {
+    "bg-page": "#0d1013",
+    "bg-surface": "#14181d",
+    "bg-raised": "#1c2229",
+    "bg-raised-hover": "#232a33",
+    "border-subtle": "rgba(230, 236, 240, 0.08)",
+    "border-strong": "rgba(230, 236, 240, 0.16)",
+    "track": "rgba(230, 236, 240, 0.1)",
+    "highlight": "rgba(230, 236, 240, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#f2e2a0",
+    "accent-hover": "#f8edc0",
+    "accent-soft": "rgba(242, 226, 160, 0.12)",
+    "income": "#8fd18a",
+    "income-soft": "rgba(143, 209, 138, 0.12)",
+    "expense": "#ff6a5c",
+    "expense-soft": "rgba(255, 106, 92, 0.12)",
+    "danger": "#ff5f57",
+    "danger-soft": "rgba(255, 95, 87, 0.14)",
+    "warning": "#ff9a3c",
+    "text-primary": "#f2f0ea",
+    "text-secondary": "#aab3bb",
+    "text-muted": "#919ba5",
+    "text-on-accent": "#1a1608",
+    "text-validation": "#ffa58a",
+    "brand-mark-shade": "#6c7a86"
+  },
+  "chart": {
+    "chart-income": "#6cc06a",
+    "chart-expense": "#f2564a",
+    "chart-warning": "#f0902c",
+    "chart-categorical-1": "#6fa8dc",
+    "chart-categorical-2": "#ff9a3c",
+    "chart-categorical-3": "#9b7fd4",
+    "chart-categorical-4": "#e8584a",
+    "chart-categorical-5": "#9ccf6a",
+    "chart-categorical-6": "#4fb8a8",
+    "chart-categorical-7": "#f2e2a0",
+    "chart-categorical-8": "#d77fb0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

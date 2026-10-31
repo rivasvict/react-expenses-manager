@@ -48,6 +48,54 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
+[data-theme="all-hallows"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #0f0a14;
+  --bg-surface: #170f1f;
+  --bg-raised: #21162c;
+  --bg-raised-hover: #2a1c38;
+  --border-subtle: rgba(234, 220, 255, 0.08);
+  --border-strong: rgba(234, 220, 255, 0.16);
+  --track: rgba(234, 220, 255, 0.1);
+  --highlight: rgba(234, 220, 255, 0.05);
+  --scrim: rgba(0, 0, 0, 0.5);
+  --accent: #ff7a1a;
+  --accent-hover: #ff9445;
+  --accent-soft: rgba(255, 122, 26, 0.12);
+  --income: #7fe36a;
+  --income-soft: rgba(127, 227, 106, 0.12);
+  --expense: #ff5277;
+  --expense-soft: rgba(255, 82, 119, 0.12);
+  --danger: #ff4d5e;
+  --danger-soft: rgba(255, 77, 94, 0.14);
+  --warning: #ffd23f;
+  --text-primary: #f5effa;
+  --text-secondary: #bfb1cf;
+  --text-muted: #a596b8;
+  --text-on-accent: #1d0b00;
+  --text-validation: #ffa48a;
+  --brand-mark-shade: #8f5bd6;
+
+  /* chart */
+  --chart-income: #5fcf4f;
+  --chart-expense: #ff3f66;
+  --chart-warning: #f2c21c;
+  --chart-categorical-1: #59d6f0;
+  --chart-categorical-2: #ff7a1a;
+  --chart-categorical-3: #a970ff;
+  --chart-categorical-4: #ff4f6e;
+  --chart-categorical-5: #8fe34f;
+  --chart-categorical-6: #2fbfa0;
+  --chart-categorical-7: #ffd23f;
+  --chart-categorical-8: #d9cbb0;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
 [data-theme="catppuccin"] {
   color-scheme: dark;
 
@@ -336,6 +384,54 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
+[data-theme="pumpkin-king"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #0d1013;
+  --bg-surface: #14181d;
+  --bg-raised: #1c2229;
+  --bg-raised-hover: #232a33;
+  --border-subtle: rgba(230, 236, 240, 0.08);
+  --border-strong: rgba(230, 236, 240, 0.16);
+  --track: rgba(230, 236, 240, 0.1);
+  --highlight: rgba(230, 236, 240, 0.05);
+  --scrim: rgba(0, 0, 0, 0.5);
+  --accent: #f2e2a0;
+  --accent-hover: #f8edc0;
+  --accent-soft: rgba(242, 226, 160, 0.12);
+  --income: #8fd18a;
+  --income-soft: rgba(143, 209, 138, 0.12);
+  --expense: #ff6a5c;
+  --expense-soft: rgba(255, 106, 92, 0.12);
+  --danger: #ff5f57;
+  --danger-soft: rgba(255, 95, 87, 0.14);
+  --warning: #ff9a3c;
+  --text-primary: #f2f0ea;
+  --text-secondary: #aab3bb;
+  --text-muted: #919ba5;
+  --text-on-accent: #1a1608;
+  --text-validation: #ffa58a;
+  --brand-mark-shade: #6c7a86;
+
+  /* chart */
+  --chart-income: #6cc06a;
+  --chart-expense: #f2564a;
+  --chart-warning: #f0902c;
+  --chart-categorical-1: #6fa8dc;
+  --chart-categorical-2: #ff9a3c;
+  --chart-categorical-3: #9b7fd4;
+  --chart-categorical-4: #e8584a;
+  --chart-categorical-5: #9ccf6a;
+  --chart-categorical-6: #4fb8a8;
+  --chart-categorical-7: #f2e2a0;
+  --chart-categorical-8: #d77fb0;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
 [data-theme="super-saiyan"] {
   color-scheme: dark;
 
@@ -474,6 +570,54 @@
   --chart-categorical-6: #3cc0b5;
   --chart-categorical-7: #f2cc3c;
   --chart-categorical-8: #e5484d;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="yuletide"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #0b1712;
+  --bg-surface: #10211a;
+  --bg-raised: #172d23;
+  --bg-raised-hover: #1e382c;
+  --border-subtle: rgba(232, 243, 236, 0.08);
+  --border-strong: rgba(232, 243, 236, 0.16);
+  --track: rgba(232, 243, 236, 0.1);
+  --highlight: rgba(232, 243, 236, 0.05);
+  --scrim: rgba(0, 0, 0, 0.5);
+  --accent: #f2c14e;
+  --accent-hover: #f7d27a;
+  --accent-soft: rgba(242, 193, 78, 0.12);
+  --income: #74dd98;
+  --income-soft: rgba(116, 221, 152, 0.12);
+  --expense: #ff6170;
+  --expense-soft: rgba(255, 97, 112, 0.12);
+  --danger: #ff5a5a;
+  --danger-soft: rgba(255, 90, 90, 0.14);
+  --warning: #ffa94d;
+  --text-primary: #f6f8f3;
+  --text-secondary: #b6c6bb;
+  --text-muted: #9aad9f;
+  --text-on-accent: #1f1500;
+  --text-validation: #ffab91;
+  --brand-mark-shade: #d6334a;
+
+  /* chart */
+  --chart-income: #4cc77a;
+  --chart-expense: #fb5e6c;
+  --chart-warning: #f0963a;
+  --chart-categorical-1: #5aa9ff;
+  --chart-categorical-2: #ff9a3c;
+  --chart-categorical-3: #b48cf0;
+  --chart-categorical-4: #ff6170;
+  --chart-categorical-5: #a5d65a;
+  --chart-categorical-6: #4fd1c5;
+  --chart-categorical-7: #f2c14e;
+  --chart-categorical-8: #ff8fb8;
 
   /* shadow */
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
