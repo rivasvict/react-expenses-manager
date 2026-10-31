@@ -24,6 +24,7 @@ import { useTrendRange } from "../../SavingsTrend/TrendRangeContext";
 import TypeChip from "../../ExpensesManager/Categories/TypeChip";
 import { mapActionsToProps, mapStateToProps } from "..";
 import BackLink from "../BackLink";
+import CategoryLocation from "../CategoryLocation";
 import CategoryPicker from "../CategoryPicker";
 import CategoryPickerSheet, { PickedCategory } from "../CategoryPickerSheet";
 import CategoryTrendSummary from "../CategoryTrendSummary";
@@ -33,10 +34,11 @@ type CategoryTrendDetailProps = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapActionsToProps>;
 
 /**
- * One category's trend (design/features/category-trends/ui/approved/): the
- * category picker, the month and range shared with the other trend views, and
- * a headline card with Per month (the default) and Change tabs over the line
- * chart. A category that no longer exists sends the user back to the list.
+ * One category's trend (design/features/category-trends/ui/approved/ and
+ * category-trends-polish/): the back link over the category picker, the month
+ * and range shared with the other trend views, and a headline card with Per
+ * month (the default) and Change tabs over the line chart. A category that no
+ * longer exists sends the user back to the list.
  */
 const CategoryTrendDetail = ({
   entries,
@@ -82,12 +84,14 @@ const CategoryTrendDetail = ({
     <MainContentContainer className="category-trend-detail">
       <h3 className="visually-hidden">{t("categoryTrends.pageTitle")}</h3>
       <ScopeSwitch active="categories" />
-      <BackLink
-        to={{ pathname: SCOPE_ROUTES.categories, state: { type } }}
-        label={t("categoryTrends.back")}
-      />
       <NavigableMonthHeader />
-      <CategoryPicker ref={pickerRef} type={type} name={name} onOpen={() => setIsPickerOpen(true)} />
+      <CategoryLocation>
+        <BackLink
+          to={{ pathname: SCOPE_ROUTES.categories, state: { type } }}
+          label={t("categoryTrends.back")}
+        />
+        <CategoryPicker ref={pickerRef} type={type} name={name} onOpen={() => setIsPickerOpen(true)} />
+      </CategoryLocation>
       <RangeControls
         entries={entries}
         selectedDate={selectedDate}
