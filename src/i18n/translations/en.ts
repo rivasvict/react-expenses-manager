@@ -217,18 +217,26 @@ const en = {
     "Spent in {{reference}}",
   "categoryTrends.key.earned":
     "Earned in {{reference}}",
-  "categoryTrends.key.spentMonth":
-    "Spent that month",
-  "categoryTrends.key.earnedMonth":
-    "Earned that month",
+  "categoryTrends.key.spendingUp":
+    "Spending is up from {{reference}}",
+  "categoryTrends.key.spendingDown":
+    "Spending is down from {{reference}}",
+  "categoryTrends.key.spendingFlat":
+    "Spending is the same as in {{reference}}",
+  "categoryTrends.key.incomeUp":
+    "Income is up from {{reference}}",
+  "categoryTrends.key.incomeDown":
+    "Income is down from {{reference}}",
+  "categoryTrends.key.incomeFlat":
+    "Income is the same as in {{reference}}",
   "categoryTrends.key.less":
     "Less",
   "categoryTrends.key.more":
     "More",
   "categoryTrends.note.perMonth.expense":
-    "Each point is what you spent on this category in that month.",
+    "Red when you spent more in {{end}} than in {{reference}}, green when you spent less.",
   "categoryTrends.note.perMonth.income":
-    "Each point is what you earned in this category in that month.",
+    "Green when you earned more in {{end}} than in {{reference}}, red when you earned less.",
   "categoryTrends.note.change.expense":
     "Green where you spent less than in {{reference}}, red where you spent more.",
   "categoryTrends.note.change.income":
@@ -246,15 +254,11 @@ const en = {
   "categoryTrends.empty.expense.title":
     "No expenses between {{from}} and {{to}}",
   "categoryTrends.empty.expense.body":
-    "Add an expense and its category will show up here with its trend.",
-  "categoryTrends.empty.expense.action":
-    "Add expense",
+    "Nothing to compare in this range yet.",
   "categoryTrends.empty.income.title":
     "No incomes between {{from}} and {{to}}",
   "categoryTrends.empty.income.body":
-    "Add an income and its category will show up here with its trend.",
-  "categoryTrends.empty.income.action":
-    "Add income",
+    "Nothing to compare in this range yet.",
   "categoryTrends.none.expense.title":
     "Nothing spent on {{category}} in this range",
   "categoryTrends.none.expense.body":

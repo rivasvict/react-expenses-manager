@@ -1,0 +1,29 @@
+@import '../../../../variables.scss';
+
+// Category location (design/system/components.md): one card for the back link
+// and the category picker, so the pair reads as "where am I".
+.category-location {
+  margin: 0 0 0.75rem;
+  overflow: hidden;
+  background-color: $bg-raised;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+
+  .back-link {
+    align-self: auto;
+    display: flex;
+    margin: 0;
+    padding: 0 0.8rem 0 0.5rem;
+    font-size: 0.88rem;
+    background-color: $bg-surface;
+    border-bottom: 1px solid $border-subtle;
+    border-radius: 0;
+  }
+
+  .category-picker {
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+}

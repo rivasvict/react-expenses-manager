@@ -44,14 +44,15 @@ describe("CategoryTrends", () => {
     ]);
   });
 
-  it("offers to add an income when the range has none", async () => {
+  it("says so, without an add button, when the range has none", async () => {
     seedEntries([entry(APRIL, "100", ",food,"), entry(OCTOBER, "120", ",food,")]);
     localStorage.setItem("categoryLists", JSON.stringify({ expense: ["Food"], income: ["Salary"] }));
     const { user } = await renderApp("/category-trends");
 
     await user.click(await screen.findByRole("tab", { name: "Incomes" }));
     expect(screen.getByText("No incomes between April and October")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Add income" })).toBeInTheDocument();
+    expect(screen.getByText("Nothing to compare in this range yet.")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Add income" })).not.toBeInTheDocument();
   });
 
   it("keeps the picked tab when the user comes back with the browser's Back", async () => {
