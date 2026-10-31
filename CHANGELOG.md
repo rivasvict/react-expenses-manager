@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.6] - 2026-10-31
+
+### Added
+
+- **Request a Claude code review on demand.** Besides the automatic review
+  when a pull request is opened, an allowlisted user can now comment
+  `@claude review` on a pull request, or add the `claude-review` label to it,
+  to run the review again (for example after new pushes or when the pull
+  request conflicted at creation and no workflow started).
+
 ## [1.37.4] - 2026-10-31
 
 ### Added
