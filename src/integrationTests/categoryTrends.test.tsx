@@ -135,7 +135,7 @@ describe("the category list", () => {
 
   it("says so, without offering to add an expense, when the range has no expenses", async () => {
     seed(["Salary"]);
-    const { user } = await renderApp("/category-trends");
+    await renderApp("/category-trends");
 
     expect(await screen.findByText("No expenses between April and October")).toBeInTheDocument();
     expect(screen.getByText("Nothing to compare in this range yet.")).toBeInTheDocument();
