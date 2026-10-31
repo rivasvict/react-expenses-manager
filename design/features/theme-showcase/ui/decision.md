@@ -69,6 +69,9 @@ warning/danger separation, chart legibility). Every theme ended at **PASS**.
 | Gruvbox | revise | accent → canonical mustard `#d79921` (was too close to the default gold), chart 8 → canonical gray | pass |
 | Nord | pass | expense/danger → `#f0959c`, a redder lift of aurora red | pass |
 | Flexoki Light | pass | chart warning → lighter amber, so a warning bucket separates from a healthy one | pass |
+| Yuletide | revise | deeper fir surfaces (too close to Ocarina), tinsel-gold accent, holly income, cranberry expense and logo shade, icy-blue first chart color | pass |
+| All Hallows | revise | chart 1 ↔ 3: witch purple leads the chart instead of Super Saiyan's cyan | pass |
+| Pumpkin King | revise | moonlit teal-black surfaces and bone-white lines (too close to the default), mint income (too close to the moon accent), teal-tinted grey text and logo | pass |
 
 Declined: a forest-green income for Flexoki Light. The reviewer called it
 optional; it is not a Flexoki color, and the olive passes every rule.
