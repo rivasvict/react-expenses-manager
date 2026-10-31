@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   you spent less (or earned more), instead of gold, with a line under the chart
   saying which way it went. When no category has entries in the range, the
   empty card no longer offers to add an expense or an income.
+
 ## [1.37.2] - 2026-10-29
 
 ### Security

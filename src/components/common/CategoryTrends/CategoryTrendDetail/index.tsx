@@ -35,9 +35,10 @@ type CategoryTrendDetailProps = ReturnType<typeof mapStateToProps> &
 
 /**
  * One category's trend (design/features/category-trends/ui/approved/ and
- * category-trends-polish/): the back link over the category picker, the month and range shared with the other trend views, and
- * a headline card with Per month (the default) and Change tabs over the line
- * chart. A category that no longer exists sends the user back to the list.
+ * category-trends-polish/): the back link over the category picker, the month
+ * and range shared with the other trend views, and a headline card with Per
+ * month (the default) and Change tabs over the line chart. A category that no
+ * longer exists sends the user back to the list.
  */
 const CategoryTrendDetail = ({
   entries,
