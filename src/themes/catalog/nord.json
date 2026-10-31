@@ -1,0 +1,55 @@
+{
+  "id": "nord",
+  "name": "Nord",
+  "scheme": "dark",
+  "inspiration": "Omarchy · Nord",
+  "description": {
+    "en": "An arctic, north-bluish calm with frost accents.",
+    "es": "Una calma ártica y azulada con acentos de escarcha.",
+    "fr": "Un calme arctique et bleuté aux accents de givre."
+  },
+  "color": {
+    "bg-page": "#272c36",
+    "bg-surface": "#2e3440",
+    "bg-raised": "#3b4252",
+    "bg-raised-hover": "#434c5e",
+    "border-subtle": "rgba(216, 222, 233, 0.08)",
+    "border-strong": "rgba(216, 222, 233, 0.16)",
+    "track": "rgba(216, 222, 233, 0.1)",
+    "highlight": "rgba(216, 222, 233, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#88c0d0",
+    "accent-hover": "#9fd0de",
+    "accent-soft": "rgba(136, 192, 208, 0.12)",
+    "income": "#a3be8c",
+    "income-soft": "rgba(163, 190, 140, 0.12)",
+    "expense": "#f0959c",
+    "expense-soft": "rgba(240, 149, 156, 0.12)",
+    "danger": "#f0959c",
+    "danger-soft": "rgba(240, 149, 156, 0.14)",
+    "warning": "#ebcb8b",
+    "text-primary": "#eceff4",
+    "text-secondary": "#d8dee9",
+    "text-muted": "#c0c8d6",
+    "text-on-accent": "#2e3440",
+    "text-validation": "#e4a68c",
+    "brand-mark-shade": "#81a1c1"
+  },
+  "chart": {
+    "chart-income": "#a3be8c",
+    "chart-expense": "#f0959c",
+    "chart-warning": "#ebcb8b",
+    "chart-categorical-1": "#81a1c1",
+    "chart-categorical-2": "#d08770",
+    "chart-categorical-3": "#b48ead",
+    "chart-categorical-4": "#d0737c",
+    "chart-categorical-5": "#a3be8c",
+    "chart-categorical-6": "#8fbcbb",
+    "chart-categorical-7": "#ebcb8b",
+    "chart-categorical-8": "#88c0d0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

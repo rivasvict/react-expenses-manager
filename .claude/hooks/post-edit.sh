@@ -13,7 +13,7 @@ rel="${file#"$PWD"/}"
 fail() { echo "$1" >&2; printf '%s\n' "$2" | limit_output >&2; exit 2; }
 
 case "$rel" in
-  src/styles/tokens.json)
+  src/styles/tokens.json | src/themes/catalog/*.json)
     out="$(npm run --silent tokens:build 2>&1)" || fail "tokens:build failed after editing $rel:" "$out"
     ;;
   src/*.ts | src/*.tsx | src/*.js | src/*.jsx)

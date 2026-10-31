@@ -9,8 +9,8 @@ file="$(jq -r '.tool_input.file_path // empty')"
 rel="${file#"$PWD"/}"
 
 case "$rel" in
-  src/styles/_tokens.scss | design/system/tokens.css)
-    echo "Blocked: $rel is generated. Edit src/styles/tokens.json and run 'npm run tokens:build'." >&2
+  src/styles/_tokens.scss | design/system/tokens.css | design/system/themes.css)
+    echo "Blocked: $rel is generated. Edit src/styles/tokens.json or src/themes/catalog/ and run 'npm run tokens:build'." >&2
     exit 2 ;;
   design/gallery.html | design/features/*/ui/flow.html)
     echo "Blocked: $rel is generated. Edit the design sources and run 'npm run gallery:build'." >&2

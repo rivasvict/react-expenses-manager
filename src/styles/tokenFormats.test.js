@@ -1,7 +1,14 @@
 import fs from "fs";
 import path from "path";
 import tokens from "./tokens.json";
-import { buildOutputs, toCss, toScss, tokenEntries } from "./tokenFormats";
+import { readThemeCatalog } from "../themes/themeCatalog";
+import {
+  buildOutputs,
+  toCss,
+  toScss,
+  toThemesCss,
+  tokenEntries,
+} from "./tokenFormats";
 
 const sample = {
   $description: "ignored",
@@ -55,11 +62,30 @@ describe("toCss", () => {
   });
 });
 
+describe("toThemesCss", () => {
+  it("renders one data-theme block per theme with its color scheme", () => {
+    const theme = {
+      id: "night",
+      scheme: "dark",
+      color: { accent: "#f0b90b" },
+      chart: { "chart-income": "#199e70" },
+      shadow: { "shadow-card": "none" },
+    };
+    expect(toThemesCss([theme])).toBe(
+      "/* GENERATED from src/themes/catalog/*.json by `npm run tokens:build` — do not edit. */\n\n" +
+        '[data-theme="night"] {\n  color-scheme: dark;\n\n' +
+        "  /* color */\n  --accent: #f0b90b;\n\n" +
+        "  /* chart */\n  --chart-income: #199e70;\n\n" +
+        "  /* shadow */\n  --shadow-card: none;\n}\n"
+    );
+  });
+});
+
 describe("generated files", () => {
   const repoRoot = path.resolve(__dirname, "../..");
 
-  it.each(Object.entries(buildOutputs(tokens)))(
-    "%s is in sync with tokens.json (run `npm run tokens:build`)",
+  it.each(Object.entries(buildOutputs(tokens, readThemeCatalog(tokens))))(
+    "%s is in sync with its sources (run `npm run tokens:build`)",
     (relativePath, expected) => {
       const actual = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
       expect(actual).toBe(expected);

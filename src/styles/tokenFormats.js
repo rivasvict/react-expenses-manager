@@ -9,6 +9,10 @@ const TOKEN_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
 const SCSS_PATH = "src/styles/_tokens.scss";
 const CSS_PATH = "design/system/tokens.css";
+const THEMES_CSS_PATH = "design/system/themes.css";
+
+const THEMES_NOTICE =
+  "GENERATED from src/themes/catalog/*.json by `npm run tokens:build` — do not edit.";
 
 const isMetaKey = (key) => key.startsWith("$");
 
@@ -67,10 +71,27 @@ const toCss = (tokens) => {
   return `/* ${GENERATED_NOTICE} */\n\n:root {\n${body}\n}\n`;
 };
 
+// One `[data-theme="<id>"]` block per theme, so a mockup can show any theme
+// on any element (the whole page, or one preview card inside it).
+const toThemesCss = (themes) => {
+  const blocks = themes.map((theme) => {
+    const body = renderGrouped(
+      { color: theme.color, chart: theme.chart, shadow: theme.shadow },
+      {
+        comment: (group) => `  /* ${group} */`,
+        line: ({ name, value }) => `  --${name}: ${value};`,
+      }
+    );
+    return `[data-theme="${theme.id}"] {\n  color-scheme: ${theme.scheme};\n\n${body}\n}`;
+  });
+  return `/* ${THEMES_NOTICE} */\n\n${blocks.join("\n\n")}\n`;
+};
+
 // Every generated file, keyed by its repo-relative path.
-const buildOutputs = (tokens) => ({
+const buildOutputs = (tokens, themes = []) => ({
   [SCSS_PATH]: toScss(tokens),
   [CSS_PATH]: toCss(tokens),
+  [THEMES_CSS_PATH]: toThemesCss(themes),
 });
 
-module.exports = { tokenEntries, toScss, toCss, buildOutputs };
+module.exports = { tokenEntries, toScss, toCss, toThemesCss, buildOutputs };

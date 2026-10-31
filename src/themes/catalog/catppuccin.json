@@ -1,0 +1,55 @@
+{
+  "id": "catppuccin",
+  "name": "Catppuccin",
+  "scheme": "dark",
+  "inspiration": "Omarchy · Catppuccin Mocha",
+  "description": {
+    "en": "Soothing pastels on a warm mocha base.",
+    "es": "Pasteles relajantes sobre una base moca.",
+    "fr": "Pastels apaisants sur une base moka."
+  },
+  "color": {
+    "bg-page": "#11111b",
+    "bg-surface": "#1e1e2e",
+    "bg-raised": "#313244",
+    "bg-raised-hover": "#45475a",
+    "border-subtle": "rgba(205, 214, 244, 0.08)",
+    "border-strong": "rgba(205, 214, 244, 0.16)",
+    "track": "rgba(205, 214, 244, 0.1)",
+    "highlight": "rgba(205, 214, 244, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#cba6f7",
+    "accent-hover": "#d9bdfa",
+    "accent-soft": "rgba(203, 166, 247, 0.12)",
+    "income": "#a6e3a1",
+    "income-soft": "rgba(166, 227, 161, 0.12)",
+    "expense": "#f38ba8",
+    "expense-soft": "rgba(243, 139, 168, 0.12)",
+    "danger": "#f38ba8",
+    "danger-soft": "rgba(243, 139, 168, 0.14)",
+    "warning": "#f9e2af",
+    "text-primary": "#cdd6f4",
+    "text-secondary": "#bac2de",
+    "text-muted": "#a6adc8",
+    "text-on-accent": "#11111b",
+    "text-validation": "#fab387",
+    "brand-mark-shade": "#6c7086"
+  },
+  "chart": {
+    "chart-income": "#a6e3a1",
+    "chart-expense": "#f38ba8",
+    "chart-warning": "#f9e2af",
+    "chart-categorical-1": "#89b4fa",
+    "chart-categorical-2": "#fab387",
+    "chart-categorical-3": "#cba6f7",
+    "chart-categorical-4": "#f38ba8",
+    "chart-categorical-5": "#94e2d5",
+    "chart-categorical-6": "#f9e2af",
+    "chart-categorical-7": "#a6e3a1",
+    "chart-categorical-8": "#f2cdcd"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

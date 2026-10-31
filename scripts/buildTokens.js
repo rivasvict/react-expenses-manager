@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-// Regenerates every file derived from src/styles/tokens.json.
+// Regenerates every file derived from src/styles/tokens.json and the theme
+// catalog in src/themes/catalog/.
 // Usage: npm run tokens:build
 
 const fs = require("fs");
 const path = require("path");
 const { buildOutputs } = require("../src/styles/tokenFormats");
 const tokens = require("../src/styles/tokens.json");
+const { readThemeCatalog } = require("../src/themes/themeCatalog");
 
 const repoRoot = path.resolve(__dirname, "..");
 
-Object.entries(buildOutputs(tokens)).forEach(([relativePath, content]) => {
+Object.entries(buildOutputs(tokens, readThemeCatalog(tokens))).forEach(([relativePath, content]) => {
   const target = path.join(repoRoot, relativePath);
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, content);

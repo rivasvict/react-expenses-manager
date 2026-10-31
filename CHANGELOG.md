@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.38.0] - 2026-10-31
+
+### Added
+
+- **Theme catalog, with designs for the theme picker.** Ten themes are defined
+  in `src/themes/catalog/`, one JSON file each: Midnight Gold (today's look,
+  the default), four inspired by anime and games (Moon Prism, Super Saiyan,
+  Ocarina and Wisteria), and five from Omarchy (Tokyo Night, Catppuccin,
+  Gruvbox, Nord and Flexoki Light). `npm run tokens:build` also generates
+  `design/system/themes.css` from them. A unit test holds every theme to the
+  default's contrast rules and requires it to set every color, chart and
+  shadow token. `design/features/theme-picker/` proposes two picker designs,
+  each with two variants. `design/features/theme-showcase/` shows every theme
+  on six app screens. The picker itself is not built yet.
+
 ## [1.37.5] - 2026-10-31
 
 ### Changed
