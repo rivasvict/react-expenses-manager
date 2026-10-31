@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.37.4] - 2026-10-31
+
+### Added
+
+- **Automatic Claude code review on pull requests.** When a pull request is
+  opened, reopened or marked ready for review by an allowlisted author, a
+  GitHub Action runs Claude's code-review plugin against it and posts its
+  findings as comments. Runs for the same pull request cancel the stale one,
+  and each review is capped at 20 agent turns and 15 minutes.
+
 ## [1.37.3] - 2026-10-29
 
 ### Changed
