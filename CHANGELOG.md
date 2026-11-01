@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.41.3] - 2026-11-01
+
+### Fixed
+
+- **Sheets hidden under the bottom tab bar.** On a phone-sized screen the
+  buttons at the foot of a bottom sheet (such as "Create category") sat under
+  the tab bar and could not be seen or tapped. Since the theme pictures landed
+  in 1.40.0, the work area has been its own stacking context, which kept every
+  sheet below the fixed tab bar whatever its z-index. This hit all the bottom
+  sheets (add, rename and delete a category, Theme, Language, Currency, the
+  month and range pickers and the category trend picker) and the entry list's
+  Filters & sort sheet. They now open above the tab bar again. On wide
+  screens the Filters panel stays inline in the page, as before.
+
 ## [1.41.2] - 2026-11-01
 
 ### Added

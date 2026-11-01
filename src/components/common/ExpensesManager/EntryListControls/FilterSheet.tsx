@@ -2,6 +2,7 @@
 // by the EN/ES translations change. Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/187
 import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "@iconify/react";
 import closeIcon from "@iconify-icons/codicon/close";
 import CategorySelector from "../CategorySelector";
@@ -11,6 +12,7 @@ import {
   SortKey,
 } from "../../../../helpers/entriesHelper/filterSortHelper";
 import { TranslationKey, useTranslation } from "../../../../i18n";
+import useIsSheetLayout from "./useIsSheetLayout";
 import "./styles.scss";
 
 type CategoryOption = { name: string; value: string };
@@ -58,6 +60,7 @@ const FilterSheet = ({
 }: FilterSheetProps) => {
   const { t, plural } = useTranslation();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const isSheetLayout = useIsSheetLayout();
 
   useEffect(() => {
     if (isOpen) headingRef.current?.focus();
@@ -75,7 +78,7 @@ const FilterSheet = ({
     }
   };
 
-  return (
+  const sheet = (
     <div className="filter-sheet" onKeyDown={handleKeyDown}>
       <div
         className="filter-sheet__scrim"
@@ -225,6 +228,11 @@ const FilterSheet = ({
       </div>
     </div>
   );
+
+  // On narrow screens the sheet must rise above the fixed tab bar, which the
+  // work area's own stacking context (the theme picture) would not allow from
+  // inside it. On wide screens it stays an inline panel in the page flow.
+  return isSheetLayout ? createPortal(sheet, document.body) : sheet;
 };
 
 export default FilterSheet;
