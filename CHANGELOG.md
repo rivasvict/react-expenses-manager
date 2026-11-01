@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.40.2] - 2026-11-01
+
+### Changed
+
+- **Theming reference moved out of `CLAUDE.md`** into `docs/theming.md`
+  (model, runtime, background pictures and headline typefaces); `CLAUDE.md`
+  keeps a short summary and links to it and to the `create-theme` skill.
+
 ## [1.40.1] - 2026-11-01
 
 ### Added

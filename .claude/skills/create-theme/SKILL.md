@@ -6,7 +6,7 @@ description: Create a new app theme (colors, headline Google Font, background pi
 # Create a theme
 
 A theme is **one JSON file + one SVG + one font file**, then `npm run tokens:build`.
-Nothing else in the app lists themes by hand. Read `design/features/theme-picker/feature-brief.md`
+Nothing else in the app lists themes by hand. How theming works: `docs/theming.md`. Read `design/features/theme-picker/feature-brief.md`
 ("Constraints") and `design/features/theme-personality/ui/decision.md` first; they are the
 approved spec. Look at a finished theme (e.g. `src/themes/catalog/all-hallows.json`) as the model.
 
