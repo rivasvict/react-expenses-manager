@@ -43,8 +43,8 @@ same PR that adds it.
 | Theme sheet (a two-column grid of theme cards on the bottom sheet; stays open after a pick, only the grid scrolls) | Settings | `src/components/Settings/ThemeSheet/` |
 | Switch row (label, hint and an on/off switch in the same raised row as a setting row; the whole row is the switch) | Settings | `src/components/Settings/SwitchRow/` |
 | Hidden figure (a blurred, fixed placeholder with a spoken label, in place of a money figure while Privacy mode hides it) | The dashboard, assembled | `src/components/common/HiddenFigure/`; the placeholders are in `src/privacy/hiddenFigures.ts` |
-| Privacy eye (gold eye chip beside the "Savings" label that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
-| Hidden balance chart (one uniform grey ring and a neutral legend in place of the savings doughnut) | The dashboard, assembled | `src/components/common/HiddenBalanceChart/` |
+| Privacy eye (gold eye chip in the top-right corner of the Savings tile that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
+| Show figures button (full-width button in place of the savings doughnut while Privacy mode hides it; same action as the eye) | The dashboard, assembled | `src/components/common/ShowFiguresButton/` |
 | Category row (type chip, name over its usage and bucket, chevron; the whole row is a button that opens the category sheet) | Categories | `src/components/common/ExpensesManager/Categories/CategoryRow/` |
 | Type chip (the money-row chip for a category type: rose up arrow for expenses, green down arrow for incomes) | Categories, Sync review | `src/components/common/ExpensesManager/Categories/TypeChip/` |
 | Usage figures (three-column strip of a bold value over a small label: entries, total, bucket) | Categories | `src/components/common/ExpensesManager/Categories/UsageFigures/` |

@@ -104,7 +104,6 @@ const en = {
   "privacy.hide": "Hide figures",
   "privacy.amountHidden": "Amount hidden",
   "privacy.changeHidden": "Percentage change hidden",
-  "privacy.chartHidden": "Chart hidden",
 
   // Month stepper
   "monthHeader.previous": "Previous month",

@@ -2,20 +2,11 @@
 
 .privacy-eye {
   position: absolute;
-  top: 0.7rem;
-  left: 1.15rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  // The row itself lets taps through to the Summary link under it; only the
-  // button takes them.
+  top: 0.55rem;
+  right: 0.55rem;
+  // The wrapper lets taps through to the Summary link under it; only the
+  // button (and its enlarged hit area) takes them.
   pointer-events: none;
-
-  .privacy-eye__spacer {
-    visibility: hidden;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
 
   .privacy-eye__button {
     display: flex;
@@ -28,9 +19,17 @@
     color: $text-secondary;
     background: transparent;
     border: 0;
+    position: relative;
     border-radius: $radius-round;
     cursor: pointer;
     pointer-events: auto;
+
+    // 44px+ hit area around the 2.2rem chip.
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -0.3rem;
+    }
     transition: background-color $transition-quick;
 
     &:hover {

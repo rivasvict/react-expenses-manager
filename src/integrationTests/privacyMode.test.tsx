@@ -4,6 +4,11 @@ import { seedEntries, ts, MAY } from "./helpers/seed";
 import { pickLanguage, togglePrivacyMode } from "./helpers/settings";
 import { PRIVACY_MODE_STORAGE_KEY } from "../privacy/privacyPreference";
 
+// While figures are hidden there are two ways to show them: the eye on the
+// Savings tile (first in the page) and the Show figures button under it.
+const findEye = async (name = "Show figures") =>
+  (await screen.findAllByRole("button", { name }))[0];
+
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
 
 beforeEach(() => {
@@ -85,10 +90,7 @@ describe("privacy mode", () => {
     expect(
       screen.getByRole("img", { name: "Percentage change hidden" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Chart hidden" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Show figures" }),
-    ).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Show figures" })).toHaveLength(2);
   });
 
   it("opens hidden when the app starts with the mode already on", async () => {
@@ -96,7 +98,7 @@ describe("privacy mode", () => {
     await renderApp("/");
 
     expect(
-      await screen.findByRole("button", { name: "Show figures" }),
+      await findEye(),
     ).toBeInTheDocument();
     expect(screen.queryByText("$1,460.00")).not.toBeInTheDocument();
   });
@@ -105,7 +107,7 @@ describe("privacy mode", () => {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("button", { name: "Show figures" }));
+    await user.click(await findEye());
 
     expect(await screen.findByText("$1,460.00")).toBeInTheDocument();
     expect(screen.getByTitle("Incomes")).toHaveTextContent("$1,500.00");
@@ -118,14 +120,29 @@ describe("privacy mode", () => {
 
     expect(screen.queryByText("$1,460.00")).not.toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Show figures" }),
-    ).toBeInTheDocument();
+      screen.getAllByRole("button", { name: "Show figures" }),
+    ).toHaveLength(2);
+  });
+
+  it("shows the figures with the Show figures button under the Savings tile", async () => {
+    localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
+    const { user } = await renderApp("/");
+
+    const buttons = await screen.findAllByRole("button", {
+      name: "Show figures",
+    });
+    await user.click(buttons[1]);
+
+    expect(await screen.findByText("$1,460.00")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Show figures" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the figures shown while moving between screens", async () => {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
     const { user } = await renderApp("/");
-    await user.click(await screen.findByRole("button", { name: "Show figures" }));
+    await user.click(await findEye());
 
     await openSettings(user);
     await goHome(user);
@@ -136,7 +153,7 @@ describe("privacy mode", () => {
   it("does not hide the figures on the other screens", async () => {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
     const { user } = await renderApp("/");
-    await screen.findByRole("button", { name: "Show figures" });
+    await findEye();
 
     await user.click(screen.getByTitle("Expenses"));
 
@@ -150,7 +167,7 @@ describe("privacy mode", () => {
   it("looks exactly like before once the mode is turned off again", async () => {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
     const { user } = await renderApp("/");
-    await screen.findByRole("button", { name: "Show figures" });
+    await findEye();
     await openSettings(user);
 
     await togglePrivacyMode(user);
@@ -167,7 +184,7 @@ describe("privacy mode", () => {
   it("is available in Spanish", async () => {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, "on");
     const { user } = await renderApp("/");
-    await screen.findByRole("button", { name: "Show figures" });
+    await findEye();
     await user.click(await screen.findByRole("link", { name: "Settings" }));
     await pickLanguage(user, /Español/);
 
@@ -177,7 +194,7 @@ describe("privacy mode", () => {
     await user.click(screen.getByRole("link", { name: "Inicio" }));
 
     expect(
-      await screen.findByRole("button", { name: "Mostrar cifras" }),
+      await findEye("Mostrar cifras"),
     ).toBeInTheDocument();
     expect(
       screen.getAllByRole("img", { name: "Importe oculto" }),

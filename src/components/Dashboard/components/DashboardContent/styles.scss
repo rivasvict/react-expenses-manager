@@ -26,6 +26,11 @@
         background-color: $bg-raised-hover;
       }
 
+      // The chevron sits beside the amount, away from the Privacy eye.
+      .tile-inner {
+        align-items: flex-end;
+      }
+
       .tile-content {
         flex-direction: column;
         align-items: flex-start;

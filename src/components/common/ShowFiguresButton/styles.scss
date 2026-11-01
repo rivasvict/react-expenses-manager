@@ -1,0 +1,28 @@
+@import '../../../variables.scss';
+
+.show-figures-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0.2rem 0 $section_header_vertical-margin;
+  padding: 0 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: $accent;
+  background-color: $accent-soft;
+  border: 0;
+  border-radius: $radius-control;
+  cursor: pointer;
+  transition: background-color $transition-quick;
+
+  &:hover {
+    background-color: alpha($accent, 0.22);
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+}

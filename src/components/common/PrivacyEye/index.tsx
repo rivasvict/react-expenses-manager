@@ -6,29 +6,18 @@ import { useTranslation } from "../../../i18n";
 import { usePrivacy } from "../../../privacy";
 import "./styles.scss";
 
-interface PrivacyEyeProps {
-  /**
-   * The text the eye sits after. An invisible copy of it pushes the eye to the
-   * right place, so it follows the label in every language.
-   */
-  after: string;
-}
-
 /**
- * The eye beside the dashboard's "Savings" label: shows the hidden figures, or
+ * The eye in the top-right corner of the dashboard's Savings tile: shows the hidden figures, or
  * hides them again. It renders nothing while Privacy mode is off. It overlays
  * the savings tile instead of sitting in it because that tile is a link and a
  * button cannot live inside a link (design/features/privacy-mode/ui/approved/).
  */
-const PrivacyEye = ({ after }: PrivacyEyeProps) => {
+const PrivacyEye = () => {
   const { t } = useTranslation();
   const { enabled, hidden, reveal, hide } = usePrivacy();
   if (!enabled) return null;
   return (
     <div className="privacy-eye">
-      <span className="privacy-eye__spacer" aria-hidden="true">
-        {after}
-      </span>
       <button
         type="button"
         className={`privacy-eye__button${
