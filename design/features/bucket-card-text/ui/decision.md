@@ -6,7 +6,7 @@ status: exploring
 
 # Decision
 
-Open. Four options on the same data (see the brief, `../feature-brief.md`).
+Open. Five options on the same data (see the brief, `../feature-brief.md`).
 Each has `buckets.html` (typical month: carried debt, carried surplus, over
 budget) and `buckets.stress.html` (a very long name, CA$55,000.00 carried,
 usage above 100%, a large carried debt).
@@ -63,6 +63,19 @@ one short word (ES "Arrastrado", FR "Reporté") and one label serves both
 cases, so there is also one string less to translate. The cost is a little
 less self-explanatory for someone who has never seen a carried debt: the red
 minus has to do the explaining.
+
+**E · Compact** (`options/e-compact/`). The ledger squeezed to what a person
+reads: under the bar, two figures side by side, **Spent** (left) and a larger
+**Left** or **Over** (right, red when over). Everything else is one muted
+footnote under a hairline: "Allowance CA$200.00" and, only when there is
+carry, "Carried −CA$65.21" (red) or "Carried +CA$8.71" (green). That is two
+short lines of text instead of four or five rows, about a third shorter than
+B and D. Each footnote part is kept whole and wraps as a unit. When both
+figures are too wide to share a row (a 320px screen with CA$50,000.00), Left
+drops to its own right-aligned line instead of overflowing (drawn in the
+stress file). Costs: the allowance and carry are small and muted, so a person
+who wants to audit them reads a footnote rather than a row; "Available" is not
+shown at all.
 
 ## What the other states look like
 
