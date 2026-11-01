@@ -3,6 +3,7 @@
 import { Chart } from "chart.js/auto";
 import { useEffect, useRef } from "react";
 import { useTheme } from "../../../themes";
+import "./styles.scss";
 
 /**
  * Categorical palette validated for the app's dark surface (#161b22) with the
@@ -87,6 +88,10 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
           ],
         },
         options: {
+          // The wrapper (styles.scss) owns the size. Letting Chart.js keep an
+          // aspect ratio makes it clamp to its container's height, which a
+          // collapsing parent (SlideReveal) derives from the canvas itself.
+          maintainAspectRatio: false,
           cutout: "68%",
           plugins: {
             legend: {
@@ -112,7 +117,12 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [labelsKey, chartDataKey, colorsKey, chartLabel, theme.id]);
 
-  return !!chartData.length && shouldShow && <canvas ref={chartRef} />;
+  if (!chartData.length || !shouldShow) return false;
+  return (
+    <div className="doughnut-chart">
+      <canvas ref={chartRef} />
+    </div>
+  );
 };
 
 export default DoughnutChart;
