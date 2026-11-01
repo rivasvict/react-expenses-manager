@@ -3,7 +3,7 @@
 A companion to [`theme-picker`](../theme-picker/feature-brief.md). It shows
 **every theme in the catalog on the same six screens**, so each theme can be
 judged against the real UI, not just as a palette. It is not a feature to
-build: there is one option per theme, and the screens are those the app already
+build: all themes live in one option (`a-all-themes`, one file per screen and theme), and the screens are those the app already
 has, recolored.
 
 The screens are chosen to exercise every token a theme sets:

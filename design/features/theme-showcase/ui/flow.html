@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow — Theme showcase</title>
+  <!-- GENERATED from flow.json by `npm run gallery:build` — do not edit. -->
+  <link rel="stylesheet" href="../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../system/mockup.css">
+  <style>
+    .fl { max-width: 72rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .fl h1 { margin: 0 0 0.25rem; font-size: 1.5rem; letter-spacing: -0.01em; }
+    .fl h2 {
+      margin: 2rem 0 0.75rem; font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .fl-lead { margin: 0; color: var(--text-secondary); }
+    .fl-walk { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+    .fl-stage {
+      width: 375px; height: 720px; flex: 0 0 auto; overflow: hidden;
+      border: 1px solid var(--border-strong); border-radius: var(--radius-card);
+      background: var(--bg-page); position: relative;
+    }
+    .fl-stage iframe { width: 375px; height: 720px; border: 0; }
+    .fl-stage [hidden] { display: none; }
+    .fl-stage__external {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: 2rem; text-align: center; color: var(--text-secondary);
+    }
+    .fl-panel { flex: 1 1 18rem; max-width: 26rem; }
+    .fl-panel h3 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+    .fl-eyebrow {
+      margin: 1.25rem 0 0.5rem; font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .fl-route { margin: 0; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+    .fl-next { display: flex; flex-direction: column; gap: 0.5rem; }
+    .fl-controls { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+    .fl-controls .mk-btn { width: auto; flex: 1; }
+    .fl-next .mk-btn { height: auto; min-height: 3.1em; padding: 0.5rem 0.75rem; text-align: center; }
+    .fl-strip { display: flex; flex-wrap: wrap; gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
+    .fl-step { width: 14rem; position: relative; }
+    .fl-step h3 { margin: 0.5rem 0 0.15rem; font-size: 0.95rem; }
+    .fl-step__index {
+      position: absolute; top: 0.4rem; left: 0.4rem; z-index: 1; min-width: 1.5rem; height: 1.5rem;
+      display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700;
+      color: var(--text-on-accent); background: var(--accent); border-radius: var(--radius-round);
+    }
+    .fl-thumb {
+      width: 14rem; height: 18rem; overflow: hidden; border: 1px solid var(--border-strong);
+      border-radius: var(--radius-card); background: var(--bg-page);
+    }
+    .fl-thumb iframe { width: 375px; height: 720px; border: 0; pointer-events: none; transform: scale(0.6); transform-origin: 0 0; }
+    .fl-thumb--external {
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      border-style: dashed; color: var(--text-muted); font-size: 0.85rem;
+    }
+    .fl-leads { margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.85rem; }
+    .fl-leads li { margin-bottom: 0.2rem; }
+  </style>
+</head>
+<body class="mk">
+  <div class="fl">
+    <h1>Flow — Theme showcase</h1>
+    <p class="fl-lead">Click through the screens the way a user would, or scan them all below.</p>
+
+    <h2>Walkthrough</h2>
+    <section class="fl-walk" aria-label="Walkthrough">
+      <div class="fl-stage">
+        <iframe id="fl-frame" title="Current screen"></iframe>
+        <div id="fl-external" class="fl-stage__external" hidden>This screen already exists in the app and is not designed here.</div>
+      </div>
+      <div class="fl-panel">
+        <p class="fl-eyebrow" style="margin-top: 0">You are on</p>
+        <h3 id="fl-title"></h3>
+        <p id="fl-route" class="fl-route"></p>
+        <p class="fl-eyebrow">Next</p>
+        <div id="fl-next" class="fl-next"></div>
+        <div class="fl-controls">
+          <button id="fl-back" type="button" class="mk-btn mk-btn--secondary">Back</button>
+          <button id="fl-restart" type="button" class="mk-btn mk-btn--secondary">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <h2>All screens (90)</h2>
+    <ol class="fl-strip">
+        <li class="fl-step">
+          <span class="fl-step__index">1</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.midnight-gold.html" title="Midnight Gold: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Midnight Gold: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">2</span>
+          <div class="fl-thumb"><iframe src="approved/entries.midnight-gold.html" title="Midnight Gold: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Midnight Gold: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">3</span>
+          <div class="fl-thumb"><iframe src="approved/form.midnight-gold.html" title="Midnight Gold: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Midnight Gold: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">4</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.midnight-gold.html" title="Midnight Gold: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Midnight Gold: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">5</span>
+          <div class="fl-thumb"><iframe src="approved/summary.midnight-gold.html" title="Midnight Gold: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Midnight Gold: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">6</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.midnight-gold.html" title="Midnight Gold: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Midnight Gold: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → All Hallows: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">7</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.all-hallows.html" title="All Hallows: Dashboard" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → All Hallows: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">8</span>
+          <div class="fl-thumb"><iframe src="approved/entries.all-hallows.html" title="All Hallows: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → All Hallows: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">9</span>
+          <div class="fl-thumb"><iframe src="approved/form.all-hallows.html" title="All Hallows: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → All Hallows: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">10</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.all-hallows.html" title="All Hallows: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → All Hallows: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">11</span>
+          <div class="fl-thumb"><iframe src="approved/summary.all-hallows.html" title="All Hallows: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → All Hallows: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">12</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.all-hallows.html" title="All Hallows: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>All Hallows: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Catppuccin: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">13</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.catppuccin.html" title="Catppuccin: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Catppuccin: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">14</span>
+          <div class="fl-thumb"><iframe src="approved/entries.catppuccin.html" title="Catppuccin: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Catppuccin: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">15</span>
+          <div class="fl-thumb"><iframe src="approved/form.catppuccin.html" title="Catppuccin: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Catppuccin: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">16</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.catppuccin.html" title="Catppuccin: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Catppuccin: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">17</span>
+          <div class="fl-thumb"><iframe src="approved/summary.catppuccin.html" title="Catppuccin: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Catppuccin: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">18</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.catppuccin.html" title="Catppuccin: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Catppuccin: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Digital Rain: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">19</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.digital-rain.html" title="Digital Rain: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Digital Rain: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">20</span>
+          <div class="fl-thumb"><iframe src="approved/entries.digital-rain.html" title="Digital Rain: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Digital Rain: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">21</span>
+          <div class="fl-thumb"><iframe src="approved/form.digital-rain.html" title="Digital Rain: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Digital Rain: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">22</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.digital-rain.html" title="Digital Rain: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Digital Rain: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">23</span>
+          <div class="fl-thumb"><iframe src="approved/summary.digital-rain.html" title="Digital Rain: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Digital Rain: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">24</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.digital-rain.html" title="Digital Rain: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Digital Rain: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Flexoki Light: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">25</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.flexoki-light.html" title="Flexoki Light: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Flexoki Light: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">26</span>
+          <div class="fl-thumb"><iframe src="approved/entries.flexoki-light.html" title="Flexoki Light: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Flexoki Light: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">27</span>
+          <div class="fl-thumb"><iframe src="approved/form.flexoki-light.html" title="Flexoki Light: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Flexoki Light: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">28</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.flexoki-light.html" title="Flexoki Light: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Flexoki Light: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">29</span>
+          <div class="fl-thumb"><iframe src="approved/summary.flexoki-light.html" title="Flexoki Light: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Flexoki Light: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">30</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.flexoki-light.html" title="Flexoki Light: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Flexoki Light: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Gruvbox: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">31</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.gruvbox.html" title="Gruvbox: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Gruvbox: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">32</span>
+          <div class="fl-thumb"><iframe src="approved/entries.gruvbox.html" title="Gruvbox: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Gruvbox: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">33</span>
+          <div class="fl-thumb"><iframe src="approved/form.gruvbox.html" title="Gruvbox: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Gruvbox: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">34</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.gruvbox.html" title="Gruvbox: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Gruvbox: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">35</span>
+          <div class="fl-thumb"><iframe src="approved/summary.gruvbox.html" title="Gruvbox: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Gruvbox: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">36</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.gruvbox.html" title="Gruvbox: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Gruvbox: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Moon Prism: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">37</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.moon-prism.html" title="Moon Prism: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Moon Prism: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">38</span>
+          <div class="fl-thumb"><iframe src="approved/entries.moon-prism.html" title="Moon Prism: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Moon Prism: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">39</span>
+          <div class="fl-thumb"><iframe src="approved/form.moon-prism.html" title="Moon Prism: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Moon Prism: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">40</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.moon-prism.html" title="Moon Prism: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Moon Prism: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">41</span>
+          <div class="fl-thumb"><iframe src="approved/summary.moon-prism.html" title="Moon Prism: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Moon Prism: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">42</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.moon-prism.html" title="Moon Prism: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Moon Prism: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Nord: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">43</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.nord.html" title="Nord: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Nord: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Nord: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">44</span>
+          <div class="fl-thumb"><iframe src="approved/entries.nord.html" title="Nord: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Nord: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Nord: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">45</span>
+          <div class="fl-thumb"><iframe src="approved/form.nord.html" title="Nord: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Nord: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Nord: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">46</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.nord.html" title="Nord: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Nord: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Nord: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">47</span>
+          <div class="fl-thumb"><iframe src="approved/summary.nord.html" title="Nord: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Nord: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Nord: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">48</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.nord.html" title="Nord: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Nord: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Ocarina: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">49</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.ocarina.html" title="Ocarina: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Ocarina: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">50</span>
+          <div class="fl-thumb"><iframe src="approved/entries.ocarina.html" title="Ocarina: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Ocarina: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">51</span>
+          <div class="fl-thumb"><iframe src="approved/form.ocarina.html" title="Ocarina: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Ocarina: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">52</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.ocarina.html" title="Ocarina: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Ocarina: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">53</span>
+          <div class="fl-thumb"><iframe src="approved/summary.ocarina.html" title="Ocarina: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Ocarina: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">54</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.ocarina.html" title="Ocarina: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Ocarina: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Pumpkin King: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">55</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.pumpkin-king.html" title="Pumpkin King: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Pumpkin King: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">56</span>
+          <div class="fl-thumb"><iframe src="approved/entries.pumpkin-king.html" title="Pumpkin King: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Pumpkin King: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">57</span>
+          <div class="fl-thumb"><iframe src="approved/form.pumpkin-king.html" title="Pumpkin King: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Pumpkin King: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">58</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.pumpkin-king.html" title="Pumpkin King: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Pumpkin King: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">59</span>
+          <div class="fl-thumb"><iframe src="approved/summary.pumpkin-king.html" title="Pumpkin King: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Pumpkin King: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">60</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.pumpkin-king.html" title="Pumpkin King: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Pumpkin King: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Snowglobe: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">61</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.snowglobe.html" title="Snowglobe: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Snowglobe: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">62</span>
+          <div class="fl-thumb"><iframe src="approved/entries.snowglobe.html" title="Snowglobe: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Snowglobe: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">63</span>
+          <div class="fl-thumb"><iframe src="approved/form.snowglobe.html" title="Snowglobe: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Snowglobe: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">64</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.snowglobe.html" title="Snowglobe: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Snowglobe: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">65</span>
+          <div class="fl-thumb"><iframe src="approved/summary.snowglobe.html" title="Snowglobe: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Snowglobe: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">66</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.snowglobe.html" title="Snowglobe: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Snowglobe: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Super Saiyan: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">67</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.super-saiyan.html" title="Super Saiyan: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Super Saiyan: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">68</span>
+          <div class="fl-thumb"><iframe src="approved/entries.super-saiyan.html" title="Super Saiyan: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Super Saiyan: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">69</span>
+          <div class="fl-thumb"><iframe src="approved/form.super-saiyan.html" title="Super Saiyan: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Super Saiyan: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">70</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.super-saiyan.html" title="Super Saiyan: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Super Saiyan: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">71</span>
+          <div class="fl-thumb"><iframe src="approved/summary.super-saiyan.html" title="Super Saiyan: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Super Saiyan: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">72</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.super-saiyan.html" title="Super Saiyan: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Super Saiyan: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Tokyo Night: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">73</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.tokyo-night.html" title="Tokyo Night: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Tokyo Night: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">74</span>
+          <div class="fl-thumb"><iframe src="approved/entries.tokyo-night.html" title="Tokyo Night: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Tokyo Night: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">75</span>
+          <div class="fl-thumb"><iframe src="approved/form.tokyo-night.html" title="Tokyo Night: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Tokyo Night: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">76</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.tokyo-night.html" title="Tokyo Night: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Tokyo Night: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">77</span>
+          <div class="fl-thumb"><iframe src="approved/summary.tokyo-night.html" title="Tokyo Night: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Tokyo Night: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">78</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.tokyo-night.html" title="Tokyo Night: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Tokyo Night: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Wisteria: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">79</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.wisteria.html" title="Wisteria: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Wisteria: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">80</span>
+          <div class="fl-thumb"><iframe src="approved/entries.wisteria.html" title="Wisteria: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Wisteria: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">81</span>
+          <div class="fl-thumb"><iframe src="approved/form.wisteria.html" title="Wisteria: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Wisteria: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">82</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.wisteria.html" title="Wisteria: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Wisteria: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">83</span>
+          <div class="fl-thumb"><iframe src="approved/summary.wisteria.html" title="Wisteria: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Wisteria: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">84</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.wisteria.html" title="Wisteria: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Wisteria: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Pick the next theme</span> → Yuletide: Dashboard</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">85</span>
+          <div class="fl-thumb"><iframe src="approved/dashboard.yuletide.html" title="Yuletide: Dashboard" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Dashboard</h3>
+          <p class="fl-route">/</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Expenses</span> → Yuletide: Expenses list, filtered</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">86</span>
+          <div class="fl-thumb"><iframe src="approved/entries.yuletide.html" title="Yuletide: Expenses list, filtered" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Expenses list, filtered</h3>
+          <p class="fl-route">/expenses</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Tap Add expense</span> → Yuletide: Add expense, validation error</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">87</span>
+          <div class="fl-thumb"><iframe src="approved/form.yuletide.html" title="Yuletide: Add expense, validation error" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Add expense, validation error</h3>
+          <p class="fl-route">/add-expense</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Buckets</span> → Yuletide: Buckets: healthy, close, over</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">88</span>
+          <div class="fl-thumb"><iframe src="approved/buckets.yuletide.html" title="Yuletide: Buckets: healthy, close, over" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Buckets: healthy, close, over</h3>
+          <p class="fl-route">/buckets</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Summary</span> → Yuletide: Summary: categorical palette</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">89</span>
+          <div class="fl-thumb"><iframe src="approved/summary.yuletide.html" title="Yuletide: Summary: categorical palette" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Summary: categorical palette</h3>
+          <p class="fl-route">/summary</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings and tap Language</span> → Yuletide: Settings with a sheet open</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">90</span>
+          <div class="fl-thumb"><iframe src="approved/sheet.yuletide.html" title="Yuletide: Settings with a sheet open" tabindex="-1"></iframe></div>
+          <h3>Yuletide: Settings with a sheet open</h3>
+          <p class="fl-route">/settings</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+    </ol>
+  </div>
+  <script type="application/json" id="flow-data">{"screens":[{"id":"dashboard.midnight-gold","title":"Midnight Gold: Dashboard","route":"/","external":false,"src":"approved/dashboard.midnight-gold.html"},{"id":"entries.midnight-gold","title":"Midnight Gold: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.midnight-gold.html"},{"id":"form.midnight-gold","title":"Midnight Gold: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.midnight-gold.html"},{"id":"buckets.midnight-gold","title":"Midnight Gold: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.midnight-gold.html"},{"id":"summary.midnight-gold","title":"Midnight Gold: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.midnight-gold.html"},{"id":"sheet.midnight-gold","title":"Midnight Gold: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.midnight-gold.html"},{"id":"dashboard.all-hallows","title":"All Hallows: Dashboard","route":"/","external":false,"src":"approved/dashboard.all-hallows.html"},{"id":"entries.all-hallows","title":"All Hallows: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.all-hallows.html"},{"id":"form.all-hallows","title":"All Hallows: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.all-hallows.html"},{"id":"buckets.all-hallows","title":"All Hallows: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.all-hallows.html"},{"id":"summary.all-hallows","title":"All Hallows: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.all-hallows.html"},{"id":"sheet.all-hallows","title":"All Hallows: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.all-hallows.html"},{"id":"dashboard.catppuccin","title":"Catppuccin: Dashboard","route":"/","external":false,"src":"approved/dashboard.catppuccin.html"},{"id":"entries.catppuccin","title":"Catppuccin: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.catppuccin.html"},{"id":"form.catppuccin","title":"Catppuccin: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.catppuccin.html"},{"id":"buckets.catppuccin","title":"Catppuccin: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.catppuccin.html"},{"id":"summary.catppuccin","title":"Catppuccin: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.catppuccin.html"},{"id":"sheet.catppuccin","title":"Catppuccin: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.catppuccin.html"},{"id":"dashboard.digital-rain","title":"Digital Rain: Dashboard","route":"/","external":false,"src":"approved/dashboard.digital-rain.html"},{"id":"entries.digital-rain","title":"Digital Rain: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.digital-rain.html"},{"id":"form.digital-rain","title":"Digital Rain: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.digital-rain.html"},{"id":"buckets.digital-rain","title":"Digital Rain: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.digital-rain.html"},{"id":"summary.digital-rain","title":"Digital Rain: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.digital-rain.html"},{"id":"sheet.digital-rain","title":"Digital Rain: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.digital-rain.html"},{"id":"dashboard.flexoki-light","title":"Flexoki Light: Dashboard","route":"/","external":false,"src":"approved/dashboard.flexoki-light.html"},{"id":"entries.flexoki-light","title":"Flexoki Light: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.flexoki-light.html"},{"id":"form.flexoki-light","title":"Flexoki Light: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.flexoki-light.html"},{"id":"buckets.flexoki-light","title":"Flexoki Light: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.flexoki-light.html"},{"id":"summary.flexoki-light","title":"Flexoki Light: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.flexoki-light.html"},{"id":"sheet.flexoki-light","title":"Flexoki Light: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.flexoki-light.html"},{"id":"dashboard.gruvbox","title":"Gruvbox: Dashboard","route":"/","external":false,"src":"approved/dashboard.gruvbox.html"},{"id":"entries.gruvbox","title":"Gruvbox: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.gruvbox.html"},{"id":"form.gruvbox","title":"Gruvbox: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.gruvbox.html"},{"id":"buckets.gruvbox","title":"Gruvbox: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.gruvbox.html"},{"id":"summary.gruvbox","title":"Gruvbox: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.gruvbox.html"},{"id":"sheet.gruvbox","title":"Gruvbox: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.gruvbox.html"},{"id":"dashboard.moon-prism","title":"Moon Prism: Dashboard","route":"/","external":false,"src":"approved/dashboard.moon-prism.html"},{"id":"entries.moon-prism","title":"Moon Prism: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.moon-prism.html"},{"id":"form.moon-prism","title":"Moon Prism: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.moon-prism.html"},{"id":"buckets.moon-prism","title":"Moon Prism: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.moon-prism.html"},{"id":"summary.moon-prism","title":"Moon Prism: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.moon-prism.html"},{"id":"sheet.moon-prism","title":"Moon Prism: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.moon-prism.html"},{"id":"dashboard.nord","title":"Nord: Dashboard","route":"/","external":false,"src":"approved/dashboard.nord.html"},{"id":"entries.nord","title":"Nord: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.nord.html"},{"id":"form.nord","title":"Nord: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.nord.html"},{"id":"buckets.nord","title":"Nord: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.nord.html"},{"id":"summary.nord","title":"Nord: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.nord.html"},{"id":"sheet.nord","title":"Nord: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.nord.html"},{"id":"dashboard.ocarina","title":"Ocarina: Dashboard","route":"/","external":false,"src":"approved/dashboard.ocarina.html"},{"id":"entries.ocarina","title":"Ocarina: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.ocarina.html"},{"id":"form.ocarina","title":"Ocarina: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.ocarina.html"},{"id":"buckets.ocarina","title":"Ocarina: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.ocarina.html"},{"id":"summary.ocarina","title":"Ocarina: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.ocarina.html"},{"id":"sheet.ocarina","title":"Ocarina: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.ocarina.html"},{"id":"dashboard.pumpkin-king","title":"Pumpkin King: Dashboard","route":"/","external":false,"src":"approved/dashboard.pumpkin-king.html"},{"id":"entries.pumpkin-king","title":"Pumpkin King: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.pumpkin-king.html"},{"id":"form.pumpkin-king","title":"Pumpkin King: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.pumpkin-king.html"},{"id":"buckets.pumpkin-king","title":"Pumpkin King: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.pumpkin-king.html"},{"id":"summary.pumpkin-king","title":"Pumpkin King: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.pumpkin-king.html"},{"id":"sheet.pumpkin-king","title":"Pumpkin King: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.pumpkin-king.html"},{"id":"dashboard.snowglobe","title":"Snowglobe: Dashboard","route":"/","external":false,"src":"approved/dashboard.snowglobe.html"},{"id":"entries.snowglobe","title":"Snowglobe: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.snowglobe.html"},{"id":"form.snowglobe","title":"Snowglobe: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.snowglobe.html"},{"id":"buckets.snowglobe","title":"Snowglobe: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.snowglobe.html"},{"id":"summary.snowglobe","title":"Snowglobe: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.snowglobe.html"},{"id":"sheet.snowglobe","title":"Snowglobe: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.snowglobe.html"},{"id":"dashboard.super-saiyan","title":"Super Saiyan: Dashboard","route":"/","external":false,"src":"approved/dashboard.super-saiyan.html"},{"id":"entries.super-saiyan","title":"Super Saiyan: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.super-saiyan.html"},{"id":"form.super-saiyan","title":"Super Saiyan: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.super-saiyan.html"},{"id":"buckets.super-saiyan","title":"Super Saiyan: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.super-saiyan.html"},{"id":"summary.super-saiyan","title":"Super Saiyan: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.super-saiyan.html"},{"id":"sheet.super-saiyan","title":"Super Saiyan: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.super-saiyan.html"},{"id":"dashboard.tokyo-night","title":"Tokyo Night: Dashboard","route":"/","external":false,"src":"approved/dashboard.tokyo-night.html"},{"id":"entries.tokyo-night","title":"Tokyo Night: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.tokyo-night.html"},{"id":"form.tokyo-night","title":"Tokyo Night: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.tokyo-night.html"},{"id":"buckets.tokyo-night","title":"Tokyo Night: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.tokyo-night.html"},{"id":"summary.tokyo-night","title":"Tokyo Night: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.tokyo-night.html"},{"id":"sheet.tokyo-night","title":"Tokyo Night: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.tokyo-night.html"},{"id":"dashboard.wisteria","title":"Wisteria: Dashboard","route":"/","external":false,"src":"approved/dashboard.wisteria.html"},{"id":"entries.wisteria","title":"Wisteria: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.wisteria.html"},{"id":"form.wisteria","title":"Wisteria: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.wisteria.html"},{"id":"buckets.wisteria","title":"Wisteria: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.wisteria.html"},{"id":"summary.wisteria","title":"Wisteria: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.wisteria.html"},{"id":"sheet.wisteria","title":"Wisteria: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.wisteria.html"},{"id":"dashboard.yuletide","title":"Yuletide: Dashboard","route":"/","external":false,"src":"approved/dashboard.yuletide.html"},{"id":"entries.yuletide","title":"Yuletide: Expenses list, filtered","route":"/expenses","external":false,"src":"approved/entries.yuletide.html"},{"id":"form.yuletide","title":"Yuletide: Add expense, validation error","route":"/add-expense","external":false,"src":"approved/form.yuletide.html"},{"id":"buckets.yuletide","title":"Yuletide: Buckets: healthy, close, over","route":"/buckets","external":false,"src":"approved/buckets.yuletide.html"},{"id":"summary.yuletide","title":"Yuletide: Summary: categorical palette","route":"/summary","external":false,"src":"approved/summary.yuletide.html"},{"id":"sheet.yuletide","title":"Yuletide: Settings with a sheet open","route":"/settings","external":false,"src":"approved/sheet.yuletide.html"}],"transitions":[{"from":"dashboard.midnight-gold","to":"entries.midnight-gold","label":"Open Expenses"},{"from":"entries.midnight-gold","to":"form.midnight-gold","label":"Tap Add expense"},{"from":"form.midnight-gold","to":"buckets.midnight-gold","label":"Open Buckets"},{"from":"buckets.midnight-gold","to":"summary.midnight-gold","label":"Open Summary"},{"from":"summary.midnight-gold","to":"sheet.midnight-gold","label":"Open Settings and tap Language"},{"from":"sheet.midnight-gold","to":"dashboard.all-hallows","label":"Pick the next theme"},{"from":"dashboard.all-hallows","to":"entries.all-hallows","label":"Open Expenses"},{"from":"entries.all-hallows","to":"form.all-hallows","label":"Tap Add expense"},{"from":"form.all-hallows","to":"buckets.all-hallows","label":"Open Buckets"},{"from":"buckets.all-hallows","to":"summary.all-hallows","label":"Open Summary"},{"from":"summary.all-hallows","to":"sheet.all-hallows","label":"Open Settings and tap Language"},{"from":"sheet.all-hallows","to":"dashboard.catppuccin","label":"Pick the next theme"},{"from":"dashboard.catppuccin","to":"entries.catppuccin","label":"Open Expenses"},{"from":"entries.catppuccin","to":"form.catppuccin","label":"Tap Add expense"},{"from":"form.catppuccin","to":"buckets.catppuccin","label":"Open Buckets"},{"from":"buckets.catppuccin","to":"summary.catppuccin","label":"Open Summary"},{"from":"summary.catppuccin","to":"sheet.catppuccin","label":"Open Settings and tap Language"},{"from":"sheet.catppuccin","to":"dashboard.digital-rain","label":"Pick the next theme"},{"from":"dashboard.digital-rain","to":"entries.digital-rain","label":"Open Expenses"},{"from":"entries.digital-rain","to":"form.digital-rain","label":"Tap Add expense"},{"from":"form.digital-rain","to":"buckets.digital-rain","label":"Open Buckets"},{"from":"buckets.digital-rain","to":"summary.digital-rain","label":"Open Summary"},{"from":"summary.digital-rain","to":"sheet.digital-rain","label":"Open Settings and tap Language"},{"from":"sheet.digital-rain","to":"dashboard.flexoki-light","label":"Pick the next theme"},{"from":"dashboard.flexoki-light","to":"entries.flexoki-light","label":"Open Expenses"},{"from":"entries.flexoki-light","to":"form.flexoki-light","label":"Tap Add expense"},{"from":"form.flexoki-light","to":"buckets.flexoki-light","label":"Open Buckets"},{"from":"buckets.flexoki-light","to":"summary.flexoki-light","label":"Open Summary"},{"from":"summary.flexoki-light","to":"sheet.flexoki-light","label":"Open Settings and tap Language"},{"from":"sheet.flexoki-light","to":"dashboard.gruvbox","label":"Pick the next theme"},{"from":"dashboard.gruvbox","to":"entries.gruvbox","label":"Open Expenses"},{"from":"entries.gruvbox","to":"form.gruvbox","label":"Tap Add expense"},{"from":"form.gruvbox","to":"buckets.gruvbox","label":"Open Buckets"},{"from":"buckets.gruvbox","to":"summary.gruvbox","label":"Open Summary"},{"from":"summary.gruvbox","to":"sheet.gruvbox","label":"Open Settings and tap Language"},{"from":"sheet.gruvbox","to":"dashboard.moon-prism","label":"Pick the next theme"},{"from":"dashboard.moon-prism","to":"entries.moon-prism","label":"Open Expenses"},{"from":"entries.moon-prism","to":"form.moon-prism","label":"Tap Add expense"},{"from":"form.moon-prism","to":"buckets.moon-prism","label":"Open Buckets"},{"from":"buckets.moon-prism","to":"summary.moon-prism","label":"Open Summary"},{"from":"summary.moon-prism","to":"sheet.moon-prism","label":"Open Settings and tap Language"},{"from":"sheet.moon-prism","to":"dashboard.nord","label":"Pick the next theme"},{"from":"dashboard.nord","to":"entries.nord","label":"Open Expenses"},{"from":"entries.nord","to":"form.nord","label":"Tap Add expense"},{"from":"form.nord","to":"buckets.nord","label":"Open Buckets"},{"from":"buckets.nord","to":"summary.nord","label":"Open Summary"},{"from":"summary.nord","to":"sheet.nord","label":"Open Settings and tap Language"},{"from":"sheet.nord","to":"dashboard.ocarina","label":"Pick the next theme"},{"from":"dashboard.ocarina","to":"entries.ocarina","label":"Open Expenses"},{"from":"entries.ocarina","to":"form.ocarina","label":"Tap Add expense"},{"from":"form.ocarina","to":"buckets.ocarina","label":"Open Buckets"},{"from":"buckets.ocarina","to":"summary.ocarina","label":"Open Summary"},{"from":"summary.ocarina","to":"sheet.ocarina","label":"Open Settings and tap Language"},{"from":"sheet.ocarina","to":"dashboard.pumpkin-king","label":"Pick the next theme"},{"from":"dashboard.pumpkin-king","to":"entries.pumpkin-king","label":"Open Expenses"},{"from":"entries.pumpkin-king","to":"form.pumpkin-king","label":"Tap Add expense"},{"from":"form.pumpkin-king","to":"buckets.pumpkin-king","label":"Open Buckets"},{"from":"buckets.pumpkin-king","to":"summary.pumpkin-king","label":"Open Summary"},{"from":"summary.pumpkin-king","to":"sheet.pumpkin-king","label":"Open Settings and tap Language"},{"from":"sheet.pumpkin-king","to":"dashboard.snowglobe","label":"Pick the next theme"},{"from":"dashboard.snowglobe","to":"entries.snowglobe","label":"Open Expenses"},{"from":"entries.snowglobe","to":"form.snowglobe","label":"Tap Add expense"},{"from":"form.snowglobe","to":"buckets.snowglobe","label":"Open Buckets"},{"from":"buckets.snowglobe","to":"summary.snowglobe","label":"Open Summary"},{"from":"summary.snowglobe","to":"sheet.snowglobe","label":"Open Settings and tap Language"},{"from":"sheet.snowglobe","to":"dashboard.super-saiyan","label":"Pick the next theme"},{"from":"dashboard.super-saiyan","to":"entries.super-saiyan","label":"Open Expenses"},{"from":"entries.super-saiyan","to":"form.super-saiyan","label":"Tap Add expense"},{"from":"form.super-saiyan","to":"buckets.super-saiyan","label":"Open Buckets"},{"from":"buckets.super-saiyan","to":"summary.super-saiyan","label":"Open Summary"},{"from":"summary.super-saiyan","to":"sheet.super-saiyan","label":"Open Settings and tap Language"},{"from":"sheet.super-saiyan","to":"dashboard.tokyo-night","label":"Pick the next theme"},{"from":"dashboard.tokyo-night","to":"entries.tokyo-night","label":"Open Expenses"},{"from":"entries.tokyo-night","to":"form.tokyo-night","label":"Tap Add expense"},{"from":"form.tokyo-night","to":"buckets.tokyo-night","label":"Open Buckets"},{"from":"buckets.tokyo-night","to":"summary.tokyo-night","label":"Open Summary"},{"from":"summary.tokyo-night","to":"sheet.tokyo-night","label":"Open Settings and tap Language"},{"from":"sheet.tokyo-night","to":"dashboard.wisteria","label":"Pick the next theme"},{"from":"dashboard.wisteria","to":"entries.wisteria","label":"Open Expenses"},{"from":"entries.wisteria","to":"form.wisteria","label":"Tap Add expense"},{"from":"form.wisteria","to":"buckets.wisteria","label":"Open Buckets"},{"from":"buckets.wisteria","to":"summary.wisteria","label":"Open Summary"},{"from":"summary.wisteria","to":"sheet.wisteria","label":"Open Settings and tap Language"},{"from":"sheet.wisteria","to":"dashboard.yuletide","label":"Pick the next theme"},{"from":"dashboard.yuletide","to":"entries.yuletide","label":"Open Expenses"},{"from":"entries.yuletide","to":"form.yuletide","label":"Tap Add expense"},{"from":"form.yuletide","to":"buckets.yuletide","label":"Open Buckets"},{"from":"buckets.yuletide","to":"summary.yuletide","label":"Open Summary"},{"from":"summary.yuletide","to":"sheet.yuletide","label":"Open Settings and tap Language"}]}</script>
+  <script>
+    (() => {
+      const data = JSON.parse(document.getElementById("flow-data").textContent);
+      const byId = new Map(data.screens.map((screen) => [screen.id, screen]));
+      const frame = document.getElementById("fl-frame");
+      const external = document.getElementById("fl-external");
+      const title = document.getElementById("fl-title");
+      const route = document.getElementById("fl-route");
+      const next = document.getElementById("fl-next");
+      const back = document.getElementById("fl-back");
+      let history = [data.screens[0].id];
+
+      const show = () => {
+        const screen = byId.get(history[history.length - 1]);
+        title.textContent = screen.title;
+        route.textContent = screen.route;
+        external.hidden = !screen.external;
+        frame.hidden = screen.external;
+        if (!screen.external) frame.src = screen.src;
+        next.textContent = "";
+        const outgoing = data.transitions.filter((t) => t.from === screen.id);
+        if (outgoing.length === 0) {
+          const end = document.createElement("p");
+          end.className = "mk-text-muted";
+          end.textContent = "End of this flow.";
+          next.append(end);
+        }
+        outgoing.forEach((transition) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "mk-btn mk-btn--secondary";
+          button.textContent = transition.label + " \u2192 " + byId.get(transition.to).title;
+          button.addEventListener("click", () => {
+            history.push(transition.to);
+            show();
+          });
+          next.append(button);
+        });
+        back.disabled = history.length < 2;
+      };
+
+      back.addEventListener("click", () => {
+        if (history.length > 1) history.pop();
+        show();
+      });
+      document.getElementById("fl-restart").addEventListener("click", () => {
+        history = [data.screens[0].id];
+        show();
+      });
+      show();
+    })();
+  </script>
+</body>
+</html>
