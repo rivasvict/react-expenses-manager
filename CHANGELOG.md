@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.41.4] - 2026-11-01
+## [1.41.5] - 2026-11-01
 
 ### Fixed
 
@@ -36,6 +36,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Categories list** keeps "Bucket $5,000.00/mo" whole when the line wraps.
 - **Dashboard button copy:** "Add Expenses" is now "Add Expense", like the
   Fixed Entries button and the form title.
+
+## [1.41.4] - 2026-11-01
+
+### Fixed
+
+- **Installed app showed the React logo.** The home-screen icon, the install
+  prompt and the iOS "Add to Home Screen" icon were still the leftover React
+  atom. They now use the app's own mark (gold and slate bars on a dark
+  tile), including a full-bleed maskable icon for Android and a dedicated
+  180px Apple touch icon. The splash background follows the same dark color.
+  Reinstall the app (or remove and re-add it) to pick the new icon up; the
+  icon is fixed at install time, so it does not change with the chosen theme.
 
 ## [1.41.3] - 2026-11-01
 
