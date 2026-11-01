@@ -44,7 +44,7 @@
     }
 
     .data-section--danger {
-      border-color: rgba($danger, 0.35);
+      border-color: alpha($danger, 0.35);
 
       .data-section__title {
         color: $danger;

@@ -517,8 +517,8 @@
   padding: 0.9rem 1rem 0.9rem 1.2rem;
   // Soft gold wash + softened gold border (alpha derived from the $accent
   // token), per the approved mock; the 3px solid gold left bar stays.
-  background: linear-gradient(180deg, rgba($accent, 0.1), rgba($accent, 0.04));
-  border: 1px solid rgba($accent, 0.3);
+  background: linear-gradient(180deg, alpha($accent, 0.1), alpha($accent, 0.04));
+  border: 1px solid alpha($accent, 0.3);
   border-radius: $radius-card;
   box-shadow: $shadow-card;
   overflow: hidden;

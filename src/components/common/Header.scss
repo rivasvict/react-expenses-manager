@@ -108,7 +108,7 @@
 
     .app-nav__glyph {
       background-color: $accent-soft;
-      border-color: rgba($accent, 0.28);
+      border-color: alpha($accent, 0.28);
       box-shadow: inset 0 1px 0 $highlight;
     }
 
@@ -133,7 +133,7 @@
     height: $bottom-nav-height;
     padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
     justify-content: space-around;
-    background-color: rgba($bg-page, 0.92);
+    background-color: alpha($bg-page, 0.92);
     backdrop-filter: blur(12px);
     border-top: 1px solid $border-subtle;
 

@@ -30,7 +30,7 @@
 
   &--warn {
     background-color: $accent-soft;
-    border: 1px solid rgba($warning, 0.4);
+    border: 1px solid alpha($warning, 0.4);
 
     .callout__icon-fill {
       fill: $warning;
@@ -43,7 +43,7 @@
 
   &--danger {
     background-color: $danger-soft;
-    border: 1px solid rgba($danger, 0.45);
+    border: 1px solid alpha($danger, 0.45);
 
     .callout__icon-fill {
       fill: $danger;
