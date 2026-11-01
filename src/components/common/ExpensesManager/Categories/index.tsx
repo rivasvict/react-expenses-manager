@@ -135,11 +135,13 @@ const Categories = ({
             count
           )
         : t("categories.unused");
+    // The bucket figure stays whole: a line break may fall before "Bucket",
+    // never inside it (non-breaking spaces; the text reads the same).
     return limit === undefined
       ? usage
       : `${usage} · ${t("categories.bucketPerMonth", {
           amount: formatCurrency(limit),
-        })}`;
+        }).replace(/ /g, "\u00a0")}`;
   };
 
   const closeSheet = (focusName?: string) => {

@@ -121,7 +121,7 @@ const en = {
   // Dashboard
   "dashboard.pageTitle": "Monthly Balance",
   "dashboard.addIncome": "Add Income",
-  "dashboard.addExpenses": "Add Expenses",
+  "dashboard.addExpenses": "Add Expense",
 
   // Savings change badge (dashboard balance hero); {{month}} is the previous
   // month's name: short in the visible caption ("vs Sep"), full in the spoken label

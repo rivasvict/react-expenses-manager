@@ -69,7 +69,7 @@ describe("category + bucket creation (issue #100)", () => {
 
     // Head to the dashboard to add an expense.
     await user.click(await screen.findByRole("link", { name: /home/i }));
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.type(
       await screen.findByPlaceholderText(/insert expense amount/i),
       "30"

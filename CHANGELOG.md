@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.41.4] - 2026-11-01
+
+### Fixed
+
+- **Buckets: figures no longer overflow the card.** "Spent" and "Remaining"
+  stay whole and drop onto their own line (Remaining right-aligned) when a
+  large amount leaves no room for both; a long bucket name wraps beside its
+  percentage instead of taking half the row; the "carried" amount no longer
+  breaks from its label.
+- **Data Management and Settings share one edge.** The cards were 12px wider
+  than the Go Back button; they now line up with it. Go Back keeps at least
+  1.25rem from the last card (the same footer rule now applies to Buckets,
+  Categories, Fixed Entries, Party and the entry lists), the sync caption has
+  room under its button and every card has equal padding above and below.
+- **Month pill in wide-display-font themes.** "November 2026" in Hogwarts (and
+  long month names in Spanish and French) no longer wraps out of the pill: the
+  label shrinks to stay on one line (new `useShrinkToFit` hook), and the pill
+  and its arrows grow instead of letting text escape.
+- **Entry rows** (Expenses, Incomes, Summary) left-align their category and
+  note, ellipsize a long note inside the row instead of overflowing both
+  sides, keep the icon chip clear of the text and sit on the same edge as the
+  toolbar and total.
+- **Entry toolbar on phones.** Search takes its own row so the placeholder is
+  no longer cut ("Searcl"); Sort and Filters share the row below.
+- **App header** no longer overflows at 360px with wide display fonts: the
+  app name gives way (smaller, ellipsis) before the settings and account
+  buttons are pushed off screen.
+- **Bottom tab bar** labels keep clear of each other on narrow phones.
+- **Categories list** keeps "Bucket $5,000.00/mo" whole when the line wraps.
+- **Dashboard button copy:** "Add Expenses" is now "Add Expense", like the
+  Fixed Entries button and the form title.
+
 ## [1.41.3] - 2026-11-01
 
 ### Fixed

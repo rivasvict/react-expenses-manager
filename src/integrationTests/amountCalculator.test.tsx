@@ -32,7 +32,7 @@ describe("amount calculator keypad", () => {
   it("user can add up an expense on the keypad and save the total", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.click(await screen.findByPlaceholderText(/insert expense amount/i));
 
     // 12.5 + 7.5 × 2 = 27.5
@@ -80,7 +80,7 @@ describe("amount calculator keypad", () => {
   it("the keypad appears while the amount field has focus and hides when it leaves", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     const amountField = await screen.findByPlaceholderText(/insert expense amount/i);
     expect(
       screen.queryByRole("group", { name: "Calculator keypad" })
@@ -108,7 +108,7 @@ describe("amount calculator keypad", () => {
   it("tapping the amount field again closes the open keypad", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     const amountField = await screen.findByPlaceholderText(/insert expense amount/i);
 
     await user.click(amountField);
