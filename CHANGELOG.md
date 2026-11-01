@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.40.1] - 2026-11-01
+
+### Added
+
+- **`create-theme` skill** (`.claude/skills/create-theme/SKILL.md`), referenced
+  from `CLAUDE.md`: how to add a theme (catalog file, contrast rules, SVG
+  picture, headline font, tests, release steps), with the mandatory rules that
+  fonts come only from Google Fonts, are self-hosted so they work offline, and
+  that performance is kept.
+
 ## [1.40.0] - 2026-11-01
 
 ### Added
