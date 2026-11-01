@@ -6,12 +6,12 @@ status: exploring
 
 # Decision
 
-Open. Three options on the same data (see the brief, `../feature-brief.md`).
+Open. Four options on the same data (see the brief, `../feature-brief.md`).
 Each has `buckets.html` (typical month: carried debt, carried surplus, over
 budget) and `buckets.stress.html` (a very long name, CA$55,000.00 carried,
 usage above 100%, a large carried debt).
 
-Shared across all three, because the old text is the problem:
+Shared across all of them, because the old text is the problem:
 
 - The percentage is shown whole (79%, not 78.75%).
 - "Remaining" becomes **left** (or **over** when negative, in the red tone), and
@@ -53,6 +53,16 @@ edit page, which the card already links to. Shortest cards and the calmest
 list, which matters most for people with many buckets. Costs: information
 moved out of the list (allowance is no longer visible without a tap), so the
 edit page should show "Available this month" in the same change.
+
+**D · Ledger, short label** (`options/d-ledger-short/`). Option B with one
+change: the carry row is just **Carried**, with the sign and the tone saying
+what it is (red "−CA$65.21" for money owed from earlier months, green
+"+CA$8.71" for a surplus). B's label "Owed from earlier months" wrapped onto two
+lines on a phone and, next to a large amount, risked crowding it; "Carried" is
+one short word (ES "Arrastrado", FR "Reporté") and one label serves both
+cases, so there is also one string less to translate. The cost is a little
+less self-explanatory for someone who has never seen a carried debt: the red
+minus has to do the explaining.
 
 ## What the other states look like
 
