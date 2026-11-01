@@ -27,7 +27,7 @@ describe("ThemeProvider", () => {
         <Probe />
       </ThemeProvider>
     );
-    expect(screen.getByText("theme:midnight-gold count:15 art:true")).toBeInTheDocument();
+    expect(screen.getByText("theme:midnight-gold count:17 art:true")).toBeInTheDocument();
     expect(document.documentElement.dataset.theme).toBe("midnight-gold");
   });
 

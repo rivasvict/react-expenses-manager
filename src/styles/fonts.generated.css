@@ -15,6 +15,13 @@
 }
 
 @font-face {
+  font-family: "Archivo";
+  src: url("../themes/fonts/archivo.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Share Tech Mono";
   src: url("../themes/fonts/share-tech-mono.woff2") format("woff2");
   font-weight: 100 900;
@@ -31,6 +38,13 @@
 @font-face {
   font-family: "Righteous";
   src: url("../themes/fonts/righteous.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel Decorative";
+  src: url("../themes/fonts/cinzel-decorative.woff2") format("woff2");
   font-weight: 100 900;
   font-display: swap;
 }
