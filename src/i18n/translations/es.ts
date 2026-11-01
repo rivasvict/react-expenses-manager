@@ -107,7 +107,6 @@ const es: Translations = {
   "privacy.hide": "Ocultar cifras",
   "privacy.amountHidden": "Importe oculto",
   "privacy.changeHidden": "Variación porcentual oculta",
-  "privacy.chartHidden": "Gráfico oculto",
 
   // Month stepper
   "monthHeader.previous": "Mes anterior",
