@@ -167,43 +167,43 @@
   color-scheme: dark;
 
   /* color */
-  --bg-page: #080b12;
-  --bg-surface: #0e131d;
-  --bg-raised: #161d2b;
-  --bg-raised-hover: #1d2638;
-  --border-subtle: rgba(200, 215, 240, 0.08);
-  --border-strong: rgba(200, 215, 240, 0.17);
-  --track: rgba(200, 215, 240, 0.1);
-  --highlight: rgba(200, 215, 240, 0.05);
+  --bg-page: #090d16;
+  --bg-surface: #11161f;
+  --bg-raised: #1a212d;
+  --bg-raised-hover: #222a38;
+  --border-subtle: rgba(214, 222, 238, 0.08);
+  --border-strong: rgba(214, 222, 238, 0.17);
+  --track: rgba(214, 222, 238, 0.1);
+  --highlight: rgba(214, 222, 238, 0.05);
   --scrim: rgba(0, 0, 0, 0.55);
-  --accent: #b894ff;
-  --accent-hover: #cdb0ff;
-  --accent-soft: rgba(184, 148, 255, 0.13);
-  --income: #5be3a6;
-  --income-soft: rgba(91, 227, 166, 0.12);
-  --expense: #ff7a59;
-  --expense-soft: rgba(255, 122, 89, 0.12);
+  --accent: #d3b13f;
+  --accent-hover: #e3c45a;
+  --accent-soft: rgba(211, 177, 63, 0.14);
+  --income: #6fd9a0;
+  --income-soft: rgba(111, 217, 160, 0.12);
+  --expense: #ff7d5c;
+  --expense-soft: rgba(255, 125, 92, 0.12);
   --danger: #ff5c6c;
   --danger-soft: rgba(255, 92, 108, 0.14);
-  --warning: #ceae33;
-  --text-primary: #eef2fa;
-  --text-secondary: #b6c0d4;
-  --text-muted: #97a3ba;
-  --text-on-accent: #150a2b;
+  --warning: #e8923a;
+  --text-primary: #f4f6fb;
+  --text-secondary: #bcc4d4;
+  --text-muted: #9aa4b8;
+  --text-on-accent: #1a1404;
   --text-validation: #ffa58f;
-  --brand-mark-shade: #6b46c1;
+  --brand-mark-shade: #8a6d12;
 
   /* chart */
-  --chart-income: #45d391;
+  --chart-income: #52cf8a;
   --chart-expense: #ff6a45;
-  --chart-warning: #ceae33;
-  --chart-categorical-1: #b894ff;
-  --chart-categorical-2: #ceae33;
-  --chart-categorical-3: #6fd8ff;
-  --chart-categorical-4: #ff7a59;
-  --chart-categorical-5: #5be3a6;
-  --chart-categorical-6: #ff6fb0;
-  --chart-categorical-7: #9fb4ff;
+  --chart-warning: #e8923a;
+  --chart-categorical-1: #d3b13f;
+  --chart-categorical-2: #6fb3e8;
+  --chart-categorical-3: #e8923a;
+  --chart-categorical-4: #ff7d5c;
+  --chart-categorical-5: #6fd9a0;
+  --chart-categorical-6: #b894ff;
+  --chart-categorical-7: #8fd3e8;
   --chart-categorical-8: #d5dbe8;
 
   /* shadow */
@@ -211,8 +211,8 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
 
   /* personality */
-  --font-display: "Orbitron", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  --display-tracking: 0.08em;
+  --font-display: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --display-tracking: 0.02em;
   --art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2096%2096%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%2234%22%20r%3D%2217%22%2F%3E%3Cpath%20d%3D%22M17%2034h34M34%2017v34M22%2022c8%206%2016%206%2024%200M22%2046c8-6%2016-6%2024%200%22%2F%3E%3Cpath%20d%3D%22M62%2070l10-14%2010%2014-10%206zM72%2056v20M10%2080l8-8%208%208-8%208z%22%2F%3E%3C%2Fsvg%3E");
   --art-opacity: 0.11;
 }

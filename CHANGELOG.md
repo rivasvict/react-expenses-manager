@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 - **Two new themes: Guardian and Hogwarts.** Guardian is inspired by Destiny 2
-  (deep space slate with Void purple and Exotic gold, Orbitron headlines, a
-  Traveler and Guardian-crest picture). Hogwarts is inspired by Harry Potter
+  (midnight navy and charcoal with Traveler gold and a warm amber glow, matching
+  the palette of bungie.net, Archivo headlines, a Traveler and Guardian-crest
+  picture). Hogwarts is inspired by Harry Potter
   (Gryffindor burgundy with golden accents and Slytherin green, Cinzel
   Decorative headlines, a lightning-scar, glasses and Snitch picture). Both
   have English, Spanish and French descriptions and pass the catalog's
