@@ -439,7 +439,7 @@ describe("leaving the wizard through the app nav (AC-3.11)", () => {
     // Accepting it leaves — and nothing was written, so a fresh sync offers
     // both items again.
     await user.click(screen.getByRole("link", { name: "Home" }));
-    expect(await screen.findByText(/Add Expenses/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Add Expense/i)).toBeInTheDocument();
     expect(server.getUploadedBackups()).toHaveLength(0);
   });
 });

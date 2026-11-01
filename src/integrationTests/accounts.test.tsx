@@ -147,7 +147,7 @@ describe("accounts", () => {
       await screen.findByRole("link", { name: /add income/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /add expenses/i })
+      screen.getByRole("link", { name: /^add expense$/i })
     ).toBeInTheDocument();
     // The account entry point is there but anonymous.
     expect(screen.getByRole("link", { name: "Account" })).toBeInTheDocument();

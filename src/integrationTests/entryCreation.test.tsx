@@ -19,7 +19,7 @@ describe("entry creation", () => {
   it("user can create an expense and see it on the dashboard", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
 
     await user.type(
       await screen.findByPlaceholderText(/insert expense amount/i),
@@ -60,7 +60,7 @@ describe("entry creation", () => {
   it("user can edit an entry immediately after creating it", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "50");
     await user.type(screen.getByPlaceholderText(/description/i), "Groceries");
     await selectCategory(user, "Food");
@@ -83,7 +83,7 @@ describe("entry creation", () => {
   it("user can type to filter the category dropdown and pick the narrowed option", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.type(
       await screen.findByPlaceholderText(/insert expense amount/i),
       "42"
@@ -111,7 +111,7 @@ describe("entry creation", () => {
   it("shows an empty state when the category search matches nothing", async () => {
     const { user } = await renderApp("/");
 
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.click(await screen.findByRole("combobox"));
     await user.keyboard("definitely-not-a-category");
 
@@ -142,7 +142,7 @@ describe("entry creation", () => {
     await screen.findByText("February 2026");
 
     // Add an expense while viewing February
-    await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+    await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
     await user.type(await screen.findByPlaceholderText(/insert expense amount/i), "99");
     await user.type(screen.getByPlaceholderText(/description/i), "Feb Rent");
     await selectCategory(user, "Food");

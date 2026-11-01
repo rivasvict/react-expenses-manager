@@ -63,9 +63,8 @@ a.content-title-selection {
     font-size: 0.85rem;
     font-weight: 600;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    // Wraps rather than ellipsizing when a long total leaves little room.
+    overflow-wrap: anywhere;
   }
 
   .tile-total__value {

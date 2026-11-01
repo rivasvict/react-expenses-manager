@@ -1,6 +1,10 @@
 @import "../../variables.scss";
 
 .party-screen {
+  .party-screen__footer {
+    @include screen-footer();
+  }
+
   .party-card {
     @include card();
     padding: 1rem 1.1rem 1.1rem;

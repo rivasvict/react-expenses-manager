@@ -169,13 +169,15 @@ const Party = ({
           {t("party.loading")}
         </p>
       )}
-      <Button
-        variant="secondary"
-        className="full-width vertical-standard-space"
-        onClick={() => history.goBack()}
-      >
-        {t("common.goBack")}
-      </Button>
+      <div className="party-screen__footer">
+        <Button
+          variant="secondary"
+          className="full-width"
+          onClick={() => history.goBack()}
+        >
+          {t("common.goBack")}
+        </Button>
+      </div>
     </MainContentContainer>
   );
 };

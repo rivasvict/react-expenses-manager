@@ -33,7 +33,7 @@ const addRecurringExpense = async (
   user: UserEvent,
   { amount, description }: { amount: string; description: string }
 ) => {
-  await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+  await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
   await user.type(
     await screen.findByPlaceholderText(/insert expense amount/i),
     amount
@@ -43,7 +43,7 @@ const addRecurringExpense = async (
   await user.click(screen.getByLabelText(/recurring/i));
   await user.click(screen.getByRole("button", { name: /submit/i }));
   // Back on the dashboard after submitting.
-  await screen.findByRole("link", { name: /add expenses/i });
+  await screen.findByRole("link", { name: /^add expense$/i });
 };
 
 // Adds a recurring income from the dashboard using the normal Add Income form
@@ -70,7 +70,7 @@ const addRegularExpense = async (
   user: UserEvent,
   { amount, description }: { amount: string; description: string }
 ) => {
-  await user.click(await screen.findByRole("link", { name: /add expenses/i }));
+  await user.click(await screen.findByRole("link", { name: /^add expense$/i }));
   await user.type(
     await screen.findByPlaceholderText(/insert expense amount/i),
     amount
@@ -79,7 +79,7 @@ const addRegularExpense = async (
   await selectCategory(user, "Food");
   // Recurring toggle is intentionally NOT clicked.
   await user.click(screen.getByRole("button", { name: /submit/i }));
-  await screen.findByRole("link", { name: /add expenses/i });
+  await screen.findByRole("link", { name: /^add expense$/i });
 };
 
 describe("toggle routing — recurring vs regular entries", () => {
@@ -90,9 +90,9 @@ describe("toggle routing — recurring vs regular entries", () => {
 
     await addRegularExpense(user, { amount: "80", description: "One-off" });
 
-    // The "Add Expenses" link is only rendered on the dashboard, confirming we
+    // The "Add Expense" link is only rendered on the dashboard, confirming we
     // are back there after submitting.
-    await screen.findByRole("link", { name: /add expenses/i });
+    await screen.findByRole("link", { name: /^add expense$/i });
 
     // The expense must be visible in the regular expenses view.
     await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
@@ -113,8 +113,8 @@ describe("toggle routing — recurring vs regular entries", () => {
 
     await addRecurringExpense(user, { amount: "150", description: "Groceries" });
 
-    // The "Add Expenses" link is only rendered on the dashboard.
-    await screen.findByRole("link", { name: /add expenses/i });
+    // The "Add Expense" link is only rendered on the dashboard.
+    await screen.findByRole("link", { name: /^add expense$/i });
 
     // Fixed entries are materialised into the entries tree, so the entry must
     // appear in the regular expenses view as well as the Fixed Entries page.
@@ -137,9 +137,9 @@ describe("toggle routing — recurring vs regular entries", () => {
 
     await addRecurringExpense(user, { amount: "200", description: "Groceries" });
 
-    // The "Add Expenses" link is only rendered on the dashboard, so finding it
+    // The "Add Expense" link is only rendered on the dashboard, so finding it
     // confirms we are back on the dashboard after submitting.
-    await screen.findByRole("link", { name: /add expenses/i });
+    await screen.findByRole("link", { name: /^add expense$/i });
     // The fixed entry is materialised into the entries tree so the monthly total reflects it.
     expect(await screen.findByText("$200.00")).toBeInTheDocument();
 
@@ -236,8 +236,8 @@ describe("toggling recurring ON in the edit form converts a one-off entry to a f
 
     // Fixed entries are also materialised into the regular expenses view.
     await user.click(screen.getByRole("link", { name: /home/i }));
-    // The "Add Expenses" link is only rendered on the dashboard.
-    await screen.findByRole("link", { name: /add expenses/i });
+    // The "Add Expense" link is only rendered on the dashboard.
+    await screen.findByRole("link", { name: /^add expense$/i });
     await user.click(screen.getByRole("link", { name: /^Expenses \$/ }));
     expect(await screen.findByText(/Coffee/)).toBeInTheDocument();
   });

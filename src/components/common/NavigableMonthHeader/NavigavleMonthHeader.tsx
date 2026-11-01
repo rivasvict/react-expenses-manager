@@ -12,6 +12,8 @@ import { setSelectedDate } from "../../../redux/expensesManager/actionCreators";
 import { connect } from "react-redux";
 import { useTranslation } from "../../../i18n";
 import MonthPickerSheet from "./MonthPickerSheet";
+import { useTheme } from "../../../themes";
+import { useShrinkToFit } from "../useShrinkToFit";
 import { getMonthAvailability } from "./utils/monthAvailability";
 import {
   doesAdjacentDateExist,
@@ -24,6 +26,11 @@ const NavigableMonthHeader = ({
   onSelectedDateChange,
 }) => {
   const { t, language } = useTranslation();
+  const { theme } = useTheme();
+  const monthLabel = `${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`;
+  // A wide display font, a long month name or text zoom must not push the
+  // label out of the pill: it shrinks (down to a floor) to stay on one line.
+  const labelRef = useShrinkToFit<HTMLSpanElement>([monthLabel, theme.id]);
   const canGo = (dateAdjacencyType) =>
     doesAdjacentDateExist({ dateAdjacencyType, selectedDate, entries });
 
@@ -75,7 +82,9 @@ const NavigableMonthHeader = ({
           ref={pillRef}
           onClick={() => setIsPickerOpen(true)}
         >
-          {`${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`}
+          <span className="month-header__label" ref={labelRef}>
+            {monthLabel}
+          </span>
           <Icon icon={chevronDown} aria-hidden="true" />
         </button>
       </h1>

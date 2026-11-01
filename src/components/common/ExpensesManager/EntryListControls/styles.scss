@@ -251,6 +251,38 @@
   }
 }
 
+// Phones: Search takes a full row so its placeholder is never clipped, and
+// Sort and Filters share the row below it equally.
+@media (max-width: 30rem) {
+  .entry-list-toolbar {
+    flex-wrap: wrap;
+
+    &__search {
+      flex: 1 1 100%;
+    }
+
+    &__sort,
+    &__filters-button {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    &__sort-button,
+    &__filters-button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    // The Sort control is the left half of the row now: open the menu from its
+    // left edge so it stays on screen.
+    &__sort-menu {
+      left: 0;
+      right: auto;
+      max-width: calc(100vw - 2rem);
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Filter sheet (mobile, below $nav-breakpoint) / inline panel (desktop).
 // Same markup for both; only the presentation switches.

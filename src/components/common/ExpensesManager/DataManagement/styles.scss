@@ -18,10 +18,18 @@
       }
     }
 
+    // The cards are the Cols of these rows: zero the Row's negative margins so
+    // they share the page rail with the Go Back button instead of poking out.
     .top-content {
-      .row {
+      > .row {
         margin-top: $vertical-standard-margin;
+        margin-left: 0;
+        margin-right: 0;
       }
+    }
+
+    .bottom-content {
+      @include screen-footer($pinned: true);
     }
 
     .data-section {
@@ -40,6 +48,25 @@
         font-size: 0.88rem;
         line-height: 1.5;
         margin-bottom: 0.9rem;
+      }
+
+      // Equal padding above the title and below the last element.
+      > :last-child {
+        margin-bottom: 0;
+      }
+
+      // Under the Sync button; status and errors follow with the same rhythm.
+      .sync-caption {
+        margin: 0.6rem 0 0;
+        font-size: 0.82rem;
+      }
+
+      .sync-status {
+        margin: 0.75rem 0 0;
+      }
+
+      .restore-backup-error {
+        margin: 0.75rem 0 0;
       }
     }
 

@@ -115,7 +115,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
           </Row>
         </Container>
       )}
-      <Container fluid>
+      <Container fluid className="buckets-footer">
         <Row className="vertical-standard-space">
           <Col>
             <Link

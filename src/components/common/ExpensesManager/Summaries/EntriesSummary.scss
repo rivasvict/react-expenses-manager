@@ -2,6 +2,11 @@
 
 .entries-summary {
   margin-bottom: 0.75rem;
+  // Already inside the screen's container: rows share the page rail with the
+  // toolbar and the total tile instead of being inset a second time.
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
 
   .entries-summary-header {
     margin-top: 0.5rem;
@@ -41,7 +46,11 @@
 
     .item-icon {
       @include adjust-text-in-vertical-axis();
-      padding: 0;
+      // The chip keeps its own width (never a share of the row) plus a gap, so
+      // it can never sit under the text.
+      flex: 0 0 auto;
+      width: auto;
+      padding: 0 0.75rem 0 0;
       justify-content: flex-start;
     }
 
@@ -74,23 +83,32 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      // Left-aligned lines that fill the column, so a long note ellipsizes
+      // inside it instead of overflowing both sides.
+      align-items: stretch;
+      text-align: left;
+      min-width: 0;
       white-space: normal;
       line-height: 1.35;
 
-      .item-category {
-        font-size: 0.92rem;
-        font-weight: 600;
+      .item-category,
+      .item-note {
+        display: block;
+        min-width: 0;
+        max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
+      .item-category {
+        font-size: 0.92rem;
+        font-weight: 600;
+      }
+
       .item-note {
         font-size: 0.78rem;
         color: $text-muted;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
     }
 
