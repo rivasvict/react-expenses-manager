@@ -1,0 +1,901 @@
+{
+  "screens": [
+    {
+      "id": "dashboard.midnight-gold",
+      "title": "Midnight Gold: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.midnight-gold",
+      "title": "Midnight Gold: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.midnight-gold",
+      "title": "Midnight Gold: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.midnight-gold",
+      "title": "Midnight Gold: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.midnight-gold",
+      "title": "Midnight Gold: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.midnight-gold",
+      "title": "Midnight Gold: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.all-hallows",
+      "title": "All Hallows: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.all-hallows",
+      "title": "All Hallows: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.all-hallows",
+      "title": "All Hallows: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.all-hallows",
+      "title": "All Hallows: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.all-hallows",
+      "title": "All Hallows: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.all-hallows",
+      "title": "All Hallows: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.catppuccin",
+      "title": "Catppuccin: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.catppuccin",
+      "title": "Catppuccin: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.catppuccin",
+      "title": "Catppuccin: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.catppuccin",
+      "title": "Catppuccin: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.catppuccin",
+      "title": "Catppuccin: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.catppuccin",
+      "title": "Catppuccin: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.digital-rain",
+      "title": "Digital Rain: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.digital-rain",
+      "title": "Digital Rain: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.digital-rain",
+      "title": "Digital Rain: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.digital-rain",
+      "title": "Digital Rain: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.digital-rain",
+      "title": "Digital Rain: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.digital-rain",
+      "title": "Digital Rain: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.flexoki-light",
+      "title": "Flexoki Light: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.flexoki-light",
+      "title": "Flexoki Light: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.flexoki-light",
+      "title": "Flexoki Light: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.flexoki-light",
+      "title": "Flexoki Light: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.flexoki-light",
+      "title": "Flexoki Light: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.flexoki-light",
+      "title": "Flexoki Light: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.gruvbox",
+      "title": "Gruvbox: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.gruvbox",
+      "title": "Gruvbox: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.gruvbox",
+      "title": "Gruvbox: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.gruvbox",
+      "title": "Gruvbox: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.gruvbox",
+      "title": "Gruvbox: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.gruvbox",
+      "title": "Gruvbox: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.moon-prism",
+      "title": "Moon Prism: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.moon-prism",
+      "title": "Moon Prism: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.moon-prism",
+      "title": "Moon Prism: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.moon-prism",
+      "title": "Moon Prism: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.moon-prism",
+      "title": "Moon Prism: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.moon-prism",
+      "title": "Moon Prism: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.nord",
+      "title": "Nord: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.nord",
+      "title": "Nord: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.nord",
+      "title": "Nord: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.nord",
+      "title": "Nord: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.nord",
+      "title": "Nord: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.nord",
+      "title": "Nord: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.ocarina",
+      "title": "Ocarina: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.ocarina",
+      "title": "Ocarina: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.ocarina",
+      "title": "Ocarina: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.ocarina",
+      "title": "Ocarina: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.ocarina",
+      "title": "Ocarina: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.ocarina",
+      "title": "Ocarina: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.pumpkin-king",
+      "title": "Pumpkin King: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.pumpkin-king",
+      "title": "Pumpkin King: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.pumpkin-king",
+      "title": "Pumpkin King: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.pumpkin-king",
+      "title": "Pumpkin King: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.pumpkin-king",
+      "title": "Pumpkin King: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.pumpkin-king",
+      "title": "Pumpkin King: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.snowglobe",
+      "title": "Snowglobe: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.snowglobe",
+      "title": "Snowglobe: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.snowglobe",
+      "title": "Snowglobe: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.snowglobe",
+      "title": "Snowglobe: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.snowglobe",
+      "title": "Snowglobe: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.snowglobe",
+      "title": "Snowglobe: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.super-saiyan",
+      "title": "Super Saiyan: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.super-saiyan",
+      "title": "Super Saiyan: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.super-saiyan",
+      "title": "Super Saiyan: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.super-saiyan",
+      "title": "Super Saiyan: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.super-saiyan",
+      "title": "Super Saiyan: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.super-saiyan",
+      "title": "Super Saiyan: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.tokyo-night",
+      "title": "Tokyo Night: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.tokyo-night",
+      "title": "Tokyo Night: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.tokyo-night",
+      "title": "Tokyo Night: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.tokyo-night",
+      "title": "Tokyo Night: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.tokyo-night",
+      "title": "Tokyo Night: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.tokyo-night",
+      "title": "Tokyo Night: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.wisteria",
+      "title": "Wisteria: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.wisteria",
+      "title": "Wisteria: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.wisteria",
+      "title": "Wisteria: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.wisteria",
+      "title": "Wisteria: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.wisteria",
+      "title": "Wisteria: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.wisteria",
+      "title": "Wisteria: Settings with a sheet open",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.yuletide",
+      "title": "Yuletide: Dashboard",
+      "route": "/"
+    },
+    {
+      "id": "entries.yuletide",
+      "title": "Yuletide: Expenses list, filtered",
+      "route": "/expenses"
+    },
+    {
+      "id": "form.yuletide",
+      "title": "Yuletide: Add expense, validation error",
+      "route": "/add-expense"
+    },
+    {
+      "id": "buckets.yuletide",
+      "title": "Yuletide: Buckets: healthy, close, over",
+      "route": "/buckets"
+    },
+    {
+      "id": "summary.yuletide",
+      "title": "Yuletide: Summary: categorical palette",
+      "route": "/summary"
+    },
+    {
+      "id": "sheet.yuletide",
+      "title": "Yuletide: Settings with a sheet open",
+      "route": "/settings"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard.midnight-gold",
+      "to": "entries.midnight-gold",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.midnight-gold",
+      "to": "form.midnight-gold",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.midnight-gold",
+      "to": "buckets.midnight-gold",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.midnight-gold",
+      "to": "summary.midnight-gold",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.midnight-gold",
+      "to": "sheet.midnight-gold",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.midnight-gold",
+      "to": "dashboard.all-hallows",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.all-hallows",
+      "to": "entries.all-hallows",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.all-hallows",
+      "to": "form.all-hallows",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.all-hallows",
+      "to": "buckets.all-hallows",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.all-hallows",
+      "to": "summary.all-hallows",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.all-hallows",
+      "to": "sheet.all-hallows",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.all-hallows",
+      "to": "dashboard.catppuccin",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.catppuccin",
+      "to": "entries.catppuccin",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.catppuccin",
+      "to": "form.catppuccin",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.catppuccin",
+      "to": "buckets.catppuccin",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.catppuccin",
+      "to": "summary.catppuccin",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.catppuccin",
+      "to": "sheet.catppuccin",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.catppuccin",
+      "to": "dashboard.digital-rain",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.digital-rain",
+      "to": "entries.digital-rain",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.digital-rain",
+      "to": "form.digital-rain",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.digital-rain",
+      "to": "buckets.digital-rain",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.digital-rain",
+      "to": "summary.digital-rain",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.digital-rain",
+      "to": "sheet.digital-rain",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.digital-rain",
+      "to": "dashboard.flexoki-light",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.flexoki-light",
+      "to": "entries.flexoki-light",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.flexoki-light",
+      "to": "form.flexoki-light",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.flexoki-light",
+      "to": "buckets.flexoki-light",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.flexoki-light",
+      "to": "summary.flexoki-light",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.flexoki-light",
+      "to": "sheet.flexoki-light",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.flexoki-light",
+      "to": "dashboard.gruvbox",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.gruvbox",
+      "to": "entries.gruvbox",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.gruvbox",
+      "to": "form.gruvbox",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.gruvbox",
+      "to": "buckets.gruvbox",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.gruvbox",
+      "to": "summary.gruvbox",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.gruvbox",
+      "to": "sheet.gruvbox",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.gruvbox",
+      "to": "dashboard.moon-prism",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.moon-prism",
+      "to": "entries.moon-prism",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.moon-prism",
+      "to": "form.moon-prism",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.moon-prism",
+      "to": "buckets.moon-prism",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.moon-prism",
+      "to": "summary.moon-prism",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.moon-prism",
+      "to": "sheet.moon-prism",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.moon-prism",
+      "to": "dashboard.nord",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.nord",
+      "to": "entries.nord",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.nord",
+      "to": "form.nord",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.nord",
+      "to": "buckets.nord",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.nord",
+      "to": "summary.nord",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.nord",
+      "to": "sheet.nord",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.nord",
+      "to": "dashboard.ocarina",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.ocarina",
+      "to": "entries.ocarina",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.ocarina",
+      "to": "form.ocarina",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.ocarina",
+      "to": "buckets.ocarina",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.ocarina",
+      "to": "summary.ocarina",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.ocarina",
+      "to": "sheet.ocarina",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.ocarina",
+      "to": "dashboard.pumpkin-king",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.pumpkin-king",
+      "to": "entries.pumpkin-king",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.pumpkin-king",
+      "to": "form.pumpkin-king",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.pumpkin-king",
+      "to": "buckets.pumpkin-king",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.pumpkin-king",
+      "to": "summary.pumpkin-king",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.pumpkin-king",
+      "to": "sheet.pumpkin-king",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.pumpkin-king",
+      "to": "dashboard.snowglobe",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.snowglobe",
+      "to": "entries.snowglobe",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.snowglobe",
+      "to": "form.snowglobe",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.snowglobe",
+      "to": "buckets.snowglobe",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.snowglobe",
+      "to": "summary.snowglobe",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.snowglobe",
+      "to": "sheet.snowglobe",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.snowglobe",
+      "to": "dashboard.super-saiyan",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.super-saiyan",
+      "to": "entries.super-saiyan",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.super-saiyan",
+      "to": "form.super-saiyan",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.super-saiyan",
+      "to": "buckets.super-saiyan",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.super-saiyan",
+      "to": "summary.super-saiyan",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.super-saiyan",
+      "to": "sheet.super-saiyan",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.super-saiyan",
+      "to": "dashboard.tokyo-night",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.tokyo-night",
+      "to": "entries.tokyo-night",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.tokyo-night",
+      "to": "form.tokyo-night",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.tokyo-night",
+      "to": "buckets.tokyo-night",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.tokyo-night",
+      "to": "summary.tokyo-night",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.tokyo-night",
+      "to": "sheet.tokyo-night",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.tokyo-night",
+      "to": "dashboard.wisteria",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.wisteria",
+      "to": "entries.wisteria",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.wisteria",
+      "to": "form.wisteria",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.wisteria",
+      "to": "buckets.wisteria",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.wisteria",
+      "to": "summary.wisteria",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.wisteria",
+      "to": "sheet.wisteria",
+      "label": "Open Settings and tap Language"
+    },
+    {
+      "from": "sheet.wisteria",
+      "to": "dashboard.yuletide",
+      "label": "Pick the next theme"
+    },
+    {
+      "from": "dashboard.yuletide",
+      "to": "entries.yuletide",
+      "label": "Open Expenses"
+    },
+    {
+      "from": "entries.yuletide",
+      "to": "form.yuletide",
+      "label": "Tap Add expense"
+    },
+    {
+      "from": "form.yuletide",
+      "to": "buckets.yuletide",
+      "label": "Open Buckets"
+    },
+    {
+      "from": "buckets.yuletide",
+      "to": "summary.yuletide",
+      "label": "Open Summary"
+    },
+    {
+      "from": "summary.yuletide",
+      "to": "sheet.yuletide",
+      "label": "Open Settings and tap Language"
+    }
+  ]
+}

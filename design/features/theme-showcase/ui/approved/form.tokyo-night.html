@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" data-theme="tokyo-night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tokyo Night: Add expense, validation error</title>
+  <link rel="stylesheet" href="../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../system/themes.css">
+  <link rel="stylesheet" href="../../../../system/mockup.css">
+  <style>
+
+    .mk-work-area { display: flex; flex-direction: column; }
+    .spacer { flex: 1 1 auto; }
+    .month-header { margin: 1.1rem 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .month-header .mk-title { flex: 1 1 auto; line-height: 1.2; }
+    .stepb { width: 2.5rem; height: 2.5rem; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--text-primary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .stepb--off { opacity: 0.35; }
+    .tone--up { color: var(--income); } .tone--down { color: var(--expense); }
+    .delta__pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.6rem; border-radius: var(--radius-pill); font-size: 0.85rem; font-weight: 700; }
+    .delta__pill.tone--up { background-color: var(--income-soft); }
+    .delta__caption { font-size: 0.82rem; color: var(--text-secondary); }
+    .hero-card { margin: 0 0 0.625rem; padding: 0; overflow: hidden; }
+    .hero { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.15rem 0.7rem; }
+    .hero__label { display: block; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+    .hero__amount { display: block; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: var(--income); }
+    .hero-card__foot { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.3rem 1.15rem; border-top: 1px solid var(--border-subtle); }
+    .trend-link { display: flex; align-items: center; gap: 0.4rem; min-height: 2.5rem; font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+    .chart { margin: 0 0 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+    .chart svg { width: 176px; display: block; }
+    .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem 1.1rem; font-size: 12px; color: var(--text-secondary); }
+    .legend i { display: inline-block; width: 8px; height: 8px; margin-right: 0.4rem; border-radius: var(--radius-round); }
+    .mrow { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 0.625rem; padding: 0.85rem 0.9rem; }
+    .mrow__chip { width: 2.4rem; height: 2.4rem; flex: none; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); }
+    .mrow__name { flex: 1 1 auto; font-weight: 500; }
+    .mrow__amount { font-weight: 600; font-size: 1.05rem; }
+    .mrow--in .mrow__chip { color: var(--income); background-color: var(--income-soft); } .mrow--in .mrow__amount { color: var(--income); }
+    .mrow--out .mrow__chip { color: var(--expense); background-color: var(--expense-soft); } .mrow--out .mrow__amount { color: var(--expense); }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; padding-top: 0.5rem; margin: auto -0.75rem 0; }
+    .toolbar { display: flex; gap: 0.5rem; margin: 0 0 0.75rem; }
+    .toolbar .mk-input { flex: 1; height: 2.75rem; color: var(--text-muted); gap: 0.5rem; padding: 0 0.9rem; }
+    .fbtn { flex: none; display: flex; align-items: center; gap: 0.4rem; height: 2.75rem; padding: 0 0.85rem; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); background-color: var(--bg-raised); border: 1px solid var(--border-strong); border-radius: var(--radius-control); }
+    .fbtn b { min-width: 1.2rem; height: 1.2rem; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; border-radius: var(--radius-pill); color: var(--text-on-accent); background-color: var(--accent); }
+    .total { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 0.75rem; }
+    .total b { font-size: 1.35rem; color: var(--expense); }
+    .day { margin: 0.6rem 0 0.35rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .entry { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 0.45rem; padding: 0.7rem 0.9rem; }
+    .entry__text { flex: 1; min-width: 0; }
+    .entry__desc { display: block; font-weight: 600; }
+    .entry__cat { display: inline-block; margin-top: 0.15rem; padding: 0 0.5rem; font-size: 0.75rem; border-radius: var(--radius-pill); color: var(--text-secondary); background-color: var(--highlight); border: 1px solid var(--border-subtle); }
+    .entry__amt { font-weight: 600; color: var(--expense); white-space: nowrap; }
+    .tag { margin-left: 0.35rem; padding: 0 0.4rem; font-size: 0.68rem; font-weight: 700; border-radius: var(--radius-pill); color: var(--accent); background-color: var(--accent-soft); }
+    .bucket { margin: 0 0 0.625rem; padding: 0.85rem 0.9rem; }
+    .bucket__top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; }
+    .bucket__name { font-weight: 600; } .bucket__pct { font-weight: 700; font-size: 0.9rem; }
+    .pct--ok { color: var(--chart-income); } .pct--warn { color: var(--chart-warning); } .pct--bad { color: var(--chart-expense); }
+    .track { height: 8px; border-radius: var(--radius-pill); background-color: var(--track); overflow: hidden; }
+    .track i { display: block; height: 100%; border-radius: var(--radius-pill); }
+    .fill--ok { background-color: var(--chart-income); } .fill--warn { background-color: var(--chart-warning); } .fill--bad { background-color: var(--chart-expense); }
+    .bucket__figs { display: flex; justify-content: space-between; margin-top: 0.45rem; font-size: 0.82rem; color: var(--text-secondary); }
+    .callout { display: flex; gap: 0.6rem; margin: 0 0 0.75rem; padding: 0.75rem 0.85rem; font-size: 0.85rem; line-height: 1.45; color: var(--text-secondary); background-color: color-mix(in srgb, var(--warning) 8%, transparent); border: 1px solid color-mix(in srgb, var(--warning) 40%, transparent); border-radius: var(--radius-control); }
+    .callout svg { flex: none; width: 18px; height: 18px; margin-top: 0.1rem; }
+    .callout b { color: var(--text-primary); }
+    .err { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--text-validation); }
+    .mk-input--error { border-color: var(--danger); }
+    .catlist { display: flex; flex-direction: column; gap: 0.4rem; }
+    .cat { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.8rem; }
+    .cat i { width: 0.7rem; height: 0.7rem; flex: none; border-radius: var(--radius-round); }
+    .cat span { flex: 1; } .cat b { font-weight: 600; }
+    .cat em { font-style: normal; font-size: 0.8rem; color: var(--text-secondary); min-width: 2.6rem; text-align: right; }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; background-color: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); }
+    .sheet__grip { width: 2.6rem; height: 0.28rem; margin: 0.25rem auto 0.6rem; background-color: var(--border-strong); border-radius: var(--radius-control); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    .sheet__close { width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .opt { display: flex; align-items: center; justify-content: space-between; margin: 0 0 0.4rem; padding: 0.65rem 0.85rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .opt--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .opt b { display: block; font-weight: 600; font-size: 0.95rem; } .opt small { color: var(--text-secondary); font-size: 0.78rem; }
+    .opt svg { width: 1.1rem; height: 1.1rem; color: var(--accent); }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3.4rem; margin: 0 0 0.6rem; padding: 0.65rem 0.9rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .row small { display: block; color: var(--text-secondary); font-size: 0.78rem; }
+    .row__v { color: var(--text-secondary); white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; }
+
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <div class="mk-tile">Add new expense</div>
+      <div class="mk-form">
+        <label class="mk-label">Amount</label><span class="mk-input mk-input--focus">48.90</span>
+        <label class="mk-label mk-field-gap">Description</label><span class="mk-input mk-input--error"></span>
+        <p class="err">Enter a description.</p>
+        <label class="mk-label mk-field-gap">Category</label><span class="mk-select">Groceries<svg class="mk-select__chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" style="fill:none;stroke:var(--text-secondary)" stroke-width="1.5"/></svg></span>
+        <label class="mk-label mk-field-gap">Date</label><span class="mk-input">10/31/2026</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="mk-actions"><span class="mk-btn mk-btn--primary">Submit</span><span class="mk-btn mk-btn--secondary mk-space-top">Cancel</span><span class="mk-btn mk-btn--danger mk-space-top">Delete</span></div>
+    </div>
+  </main>
+
+</body>
+</html>
