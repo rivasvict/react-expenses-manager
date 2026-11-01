@@ -1,6 +1,6 @@
 ---
 name: create-theme
-description: Create a new app theme (colors, headline Google Font, background picture) the way the existing 14 were made. Use whenever asked to add, design or change a theme in src/themes/catalog/. Covers the catalog file, contrast rules, the mandatory font rules (Google Fonts only, self-hosted and offline, performance kept), the SVG motif, translations, tests, design review and the release steps.
+description: Create a new app theme (colors, headline Google Font, background picture) the way the existing ones were made. Use whenever asked to add, design or change a theme in src/themes/catalog/. Covers the catalog file, contrast rules, the mandatory font rules (Google Fonts only, self-hosted and offline, performance kept), the SVG motif, translations, tests, design review and the release steps.
 ---
 
 # Create a theme
@@ -99,7 +99,7 @@ approved spec. Look at a finished theme (e.g. `src/themes/catalog/all-hallows.js
    Never hand-edit generated files.
 8. **Update the hard-coded theme counts** in tests (`src/themes/themePreference.test.ts`
    `toHaveLength(N)`, `src/integrationTests/themePicker.test.tsx` two `toHaveLength(N)`),
-   and `CLAUDE.md` ("Fifteen themes") plus the docs that name the number.
+   and any docs that name the number (CLAUDE.md no longer does).
 9. **Translations:** theme names are proper names (not translated); `description` and
    `inspiration` must exist in en/es/fr. No new UI strings are needed for a theme.
 10. **Design record (own PR, `design/` only):** per the project convention, a theme is

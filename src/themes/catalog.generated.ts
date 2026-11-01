@@ -4,9 +4,11 @@ import tokens from "../styles/tokens.json";
 import midnightGold from "./catalog/midnight-gold.json";
 import allHallows from "./catalog/all-hallows.json";
 import catppuccin from "./catalog/catppuccin.json";
+import destiny from "./catalog/destiny.json";
 import digitalRain from "./catalog/digital-rain.json";
 import flexokiLight from "./catalog/flexoki-light.json";
 import gruvbox from "./catalog/gruvbox.json";
+import harryPotter from "./catalog/harry-potter.json";
 import moonPrism from "./catalog/moon-prism.json";
 import nord from "./catalog/nord.json";
 import ocarina from "./catalog/ocarina.json";
@@ -30,9 +32,11 @@ export const THEME_CATALOG = [
   },
   allHallows,
   catppuccin,
+  destiny,
   digitalRain,
   flexokiLight,
   gruvbox,
+  harryPotter,
   moonPrism,
   nord,
   ocarina,

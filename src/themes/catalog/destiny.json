@@ -1,0 +1,67 @@
+{
+  "id": "destiny",
+  "name": "Guardian",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Destiny 2",
+    "es": "Destiny 2",
+    "fr": "Destiny 2"
+  },
+  "description": {
+    "en": "The Last City at dusk: midnight navy and charcoal, Traveler gold and a warm amber glow.",
+    "es": "La Última Ciudad al anochecer: azul medianoche y carbón, oro del Viajero y un cálido brillo ámbar.",
+    "fr": "La Dernière Cité au crépuscule : bleu nuit et charbon, or du Voyageur et lueur ambrée."
+  },
+  "typography": {
+    "display": {
+      "family": "Archivo",
+      "file": "archivo"
+    },
+    "tracking": "0.02em"
+  },
+  "art": "destiny",
+  "color": {
+    "bg-page": "#090d16",
+    "bg-surface": "#11161f",
+    "bg-raised": "#1a212d",
+    "bg-raised-hover": "#222a38",
+    "border-subtle": "rgba(214, 222, 238, 0.08)",
+    "border-strong": "rgba(214, 222, 238, 0.17)",
+    "track": "rgba(214, 222, 238, 0.1)",
+    "highlight": "rgba(214, 222, 238, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.55)",
+    "accent": "#d3b13f",
+    "accent-hover": "#e3c45a",
+    "accent-soft": "rgba(211, 177, 63, 0.14)",
+    "income": "#6fd9a0",
+    "income-soft": "rgba(111, 217, 160, 0.12)",
+    "expense": "#ff7d5c",
+    "expense-soft": "rgba(255, 125, 92, 0.12)",
+    "danger": "#ff5c6c",
+    "danger-soft": "rgba(255, 92, 108, 0.14)",
+    "warning": "#e8923a",
+    "text-primary": "#f4f6fb",
+    "text-secondary": "#bcc4d4",
+    "text-muted": "#9aa4b8",
+    "text-on-accent": "#1a1404",
+    "text-validation": "#ffa58f",
+    "brand-mark-shade": "#8a6d12"
+  },
+  "chart": {
+    "chart-income": "#52cf8a",
+    "chart-expense": "#ff6a45",
+    "chart-warning": "#e8923a",
+    "chart-categorical-1": "#d3b13f",
+    "chart-categorical-2": "#6fb3e8",
+    "chart-categorical-3": "#e8923a",
+    "chart-categorical-4": "#ff7d5c",
+    "chart-categorical-5": "#6fd9a0",
+    "chart-categorical-6": "#b894ff",
+    "chart-categorical-7": "#8fd3e8",
+    "chart-categorical-8": "#d5dbe8"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.35)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.5)"
+  }
+}

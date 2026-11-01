@@ -20,7 +20,7 @@ describe("ThemeSheet", () => {
     expect(
       screen.getByText("Tap a theme to use it. The app changes right away."),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole("radio")).toHaveLength(15);
+    expect(screen.getAllByRole("radio")).toHaveLength(17);
     expect(screen.getByRole("radio", { name: "Midnight Gold" })).toBeChecked();
   });
 

@@ -30,7 +30,7 @@ const openSettings = async () => {
 };
 
 describe("the Theme row and sheet in Settings", () => {
-  it("shows the current theme in the row and lists all fifteen in the sheet", async () => {
+  it("shows the current theme in the row and lists all seventeen in the sheet", async () => {
     const { user } = await openSettings();
 
     const row = screen.getByRole("button", { name: "Theme: Midnight Gold" });
@@ -42,7 +42,7 @@ describe("the Theme row and sheet in Settings", () => {
     expect(
       within(dialog).getByText("Tap a theme to use it. The app changes right away.")
     ).toBeInTheDocument();
-    expect(within(dialog).getAllByRole("radio")).toHaveLength(15);
+    expect(within(dialog).getAllByRole("radio")).toHaveLength(17);
     expect(within(dialog).getByRole("radio", { name: "Midnight Gold" })).toBeChecked();
     expect(within(dialog).getByRole("radio", { name: "Midnight Gold" })).toHaveAccessibleDescription(
       "The original look"
@@ -150,7 +150,7 @@ describe("the theme strip in setup", () => {
     await findStepHeading("Welcome! Let’s set things up");
 
     const strip = screen.getByRole("radiogroup", { name: "Theme" });
-    expect(within(strip).getAllByRole("radio")).toHaveLength(15);
+    expect(within(strip).getAllByRole("radio")).toHaveLength(17);
     expect(within(strip).getByRole("radio", { name: "Midnight Gold" })).toBeChecked();
     expect(screen.getByText(/the whole app changes as you pick/)).toBeInTheDocument();
 
