@@ -108,6 +108,7 @@
     color: $text-primary;
     font-size: 1.05rem;
     font-weight: 700;
+    @include display-font;
 
     &:focus-visible {
       @include focus-ring();

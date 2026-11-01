@@ -1,0 +1,67 @@
+<!doctype html>
+<html data-theme="midnight-gold" data-type="c" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theme sheet with Background pictures (Midnight Gold)</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/themes.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <link rel="stylesheet" href="../../shared/personality.css">
+  <link rel="stylesheet" href="../../shared/motifs.generated.css">
+  <style>
+    .stack { display:flex; flex-direction:column; gap:0.75rem; }
+    .card-title { margin:0 0 0.5rem; font-size:0.78rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-secondary); }
+    .fig { font-size:2.1rem; font-weight:700; line-height:1.1; letter-spacing:-0.01em; margin:0.1rem 0 0.6rem; }
+    .row2 { display:flex; gap:1.25rem; flex-wrap:wrap; }
+    .link { color:var(--accent); font-weight:600; font-size:0.85rem; }
+    .between { display:flex; justify-content:space-between; align-items:baseline; gap:0.5rem; }
+    .track { height:0.5rem; background:var(--track); border-radius:var(--radius-pill); overflow:hidden; margin:0.35rem 0 0.2rem; }
+    .track > i { display:block; height:100%; background:var(--accent); border-radius:var(--radius-pill); }
+    .track > i.warn { background:var(--warning); }
+    .entry { display:flex; justify-content:space-between; gap:0.75rem; padding:0.6rem 0; border-top:1px solid var(--border-subtle); }
+    .entry:first-of-type { border-top:0; }
+    .entry small { display:block; color:var(--text-secondary); font-size:0.78rem; }
+    .scrim { position:fixed; inset:0; background-color:var(--scrim); z-index:5; }
+    .sheet { position:fixed; z-index:6; left:0; right:0; bottom:0; max-width:40rem; margin:0 auto; padding:0.5rem 1rem 1.5rem; background-color:var(--bg-surface); border:1px solid var(--border-strong); border-bottom:0; border-radius:var(--radius-card) var(--radius-card) 0 0; }
+    .sheet__grip { width:2.6rem; height:0.28rem; margin:0.25rem auto 0.6rem; background-color:var(--border-strong); border-radius:var(--radius-control); }
+    .sheet__title { margin:0 0 0.2rem; font-size:1.05rem; font-weight:700; }
+    .row { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; min-height:3.4rem; padding:0.65rem 0.9rem; background-color:var(--bg-raised); border:1px solid var(--border-subtle); border-radius:var(--radius-card); margin:0.5rem 0; }
+    .row__label { display:block; font-weight:600; font-size:0.95rem; }
+    .row__hint { display:block; color:var(--text-secondary); font-size:0.78rem; }
+    .row--disabled { opacity:0.6; }
+    .switch { flex:0 0 auto; width:2.7rem; height:1.55rem; padding:0.2rem; display:flex; border-radius:var(--radius-pill); background-color:var(--highlight); border:1px solid var(--border-strong); }
+    .switch::after { content:""; width:1.05rem; height:1.05rem; border-radius:var(--radius-round); background-color:var(--text-secondary); }
+    .switch--on { background-color:var(--accent); border-color:var(--accent); justify-content:flex-end; }
+    .switch--on::after { background-color:var(--text-on-accent); }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; max-height:15.5rem; overflow:hidden; }
+    .tcard { position:relative; overflow:hidden; display:flex; flex-direction:column; gap:0.3rem; padding:0.55rem 0.6rem 0.6rem; background-color:var(--bg-page); color:var(--text-primary); border:1px solid var(--border-strong); border-radius:var(--radius-card); min-height:5.6rem; }
+    .tcard--sel { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
+    .tcard > * { position:relative; z-index:1; }
+    .tcard .art { z-index:0; }
+    .tname { font-size:0.98rem; font-weight:700; line-height:1.2; }
+    .tfrom { font-size:0.72rem; line-height:1.3; color:var(--text-secondary); }
+    .tdots { display:flex; gap:0.2rem; margin-top:auto; }
+    .tdots i { width:0.7rem; height:0.7rem; border-radius:var(--radius-round); }
+    .wall { display:flex; flex-direction:column; gap:0.75rem; margin-top:0.5rem; }
+    .wcard { position:relative; overflow:hidden; min-height:9.5rem; padding:0.9rem 1rem 1rem; background-color:var(--bg-page); color:var(--text-primary); border:1px solid var(--border-strong); border-radius:var(--radius-card); }
+    .wcard > :not(.art) { position:relative; z-index:1; }
+    .wcard h2 { margin:0; font-size:1.25rem; line-height:1.2; }
+    .wcard .tfrom { margin:0.1rem 0 0.5rem; }
+    .wcard .sample { margin:0; font-size:0.9rem; color:var(--text-secondary); max-width:20rem; }
+    .wcard .wfig { margin:0.4rem 0 0; font-size:1.5rem; font-weight:700; }
+    .wcard .faces { margin:0.45rem 0 0; font-size:0.7rem; color:var(--text-muted); }
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header"><svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg><span class="mk-header__name">Expenses Tracker</span></header>
+  <main class="mk-shell"><div class="mk-work-area"><h1 class="mk-eyebrow">Settings</h1>
+    <section class="mk-card" style="margin:0.625rem -0.75rem 0;padding:1rem 1.1rem"><div class="row" style="margin:0"><span><span class="row__label">Theme</span><span class="row__hint">Midnight Gold</span></span></div></section></div></main>
+  <div class="scrim"></div>
+  <div class="sheet"><div class="sheet__grip"></div><h2 class="sheet__title">Theme</h2>
+    <p class="mk-hint" style="margin:0 0 0.2rem">Tap a theme to use it. The app changes right away.</p>
+    <div class="row row--disabled"><span><span class="row__label">Background pictures</span><span class="row__hint">Midnight Gold stays plain. Pick another theme to use pictures.</span></span><span class="switch" role="switch" aria-checked="false" aria-disabled="true"></span></div>
+    <div class="grid2"><div class="tcard tcard--sel" data-theme="midnight-gold"><span class="tname disp">Midnight Gold</span><span class="tfrom">Today's look (default)</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div><div class="tcard" data-theme="moon-prism"><div class="art" aria-hidden="true"></div><span class="tname disp">Moon Prism</span><span class="tfrom">Sailor Moon</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div><div class="tcard" data-theme="super-saiyan"><div class="art" aria-hidden="true"></div><span class="tname disp">Super Saiyan</span><span class="tfrom">Dragon Ball Z</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div><div class="tcard" data-theme="ocarina"><div class="art" aria-hidden="true"></div><span class="tname disp">Ocarina</span><span class="tfrom">The Legend of Zelda: Ocarina of Time</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div><div class="tcard" data-theme="wisteria"><div class="art" aria-hidden="true"></div><span class="tname disp">Wisteria</span><span class="tfrom">Demon Slayer</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div><div class="tcard" data-theme="yuletide"><div class="art" aria-hidden="true"></div><span class="tname disp">Yuletide</span><span class="tfrom">Christmas</span><span class="tdots"><i style="background-color:var(--accent)"></i><i style="background-color:var(--income)"></i><i style="background-color:var(--expense)"></i></span></div></div>
+  </div>
+</body>
+</html>

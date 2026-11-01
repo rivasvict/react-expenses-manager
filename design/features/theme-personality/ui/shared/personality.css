@@ -1,0 +1,79 @@
+/*
+  Theme personality (design/features/theme-personality): shared by every option.
+  Fonts are the latin subsets of Google Fonts families (all SIL OFL), saved next
+  to this file so mockups stay self-contained. In the app they would load from
+  Google Fonts (see decision.md). No colors here: the art is painted with
+  var(--accent) through a CSS mask, so it follows whichever theme is active.
+*/
+@font-face { font-family: "Comfortaa"; src: url("fonts/comfortaa.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Quicksand"; src: url("fonts/quicksand.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Russo One"; src: url("fonts/russo-one.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Rubik"; src: url("fonts/rubik.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Cinzel"; src: url("fonts/cinzel.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Alegreya Sans"; src: url("fonts/alegreya-sans.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Shippori Mincho"; src: url("fonts/shippori-mincho.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Zen Kaku Gothic New"; src: url("fonts/zen-kaku.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Mountains of Christmas"; src: url("fonts/mountains-of-christmas.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Creepster"; src: url("fonts/creepster.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Crimson Pro"; src: url("fonts/crimson-pro.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Almendra"; src: url("fonts/almendra.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "EB Garamond"; src: url("fonts/eb-garamond.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("fonts/fraunces.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Nunito Sans"; src: url("fonts/nunito-sans.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Share Tech Mono"; src: url("fonts/share-tech-mono.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Zen Dots"; src: url("fonts/zen-dots.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("fonts/inter.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Fredoka"; src: url("fonts/fredoka.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Righteous"; src: url("fonts/righteous.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Roboto Slab"; src: url("fonts/roboto-slab.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Jost"; src: url("fonts/jost.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Newsreader"; src: url("fonts/newsreader.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("fonts/public-sans.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
+/* Per-theme type pair. Midnight Gold keeps today's system stack. */
+:root { --font-display: var(--font-sans); --font-body: var(--font-sans); --display-tracking: 0; }
+[data-theme="midnight-gold"] { --font-display: var(--font-sans); --font-body: var(--font-sans); --display-tracking: 0; }
+[data-theme="moon-prism"] { --font-display: "Comfortaa"; --font-body: "Quicksand"; --display-tracking: 0; }
+[data-theme="super-saiyan"] { --font-display: "Russo One"; --font-body: "Rubik"; --display-tracking: 0.02em; }
+[data-theme="ocarina"] { --font-display: "Cinzel"; --font-body: "Alegreya Sans"; --display-tracking: 0.06em; }
+[data-theme="wisteria"] { --font-display: "Shippori Mincho"; --font-body: "Zen Kaku Gothic New"; --display-tracking: 0; }
+[data-theme="yuletide"] { --font-display: "Mountains of Christmas"; --font-body: "Nunito"; --display-tracking: 0.01em; }
+[data-theme="all-hallows"] { --font-display: "Creepster"; --font-body: "Crimson Pro"; --display-tracking: 0.04em; }
+[data-theme="pumpkin-king"] { --font-display: "Almendra"; --font-body: "EB Garamond"; --display-tracking: 0.02em; }
+[data-theme="snowglobe"] { --font-display: "Fraunces"; --font-body: "Nunito Sans"; --display-tracking: 0; }
+[data-theme="digital-rain"] { --font-display: "Share Tech Mono"; --font-body: "IBM Plex Mono"; --display-tracking: 0; }
+[data-theme="tokyo-night"] { --font-display: "Zen Dots"; --font-body: "Inter"; --display-tracking: 0.04em; }
+[data-theme="catppuccin"] { --font-display: "Fredoka"; --font-body: "Nunito"; --display-tracking: 0; }
+[data-theme="gruvbox"] { --font-display: "Righteous"; --font-body: "Roboto Slab"; --display-tracking: 0.02em; }
+[data-theme="nord"] { --font-display: "Jost"; --font-body: "Jost"; --display-tracking: 0; }
+[data-theme="flexoki-light"] { --font-display: "Newsreader"; --font-body: "Public Sans"; --display-tracking: 0; }
+
+/* ---- Type models (html[data-type]) ---- */
+/* a: headline voice only */
+html[data-type="a"] :is(.mk-eyebrow, .mk-title, .mk-header__name, .sheet__title, .disp),
+html[data-type="b"] :is(.mk-eyebrow, .mk-title, .mk-header__name, .sheet__title, .disp),
+html[data-type="c"] :is(.mk-eyebrow, .mk-title, .mk-header__name, .sheet__title, .disp, .fig) {
+  font-family: var(--font-display), var(--font-sans); letter-spacing: var(--display-tracking);
+}
+/* b: display + body pairing everywhere under a theme scope */
+html[data-type="b"] [data-theme], html[data-type="b"] body.mk,
+html[data-type="c"] [data-theme] { font-family: var(--font-body), var(--font-sans); }
+html[data-type="b"] :is(.mk-btn, .mk-chip) { font-family: var(--font-body), var(--font-sans); }
+
+/* ---- Art models (html[data-art]); the layer is <div class="art"> ---- */
+.art { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.art::before { content: ""; position: absolute; background-color: var(--accent); }
+/* The app's work area is an opaque surface card, so the art lives INSIDE it (first child) and the cards sit on top. */
+.mk-work-area { position: relative; overflow: hidden; }
+.mk-work-area > :not(.art) { position: relative; z-index: 1; }
+html:not([data-art]) .art, html[data-art="off"] .art { display: none; }
+/* Light themes need more ink to read the same. */
+[data-theme="snowglobe"], [data-theme="flexoki-light"] { --art-opacity: 0.2; }
+/* a: all-over tile, 7% accent */
+html[data-art="tile"] .art::before { inset: 0; opacity: var(--art-opacity, 0.11); -webkit-mask: var(--art) 0 0 / 112px 112px repeat; mask: var(--art) 0 0 / 112px 112px repeat; }
+/* b: one large crest tucked into the top-right corner, 11% accent */
+html[data-art="crest"] .art::before { top: -3.5rem; right: -4.5rem; width: 21rem; height: 21rem; opacity: var(--art-opacity, 0.15); transform: rotate(-10deg); -webkit-mask: var(--art) center / contain no-repeat; mask: var(--art) center / contain no-repeat; }
+/* c: a frieze along the bottom edge, 12% accent */
+html[data-art="frieze"] .art::before { left: 0; right: 0; bottom: 0; height: 7.5rem; opacity: var(--art-opacity, 0.16); -webkit-mask: var(--art) 0 100% / 100px 100px repeat-x; mask: var(--art) 0 100% / 100px 100px repeat-x; }

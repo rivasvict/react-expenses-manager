@@ -12,6 +12,14 @@
     "es": "Azul marino de luna, rosa prisma y una media luna dorada.",
     "fr": "Bleu nuit lunaire, rose prisme et croissant doré."
   },
+  "typography": {
+    "display": {
+      "family": "Comfortaa",
+      "file": "comfortaa"
+    },
+    "tracking": "0"
+  },
+  "art": "moon-prism",
   "color": {
     "bg-page": "#100f26",
     "bg-surface": "#17163a",

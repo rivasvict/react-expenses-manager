@@ -14,6 +14,12 @@ import {
   THEME_CATALOG,
   THEME_STORAGE_KEY,
 } from "../themePreference";
+import {
+  applyThemeArt,
+  getStoredThemeArt,
+  storeThemeArt,
+  THEME_ART_STORAGE_KEY,
+} from "../artPreference";
 import type { Theme } from "../theme.types";
 
 export type ThemeContextValue = {
@@ -23,6 +29,9 @@ export type ThemeContextValue = {
   themes: Theme[];
   /** Applies a theme to the whole app and remembers it on this device. */
   setTheme: (id: string) => void;
+  /** Whether themes draw their background pictures (on by default). */
+  artEnabled: boolean;
+  setArtEnabled: (enabled: boolean) => void;
 };
 
 // Components rendered without a provider (isolated unit tests) get the
@@ -31,6 +40,8 @@ const ThemeContext = createContext<ThemeContextValue>({
   theme: THEME_CATALOG[0],
   themes: THEME_CATALOG,
   setTheme: () => undefined,
+  artEnabled: true,
+  setArtEnabled: () => undefined,
 });
 
 type ThemeProviderProps = {
@@ -44,6 +55,7 @@ type ThemeProviderProps = {
  */
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [themeId, setThemeId] = useState<string>(getStoredThemeId);
+  const [artEnabled, setArtEnabledState] = useState<boolean>(getStoredThemeArt);
   const theme = getTheme(themeId);
 
   const setTheme = useCallback((id: string) => {
@@ -51,6 +63,12 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     storeThemeId(next.id);
     applyTheme(next);
     setThemeId(next.id);
+  }, []);
+
+  const setArtEnabled = useCallback((enabled: boolean) => {
+    storeThemeArt(enabled);
+    applyThemeArt(enabled);
+    setArtEnabledState(enabled);
   }, []);
 
   useEffect(() => {
@@ -61,14 +79,25 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   useEffect(() => {
     const handleStorage = (event: StorageEvent) => {
       if (event.key === THEME_STORAGE_KEY) setThemeId(getStoredThemeId());
+      if (event.key === THEME_ART_STORAGE_KEY) {
+        const enabled = getStoredThemeArt();
+        applyThemeArt(enabled);
+        setArtEnabledState(enabled);
+      }
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   const value = useMemo(
-    () => ({ theme, themes: THEME_CATALOG, setTheme }),
-    [theme, setTheme]
+    () => ({
+      theme,
+      themes: THEME_CATALOG,
+      setTheme,
+      artEnabled,
+      setArtEnabled,
+    }),
+    [theme, setTheme, artEnabled, setArtEnabled]
   );
 
   return (

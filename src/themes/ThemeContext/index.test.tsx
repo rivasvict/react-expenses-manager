@@ -5,10 +5,11 @@ import { ThemeProvider, useTheme } from "./index";
 import { THEME_STORAGE_KEY } from "../themePreference";
 
 const Probe = () => {
-  const { theme, themes, setTheme } = useTheme();
+  const { theme, themes, setTheme, artEnabled, setArtEnabled } = useTheme();
   return (
     <>
-      <p>{`theme:${theme.id} count:${themes.length}`}</p>
+      <p>{`theme:${theme.id} count:${themes.length} art:${artEnabled}`}</p>
+      <button onClick={() => setArtEnabled(!artEnabled)}>toggle art</button>
       <button onClick={() => setTheme("nord")}>pick nord</button>
     </>
   );
@@ -26,7 +27,7 @@ describe("ThemeProvider", () => {
         <Probe />
       </ThemeProvider>
     );
-    expect(screen.getByText("theme:midnight-gold count:15")).toBeInTheDocument();
+    expect(screen.getByText("theme:midnight-gold count:15 art:true")).toBeInTheDocument();
     expect(document.documentElement.dataset.theme).toBe("midnight-gold");
   });
 
@@ -71,5 +72,17 @@ describe("ThemeProvider", () => {
   it("gives the default theme to a component without a provider", () => {
     render(<Probe />);
     expect(screen.getByText(/theme:midnight-gold/)).toBeInTheDocument();
+  });
+
+  it("turns the background pictures off and remembers it", async () => {
+    render(
+      <ThemeProvider>
+        <Probe />
+      </ThemeProvider>
+    );
+    await userEvent.click(screen.getByText("toggle art"));
+    expect(screen.getByText(/art:false/)).toBeInTheDocument();
+    expect(document.documentElement.dataset.themeArt).toBe("off");
+    expect(localStorage.getItem("settings.themeArt")).toBe("off");
   });
 });

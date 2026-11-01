@@ -28,7 +28,7 @@ const ThemePreview = ({ theme, currency }: ThemePreviewProps) => {
     >
       <span className="theme-preview__top">
         <span className="theme-preview__logo" />
-        <span className="theme-preview__brand" />
+        <span className="theme-preview__brand">{t("header.appName")}</span>
       </span>
       <span className="theme-preview__surface">
         <span className="theme-preview__hero">

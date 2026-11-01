@@ -36,12 +36,12 @@ same PR that adds it.
 | Setting row (label, hint, current value and chevron; opens a sheet) | Settings | `src/components/Settings/SettingRow/` |
 | Currency tile grid (symbol + code radio tiles; 3 columns in the Settings sheet, 4 in the onboarding wizard) | Settings, Onboarding | `src/components/Settings/CurrencyTileGrid/`, placed in a sheet by `src/components/Settings/CurrencySheet/` |
 | History notice (the card that replaces the headline and chart when a range cannot be drawn, with an optional gold or secondary action and icon) | Savings trend | `src/components/common/SavingsTrend/HistoryNotice/` |
-| Theme preview (a miniature of the app drawn in one theme, scoped by `data-theme`; fixed sample figures in the display currency) | Settings, Setup | `src/components/common/ThemePreview/` |
+| Theme preview (a miniature of the app drawn in one theme, scoped by `data-theme`, with the theme's picture and the app name in its headline typeface; fixed sample figures in the display currency) | Settings, Setup | `src/components/common/ThemePreview/` |
 | Theme card (a theme preview, its name, the Default badge or the "Inspired by" line, a tick when selected; a `radio`) | Settings, Setup | `src/components/common/ThemeCard/` |
 | Theme radio group (the cards as one labelled `radiogroup` with a roving tab stop and arrow-key selection; laid out as a grid in the Theme sheet and a sideways strip in setup) | Settings, Setup | `src/components/common/ThemeRadioGroup/` |
 | Theme dots (four overlapping dots: a theme's page, accent, income and expense colors) | Settings | `src/components/common/ThemeDots/` |
 | Theme sheet (a two-column grid of theme cards on the bottom sheet; stays open after a pick, only the grid scrolls) | Settings | `src/components/Settings/ThemeSheet/` |
-| Switch row (label, hint and an on/off switch in the same raised row as a setting row; the whole row is the switch) | Settings | `src/components/Settings/SwitchRow/` |
+| Switch row (label, hint and an on/off switch in the same raised row as a setting row; the whole row is the switch; the Theme sheet's slim Background pictures row is this with a `className`) | Settings, Theme sheet | `src/components/Settings/SwitchRow/` |
 | Hidden figure (a blurred, fixed placeholder with a spoken label, in place of a money figure while Privacy mode hides it) | The dashboard, assembled | `src/components/common/HiddenFigure/`; the placeholders are in `src/privacy/hiddenFigures.ts` |
 | Privacy eye (gold eye chip in the top-right corner of the Savings tile that shows or hides the dashboard's figures; absent while Privacy mode is off) | The dashboard, assembled | `src/components/common/PrivacyEye/`; state from `src/privacy/` |
 | Show figures button (full-width button in place of the savings doughnut while Privacy mode hides it; same action as the eye) | The dashboard, assembled | `src/components/common/ShowFiguresButton/` |

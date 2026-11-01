@@ -12,6 +12,14 @@
     "es": "Una calma ártica y azulada con acentos de escarcha.",
     "fr": "Un calme arctique et bleuté aux accents de givre."
   },
+  "typography": {
+    "display": {
+      "family": "Jost",
+      "file": "jost"
+    },
+    "tracking": "0"
+  },
+  "art": "nord",
   "color": {
     "bg-page": "#272c36",
     "bg-surface": "#2e3440",

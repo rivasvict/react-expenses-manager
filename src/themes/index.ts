@@ -10,4 +10,10 @@ export {
   THEME_CATALOG,
   THEME_STORAGE_KEY,
 } from "./themePreference";
+export {
+  applyThemeArt,
+  getStoredThemeArt,
+  storeThemeArt,
+  THEME_ART_STORAGE_KEY,
+} from "./artPreference";
 export type { Theme } from "./theme.types";

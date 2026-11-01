@@ -5,6 +5,7 @@ import { readThemeCatalog } from "../themes/themeCatalog";
 import {
   buildOutputs,
   toAppThemesCss,
+  toFontsCss,
   toCatalogTs,
   toCss,
   toScss,
@@ -112,6 +113,48 @@ describe("toAppThemesCss", () => {
     expect(css).toContain('\n[data-theme="day"] {\n  color-scheme: light;\n');
     expect(css).toContain("--accent: #176a94;");
     expect(css.match(/:root/g)).toHaveLength(1);
+  });
+});
+
+describe("personality in the app themes CSS", () => {
+  const withArt = {
+    ...dayTheme,
+    typography: { display: { family: "Cinzel", file: "cinzel" }, tracking: "0.06em" },
+    art: "day",
+    artSvg: '<svg viewBox="0 0 96 96"></svg>',
+  };
+  const css = toAppThemesCss([nightTheme, withArt], "system-ui");
+
+  it("gives the default theme the system font and no picture", () => {
+    expect(css).toContain("--font-display: system-ui;");
+    expect(css).toContain("--art: none;\n  --art-opacity: 0;");
+  });
+
+  it("gives a theme its typeface, tracking and an inlined picture", () => {
+    expect(css).toContain('--font-display: "Cinzel", system-ui;');
+    expect(css).toContain("--display-tracking: 0.06em;");
+    expect(css).toContain('--art: url("data:image/svg+xml,%3Csvg');
+  });
+
+  it("uses more ink on a light theme than a dark one", () => {
+    const dark = toAppThemesCss([nightTheme, { ...withArt, scheme: "dark" }]);
+    expect(css).toContain("--art-opacity: 0.2;");
+    expect(dark).toContain("--art-opacity: 0.11;");
+  });
+});
+
+describe("toFontsCss", () => {
+  it("declares each distinct display typeface once, from src/themes/fonts", () => {
+    const themes = [
+      { typography: { display: { family: "Cinzel", file: "cinzel" } } },
+      { typography: { display: { family: "Cinzel", file: "cinzel" } } },
+      { typography: { display: { family: "Jost", file: "jost" } } },
+      {},
+    ];
+    const css = toFontsCss(themes);
+    expect(css.match(/@font-face/g)).toHaveLength(2);
+    expect(css).toContain('url("../themes/fonts/jost.woff2")');
+    expect(css).toContain("font-display: swap;");
   });
 });
 

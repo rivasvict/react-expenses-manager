@@ -52,6 +52,47 @@ $transition-slide: 220ms ease;
 // ---------------------------------------------------------------------------
 // Mixins
 // ---------------------------------------------------------------------------
+// The active theme's headline typeface (design/features/theme-personality):
+// used by headings, page titles and the brand name only. Body text and money
+// figures keep the system font. Themes without one (Midnight Gold) answer with
+// the system stack, so this is a no-op there.
+// `$font-display` is the themed headline stack (set per theme in
+// src/styles/themes.generated.css).
+$font-display: var(--font-display);
+
+@mixin display-font {
+  font-family: $font-display;
+  letter-spacing: var(--display-tracking);
+}
+
+// The active theme's background picture, drawn on the element's own surface
+// (design/features/theme-personality). The picture is a CSS mask over the
+// theme's accent, so it recolors with the theme; `--art-opacity` is 0 for a
+// theme without art. The layer sits behind the content (the element becomes
+// its own stacking context), and `data-theme-art="off"` on <html> hides it.
+// `$strength` scales the ink for small surfaces such as the theme previews.
+@mixin theme-art($tile-size, $strength: 1) {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background-color: $accent;
+    opacity: #{"calc(var(--art-opacity) * #{$strength})"};
+    -webkit-mask: var(--art) 0 0 / #{$tile-size} #{$tile-size} repeat;
+    mask: var(--art) 0 0 / #{$tile-size} #{$tile-size} repeat;
+  }
+
+  @at-root :root[data-theme-art="off"] &::before {
+    display: none;
+  }
+}
+
 @mixin focus-ring {
   outline: 2px solid $accent;
   outline-offset: 2px;

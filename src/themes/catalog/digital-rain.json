@@ -12,6 +12,14 @@
     "es": "Código verde cayendo sobre una pantalla negra. Toma la pastilla roja.",
     "fr": "Du code vert qui tombe sur un écran noir. Prenez la pilule rouge."
   },
+  "typography": {
+    "display": {
+      "family": "Share Tech Mono",
+      "file": "share-tech-mono"
+    },
+    "tracking": "0"
+  },
+  "art": "digital-rain",
   "color": {
     "bg-page": "#000300",
     "bg-surface": "#030d05",

@@ -6,6 +6,8 @@ interface SwitchRowProps {
   hint: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  /** Extra class, e.g. to place the row inside a sheet. */
+  className?: string;
 }
 
 /**
@@ -13,12 +15,18 @@ interface SwitchRowProps {
  * its name and a short hint on the left, the switch on the right. The whole
  * row is the switch, so it is one large tap target.
  */
-const SwitchRow = ({ label, hint, checked, onChange }: SwitchRowProps) => (
+const SwitchRow = ({
+  label,
+  hint,
+  checked,
+  onChange,
+  className = "",
+}: SwitchRowProps) => (
   <button
     type="button"
     role="switch"
     aria-checked={checked}
-    className="switch-row"
+    className={`switch-row ${className}`.trim()}
     onClick={() => onChange(!checked)}
   >
     <span className="switch-row__text">

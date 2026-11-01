@@ -2,9 +2,10 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import tokens from "../styles/tokens.json";
-import { THEMED_GROUPS, readThemeCatalog } from "./themeCatalog";
+import { ART_DIR, THEMED_GROUPS, readThemeCatalog } from "./themeCatalog";
 
 const LANGUAGES = ["en", "es", "fr"];
+const FONTS_DIR = path.join(__dirname, "fonts");
 
 // WCAG 2 relative luminance and contrast ratio. A translucent color is
 // composited over the background it sits on first.
@@ -124,6 +125,26 @@ describe("the theme catalog", () => {
           Object.keys(tokens[group]).sort()
         );
       });
+    });
+
+    (theme.default ? it : it.skip)("has no picture and no typeface of its own (the default)", () => {
+      expect(theme.art).toBeUndefined();
+      expect(theme.typography).toBeUndefined();
+    });
+
+    (theme.default ? it.skip : it)("has a picture and a headline typeface that exist", () => {
+      const svg = fs.readFileSync(path.join(ART_DIR, `${theme.art}.svg`), "utf8");
+      // Monoline art painted by the accent through a mask: no colors of its own,
+      // and small enough that all of them stay a few KB each.
+      expect(svg).toMatch(/viewBox="0 0 96 96"/);
+      expect(svg).not.toMatch(/#[0-9a-f]{3,8}\b|rgb|hsl|<image|<script/i);
+      expect(svg.length).toBeLessThan(3000);
+      const { display, tracking } = theme.typography;
+      expect(display.family).toEqual(expect.any(String));
+      expect(tracking).toMatch(/^0(\.\d+em)?$/);
+      expect(
+        fs.existsSync(path.join(FONTS_DIR, `${display.file}.woff2`))
+      ).toBe(true);
     });
 
     it("meets the contrast rules", () => {

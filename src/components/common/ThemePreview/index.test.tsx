@@ -17,6 +17,8 @@ describe("ThemePreview", () => {
     expect(screen.getByText("$4,200.00")).toBeInTheDocument();
     expect(screen.getByText("$2,580.00")).toBeInTheDocument();
     expect(screen.getByText("Savings")).toBeInTheDocument();
+    // The brand name is real text (set in the theme's headline typeface).
+    expect(screen.getByText("Expenses Tracker")).toBeInTheDocument();
   });
 
   it("formats the figures in the currency it is given", () => {

@@ -34,6 +34,23 @@ describe("ThemeSheet", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it("has a Background pictures switch, on by default, that turns the pictures off", async () => {
+    renderSheet(jest.fn());
+    const art = screen.getByRole("switch", { name: /Background pictures/ });
+    expect(art).toBeChecked();
+    expect(document.documentElement.dataset.themeArt).toBeUndefined();
+    await userEvent.click(art);
+    expect(art).not.toBeChecked();
+    expect(document.documentElement.dataset.themeArt).toBe("off");
+  });
+
+  it("says the default theme stays plain, and does not on a theme with pictures", async () => {
+    renderSheet(jest.fn());
+    expect(screen.getByText(/Midnight Gold stays plain\./)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("radio", { name: "Ocarina" }));
+    expect(screen.queryByText(/stays plain/)).not.toBeInTheDocument();
+  });
+
   it("closes with the Close button", async () => {
     const onClose = jest.fn();
     renderSheet(onClose);

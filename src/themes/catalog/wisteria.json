@@ -12,6 +12,14 @@
     "es": "Noche negra del cuerpo, verde de haori a cuadros y glicinas en flor.",
     "fr": "Nuit noire du corps, vert du haori à damier et glycines en fleur."
   },
+  "typography": {
+    "display": {
+      "family": "Shippori Mincho",
+      "file": "shippori-mincho"
+    },
+    "tracking": "0"
+  },
+  "art": "wisteria",
   "color": {
     "bg-page": "#0d0e0f",
     "bg-surface": "#141917",

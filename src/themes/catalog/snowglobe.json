@@ -12,6 +12,14 @@
     "es": "Una mañana de Navidad nevada: nieve fresca, azul glaciar, pino y arándano.",
     "fr": "Un matin de Noël enneigé : neige fraîche, bleu glacier, sapin et canneberge."
   },
+  "typography": {
+    "display": {
+      "family": "Fraunces",
+      "file": "fraunces"
+    },
+    "tracking": "0"
+  },
+  "art": "snowglobe",
   "color": {
     "bg-page": "#d2e3ef",
     "bg-surface": "#f7fbff",

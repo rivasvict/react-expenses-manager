@@ -16,6 +16,16 @@ module.exports = {
   // /api/* is the sync backend (src/services/syncApi) and must always hit
   // the network — never precached, never served stale from a cache.
   runtimeCaching: [
+    // The themed headline fonts (src/themes/fonts/) are not precached: a device
+    // needs only the active theme's face, so each is cached on first use.
+    {
+      urlPattern: ({ url }) => url.pathname.endsWith(".woff2"),
+      handler: "CacheFirst",
+      options: {
+        cacheName: "theme-fonts",
+        expiration: { maxEntries: 20 },
+      },
+    },
     {
       urlPattern: ({ url }) => url.pathname.startsWith("/api/"),
       handler: "NetworkOnly",

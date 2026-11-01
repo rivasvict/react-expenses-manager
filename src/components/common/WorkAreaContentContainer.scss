@@ -11,6 +11,8 @@
   justify-content: space-between;
   padding: 1.1rem 1rem;
 
+  @include theme-art(112px);
+
   .top-container {
     flex: 1 1;
   }
