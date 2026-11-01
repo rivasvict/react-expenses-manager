@@ -21,29 +21,35 @@ compares the themes side by side, screen by screen.
   jack-o'-lantern orange accent, slime-green income, candy-corn warning, and
   ghost, potion and bone in the charts.
 - **c-catppuccin**: Mocha pastels; mauve accent, green income, red expense.
-- **d-flexoki-light**: the one light theme; ink on warm paper, blue accent.
-- **e-gruvbox**: warm retro browns; Gruvbox's own mustard yellow as the accent
+- **d-digital-rain** (The Matrix): a black screen with phosphor-green text
+  and buttons, red-pill red for expense, and aqua-mint for income, since green
+  is taken by the buttons.
+- **e-flexoki-light**: a light theme; ink on warm paper, blue accent.
+- **f-gruvbox**: warm retro browns; Gruvbox's own mustard yellow as the accent
   (not the default's gold), orange warning. Its red is lifted so it stays
   readable on raised cards.
-- **f-moon-prism** (Sailor Moon): moonlit navy, prism-pink accent, golden
+- **g-moon-prism** (Sailor Moon): moonlit navy, prism-pink accent, golden
   crescent as the warning and logo shade, and the senshi colors as the chart
   palette.
-- **g-nord**: arctic polar night with a frost accent. The aurora red and green
+- **h-nord**: arctic polar night with a frost accent. The aurora red and green
   are lifted for contrast.
-- **h-ocarina** (Zelda: Ocarina of Time): Hyrule at night; ocarina-blue
+- **i-ocarina** (Zelda: Ocarina of Time): Hyrule at night; ocarina-blue
   accent, Kokiri green income, heart-red expense, Triforce gold, and rupee
   colors in the charts.
-- **i-pumpkin-king** (The Nightmare Before Christmas): Halloween Town by
+- **j-pumpkin-king** (The Nightmare Before Christmas): Halloween Town by
   moonlight; the full moon behind Spiral Hill as the accent, bone-white text,
   Zero's orange nose as the warning, Sally's red hair as expense and her
   patchwork in the charts.
-- **j-super-saiyan** (Dragon Ball Z): training-gi blue surfaces, turtle-school
+- **k-snowglobe** (Christmas in winter): the light sibling of Yuletide. Fresh
+  snow and frost surfaces, a twilight-indigo accent, pine income, cranberry
+  expense, and gingerbread and gold in the charts.
+- **l-super-saiyan** (Dragon Ball Z): training-gi blue surfaces, turtle-school
   orange accent, Super Saiyan gold warning, Namekian green income.
-- **k-tokyo-night**: neon blue accent on an indigo night.
-- **l-wisteria** (Demon Slayer): corps-black night with a haori-green tint,
+- **m-tokyo-night**: neon blue accent on an indigo night.
+- **n-wisteria** (Demon Slayer): corps-black night with a haori-green tint,
   a blue-violet wisteria accent, Nezuko pink, flame orange, Zenitsu yellow
   and water-breathing blue in the charts.
-- **m-yuletide** (Christmas): a pine-green night with a star-gold accent,
+- **o-yuletide** (Christmas): a pine-green night with a star-gold accent,
   holly-green income, cranberry expense, a cranberry logo shade, and
   ornaments in the charts.
 

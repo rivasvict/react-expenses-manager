@@ -25,6 +25,8 @@ truth for the app, for `design/system/themes.css` and for these mockups.
 | Yuletide | Christmas | dark |
 | All Hallows | Halloween | dark |
 | Pumpkin King | The Nightmare Before Christmas | dark |
+| Snowglobe | Christmas in winter | light |
+| Digital Rain | The Matrix | dark |
 | Tokyo Night | Omarchy | dark |
 | Catppuccin | Omarchy (Mocha) | dark |
 | Gruvbox | Omarchy | dark |

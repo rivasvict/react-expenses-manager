@@ -144,6 +144,54 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
+[data-theme="digital-rain"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #000300;
+  --bg-surface: #030d05;
+  --bg-raised: #071a0b;
+  --bg-raised-hover: #0b2410;
+  --border-subtle: rgba(125, 255, 154, 0.08);
+  --border-strong: rgba(125, 255, 154, 0.16);
+  --track: rgba(125, 255, 154, 0.1);
+  --highlight: rgba(125, 255, 154, 0.05);
+  --scrim: rgba(0, 0, 0, 0.6);
+  --accent: #00e639;
+  --accent-hover: #3dff6a;
+  --accent-soft: rgba(0, 230, 57, 0.12);
+  --income: #4fe3d8;
+  --income-soft: rgba(79, 227, 216, 0.12);
+  --expense: #ff4545;
+  --expense-soft: rgba(255, 69, 69, 0.12);
+  --danger: #ff4545;
+  --danger-soft: rgba(255, 69, 69, 0.14);
+  --warning: #f2c033;
+  --text-primary: #d4ffdc;
+  --text-secondary: #86c995;
+  --text-muted: #6fae7e;
+  --text-on-accent: #001a06;
+  --text-validation: #ff8a6b;
+  --brand-mark-shade: #0f6b28;
+
+  /* chart */
+  --chart-income: #2ec9bf;
+  --chart-expense: #ff4d4d;
+  --chart-warning: #f2b520;
+  --chart-categorical-1: #00e639;
+  --chart-categorical-2: #f2a33a;
+  --chart-categorical-3: #4a8dff;
+  --chart-categorical-4: #ff4d4d;
+  --chart-categorical-5: #2fd6c8;
+  --chart-categorical-6: #a67cff;
+  --chart-categorical-7: #b6ffc4;
+  --chart-categorical-8: #e05fb0;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
 [data-theme="flexoki-light"] {
   color-scheme: light;
 
@@ -430,6 +478,54 @@
   /* shadow */
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="snowglobe"] {
+  color-scheme: light;
+
+  /* color */
+  --bg-page: #dfe8f0;
+  --bg-surface: #f8fbfd;
+  --bg-raised: #ecf2f7;
+  --bg-raised-hover: #e1e9f1;
+  --border-subtle: rgba(16, 36, 58, 0.1);
+  --border-strong: rgba(16, 36, 58, 0.2);
+  --track: rgba(16, 36, 58, 0.12);
+  --highlight: rgba(16, 36, 58, 0.06);
+  --scrim: rgba(15, 34, 54, 0.35);
+  --accent: #4a4fc4;
+  --accent-hover: #3c40a8;
+  --accent-soft: rgba(74, 79, 196, 0.12);
+  --income: #1f7a4a;
+  --income-soft: rgba(31, 122, 74, 0.12);
+  --expense: #b3243a;
+  --expense-soft: rgba(179, 36, 58, 0.12);
+  --danger: #b3243a;
+  --danger-soft: rgba(179, 36, 58, 0.14);
+  --warning: #a35f00;
+  --text-primary: #0f2236;
+  --text-secondary: #3a4e63;
+  --text-muted: #4f6277;
+  --text-on-accent: #ffffff;
+  --text-validation: #a8431a;
+  --brand-mark-shade: #b3243a;
+
+  /* chart */
+  --chart-income: #1f7a4a;
+  --chart-expense: #b3243a;
+  --chart-warning: #8f5a00;
+  --chart-categorical-1: #2f7fc1;
+  --chart-categorical-2: #b5651d;
+  --chart-categorical-3: #7a4fb0;
+  --chart-categorical-4: #b3243a;
+  --chart-categorical-5: #2e7d4f;
+  --chart-categorical-6: #1f8a8a;
+  --chart-categorical-7: #a07d00;
+  --chart-categorical-8: #c2477d;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(15, 34, 54, 0.08);
+  --shadow-pop: 0 12px 32px rgba(15, 34, 54, 0.18);
 }
 
 [data-theme="super-saiyan"] {

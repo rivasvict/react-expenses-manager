@@ -1,0 +1,55 @@
+{
+  "id": "digital-rain",
+  "name": "Digital Rain",
+  "scheme": "dark",
+  "inspiration": "The Matrix",
+  "description": {
+    "en": "Green code falling on a black screen. Take the red pill.",
+    "es": "Código verde cayendo sobre una pantalla negra. Toma la pastilla roja.",
+    "fr": "Du code vert qui tombe sur un écran noir. Prenez la pilule rouge."
+  },
+  "color": {
+    "bg-page": "#000300",
+    "bg-surface": "#030d05",
+    "bg-raised": "#071a0b",
+    "bg-raised-hover": "#0b2410",
+    "border-subtle": "rgba(125, 255, 154, 0.08)",
+    "border-strong": "rgba(125, 255, 154, 0.16)",
+    "track": "rgba(125, 255, 154, 0.1)",
+    "highlight": "rgba(125, 255, 154, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.6)",
+    "accent": "#00e639",
+    "accent-hover": "#3dff6a",
+    "accent-soft": "rgba(0, 230, 57, 0.12)",
+    "income": "#4fe3d8",
+    "income-soft": "rgba(79, 227, 216, 0.12)",
+    "expense": "#ff4545",
+    "expense-soft": "rgba(255, 69, 69, 0.12)",
+    "danger": "#ff4545",
+    "danger-soft": "rgba(255, 69, 69, 0.14)",
+    "warning": "#f2c033",
+    "text-primary": "#d4ffdc",
+    "text-secondary": "#86c995",
+    "text-muted": "#6fae7e",
+    "text-on-accent": "#001a06",
+    "text-validation": "#ff8a6b",
+    "brand-mark-shade": "#0f6b28"
+  },
+  "chart": {
+    "chart-income": "#2ec9bf",
+    "chart-expense": "#ff4d4d",
+    "chart-warning": "#f2b520",
+    "chart-categorical-1": "#00e639",
+    "chart-categorical-2": "#f2a33a",
+    "chart-categorical-3": "#4a8dff",
+    "chart-categorical-4": "#ff4d4d",
+    "chart-categorical-5": "#2fd6c8",
+    "chart-categorical-6": "#a67cff",
+    "chart-categorical-7": "#b6ffc4",
+    "chart-categorical-8": "#e05fb0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

@@ -1,6 +1,6 @@
 ---
 title: Theme picker
-summary: Pick one of thirteen themes from Settings or the first-run setup; the whole app recolors right away, Omarchy-style.
+summary: Pick one of fifteen themes from Settings or the first-run setup; the whole app recolors right away, Omarchy-style.
 status: exploring
 ---
 
@@ -32,7 +32,7 @@ at once and moves the check. Nothing needs confirming.
   the sheet. *Cost:* ten cards scroll inside the sheet; one new component
   (the preview card).
 - **a2-grid-screen**: the same grid on its own screen (`/settings/theme`) with
-  Go Back. Onboarding shows four cards and "See all 13 themes". *Good:* room
+  Go Back. Onboarding shows four cards and "See all 15 themes". *Good:* room
   for the catalog to grow, and the picker is not covered by a sheet. *Cost:*
   one new route.
 
