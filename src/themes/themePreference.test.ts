@@ -20,7 +20,7 @@ describe("themePreference", () => {
 
   it("lists the default theme first", () => {
     expect(THEME_CATALOG[0].id).toBe(DEFAULT_THEME_ID);
-    expect(THEME_CATALOG).toHaveLength(15);
+    expect(THEME_CATALOG).toHaveLength(17);
   });
 
   it("uses the default when nothing is stored", () => {

@@ -21,7 +21,7 @@ describe("ThemeRadioGroup", () => {
     render(<Harness />);
     const group = screen.getByRole("radiogroup", { name: "Theme" });
     expect(group).toBeInTheDocument();
-    expect(screen.getAllByRole("radio")).toHaveLength(15);
+    expect(screen.getAllByRole("radio")).toHaveLength(17);
     expect(screen.getByRole("radio", { name: "Midnight Gold" })).toBeChecked();
   });
 

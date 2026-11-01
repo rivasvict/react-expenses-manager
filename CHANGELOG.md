@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.40.1] - 2026-11-01
+## [1.41.1] - 2026-11-01
 
 ### Fixed
 
@@ -17,6 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   by its width alone, so it comes out the same size however the reveal is
   timed. The Summary and entry-list doughnuts share the component and look the
   same as before.
+
+## [1.41.0] - 2026-11-01
+
+### Added
+
+- **Two new themes: Guardian and Hogwarts.** Guardian is inspired by Destiny 2
+  (midnight navy and charcoal with Traveler gold and a warm amber glow, matching
+  the palette of bungie.net, Archivo headlines, a Traveler and Guardian-crest
+  picture). Hogwarts is inspired by Harry Potter
+  (Gryffindor burgundy with golden accents and Slytherin green, Cinzel
+  Decorative headlines, a lightning-scar, glasses and Snitch picture). Both
+  have English, Spanish and French descriptions and pass the catalog's
+  contrast rules. The picker now lists seventeen themes.
 
 ## [1.40.0] - 2026-11-01
 
