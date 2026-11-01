@@ -1,0 +1,135 @@
+@import "../../../variables.scss";
+
+// A miniature of the app. Every color is a variable scoped by the element's
+// own data-theme, so it draws in its theme inside any other theme. Inner radii
+// are fractions of $radius-control so they stay tied to the token.
+.theme-preview {
+  display: block;
+  padding: 0.4rem;
+  background-color: $bg-page;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-control;
+  color: $text-primary;
+  font-size: 0.55rem;
+  line-height: 1.3;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0 0.3rem;
+  }
+
+  &__logo {
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 1px solid $accent;
+    border-radius: $radius-control * 0.3;
+    background: linear-gradient(
+      160deg,
+      $accent 45%,
+      $brand-mark-shade 45%
+    );
+  }
+
+  &__brand {
+    width: 2.2rem;
+    height: 0.25rem;
+    border-radius: $radius-pill;
+    background-color: $text-secondary;
+    opacity: 0.6;
+  }
+
+  &__surface {
+    display: block;
+    padding: 0.3rem;
+    background-color: $bg-surface;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-control * 0.55;
+  }
+
+  &__hero {
+    display: block;
+    margin: 0 0 0.25rem;
+    padding: 0.25rem 0.35rem;
+    background-color: $bg-raised;
+    border-radius: $radius-control * 0.4;
+  }
+
+  &__label {
+    display: block;
+    color: $text-secondary;
+    font-size: 0.5rem;
+  }
+
+  &__figure {
+    display: block;
+    color: $income;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0 0.2rem;
+    padding: 0.15rem 0.3rem;
+    background-color: $bg-raised;
+    border-radius: $radius-control * 0.4;
+  }
+
+  &__chip {
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: $radius-round;
+
+    &--in {
+      background-color: $income-soft;
+      box-shadow: inset 0 0 0 1.5px $income;
+    }
+
+    &--out {
+      background-color: $expense-soft;
+      box-shadow: inset 0 0 0 1.5px $expense;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    height: 0.22rem;
+    border-radius: $radius-pill;
+    background-color: $text-primary;
+    opacity: 0.55;
+  }
+
+  &__in {
+    color: $income;
+    font-weight: 600;
+  }
+
+  &__out {
+    color: $expense;
+    font-weight: 600;
+  }
+
+  &__buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2rem;
+    margin-top: 0.25rem;
+  }
+
+  &__button {
+    height: 0.75rem;
+    border-radius: $radius-control * 0.3;
+    background-color: $accent;
+
+    &--ghost {
+      background-color: transparent;
+      border: 1px solid $border-strong;
+    }
+  }
+}

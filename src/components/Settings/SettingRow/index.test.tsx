@@ -24,4 +24,18 @@ describe("SettingRow", () => {
 
     expect(onOpen).toHaveBeenCalledTimes(1);
   });
+
+  it("can be named by an explicit label", () => {
+    render(
+      <SettingRow
+        label="Theme"
+        hint="Colors of the app"
+        value={<b>Nord</b>}
+        ariaLabel="Theme: Nord"
+        onOpen={jest.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Theme: Nord" })).toBeInTheDocument();
+  });
 });

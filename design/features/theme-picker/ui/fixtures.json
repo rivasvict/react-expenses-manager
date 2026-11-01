@@ -1,0 +1,306 @@
+{
+  "screens": {
+    "settings.default": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en"
+      }
+    },
+    "settings.picked": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      }
+    },
+    "settings.light": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      }
+    },
+    "settings.es": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.privacyMode": "on"
+      }
+    },
+    "theme-sheet.default": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Theme/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "theme-sheet.picked": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Theme/]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "click": "role=radio[name=\"All Hallows\"]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "theme-sheet.es": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "click": "role=button[name=/^Tema/]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "preferences.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "blur": true
+        }
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
+    },
+    "preferences.picked": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "role=radio[name=\"All Hallows\"]"
+        },
+        {
+          "wait": 300
+        },
+        {
+          "blur": true
+        }
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
+    },
+    "preferences.es": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "es",
+        "settings.currency": "EUR",
+        "settings.privacyMode": "on"
+      },
+      "actions": [
+        {
+          "blur": true
+        }
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
+    },
+    "review.default": {
+      "route": "/welcome",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "settings.language": "en"
+      },
+      "actions": [
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"House (Rent)\")"
+        },
+        {
+          "click": "button:text-is(\"Transportation\")"
+        },
+        {
+          "click": "button:text-is(\"Subscriptions\")"
+        },
+        {
+          "click": "button:text-is(\"Internet\")"
+        },
+        {
+          "click": "button:text-is(\"Eating out\")"
+        },
+        {
+          "click": "button:text-is(\"Food\")"
+        },
+        {
+          "click": "button:text-is(\"Health\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Pet food"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "button:text-is(\"Salary\")"
+        },
+        {
+          "click": "button:text-is(\"Deposit\")"
+        },
+        {
+          "fill": [
+            "input[name=\"customCategory\"]",
+            "Freelance"
+          ]
+        },
+        {
+          "click": "button:text-is(\"Add\")"
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "click": "role=checkbox[name=\"House (Rent)\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-House (Rent)\"]",
+            "1200.00"
+          ]
+        },
+        {
+          "blur": true
+        },
+        {
+          "click": "role=checkbox[name=\"Eating out\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Eating out\"]",
+            "300.00"
+          ]
+        },
+        {
+          "blur": true
+        },
+        {
+          "click": "role=checkbox[name=\"Food\"]"
+        },
+        {
+          "fill": [
+            "input[name=\"limit-Food\"]",
+            "450.00"
+          ]
+        },
+        {
+          "blur": true
+        },
+        {
+          "click": "button:text-is(\"Next\")"
+        },
+        {
+          "blur": true
+        }
+      ],
+      "region": {
+        "app": ".wizard-shell__card",
+        "mockup": ".mk-work-area"
+      }
+    }
+  }
+}

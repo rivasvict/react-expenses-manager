@@ -1,0 +1,59 @@
+{
+  "id": "ocarina",
+  "name": "Ocarina",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "The Legend of Zelda: Ocarina of Time",
+    "es": "The Legend of Zelda: Ocarina of Time",
+    "fr": "The Legend of Zelda: Ocarina of Time"
+  },
+  "description": {
+    "en": "Hyrule Field at night: forest green, ocarina blue and Triforce gold.",
+    "es": "La pradera de Hyrule de noche: verde bosque, azul ocarina y oro de la Trifuerza.",
+    "fr": "La plaine d'Hyrule la nuit : vert forêt, bleu ocarina et or de la Triforce."
+  },
+  "color": {
+    "bg-page": "#0b1510",
+    "bg-surface": "#111f18",
+    "bg-raised": "#182a21",
+    "bg-raised-hover": "#1f3529",
+    "border-subtle": "rgba(214, 240, 220, 0.08)",
+    "border-strong": "rgba(214, 240, 220, 0.16)",
+    "track": "rgba(214, 240, 220, 0.1)",
+    "highlight": "rgba(214, 240, 220, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#6cb8ff",
+    "accent-hover": "#8fcaff",
+    "accent-soft": "rgba(108, 184, 255, 0.12)",
+    "income": "#5ed37a",
+    "income-soft": "rgba(94, 211, 122, 0.12)",
+    "expense": "#ff6464",
+    "expense-soft": "rgba(255, 100, 100, 0.12)",
+    "danger": "#ff5f5f",
+    "danger-soft": "rgba(255, 95, 95, 0.14)",
+    "warning": "#f2c94c",
+    "text-primary": "#eef6ea",
+    "text-secondary": "#abc2b0",
+    "text-muted": "#91aa98",
+    "text-on-accent": "#04121f",
+    "text-validation": "#ffab7a",
+    "brand-mark-shade": "#c9a227"
+  },
+  "chart": {
+    "chart-income": "#3fbf63",
+    "chart-expense": "#f25757",
+    "chart-warning": "#e0b636",
+    "chart-categorical-1": "#4a90e2",
+    "chart-categorical-2": "#f08a3c",
+    "chart-categorical-3": "#a97de0",
+    "chart-categorical-4": "#ff5f6d",
+    "chart-categorical-5": "#9ccc4a",
+    "chart-categorical-6": "#2fc4b2",
+    "chart-categorical-7": "#f2c94c",
+    "chart-categorical-8": "#e86fc0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

@@ -10,6 +10,13 @@ and run `npm run tokens:build`; this file only derives from them.
 */
 @import "./styles/tokens";
 
+// Colors are CSS variables (src/styles/themes.generated.css), so Sass cannot
+// compute with them: derive a translucent version in the browser instead.
+// `alpha($accent, 0.28)` is the themed replacement for `alpha($accent, 0.28)`.
+@function alpha($color, $amount) {
+  @return color-mix(in srgb, #{$color} #{$amount * 100%}, transparent);
+}
+
 // ---------------------------------------------------------------------------
 // Layout & rhythm
 // ---------------------------------------------------------------------------
@@ -27,14 +34,15 @@ $nav-breakpoint: 768px; // below this the nav becomes the bottom tab bar
 // contrast of anything drawn on a surface above it.
 $glow-page: radial-gradient(
   90rem 40rem at 50% -6rem,
-  rgba($accent, 0.05),
+  alpha($accent, 0.05),
   transparent 62%
 );
 
 // Chevron affordance shared by the native selects (global.scss) and the
 // searchable category dropdown's trigger (CategorySearchSelect) — single
-// source of truth so the two can never drift. The fill is $text-secondary,
-// URL-encoded (%23 = #) because a data URI cannot reference a variable.
+// source of truth so the two can never drift. The fill is the default theme's
+// $text-secondary, URL-encoded (%23 = #): a data URI cannot reference a CSS
+// variable, so the chevron keeps this one grey in every theme.
 $select-chevron: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239aa4b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.976 10.072l4.357-4.357.62.618L8.284 11h-.618L3 6.333l.619-.618 4.357 4.357z'/%3E%3C/svg%3E");
 
 $transition-quick: 140ms ease;
@@ -166,7 +174,7 @@ $transition-slide: 220ms ease;
 
   .btn.btn-danger {
     background-color: transparent;
-    border-color: rgba($danger, 0.5);
+    border-color: alpha($danger, 0.5);
     color: $danger;
 
     &:hover,

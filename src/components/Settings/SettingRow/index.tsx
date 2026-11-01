@@ -6,7 +6,10 @@ import "./styles.scss";
 interface SettingRowProps {
   label: string;
   hint: string;
-  value: string;
+  /** Usually text; the Theme row adds its color dots. */
+  value: React.ReactNode;
+  /** Replaces the name made from the row's text, e.g. "Theme: Nord". */
+  ariaLabel?: string;
   onOpen: () => void;
 }
 
@@ -16,11 +19,12 @@ interface SettingRowProps {
  * button that announces a dialog.
  */
 const SettingRow = forwardRef<HTMLButtonElement, SettingRowProps>(
-  ({ label, hint, value, onOpen }, ref) => (
+  ({ label, hint, value, ariaLabel, onOpen }, ref) => (
     <button
       type="button"
       className="setting-row"
       aria-haspopup="dialog"
+      aria-label={ariaLabel}
       ref={ref}
       onClick={onOpen}
     >

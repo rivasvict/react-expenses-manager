@@ -14,6 +14,7 @@ import WithDataDisclaimer from "./components/Dashboard/WithDataDisclaimer";
 import WithOnboarding from "./components/Onboarding/WithOnboarding";
 import { LanguageProvider } from "./i18n";
 import { PrivacyProvider } from "./privacy";
+import { ThemeProvider } from "./themes";
 
 const mapStateToProps = (state) => ({ user: state.userManager.user });
 
@@ -54,13 +55,15 @@ function App({ reduxStore }) {
   return (
     <Provider store={reduxStore}>
       <LanguageProvider>
-        <PrivacyProvider>
-          <Router>
-            <Switch>
-              <Routes />
-            </Switch>
-          </Router>
-        </PrivacyProvider>
+        <ThemeProvider>
+          <PrivacyProvider>
+            <Router>
+              <Switch>
+                <Routes />
+              </Switch>
+            </Router>
+          </PrivacyProvider>
+        </ThemeProvider>
       </LanguageProvider>
     </Provider>
   );

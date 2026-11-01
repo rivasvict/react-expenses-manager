@@ -2,9 +2,7 @@
 // https://github.com/rivasvict/react-expenses-manager/issues/189
 import { Chart } from "chart.js/auto";
 import { useEffect, useRef } from "react";
-import tokens from "../../../styles/tokens.json";
-
-const { chart, color } = tokens;
+import { useTheme } from "../../../themes";
 
 /**
  * Categorical palette validated for the app's dark surface (#161b22) with the
@@ -14,41 +12,33 @@ const { chart, color } = tokens;
  * (income green, warning amber, expense red), which sit at the tail for the
  * rare 5+ category chart; the surface-colored slice borders act as the
  * spacer that keeps adjacent slices distinguishable for color-vision
- * deficiencies. All values come from src/styles/tokens.json, which also
- * generates their SCSS twins ($chart-*).
+ * deficiencies. Colors are named by chart token and resolved against the
+ * active theme's palette (a canvas cannot read CSS variables), so a theme
+ * switch repaints the chart.
  */
 const CATEGORICAL_COLORS = [
-  chart["chart-categorical-1"], // blue
-  chart["chart-categorical-2"], // orange
-  chart["chart-categorical-3"], // violet
-  chart["chart-categorical-4"], // magenta
-  chart["chart-categorical-5"], // green
-  chart["chart-categorical-6"], // aqua
-  chart["chart-categorical-7"], // amber
-  chart["chart-categorical-8"], // red
+  "chart-categorical-1", // blue
+  "chart-categorical-2", // orange
+  "chart-categorical-3", // violet
+  "chart-categorical-4", // magenta
+  "chart-categorical-5", // green
+  "chart-categorical-6", // aqua
+  "chart-categorical-7", // amber
+  "chart-categorical-8", // red
 ];
 
 /**
  * Semantic pair for income-vs-expense charts, shared by the dashboard
  * balance donut and the monthly summary donut.
  */
-export const INCOME_EXPENSE_COLORS = [
-  chart["chart-income"],
-  chart["chart-expense"],
-];
+export const INCOME_EXPENSE_COLORS = ["chart-income", "chart-expense"];
 
 /**
  * Semantic pair for expense-vs-savings charts (e.g. the dashboard balance
  * donut), where expenses are shown in the warning/expense red and savings
  * reuses the income green to signal "kept" money.
  */
-export const EXPENSE_SAVINGS_COLORS = [
-  chart["chart-expense"],
-  chart["chart-income"],
-];
-
-const SURFACE_COLOR = color["bg-surface"];
-const LEGEND_TEXT_COLOR = color["text-secondary"];
+export const EXPENSE_SAVINGS_COLORS = ["chart-expense", "chart-income"];
 
 // One color per slice; charts can have more slices than the palette (users
 // create unlimited categories), so wrap around rather than let Chart.js fall
@@ -60,8 +50,12 @@ const colorsForSlices = (palette, sliceCount) =>
     (unused, index) => palette[index % palette.length]
   );
 
+// `colors` is a list of chart token names (the exports above).
 const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
   const { labels, chartData } = data;
+  const { theme } = useTheme();
+  const palette = { ...theme.color, ...theme.chart };
+  const tokenNames = colors || CATEGORICAL_COLORS;
   const chartRef = useRef(null);
   // Callers rebuild the labels/data/colors arrays on every render, so the
   // effect keys on their content instead of their identity — otherwise the
@@ -69,7 +63,7 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
   // unrelated re-render.
   const labelsKey = labels.join("|");
   const chartDataKey = chartData.join("|");
-  const colorsKey = (colors || CATEGORICAL_COLORS).join("|");
+  const colorsKey = tokenNames.join("|");
   useEffect(() => {
     if (chartRef.current) {
       const chart = new Chart(chartRef.current, {
@@ -82,11 +76,11 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
               data: chartData,
               hoverOffset: 6,
               backgroundColor: colorsForSlices(
-                colors || CATEGORICAL_COLORS,
+                tokenNames.map((name) => palette[name]),
                 chartData.length
               ),
               // A surface-colored gap between slices (the "2px spacer").
-              borderColor: SURFACE_COLOR,
+              borderColor: palette["bg-surface"],
               borderWidth: 2,
               borderRadius: 3,
             },
@@ -99,7 +93,7 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
               display: true,
               position: "bottom",
               labels: {
-                color: LEGEND_TEXT_COLOR,
+                color: palette["text-secondary"],
                 usePointStyle: true,
                 pointStyle: "circle",
                 boxWidth: 8,
@@ -116,7 +110,7 @@ const DoughnutChart = ({ chartLabel, data, colors, shouldShow = true }) => {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [labelsKey, chartDataKey, colorsKey, chartLabel]);
+  }, [labelsKey, chartDataKey, colorsKey, chartLabel, theme.id]);
 
   return !!chartData.length && shouldShow && <canvas ref={chartRef} />;
 };

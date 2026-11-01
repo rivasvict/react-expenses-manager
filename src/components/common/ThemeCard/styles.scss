@@ -1,0 +1,81 @@
+@import "../../../variables.scss";
+
+.theme-card {
+  @include card();
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.4rem 0.4rem 0.55rem;
+  color: $text-primary;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color $transition-quick,
+    border-color $transition-quick;
+
+  &:hover {
+    background-color: $bg-raised-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring();
+  }
+
+  &--selected,
+  &--selected:hover {
+    border-color: $accent;
+    box-shadow: 0 0 0 2px $accent;
+  }
+
+  &__text {
+    display: block;
+    padding: 0 0.25rem;
+  }
+
+  &__name {
+    display: block;
+    color: $text-primary;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0 0.4rem;
+    background-color: $highlight;
+    border: 1px solid $border-subtle;
+    border-radius: $radius-pill;
+    color: $text-secondary;
+    font-size: 0.68rem;
+    font-weight: 700;
+    vertical-align: 0.1rem;
+  }
+
+  &__source {
+    display: block;
+    color: $text-secondary;
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  &__tick {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: $accent;
+    border-radius: $radius-round;
+    box-shadow: $shadow-card;
+    color: $text-on-accent;
+    font-size: 0.9rem;
+  }
+}

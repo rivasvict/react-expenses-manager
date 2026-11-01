@@ -29,6 +29,13 @@ describe("onboardingStatus", () => {
     expect(isNewUser()).toBe(true);
   });
 
+  it("ignores a stored theme, a language or a currency", () => {
+    localStorage.setItem("settings.theme", "all-hallows");
+    localStorage.setItem("settings.language", "es");
+    localStorage.setItem("settings.currency", "EUR");
+    expect(isNewUser()).toBe(true);
+  });
+
   it("is not a new user after finishing or skipping once", () => {
     markOnboardingCompleted();
     expect(localStorage.getItem(ONBOARDING_COMPLETED_STORAGE_KEY)).toBe("1");

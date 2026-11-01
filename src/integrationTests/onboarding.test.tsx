@@ -148,7 +148,7 @@ describe("finishing the wizard", () => {
     await walkToReviewEmpty(user);
 
     expect(screen.getByText("English · € EUR")).toBeInTheDocument();
-    expect(screen.getByText("Privacy mode on")).toBeInTheDocument();
+    expect(screen.getByText("Midnight Gold · Privacy mode on")).toBeInTheDocument();
     await tapNext(user, "Start tracking");
 
     await screen.findByText("Monthly Balance");

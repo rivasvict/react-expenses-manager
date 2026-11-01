@@ -1,0 +1,59 @@
+{
+  "id": "snowglobe",
+  "name": "Snowglobe",
+  "scheme": "light",
+  "inspiration": {
+    "en": "Christmas in winter",
+    "es": "la Navidad en invierno",
+    "fr": "Noël en hiver"
+  },
+  "description": {
+    "en": "A snowy Christmas morning: fresh snow, glacier blue, pine and cranberry.",
+    "es": "Una mañana de Navidad nevada: nieve fresca, azul glaciar, pino y arándano.",
+    "fr": "Un matin de Noël enneigé : neige fraîche, bleu glacier, sapin et canneberge."
+  },
+  "color": {
+    "bg-page": "#d2e3ef",
+    "bg-surface": "#f7fbff",
+    "bg-raised": "#e6f0f8",
+    "bg-raised-hover": "#dae7f2",
+    "border-subtle": "rgba(14, 40, 62, 0.1)",
+    "border-strong": "rgba(14, 40, 62, 0.2)",
+    "track": "rgba(14, 40, 62, 0.12)",
+    "highlight": "rgba(14, 40, 62, 0.06)",
+    "scrim": "rgba(10, 36, 56, 0.4)",
+    "accent": "#176a94",
+    "accent-hover": "#0f5578",
+    "accent-soft": "rgba(23, 106, 148, 0.12)",
+    "income": "#1f7a4a",
+    "income-soft": "rgba(31, 122, 74, 0.12)",
+    "expense": "#b0213a",
+    "expense-soft": "rgba(176, 33, 58, 0.12)",
+    "danger": "#b0213a",
+    "danger-soft": "rgba(176, 33, 58, 0.14)",
+    "warning": "#a35f00",
+    "text-primary": "#0f2236",
+    "text-secondary": "#3a4e63",
+    "text-muted": "#4f6277",
+    "text-on-accent": "#ffffff",
+    "text-validation": "#a8431a",
+    "brand-mark-shade": "#b0213a"
+  },
+  "chart": {
+    "chart-income": "#1f7a4a",
+    "chart-expense": "#b0213a",
+    "chart-warning": "#8f5a00",
+    "chart-categorical-1": "#3a86c8",
+    "chart-categorical-2": "#b5651d",
+    "chart-categorical-3": "#7a4fb0",
+    "chart-categorical-4": "#b0213a",
+    "chart-categorical-5": "#2b7a4b",
+    "chart-categorical-6": "#1f8aa3",
+    "chart-categorical-7": "#a07d00",
+    "chart-categorical-8": "#c2477d"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(10, 36, 56, 0.1)",
+    "shadow-pop": "0 12px 32px rgba(10, 36, 56, 0.18)"
+  }
+}

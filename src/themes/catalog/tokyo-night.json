@@ -1,0 +1,59 @@
+{
+  "id": "tokyo-night",
+  "name": "Tokyo Night",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Omarchy’s Tokyo Night",
+    "es": "Tokyo Night de Omarchy",
+    "fr": "Tokyo Night d’Omarchy"
+  },
+  "description": {
+    "en": "Neon city lights over a deep indigo night.",
+    "es": "Luces de neón sobre una noche índigo profunda.",
+    "fr": "Néons de la ville sur une nuit indigo profonde."
+  },
+  "color": {
+    "bg-page": "#16161e",
+    "bg-surface": "#1a1b26",
+    "bg-raised": "#24283b",
+    "bg-raised-hover": "#292e42",
+    "border-subtle": "rgba(169, 177, 214, 0.08)",
+    "border-strong": "rgba(169, 177, 214, 0.16)",
+    "track": "rgba(169, 177, 214, 0.1)",
+    "highlight": "rgba(169, 177, 214, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#7aa2f7",
+    "accent-hover": "#93b4f9",
+    "accent-soft": "rgba(122, 162, 247, 0.12)",
+    "income": "#9ece6a",
+    "income-soft": "rgba(158, 206, 106, 0.12)",
+    "expense": "#f7768e",
+    "expense-soft": "rgba(247, 118, 142, 0.12)",
+    "danger": "#f7768e",
+    "danger-soft": "rgba(247, 118, 142, 0.14)",
+    "warning": "#e0af68",
+    "text-primary": "#c0caf5",
+    "text-secondary": "#a9b1d6",
+    "text-muted": "#8a93bd",
+    "text-on-accent": "#16161e",
+    "text-validation": "#ff9e64",
+    "brand-mark-shade": "#565f89"
+  },
+  "chart": {
+    "chart-income": "#9ece6a",
+    "chart-expense": "#f7768e",
+    "chart-warning": "#e0af68",
+    "chart-categorical-1": "#7aa2f7",
+    "chart-categorical-2": "#ff9e64",
+    "chart-categorical-3": "#bb9af7",
+    "chart-categorical-4": "#f7768e",
+    "chart-categorical-5": "#9ece6a",
+    "chart-categorical-6": "#7dcfff",
+    "chart-categorical-7": "#e0af68",
+    "chart-categorical-8": "#73daca"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

@@ -65,7 +65,7 @@
 
     &--empty {
       color: $text-secondary;
-      border-color: rgba($danger, 0.55);
+      border-color: alpha($danger, 0.55);
     }
   }
 }

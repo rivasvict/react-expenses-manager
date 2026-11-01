@@ -2609,6 +2609,1030 @@
         </div>
       </details>
     </section>
+    <section class="feature" id="feature-theme-picker" data-status="implemented">
+      <header class="feature__head">
+        <h2>Theme picker</h2>
+        <span class="badge badge--implemented">Implemented</span>
+      </header>
+      <p class="summary">Pick one of fifteen themes from a preview grid in a bottom sheet (Settings) or a swipeable strip (setup step 1); the whole app recolors at once, Omarchy-style.</p>
+      <nav class="links" aria-label="Theme picker documents"><a href="features/theme-picker/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/theme-picker/ui/flow.html" target="_blank" rel="noopener">Flow</a><a href="features/theme-picker/ui/decision.md" target="_blank" rel="noopener">Decision</a><a href="features/theme-picker/ui/fixtures.json" target="_blank" rel="noopener">Fixtures</a></nav>
+      <h3>Approved screens</h3>
+      <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/preferences.default.html" target="_blank" rel="noopener" aria-label="Open preferences · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/preferences.default.html" title="preferences · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>preferences · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/preferences.es.html" target="_blank" rel="noopener" aria-label="Open preferences · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/preferences.es.html" title="preferences · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>preferences · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/preferences.picked.html" target="_blank" rel="noopener" aria-label="Open preferences · picked full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/preferences.picked.html" title="preferences · picked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>preferences · picked</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/review.default.html" target="_blank" rel="noopener" aria-label="Open review · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/review.default.html" title="review · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>review · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/settings.default.html" target="_blank" rel="noopener" aria-label="Open settings · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/settings.default.html" title="settings · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/settings.es.html" target="_blank" rel="noopener" aria-label="Open settings · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/settings.es.html" title="settings · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/settings.light.html" target="_blank" rel="noopener" aria-label="Open settings · light full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/settings.light.html" title="settings · light" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · light</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/settings.picked.html" target="_blank" rel="noopener" aria-label="Open settings · picked full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/settings.picked.html" title="settings · picked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>settings · picked</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/theme-sheet.default.html" target="_blank" rel="noopener" aria-label="Open theme-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/theme-sheet.default.html" title="theme-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>theme-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/theme-sheet.es.html" target="_blank" rel="noopener" aria-label="Open theme-sheet · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/theme-sheet.es.html" title="theme-sheet · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>theme-sheet · es</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/approved/theme-sheet.picked.html" target="_blank" rel="noopener" aria-label="Open theme-sheet · picked full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/approved/theme-sheet.picked.html" title="theme-sheet · picked" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>theme-sheet · picked</figcaption>
+        </figure>
+      </div>
+      <details class="options">
+        <summary>Options (4)</summary>
+        <div class="option">
+          <h4>a1-grid-sheet <span class="badge badge--approved">Chosen</span></h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a1-grid-sheet/onboarding.html" target="_blank" rel="noopener" aria-label="Open a1-grid-sheet · onboarding full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a1-grid-sheet/onboarding.html" title="a1-grid-sheet · onboarding" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a1-grid-sheet · onboarding</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a1-grid-sheet/picker.html" target="_blank" rel="noopener" aria-label="Open a1-grid-sheet · picker full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a1-grid-sheet/picker.html" title="a1-grid-sheet · picker" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a1-grid-sheet · picker</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a1-grid-sheet/settings.html" target="_blank" rel="noopener" aria-label="Open a1-grid-sheet · settings full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a1-grid-sheet/settings.html" title="a1-grid-sheet · settings" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a1-grid-sheet · settings</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>a2-grid-screen</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a2-grid-screen/onboarding.html" target="_blank" rel="noopener" aria-label="Open a2-grid-screen · onboarding full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a2-grid-screen/onboarding.html" title="a2-grid-screen · onboarding" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a2-grid-screen · onboarding</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a2-grid-screen/picker.html" target="_blank" rel="noopener" aria-label="Open a2-grid-screen · picker full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a2-grid-screen/picker.html" title="a2-grid-screen · picker" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a2-grid-screen · picker</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/a2-grid-screen/settings.html" target="_blank" rel="noopener" aria-label="Open a2-grid-screen · settings full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/a2-grid-screen/settings.html" title="a2-grid-screen · settings" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a2-grid-screen · settings</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>b1-launcher-list</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b1-launcher-list/onboarding.html" target="_blank" rel="noopener" aria-label="Open b1-launcher-list · onboarding full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b1-launcher-list/onboarding.html" title="b1-launcher-list · onboarding" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b1-launcher-list · onboarding</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b1-launcher-list/picker.html" target="_blank" rel="noopener" aria-label="Open b1-launcher-list · picker full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b1-launcher-list/picker.html" title="b1-launcher-list · picker" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b1-launcher-list · picker</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b1-launcher-list/settings.html" target="_blank" rel="noopener" aria-label="Open b1-launcher-list · settings full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b1-launcher-list/settings.html" title="b1-launcher-list · settings" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b1-launcher-list · settings</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>b2-spotlight</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b2-spotlight/onboarding.html" target="_blank" rel="noopener" aria-label="Open b2-spotlight · onboarding full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b2-spotlight/onboarding.html" title="b2-spotlight · onboarding" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b2-spotlight · onboarding</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b2-spotlight/picker.html" target="_blank" rel="noopener" aria-label="Open b2-spotlight · picker full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b2-spotlight/picker.html" title="b2-spotlight · picker" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b2-spotlight · picker</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-picker/ui/options/b2-spotlight/settings.html" target="_blank" rel="noopener" aria-label="Open b2-spotlight · settings full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-picker/ui/options/b2-spotlight/settings.html" title="b2-spotlight · settings" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b2-spotlight · settings</figcaption>
+        </figure>
+          </div>
+        </div>
+      </details>
+    </section>
+    <section class="feature" id="feature-theme-showcase" data-status="exploring">
+      <header class="feature__head">
+        <h2>Theme showcase</h2>
+        <span class="badge badge--exploring">Exploring</span>
+      </header>
+      <p class="summary">Every theme on the same six app screens, one option per theme. The owner approved all fifteen on 2026-11-01; this is the catalog's review record, not a feature to build.</p>
+      <nav class="links" aria-label="Theme showcase documents"><a href="features/theme-showcase/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/theme-showcase/ui/decision.md" target="_blank" rel="noopener">Decision</a></nav>
+      <details class="options" open>
+        <summary>Options (15)</summary>
+        <div class="option">
+          <h4>a-midnight-gold</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/buckets.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/buckets.html" title="a-midnight-gold · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/dashboard.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/dashboard.html" title="a-midnight-gold · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/entries.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/entries.html" title="a-midnight-gold · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/form.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/form.html" title="a-midnight-gold · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/sheet.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/sheet.html" title="a-midnight-gold · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/a-midnight-gold/summary.html" target="_blank" rel="noopener" aria-label="Open a-midnight-gold · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/a-midnight-gold/summary.html" title="a-midnight-gold · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>a-midnight-gold · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>b-all-hallows</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/buckets.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/buckets.html" title="b-all-hallows · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/dashboard.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/dashboard.html" title="b-all-hallows · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/entries.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/entries.html" title="b-all-hallows · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/form.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/form.html" title="b-all-hallows · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/sheet.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/sheet.html" title="b-all-hallows · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/b-all-hallows/summary.html" target="_blank" rel="noopener" aria-label="Open b-all-hallows · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/b-all-hallows/summary.html" title="b-all-hallows · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>b-all-hallows · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>c-catppuccin</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/buckets.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/buckets.html" title="c-catppuccin · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/dashboard.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/dashboard.html" title="c-catppuccin · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/entries.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/entries.html" title="c-catppuccin · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/form.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/form.html" title="c-catppuccin · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/sheet.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/sheet.html" title="c-catppuccin · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/c-catppuccin/summary.html" target="_blank" rel="noopener" aria-label="Open c-catppuccin · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/c-catppuccin/summary.html" title="c-catppuccin · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>c-catppuccin · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>d-digital-rain</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/buckets.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/buckets.html" title="d-digital-rain · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/dashboard.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/dashboard.html" title="d-digital-rain · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/entries.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/entries.html" title="d-digital-rain · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/form.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/form.html" title="d-digital-rain · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/sheet.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/sheet.html" title="d-digital-rain · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/d-digital-rain/summary.html" target="_blank" rel="noopener" aria-label="Open d-digital-rain · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/d-digital-rain/summary.html" title="d-digital-rain · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>d-digital-rain · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>e-flexoki-light</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/buckets.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/buckets.html" title="e-flexoki-light · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/dashboard.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/dashboard.html" title="e-flexoki-light · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/entries.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/entries.html" title="e-flexoki-light · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/form.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/form.html" title="e-flexoki-light · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/sheet.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/sheet.html" title="e-flexoki-light · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/e-flexoki-light/summary.html" target="_blank" rel="noopener" aria-label="Open e-flexoki-light · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/e-flexoki-light/summary.html" title="e-flexoki-light · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>e-flexoki-light · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>f-gruvbox</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/buckets.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/buckets.html" title="f-gruvbox · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/dashboard.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/dashboard.html" title="f-gruvbox · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/entries.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/entries.html" title="f-gruvbox · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/form.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/form.html" title="f-gruvbox · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/sheet.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/sheet.html" title="f-gruvbox · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/f-gruvbox/summary.html" target="_blank" rel="noopener" aria-label="Open f-gruvbox · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/f-gruvbox/summary.html" title="f-gruvbox · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>f-gruvbox · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>g-moon-prism</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/buckets.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/buckets.html" title="g-moon-prism · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/dashboard.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/dashboard.html" title="g-moon-prism · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/entries.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/entries.html" title="g-moon-prism · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/form.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/form.html" title="g-moon-prism · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/sheet.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/sheet.html" title="g-moon-prism · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/g-moon-prism/summary.html" target="_blank" rel="noopener" aria-label="Open g-moon-prism · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/g-moon-prism/summary.html" title="g-moon-prism · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>g-moon-prism · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>h-nord</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/buckets.html" target="_blank" rel="noopener" aria-label="Open h-nord · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/buckets.html" title="h-nord · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/dashboard.html" target="_blank" rel="noopener" aria-label="Open h-nord · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/dashboard.html" title="h-nord · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/entries.html" target="_blank" rel="noopener" aria-label="Open h-nord · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/entries.html" title="h-nord · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/form.html" target="_blank" rel="noopener" aria-label="Open h-nord · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/form.html" title="h-nord · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/sheet.html" target="_blank" rel="noopener" aria-label="Open h-nord · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/sheet.html" title="h-nord · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/h-nord/summary.html" target="_blank" rel="noopener" aria-label="Open h-nord · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/h-nord/summary.html" title="h-nord · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>h-nord · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>i-ocarina</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/buckets.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/buckets.html" title="i-ocarina · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/dashboard.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/dashboard.html" title="i-ocarina · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/entries.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/entries.html" title="i-ocarina · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/form.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/form.html" title="i-ocarina · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/sheet.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/sheet.html" title="i-ocarina · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/i-ocarina/summary.html" target="_blank" rel="noopener" aria-label="Open i-ocarina · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/i-ocarina/summary.html" title="i-ocarina · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>i-ocarina · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>j-pumpkin-king</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/buckets.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/buckets.html" title="j-pumpkin-king · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/dashboard.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/dashboard.html" title="j-pumpkin-king · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/entries.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/entries.html" title="j-pumpkin-king · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/form.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/form.html" title="j-pumpkin-king · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/sheet.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/sheet.html" title="j-pumpkin-king · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/j-pumpkin-king/summary.html" target="_blank" rel="noopener" aria-label="Open j-pumpkin-king · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/j-pumpkin-king/summary.html" title="j-pumpkin-king · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>j-pumpkin-king · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>k-snowglobe</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/buckets.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/buckets.html" title="k-snowglobe · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/dashboard.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/dashboard.html" title="k-snowglobe · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/entries.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/entries.html" title="k-snowglobe · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/form.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/form.html" title="k-snowglobe · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/sheet.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/sheet.html" title="k-snowglobe · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/k-snowglobe/summary.html" target="_blank" rel="noopener" aria-label="Open k-snowglobe · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/k-snowglobe/summary.html" title="k-snowglobe · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>k-snowglobe · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>l-super-saiyan</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/buckets.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/buckets.html" title="l-super-saiyan · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/dashboard.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/dashboard.html" title="l-super-saiyan · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/entries.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/entries.html" title="l-super-saiyan · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/form.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/form.html" title="l-super-saiyan · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/sheet.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/sheet.html" title="l-super-saiyan · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/l-super-saiyan/summary.html" target="_blank" rel="noopener" aria-label="Open l-super-saiyan · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/l-super-saiyan/summary.html" title="l-super-saiyan · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>l-super-saiyan · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>m-tokyo-night</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/buckets.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/buckets.html" title="m-tokyo-night · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/dashboard.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/dashboard.html" title="m-tokyo-night · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/entries.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/entries.html" title="m-tokyo-night · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/form.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/form.html" title="m-tokyo-night · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/sheet.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/sheet.html" title="m-tokyo-night · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/m-tokyo-night/summary.html" target="_blank" rel="noopener" aria-label="Open m-tokyo-night · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/m-tokyo-night/summary.html" title="m-tokyo-night · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>m-tokyo-night · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>n-wisteria</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/buckets.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/buckets.html" title="n-wisteria · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/dashboard.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/dashboard.html" title="n-wisteria · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/entries.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/entries.html" title="n-wisteria · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/form.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/form.html" title="n-wisteria · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/sheet.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/sheet.html" title="n-wisteria · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/n-wisteria/summary.html" target="_blank" rel="noopener" aria-label="Open n-wisteria · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/n-wisteria/summary.html" title="n-wisteria · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>n-wisteria · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+        <div class="option">
+          <h4>o-yuletide</h4>
+          <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/buckets.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · buckets full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/buckets.html" title="o-yuletide · buckets" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · buckets</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/dashboard.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · dashboard full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/dashboard.html" title="o-yuletide · dashboard" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · dashboard</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/entries.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · entries full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/entries.html" title="o-yuletide · entries" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · entries</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/form.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · form full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/form.html" title="o-yuletide · form" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · form</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/sheet.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · sheet full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/sheet.html" title="o-yuletide · sheet" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · sheet</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/theme-showcase/ui/options/o-yuletide/summary.html" target="_blank" rel="noopener" aria-label="Open o-yuletide · summary full size">
+            <div class="frame__viewport">
+              <iframe src="features/theme-showcase/ui/options/o-yuletide/summary.html" title="o-yuletide · summary" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>o-yuletide · summary</figcaption>
+        </figure>
+          </div>
+        </div>
+      </details>
+    </section>
     </main>
   </div>
   <script>
