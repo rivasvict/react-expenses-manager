@@ -12,7 +12,10 @@ before building or designing any UI.
 |---|---|
 | [`src/styles/tokens.json`](../../src/styles/tokens.json) | **The single source of truth** for every color, radius, shadow and font stack. |
 | [`tokens.css`](tokens.css) | Generated: the tokens as CSS custom properties (`--accent`, `--radius-card`, …) for HTML mockups. |
-| [`src/styles/_tokens.scss`](../../src/styles/_tokens.scss) | Generated: the tokens as SCSS variables (`$accent`, `$radius-card`, …), pulled in by `src/variables.scss`. |
+| [`themes.css`](themes.css) | Generated from `src/themes/catalog/*.json`: one `[data-theme="<id>"]` block per theme, so a mockup can show any theme on the page or on one element (link it after `tokens.css`). |
+| [`src/styles/_tokens.scss`](../../src/styles/_tokens.scss) | Generated: the tokens as SCSS variables (`$accent`, `$radius-card`, …), pulled in by `src/variables.scss`. Color, chart and shadow variables are `var(--…)` references (themed at runtime); radius and font stay literal. |
+| [`src/styles/themes.generated.css`](../../src/styles/themes.generated.css) | Generated: the app's stylesheet of theme variables (`:root` and one `[data-theme]` block per theme), imported once by `src/index.tsx`. |
+| [`src/themes/catalog.generated.ts`](../../src/themes/catalog.generated.ts) | Generated: the typed `THEME_CATALOG` the theme picker lists. |
 | [`mockup.css`](mockup.css) | Shared base for UI mockups: the app shell, cards, buttons and text roles, built only from `tokens.css`. See [`../README.md`](../README.md). |
 | [`components.md`](components.md) | Inventory: each design-system component → the code that implements it. |
 | [`reference/design-system.dc.html`](reference/design-system.dc.html) | The visual reference board exported from Claude Design (snapshot — see below). |
@@ -21,15 +24,27 @@ before building or designing any UI.
 
 ```
 src/styles/tokens.json ──npm run tokens:build──┬─▶ src/styles/_tokens.scss ─▶ src/variables.scss ─▶ every .scss
-                                               └─▶ design/system/tokens.css ─▶ HTML mockups
-src/styles/tokens.json ──import──▶ JS/TSX that needs a color at runtime (charts, SVG marks)
+                                               │        (color / chart / shadow = var(--token); radius, font = literal)
+src/themes/catalog/*.json ─────────────────────┼─▶ src/styles/themes.generated.css ─▶ imported once by src/index.tsx
+   (default theme: tokens.json)                ├─▶ src/themes/catalog.generated.ts ─▶ THEME_CATALOG ─▶ useTheme() / the picker
+                                               ├─▶ design/system/tokens.css ─▶ HTML mockups (literal values)
+                                               └─▶ design/system/themes.css ─▶ HTML mockups (one block per theme)
 ```
+
+The app is themed at runtime: `data-theme="<id>"` on `<html>` (set before the first render from
+`localStorage` `settings.theme`) selects a block of CSS variables, so every SCSS token follows the
+active theme. In SCSS, derive a translucent color with `alpha($accent, 0.28)` (it emits
+`color-mix`), never `rgba($accent, …)`: a variable cannot be computed on by Sass. In JS/TSX, a color
+at runtime comes from `useTheme()` (Chart.js canvases and library props need real values and
+re-render on a change) or from `var(--token)` in a DOM/SVG `style`; never read `tokens.json` colors
+in a component. To add a theme, add one JSON file to `src/themes/catalog/` and run
+`npm run tokens:build`; it must pass `src/themes/themeCatalog.test.js`.
 
 To change or add a token:
 
 1. Edit `src/styles/tokens.json` (kebab-case names, unique across groups).
 2. Run `npm run tokens:build`.
-3. Commit the JSON **and** both generated files. A unit test
+3. Commit the JSON **and** every generated file. A unit test
    (`src/styles/tokenFormats.test.js`) fails if they are out of sync.
 
 A token change alters the app (`tokens.json` lives in `src/`), so its PR bumps
@@ -42,13 +57,14 @@ the version like any other. Editing only files under `design/` does not (see
   - `npm run lint:styles` (stylelint): rejects hex and named colors, `rgb()`/`hsl()` with literal
     channels, literal `border-radius` lengths/percentages, and any `font-family` that isn't a token.
   - `npm run lint` (ESLint): rejects hex/`rgb()`/`hsl()` color strings in `src/` JS/TSX.
-- **Deriving from a token is fine**: `rgba($accent, 0.28)` or a focus halo like `0 0 0 3px $income-soft`.
+- **Deriving from a token is fine**: `alpha($accent, 0.28)` or a focus halo like `0 0 0 3px $income-soft`.
   A value that is genuinely new belongs in `tokens.json`, not inline.
 - **Reuse before you create.** Check [`components.md`](components.md) and the mixins in
   `src/variables.scss` (`card`, `interactive-card`, `buttons`, `icon-chip`, `money-figures`,
   `focus-ring`) before writing new styles.
-- The only exception is the `$select-chevron` data URI in `src/variables.scss`, whose fill is
-  `$text-secondary` URL-encoded, because a data URI cannot reference a variable.
+- The only exception is the `$select-chevron` data URI in `src/variables.scss`, whose fill is the
+  default theme's `$text-secondary` URL-encoded, because a data URI cannot reference a variable; the
+  chevron keeps that one grey in every theme.
 
 ## Foundations
 

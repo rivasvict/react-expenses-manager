@@ -1,0 +1,59 @@
+{
+  "id": "flexoki-light",
+  "name": "Flexoki Light",
+  "scheme": "light",
+  "inspiration": {
+    "en": "Omarchy’s Flexoki Light",
+    "es": "Flexoki Light de Omarchy",
+    "fr": "Flexoki Light d’Omarchy"
+  },
+  "description": {
+    "en": "Ink on warm paper: a light theme made for reading.",
+    "es": "Tinta sobre papel cálido: un tema claro pensado para leer.",
+    "fr": "De l'encre sur du papier chaud : un thème clair fait pour la lecture."
+  },
+  "color": {
+    "bg-page": "#e6e4d9",
+    "bg-surface": "#fffcf0",
+    "bg-raised": "#f2f0e5",
+    "bg-raised-hover": "#e6e4d9",
+    "border-subtle": "rgba(16, 15, 15, 0.1)",
+    "border-strong": "rgba(16, 15, 15, 0.2)",
+    "track": "rgba(16, 15, 15, 0.12)",
+    "highlight": "rgba(16, 15, 15, 0.06)",
+    "scrim": "rgba(16, 15, 15, 0.35)",
+    "accent": "#205ea6",
+    "accent-hover": "#1a4f8c",
+    "accent-soft": "rgba(32, 94, 166, 0.12)",
+    "income": "#536907",
+    "income-soft": "rgba(83, 105, 7, 0.12)",
+    "expense": "#af3029",
+    "expense-soft": "rgba(175, 48, 41, 0.12)",
+    "danger": "#af3029",
+    "danger-soft": "rgba(175, 48, 41, 0.14)",
+    "warning": "#ad8301",
+    "text-primary": "#100f0f",
+    "text-secondary": "#403e3c",
+    "text-muted": "#5c5b57",
+    "text-on-accent": "#fffcf0",
+    "text-validation": "#9d4310",
+    "brand-mark-shade": "#b7b5ac"
+  },
+  "chart": {
+    "chart-income": "#536907",
+    "chart-expense": "#af3029",
+    "chart-warning": "#8a6600",
+    "chart-categorical-1": "#205ea6",
+    "chart-categorical-2": "#bc5215",
+    "chart-categorical-3": "#5e409d",
+    "chart-categorical-4": "#a02f6f",
+    "chart-categorical-5": "#66800b",
+    "chart-categorical-6": "#24837b",
+    "chart-categorical-7": "#ad8301",
+    "chart-categorical-8": "#af3029"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(16, 15, 15, 0.08)",
+    "shadow-pop": "0 12px 32px rgba(16, 15, 15, 0.18)"
+  }
+}

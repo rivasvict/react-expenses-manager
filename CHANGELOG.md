@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.37.6] - 2026-10-31
+## [1.38.1] - 2026-11-01
 
 ### Added
 
@@ -14,6 +14,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `@claude review` on a pull request, or add the `claude-review` label to it,
   to run the review again (for example after new pushes or when the pull
   request conflicted at creation and no workflow started).
+
+## [1.38.0] - 2026-11-01
+
+### Added
+
+- **Theme picker.** A new **Theme** row in Settings (between Currency and
+  Privacy mode) opens a bottom sheet with a preview card for each of fifteen
+  themes: a live miniature of the app, the theme's name and what inspired it.
+  Tapping a card recolors the whole app at once and keeps the sheet open, so
+  several themes can be tried; Close, the scrim or Escape closes it. The first
+  setup step has the same cards in a sideways strip, applied at once and kept
+  if the setup is skipped, and the setup review names the chosen theme. The
+  choice is a device preference (`settings.theme`) that never enters the
+  entries model, backups or sync, and the theme is applied before the first
+  render, so there is no flash of the default look.
+- **Fifteen themes**, defined in `src/themes/catalog/`, one JSON file each:
+  Midnight Gold (today's look, the default), four inspired by anime and games
+  (Moon Prism, Super Saiyan, Ocarina and Wisteria), four seasonal ones
+  (Yuletide, Snowglobe, All Hallows and Pumpkin King), Digital Rain for The
+  Matrix, and five from Omarchy (Tokyo Night, Catppuccin, Gruvbox, Nord and
+  Flexoki Light). Each theme's "inspired by" text is written in English,
+  Spanish and French, and a unit test holds every theme to the default's
+  contrast rules. Adding a theme is one JSON file and `npm run tokens:build`.
+
+### Changed
+
+- **The app is themed at runtime with CSS variables.** `npm run tokens:build`
+  now also writes `src/styles/themes.generated.css` (one block per theme) and
+  `src/themes/catalog.generated.ts` (the typed registry the picker lists), and
+  the SCSS color, chart and shadow tokens are `var(--…)` references. Sass color
+  functions on tokens are replaced by `alpha($color, $amount)` in
+  `src/variables.scss`. Charts and the brand mark read the active theme
+  through `useTheme()` or CSS variables instead of `tokens.json`.
+- The setup's first step now offers four quick choices (language, theme,
+  currency, Privacy mode).
 
 ## [1.37.5] - 2026-10-31
 

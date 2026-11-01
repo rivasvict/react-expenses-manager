@@ -11,19 +11,23 @@ import {
   storeCurrency,
 } from "../../helpers/currency/currency";
 import { usePrivacy } from "../../privacy";
+import { useTheme } from "../../themes";
+import ThemeDots from "../common/ThemeDots";
 import VersionLabel from "../common/VersionLabel";
 import CurrencySheet from "./CurrencySheet";
 import LanguageSheet from "./LanguageSheet";
 import SettingRow from "./SettingRow";
 import SwitchRow from "./SwitchRow";
+import ThemeSheet from "./ThemeSheet";
 import "./styles.scss";
 
-type OpenSheet = "language" | "currency" | null;
+type OpenSheet = "language" | "currency" | "theme" | null;
 
 /**
- * Device-level preferences: the UI language, the display currency and Privacy
- * mode. The first two are rows showing their current value; tapping one opens
- * a sheet to pick another. Privacy mode is a switch row.
+ * Device-level preferences: the UI language, the display currency, the color
+ * theme and Privacy mode. The first three are rows showing their current
+ * value; tapping one opens a sheet to pick another. Privacy mode is a switch
+ * row.
  * Picking one applies immediately and is remembered in this browser only, so
  * it works the same with or without a sync server and never touches the
  * entries model.
@@ -37,9 +41,16 @@ const Settings = () => {
   const [currency, setCurrency] = useState<Currency>(getStoredCurrency);
   const languageRow = useRef<HTMLButtonElement>(null);
   const currencyRow = useRef<HTMLButtonElement>(null);
+  const themeRow = useRef<HTMLButtonElement>(null);
+  const { theme } = useTheme();
 
   const closeSheet = () => {
-    (openSheet === "language" ? languageRow : currencyRow).current?.focus();
+    const rows = {
+      language: languageRow,
+      currency: currencyRow,
+      theme: themeRow,
+    };
+    if (openSheet) rows[openSheet].current?.focus();
     setOpenSheet(null);
   };
   const pickCurrency = (picked: Currency) => {
@@ -66,6 +77,19 @@ const Settings = () => {
               value={`${CURRENCY_SYMBOLS[currency]} · ${currency}`}
               onOpen={() => setOpenSheet("currency")}
             />
+            <SettingRow
+              ref={themeRow}
+              label={t("settings.theme.title")}
+              hint={t("settings.theme.hint")}
+              ariaLabel={`${t("settings.theme.title")}: ${theme.name}`}
+              value={
+                <>
+                  <ThemeDots theme={theme} />
+                  {theme.name}
+                </>
+              }
+              onOpen={() => setOpenSheet("theme")}
+            />
             <SwitchRow
               label={t("settings.privacy.title")}
               hint={t("settings.privacy.hint")}
@@ -86,6 +110,7 @@ const Settings = () => {
         </Row>
       </Container>
       {openSheet === "language" && <LanguageSheet onClose={closeSheet} />}
+      {openSheet === "theme" && <ThemeSheet onClose={closeSheet} />}
       {openSheet === "currency" && (
         <CurrencySheet
           current={currency}

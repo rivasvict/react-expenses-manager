@@ -1,0 +1,35 @@
+@import "../../../variables.scss";
+
+// The panel is a column so that only the grid scrolls (max-height 85vh comes
+// from the shared sheet).
+.theme-sheet .bottom-sheet__panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: #{"calc(1rem + env(safe-area-inset-bottom, 0px))"};
+
+  .bottom-sheet__grabber,
+  .bottom-sheet__header {
+    flex: none;
+  }
+
+  .field-hint {
+    flex: none;
+    margin-bottom: 0.4rem;
+  }
+}
+
+.theme-sheet__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 -0.15rem;
+  overflow-y: auto;
+}
+
+.theme-sheet__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  // Room for the selected card's 2px ring, which would otherwise be clipped.
+  padding: 0.15rem 0.15rem 0.3rem;
+}

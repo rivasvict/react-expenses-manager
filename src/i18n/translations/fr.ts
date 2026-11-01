@@ -67,7 +67,16 @@ const fr: Translations = {
   "settings.privacy.title": "Mode confidentialité",
   "settings.privacy.hint":
     "Floute les chiffres à l'ouverture de l'app jusqu'à ce que vous les affichiez",
+  "settings.theme.title": "Thème",
+  "settings.theme.hint": "Couleurs de l’app",
+  "settings.theme.description":
+    "Touchez un thème pour l’utiliser. L’app change aussitôt.",
   "settings.sheet.close": "Fermer",
+
+  // Thèmes (les noms sont des noms propres et ne sont pas traduits)
+  "themes.inspiredBy": "Inspiré de {{source}}",
+  "themes.original": "L’apparence d’origine",
+  "themes.default": "Par défaut",
   "currency.USD": "Dollar américain",
   "currency.EUR": "Euro",
   "currency.GBP": "Livre sterling",
@@ -511,7 +520,8 @@ const fr: Translations = {
   "onboarding.start": "Commencer le suivi",
   "onboarding.welcome": "Bienvenue ! Configurons votre espace",
   "onboarding.prefsLead":
-    "Trois choix rapides. Vous pourrez tous les modifier plus tard dans les Réglages.",
+    "Quatre choix rapides. Vous pourrez tous les modifier plus tard dans les Réglages.",
+  "onboarding.themeHint": "toute l’app change dès que vous choisissez",
   "onboarding.currencyHint": "symbole uniquement, rien n’est converti",
   "onboarding.privacy": "Confidentialité",
   "onboarding.privacyHint":

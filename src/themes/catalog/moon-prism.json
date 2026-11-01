@@ -1,0 +1,59 @@
+{
+  "id": "moon-prism",
+  "name": "Moon Prism",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Sailor Moon",
+    "es": "Sailor Moon",
+    "fr": "Sailor Moon"
+  },
+  "description": {
+    "en": "Moonlit navy, prism pink and a golden crescent.",
+    "es": "Azul marino de luna, rosa prisma y una media luna dorada.",
+    "fr": "Bleu nuit lunaire, rose prisme et croissant doré."
+  },
+  "color": {
+    "bg-page": "#100f26",
+    "bg-surface": "#17163a",
+    "bg-raised": "#211f4d",
+    "bg-raised-hover": "#2a285c",
+    "border-subtle": "rgba(217, 212, 255, 0.08)",
+    "border-strong": "rgba(217, 212, 255, 0.16)",
+    "track": "rgba(217, 212, 255, 0.1)",
+    "highlight": "rgba(217, 212, 255, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#ff8fc8",
+    "accent-hover": "#ffaad6",
+    "accent-soft": "rgba(255, 143, 200, 0.12)",
+    "income": "#6fe0b8",
+    "income-soft": "rgba(111, 224, 184, 0.12)",
+    "expense": "#ff7b6b",
+    "expense-soft": "rgba(255, 123, 107, 0.12)",
+    "danger": "#ff6b6b",
+    "danger-soft": "rgba(255, 107, 107, 0.14)",
+    "warning": "#f7d14c",
+    "text-primary": "#f6f2ff",
+    "text-secondary": "#bab5dc",
+    "text-muted": "#a29dcb",
+    "text-on-accent": "#2a0a1f",
+    "text-validation": "#ffb38a",
+    "brand-mark-shade": "#ffd95e"
+  },
+  "chart": {
+    "chart-income": "#3fc796",
+    "chart-expense": "#ff6b5c",
+    "chart-warning": "#e9be2c",
+    "chart-categorical-1": "#5aa9ff",
+    "chart-categorical-2": "#ff9a3c",
+    "chart-categorical-3": "#a77bef",
+    "chart-categorical-4": "#ff8fc8",
+    "chart-categorical-5": "#5fcf7a",
+    "chart-categorical-6": "#3cc8e6",
+    "chart-categorical-7": "#ffe27a",
+    "chart-categorical-8": "#ff5d6c"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

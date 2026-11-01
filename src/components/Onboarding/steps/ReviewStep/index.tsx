@@ -12,6 +12,7 @@ import {
   getBucketsTotal,
   WizardDraft,
 } from "../../../../onboarding/wizardDraft";
+import { useTheme } from "../../../../themes";
 import SummaryRow from "../../SummaryRow";
 import "./styles.scss";
 
@@ -29,6 +30,7 @@ interface ReviewStepProps {
  */
 const ReviewStep = ({ draft, onEdit }: ReviewStepProps) => {
   const { t, plural, language } = useTranslation();
+  const { theme } = useTheme();
 
   const categoryRow = (type: CategoryType) => {
     const names = draft.categories[type].own;
@@ -57,7 +59,9 @@ const ReviewStep = ({ draft, onEdit }: ReviewStepProps) => {
       <div className="review-step__rows">
         <SummaryRow
           title={`${LANGUAGE_NATIVE_NAMES[language]} · ${CURRENCY_SYMBOLS[draft.currency]} ${draft.currency}`}
-          hint={t(draft.privacyMode ? "onboarding.privacyOn" : "onboarding.privacyOff")}
+          hint={`${theme.name} · ${t(
+            draft.privacyMode ? "onboarding.privacyOn" : "onboarding.privacyOff",
+          )}`}
           onEdit={() => onEdit("preferences")}
         />
         {categoryRow("expense")}

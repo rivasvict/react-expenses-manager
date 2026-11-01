@@ -81,7 +81,7 @@ a.content-title-selection {
   // Sign drives the tint; a zero/net total keeps the neutral surface + value.
   &.tile-tone--expense {
     background-color: $expense-soft;
-    border-color: rgba($expense, 0.28);
+    border-color: alpha($expense, 0.28);
 
     .tile-total__value {
       color: $expense;
@@ -90,7 +90,7 @@ a.content-title-selection {
 
   &.tile-tone--income {
     background-color: $income-soft;
-    border-color: rgba($income, 0.28);
+    border-color: alpha($income, 0.28);
 
     .tile-total__value {
       color: $income;

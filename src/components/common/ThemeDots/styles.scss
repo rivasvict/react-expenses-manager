@@ -1,0 +1,36 @@
+@import "../../../variables.scss";
+
+.theme-dots {
+  display: inline-flex;
+  flex: none;
+
+  // The ring is the row's surface, so the dots read as overlapping discs.
+  i {
+    width: 0.85rem;
+    height: 0.85rem;
+    margin-left: -0.25rem;
+    border: 2px solid $bg-surface;
+    border-radius: $radius-round;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &__page {
+    background-color: $bg-page;
+    box-shadow: inset 0 0 0 1px $border-strong;
+  }
+
+  &__accent {
+    background-color: $accent;
+  }
+
+  &__income {
+    background-color: $income;
+  }
+
+  &__expense {
+    background-color: $expense;
+  }
+}

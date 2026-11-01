@@ -1,0 +1,122 @@
+{
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "settings.default",
+      "title": "Settings with the Theme row",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.default",
+      "title": "Theme sheet",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.picked",
+      "title": "All Hallows picked: the whole app changes",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.picked",
+      "title": "Settings in All Hallows",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.light",
+      "title": "Settings in a light theme (Flexoki Light)",
+      "route": "/settings"
+    },
+    {
+      "id": "settings.es",
+      "title": "Settings (es)",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.es",
+      "title": "Theme sheet (es)",
+      "route": "/settings"
+    },
+    {
+      "id": "preferences.default",
+      "title": "Setup step 1 with the theme strip",
+      "route": "/welcome"
+    },
+    {
+      "id": "preferences.picked",
+      "title": "Setup step 1, All Hallows picked",
+      "route": "/welcome"
+    },
+    {
+      "id": "preferences.es",
+      "title": "Setup step 1 (es)",
+      "route": "/welcome"
+    },
+    {
+      "id": "review.default",
+      "title": "Setup review",
+      "route": "/welcome"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard",
+      "to": "settings.default",
+      "label": "Tap the gear in the app bar"
+    },
+    {
+      "from": "settings.default",
+      "to": "theme-sheet.default",
+      "label": "Tap Theme"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "theme-sheet.picked",
+      "label": "Tap All Hallows"
+    },
+    {
+      "from": "theme-sheet.picked",
+      "to": "theme-sheet.default",
+      "label": "Tap Midnight Gold"
+    },
+    {
+      "from": "theme-sheet.picked",
+      "to": "settings.picked",
+      "label": "Tap Close, the scrim or Escape"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "settings.default",
+      "label": "Tap Close, the scrim or Escape"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "settings.light",
+      "label": "Scroll, tap Flexoki Light, then Close"
+    },
+    {
+      "from": "settings.es",
+      "to": "theme-sheet.es",
+      "label": "Tap Tema"
+    },
+    {
+      "from": "preferences.default",
+      "to": "preferences.picked",
+      "label": "Tap All Hallows in the strip"
+    },
+    {
+      "from": "preferences.picked",
+      "to": "preferences.default",
+      "label": "Tap Midnight Gold"
+    },
+    {
+      "from": "preferences.default",
+      "to": "review.default",
+      "label": "Tap Next through steps 2 to 4"
+    }
+  ]
+}

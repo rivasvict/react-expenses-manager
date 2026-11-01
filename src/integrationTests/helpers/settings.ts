@@ -34,3 +34,18 @@ export const togglePrivacyMode = async (
   user: UserEvent,
   rowName: RegExp = /^Privacy mode/,
 ) => user.click(await screen.findByRole("switch", { name: rowName }));
+
+/**
+ * Open the Theme sheet from its row and tap one theme card. Unlike the
+ * Language and Currency sheets, the Theme sheet stays open after a pick (the
+ * app recolors behind it), so close it with the Close button when needed.
+ * `rowName` defaults to the English label.
+ */
+export const pickTheme = async (
+  user: UserEvent,
+  themeName: string | RegExp,
+  rowName: RegExp = /^Theme/,
+) => {
+  await user.click(await screen.findByRole("button", { name: rowName }));
+  await user.click(await screen.findByRole("radio", { name: themeName }));
+};

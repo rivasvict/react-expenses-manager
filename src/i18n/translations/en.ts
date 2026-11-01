@@ -67,7 +67,16 @@ const en = {
   "settings.privacy.title": "Privacy mode",
   "settings.privacy.hint":
     "Blurs figures when the app opens until you show them",
+  "settings.theme.title": "Theme",
+  "settings.theme.hint": "Colors of the app",
+  "settings.theme.description":
+    "Tap a theme to use it. The app changes right away.",
   "settings.sheet.close": "Close",
+
+  // Themes (names are proper names and are never translated)
+  "themes.inspiredBy": "Inspired by {{source}}",
+  "themes.original": "The original look",
+  "themes.default": "Default",
   "currency.USD": "US Dollar",
   "currency.EUR": "Euro",
   "currency.GBP": "British Pound",
@@ -515,7 +524,8 @@ const en = {
   "onboarding.start": "Start tracking",
   "onboarding.welcome": "Welcome! Let’s set things up",
   "onboarding.prefsLead":
-    "Three quick choices. You can change all of them later in Settings.",
+    "Four quick choices. You can change all of them later in Settings.",
+  "onboarding.themeHint": "the whole app changes as you pick",
   "onboarding.currencyHint": "symbol only, nothing is converted",
   "onboarding.privacy": "Privacy",
   "onboarding.privacyHint":

@@ -1,0 +1,59 @@
+{
+  "id": "wisteria",
+  "name": "Wisteria",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Demon Slayer",
+    "es": "Demon Slayer",
+    "fr": "Demon Slayer"
+  },
+  "description": {
+    "en": "A corps-black night, checkered-haori green and wisteria in bloom.",
+    "es": "Noche negra del cuerpo, verde de haori a cuadros y glicinas en flor.",
+    "fr": "Nuit noire du corps, vert du haori à damier et glycines en fleur."
+  },
+  "color": {
+    "bg-page": "#0d0e0f",
+    "bg-surface": "#141917",
+    "bg-raised": "#1b231f",
+    "bg-raised-hover": "#222c27",
+    "border-subtle": "rgba(227, 234, 223, 0.08)",
+    "border-strong": "rgba(227, 234, 223, 0.16)",
+    "track": "rgba(227, 234, 223, 0.1)",
+    "highlight": "rgba(227, 234, 223, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#a58ff5",
+    "accent-hover": "#bba9f8",
+    "accent-soft": "rgba(165, 143, 245, 0.12)",
+    "income": "#4fcb8a",
+    "income-soft": "rgba(79, 203, 138, 0.12)",
+    "expense": "#ff5f62",
+    "expense-soft": "rgba(255, 95, 98, 0.12)",
+    "danger": "#ff5a5a",
+    "danger-soft": "rgba(255, 90, 90, 0.14)",
+    "warning": "#f2cc3c",
+    "text-primary": "#f1efe9",
+    "text-secondary": "#b1b8ae",
+    "text-muted": "#979f94",
+    "text-on-accent": "#1a0f2b",
+    "text-validation": "#ffa27a",
+    "brand-mark-shade": "#2f8a64"
+  },
+  "chart": {
+    "chart-income": "#36b574",
+    "chart-expense": "#f24f55",
+    "chart-warning": "#e0b928",
+    "chart-categorical-1": "#4ea3f0",
+    "chart-categorical-2": "#ff7a33",
+    "chart-categorical-3": "#a58ff5",
+    "chart-categorical-4": "#f49ac1",
+    "chart-categorical-5": "#a8d65a",
+    "chart-categorical-6": "#3cc0b5",
+    "chart-categorical-7": "#f2cc3c",
+    "chart-categorical-8": "#e5484d"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

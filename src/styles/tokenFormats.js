@@ -9,6 +9,16 @@ const TOKEN_NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
 const SCSS_PATH = "src/styles/_tokens.scss";
 const CSS_PATH = "design/system/tokens.css";
+const THEMES_CSS_PATH = "design/system/themes.css";
+const APP_THEMES_CSS_PATH = "src/styles/themes.generated.css";
+const CATALOG_TS_PATH = "src/themes/catalog.generated.ts";
+
+// The groups the app themes at runtime: SCSS reads them as CSS variables.
+// Radius and font stacks are the same in every theme and stay literal.
+const THEMED_VAR_GROUPS = ["color", "chart", "shadow"];
+
+const THEMES_NOTICE =
+  "GENERATED from src/themes/catalog/*.json by `npm run tokens:build` — do not edit.";
 
 const isMetaKey = (key) => key.startsWith("$");
 
@@ -51,10 +61,15 @@ const renderGrouped = (tokens, { comment, line }) => {
     .join("\n\n");
 };
 
+// Themed tokens (color, chart, shadow) become `$name: var(--name);` so a theme
+// switch at runtime recolors the app; the rest keep their literal value.
 const toScss = (tokens) => {
   const body = renderGrouped(tokens, {
     comment: (group) => `// ${group}`,
-    line: ({ name, value }) => `$${name}: ${value};`,
+    line: ({ group, name, value }) =>
+      THEMED_VAR_GROUPS.includes(group)
+        ? `$${name}: var(--${name});`
+        : `$${name}: ${value};`,
   });
   return `// ${GENERATED_NOTICE}\n\n${body}\n`;
 };
@@ -67,10 +82,98 @@ const toCss = (tokens) => {
   return `/* ${GENERATED_NOTICE} */\n\n:root {\n${body}\n}\n`;
 };
 
+// One `[data-theme="<id>"]` block per theme, so a mockup can show any theme
+// on any element (the whole page, or one preview card inside it).
+const toThemesCss = (themes) => {
+  const blocks = themes.map((theme) => {
+    const body = renderGrouped(
+      { color: theme.color, chart: theme.chart, shadow: theme.shadow },
+      {
+        comment: (group) => `  /* ${group} */`,
+        line: ({ name, value }) => `  --${name}: ${value};`,
+      }
+    );
+    return `[data-theme="${theme.id}"] {\n  color-scheme: ${theme.scheme};\n\n${body}\n}`;
+  });
+  return `/* ${THEMES_NOTICE} */\n\n${blocks.join("\n\n")}\n`;
+};
+
+// The stylesheet the app imports once: the default theme answers on :root (so
+// the app is themed before anything sets data-theme) and every theme answers on
+// its own `[data-theme]` selector, on <html> or on one preview element.
+const toAppThemesCss = (themes) => {
+  const blocks = themes.map((theme) => {
+    const body = renderGrouped(
+      { color: theme.color, chart: theme.chart, shadow: theme.shadow },
+      {
+        comment: (group) => `  /* ${group} */`,
+        line: ({ name, value }) => `  --${name}: ${value};`,
+      }
+    );
+    const selector = theme.default
+      ? `:root,\n[data-theme="${theme.id}"]`
+      : `[data-theme="${theme.id}"]`;
+    return `${selector} {\n  color-scheme: ${theme.scheme};\n\n${body}\n}`;
+  });
+  return `/* ${THEMES_NOTICE} */\n\n${blocks.join("\n\n")}\n`;
+};
+
+const importName = (id) =>
+  id.replace(/-([a-z0-9])/g, (_, char) => char.toUpperCase());
+
+// The runtime registry: every catalog file imported statically, in catalog
+// order. The default theme's tokens come from tokens.json, the rest from
+// their own file. Nothing else in the app lists themes by hand.
+const toCatalogTs = (themes) => {
+  const defaultTheme = themes.find((theme) => theme.default);
+  const entries = themes.map((theme) =>
+    theme.default
+      ? [
+          "  {",
+          `    ...${importName(theme.id)},`,
+          "    color: tokens.color,",
+          "    chart: tokens.chart,",
+          "    shadow: tokens.shadow,",
+          "  },",
+        ].join("\n")
+      : `  ${importName(theme.id)},`
+  );
+  return [
+    `// ${THEMES_NOTICE}`,
+    "",
+    'import tokens from "../styles/tokens.json";',
+    ...themes.map(
+      (theme) => `import ${importName(theme.id)} from "./catalog/${theme.id}.json";`
+    ),
+    'import type { Theme } from "./theme.types";',
+    "",
+    `export const DEFAULT_THEME_ID = ${JSON.stringify(defaultTheme.id)};`,
+    "",
+    "// The default theme first, then the others by id.",
+    "export const THEME_CATALOG = [",
+    ...entries,
+    "] as Theme[];",
+    "",
+  ].join("\n");
+};
+
 // Every generated file, keyed by its repo-relative path.
-const buildOutputs = (tokens) => ({
+const buildOutputs = (tokens, themes = []) => ({
   [SCSS_PATH]: toScss(tokens),
   [CSS_PATH]: toCss(tokens),
+  [THEMES_CSS_PATH]: toThemesCss(themes),
+  [APP_THEMES_CSS_PATH]: toAppThemesCss(themes),
+  ...(themes.some((theme) => theme.default)
+    ? { [CATALOG_TS_PATH]: toCatalogTs(themes) }
+    : {}),
 });
 
-module.exports = { tokenEntries, toScss, toCss, buildOutputs };
+module.exports = {
+  tokenEntries,
+  toScss,
+  toCss,
+  toThemesCss,
+  toAppThemesCss,
+  toCatalogTs,
+  buildOutputs,
+};

@@ -21,6 +21,22 @@
     font-weight: 400;
   }
 
+  // A sideways strip of theme cards that bleeds to the card's edges (the
+  // wizard's side padding is 1.75rem).
+  &__themes {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0 -1.75rem;
+    padding: 0.15rem 1.75rem 0.3rem;
+    overflow-x: auto;
+    scroll-padding: 0 1.75rem;
+
+    .theme-card {
+      flex: 0 0 8.4rem;
+      width: auto;
+    }
+  }
+
   // The wizard's card is the surface colour, so its rows are raised from it.
   .switch-row {
     background-color: $bg-raised;

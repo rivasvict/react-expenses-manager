@@ -1,0 +1,59 @@
+{
+  "id": "super-saiyan",
+  "name": "Super Saiyan",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Dragon Ball Z",
+    "es": "Dragon Ball Z",
+    "fr": "Dragon Ball Z"
+  },
+  "description": {
+    "en": "Turtle-school orange on a deep training-gi blue, with a golden aura.",
+    "es": "Naranja de la escuela tortuga sobre el azul del gi, con un aura dorada.",
+    "fr": "Orange de l'école de la tortue sur le bleu du gi, avec une aura dorée."
+  },
+  "color": {
+    "bg-page": "#0c1228",
+    "bg-surface": "#121a38",
+    "bg-raised": "#1a2449",
+    "bg-raised-hover": "#212d58",
+    "border-subtle": "rgba(201, 214, 255, 0.08)",
+    "border-strong": "rgba(201, 214, 255, 0.16)",
+    "track": "rgba(201, 214, 255, 0.1)",
+    "highlight": "rgba(201, 214, 255, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.5)",
+    "accent": "#ff8a1f",
+    "accent-hover": "#ffb347",
+    "accent-soft": "rgba(255, 138, 31, 0.12)",
+    "income": "#62d36d",
+    "income-soft": "rgba(98, 211, 109, 0.12)",
+    "expense": "#ff5c7a",
+    "expense-soft": "rgba(255, 92, 122, 0.12)",
+    "danger": "#ff5a5f",
+    "danger-soft": "rgba(255, 90, 95, 0.14)",
+    "warning": "#ffd23f",
+    "text-primary": "#f3f6ff",
+    "text-secondary": "#adb8da",
+    "text-muted": "#949fc6",
+    "text-on-accent": "#1f0e00",
+    "text-validation": "#ffa08a",
+    "brand-mark-shade": "#4c6fd6"
+  },
+  "chart": {
+    "chart-income": "#43bf55",
+    "chart-expense": "#ff4f6d",
+    "chart-warning": "#f2c21c",
+    "chart-categorical-1": "#4cc9ff",
+    "chart-categorical-2": "#ff8a1f",
+    "chart-categorical-3": "#b07cff",
+    "chart-categorical-4": "#ff7eb6",
+    "chart-categorical-5": "#a8e04a",
+    "chart-categorical-6": "#1fb5a5",
+    "chart-categorical-7": "#ffd23f",
+    "chart-categorical-8": "#ff5a4f"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.3)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.45)"
+  }
+}

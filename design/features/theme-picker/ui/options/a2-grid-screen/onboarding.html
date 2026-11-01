@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" data-theme="flexoki-light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Onboarding, step 1 with the theme choice</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/themes.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+
+    .mk-work-area { display: flex; flex-direction: column; }
+    .spacer { flex: 1 1 auto; }
+    .settings-card { margin: 0.625rem -0.75rem 0; padding: 1rem 1.1rem 1.1rem; }
+    .version { margin: 1.25rem 0 0; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
+    .stack { display: flex; flex-direction: column; gap: 0.625rem; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3.4rem; padding: 0.65rem 0.9rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .row__label { display: block; font-weight: 600; font-size: 0.95rem; }
+    .row__hint { display: block; color: var(--text-secondary); font-size: 0.78rem; }
+    .row__value { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.92rem; min-width: 0; white-space: nowrap; }
+    .switch { width: 2.6rem; height: 1.5rem; flex: none; position: relative; border-radius: var(--radius-pill); background-color: var(--track); border: 1px solid var(--border-strong); }
+    .switch::after { content: ""; position: absolute; top: 0.15rem; left: 0.15rem; width: 1rem; height: 1rem; border-radius: var(--radius-round); background-color: var(--text-secondary); }
+    /* Three dots of the current theme: page, accent, income/expense. */
+    .dots { display: inline-flex; }
+    .dots i { width: 0.85rem; height: 0.85rem; margin-left: -0.25rem; border-radius: var(--radius-round); border: 2px solid var(--bg-surface); }
+    .dots i:first-child { margin-left: 0; }
+    .sw-page { background-color: var(--bg-page); box-shadow: inset 0 0 0 1px var(--border-strong); } .sw-accent { background-color: var(--accent); } .sw-in { background-color: var(--income); } .sw-out { background-color: var(--expense); }
+    /* Miniature of the app drawn in its own theme: the theme's "preview.png". */
+    .tp { display: block; padding: 0.4rem; background-color: var(--bg-page); border-radius: var(--radius-control); border: 1px solid var(--border-subtle); color: var(--text-primary); font-size: 0.55rem; line-height: 1.3; }
+    .tp__top { display: flex; align-items: center; gap: 0.25rem; margin: 0 0 0.3rem; }
+    .tp__logo { width: 0.7rem; height: 0.7rem; border-radius: 0.2rem; border: 1px solid var(--accent); background: linear-gradient(160deg, var(--accent) 45%, var(--brand-mark-shade) 45%); }
+    .tp__brand { height: 0.25rem; width: 2.2rem; border-radius: var(--radius-pill); background-color: var(--text-secondary); opacity: 0.6; }
+    .tp__surface { display: block; padding: 0.3rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 0.35rem; }
+    .tp__hero { display: block; padding: 0.25rem 0.35rem; margin: 0 0 0.25rem; background-color: var(--bg-raised); border-radius: 0.25rem; }
+    .tp__label { display: block; color: var(--text-secondary); font-size: 0.5rem; }
+    .tp__fig { display: block; font-weight: 700; font-size: 0.78rem; color: var(--income); letter-spacing: -0.02em; }
+    .tp__row { display: flex; align-items: center; gap: 0.25rem; margin: 0 0 0.2rem; padding: 0.15rem 0.3rem; background-color: var(--bg-raised); border-radius: 0.25rem; }
+    .tp__chip { width: 0.5rem; height: 0.5rem; border-radius: var(--radius-round); }
+    .tp__chip--in { background-color: var(--income-soft); box-shadow: inset 0 0 0 1.5px var(--income); }
+    .tp__chip--out { background-color: var(--expense-soft); box-shadow: inset 0 0 0 1.5px var(--expense); }
+    .tp__name { flex: 1; height: 0.22rem; border-radius: var(--radius-pill); background-color: var(--text-primary); opacity: 0.55; }
+    .tp__amt--in { color: var(--income); font-weight: 600; } .tp__amt--out { color: var(--expense); font-weight: 600; }
+    .tp__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem; margin-top: 0.25rem; }
+    .tp__btn { height: 0.75rem; border-radius: 0.2rem; background-color: var(--accent); }
+    .tp__btn--ghost { background-color: transparent; border: 1px solid var(--border-strong); }
+    .tname { display: block; font-weight: 600; font-size: 0.9rem; line-height: 1.3; }
+    .tfrom { display: block; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.35; }
+    .badge { display: inline-block; margin-left: 0.3rem; padding: 0 0.4rem; font-size: 0.68rem; font-weight: 700; vertical-align: 0.1rem; border-radius: var(--radius-pill); color: var(--text-secondary); background-color: var(--highlight); border: 1px solid var(--border-subtle); }
+    .tick { position: absolute; top: 0.35rem; right: 0.35rem; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); color: var(--text-on-accent); background-color: var(--accent); box-shadow: var(--shadow-card); }
+    .tick svg { width: 0.9rem; height: 0.9rem; }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; padding: 0.5rem 1rem 1rem; background-color: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); }
+    .sheet__grip { width: 2.6rem; height: 0.28rem; margin: 0.25rem auto 0.6rem; flex: none; background-color: var(--border-strong); border-radius: var(--radius-control); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.25rem; flex: none; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    .sheet__close { width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .sheet__body { overflow: hidden; min-height: 0; }
+    .sheet .mk-hint { margin: 0 0 0.6rem; flex: none; }
+
+    .tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .tcard { position: relative; display: flex; flex-direction: column; gap: 0.4rem; padding: 0.4rem 0.4rem 0.55rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); }
+    .tcard--sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+    .tcard__text { padding: 0 0.25rem; }
+    .strip { display: flex; gap: 0.5rem; overflow: hidden; margin: 0 -1.75rem; padding: 0.15rem 1.75rem 0.3rem; }
+    .strip .tcard { flex: 0 0 8.4rem; }
+
+    .top { display: flex; align-items: center; justify-content: space-between; margin: 0.3rem 0 0.2rem; }
+    .step { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+    .skip { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); min-height: 2.5rem; display: flex; align-items: center; }
+    .bar { display: flex; gap: 0.3rem; margin: 0.2rem 0 0.8rem; }
+    .bar i { flex: 1; height: 0.28rem; border-radius: var(--radius-pill); background-color: var(--track); }
+    .bar i.on { background-color: var(--accent); }
+    h2.h { margin: 0.2rem 0 0.3rem; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+    p.lead { margin: 0 0 0.9rem; font-size: 0.92rem; line-height: 1.5; color: var(--text-secondary); }
+    .lab { margin: 0.8rem 0 0.35rem; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em; color: var(--text-secondary); }
+    .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem; padding: 0.25rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .seg b { min-height: 2.7rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-control); font-size: 0.92rem; font-weight: 600; color: var(--text-secondary); }
+    .seg b.sel { background-color: var(--accent-soft); color: var(--text-primary); box-shadow: inset 0 0 0 1px var(--accent); }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem; }
+    .tile { min-height: 3rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .tile--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .tile b { font-size: 1rem; } .tile small { font-size: 0.74rem; color: var(--text-secondary); }
+    .orow { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3.4rem; padding: 0.65rem 0.9rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .orow__sub { display: block; color: var(--text-secondary); font-size: 0.78rem; font-weight: 400; }
+    .foot { position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; max-width: 40rem; margin: 0 auto; padding: 0.6rem 1.75rem 1rem; background-color: var(--bg-surface); border-top: 1px solid var(--border-subtle); }
+    .tail { height: 5.5rem; }
+
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <div class="top"><span class="step">Step 1 of 5</span><a class="skip">Skip setup</a></div>
+      <div class="bar" role="progressbar" aria-valuenow="1" aria-valuemax="5"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <h2 class="h">Welcome! Let’s set things up</h2>
+      <p class="lead">Four quick choices. You can change all of them later in Settings.</p>
+      <div class="lab" style="margin-top:0">Language</div>
+      <div class="seg"><b class="sel">English</b><b>Español</b><b>Français</b></div>
+      <div class="lab">Theme <span class="mk-text-muted" style="font-weight:400">· the whole app changes as you pick</span></div>
+      <div class="tgrid" role="radiogroup" aria-label="Theme"><span class="tcard" role="radio" aria-checked="false" aria-label="Midnight Gold"><span class="tp" data-theme="midnight-gold" aria-hidden="true"><span class="tp__top"><span class="tp__logo"></span><span class="tp__brand"></span></span><span class="tp__surface"><span class="tp__hero"><span class="tp__label">Savings</span><span class="tp__fig">$1,620.00</span></span><span class="tp__row"><span class="tp__chip tp__chip--in"></span><span class="tp__name"></span><span class="tp__amt--in">$4,200</span></span><span class="tp__row"><span class="tp__chip tp__chip--out"></span><span class="tp__name"></span><span class="tp__amt--out">$2,580</span></span><span class="tp__btns"><span class="tp__btn"></span><span class="tp__btn tp__btn--ghost"></span></span></span></span><span class="tcard__text"><span class="tname">Midnight Gold<span class="badge">Default</span></span><span class="tfrom">The original look</span></span></span><span class="tcard" role="radio" aria-checked="false" aria-label="All Hallows"><span class="tp" data-theme="all-hallows" aria-hidden="true"><span class="tp__top"><span class="tp__logo"></span><span class="tp__brand"></span></span><span class="tp__surface"><span class="tp__hero"><span class="tp__label">Savings</span><span class="tp__fig">$1,620.00</span></span><span class="tp__row"><span class="tp__chip tp__chip--in"></span><span class="tp__name"></span><span class="tp__amt--in">$4,200</span></span><span class="tp__row"><span class="tp__chip tp__chip--out"></span><span class="tp__name"></span><span class="tp__amt--out">$2,580</span></span><span class="tp__btns"><span class="tp__btn"></span><span class="tp__btn tp__btn--ghost"></span></span></span></span><span class="tcard__text"><span class="tname">All Hallows</span><span class="tfrom">Inspired by Halloween</span></span></span><span class="tcard" role="radio" aria-checked="false" aria-label="Catppuccin"><span class="tp" data-theme="catppuccin" aria-hidden="true"><span class="tp__top"><span class="tp__logo"></span><span class="tp__brand"></span></span><span class="tp__surface"><span class="tp__hero"><span class="tp__label">Savings</span><span class="tp__fig">$1,620.00</span></span><span class="tp__row"><span class="tp__chip tp__chip--in"></span><span class="tp__name"></span><span class="tp__amt--in">$4,200</span></span><span class="tp__row"><span class="tp__chip tp__chip--out"></span><span class="tp__name"></span><span class="tp__amt--out">$2,580</span></span><span class="tp__btns"><span class="tp__btn"></span><span class="tp__btn tp__btn--ghost"></span></span></span></span><span class="tcard__text"><span class="tname">Catppuccin</span><span class="tfrom">Inspired by Omarchy’s Catppuccin Mocha</span></span></span><span class="tcard" role="radio" aria-checked="false" aria-label="Digital Rain"><span class="tp" data-theme="digital-rain" aria-hidden="true"><span class="tp__top"><span class="tp__logo"></span><span class="tp__brand"></span></span><span class="tp__surface"><span class="tp__hero"><span class="tp__label">Savings</span><span class="tp__fig">$1,620.00</span></span><span class="tp__row"><span class="tp__chip tp__chip--in"></span><span class="tp__name"></span><span class="tp__amt--in">$4,200</span></span><span class="tp__row"><span class="tp__chip tp__chip--out"></span><span class="tp__name"></span><span class="tp__amt--out">$2,580</span></span><span class="tp__btns"><span class="tp__btn"></span><span class="tp__btn tp__btn--ghost"></span></span></span></span><span class="tcard__text"><span class="tname">Digital Rain</span><span class="tfrom">Inspired by The Matrix</span></span></span></div>
+      <span class="mk-btn mk-btn--secondary" style="margin-top:.5rem;height:2.6em">See all 15 themes</span>
+      <div class="lab">Currency <span class="mk-text-muted" style="font-weight:400">· symbol only, nothing is converted</span></div>
+      <div class="grid4"><span class="tile tile--sel"><b>$</b><small>USD</small></span><span class="tile"><b>€</b><small>EUR</small></span><span class="tile"><b>£</b><small>GBP</small></span><span class="tile"><b>CA$</b><small>CAD</small></span></div>
+      <div class="lab">Privacy</div>
+      <div class="orow"><span><b style="font-weight:600;font-size:.95rem">Privacy mode</b><span class="orow__sub">Hide the dashboard's amounts until you tap the eye</span></span><span class="switch"></span></div>
+      <div class="tail"></div>
+    </div>
+  </main>
+<div class="foot"><span class="mk-btn mk-btn--primary">Next</span></div>
+</body>
+</html>

@@ -46,7 +46,7 @@
   &--selected,
   &--selected:hover {
     background-color: $accent-soft;
-    border-color: rgba($accent, 0.28);
+    border-color: alpha($accent, 0.28);
   }
 
   &__input {

@@ -6,7 +6,9 @@ import {
   SUPPORTED_LANGUAGES,
 } from "../../../../i18n/languages";
 import { Currency } from "../../../../helpers/currency/currency";
+import { useTheme } from "../../../../themes";
 import SegmentedControl from "../../../common/SegmentedControl";
+import ThemeRadioGroup from "../../../common/ThemeRadioGroup";
 import CurrencyTileGrid from "../../../Settings/CurrencyTileGrid";
 import SwitchRow from "../../../Settings/SwitchRow";
 import "./styles.scss";
@@ -24,8 +26,9 @@ const LANGUAGE_OPTIONS = SUPPORTED_LANGUAGES.map((language) => ({
 }));
 
 /**
- * Step 1: the language (applied at once, so the wizard itself switches), the
- * display currency and Privacy mode, preselected from what this device stores.
+ * Step 1: the language and the theme (each applied and stored at once, so the
+ * wizard itself switches), the display currency and Privacy mode, preselected
+ * from what this device stores.
  */
 const PreferencesStep = ({
   currency,
@@ -34,6 +37,7 @@ const PreferencesStep = ({
   onPrivacyModeChange,
 }: PreferencesStepProps) => {
   const { t, language, setLanguage } = useTranslation();
+  const { theme, themes, setTheme } = useTheme();
 
   return (
     <div className="preferences-step">
@@ -45,6 +49,19 @@ const PreferencesStep = ({
         options={LANGUAGE_OPTIONS}
         value={language}
         onChange={setLanguage}
+      />
+      <p className="preferences-step__label">
+        {t("settings.theme.title")}{" "}
+        <span className="preferences-step__hint">
+          · {t("onboarding.themeHint")}
+        </span>
+      </p>
+      <ThemeRadioGroup
+        className="preferences-step__themes"
+        themes={themes}
+        currentId={theme.id}
+        currency={currency}
+        onPick={setTheme}
       />
       <p className="preferences-step__label">
         {t("settings.currency.title")}{" "}
