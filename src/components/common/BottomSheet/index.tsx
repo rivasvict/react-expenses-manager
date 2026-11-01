@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "@iconify/react";
 import closeIcon from "@iconify-icons/codicon/close";
 import "./styles.scss";
@@ -29,6 +30,10 @@ interface BottomSheetProps {
  * body, optionally with a fixed footer. Mount it to open it: it focuses its
  * heading (or `initialFocusRef`), closes on Escape or a tap on the scrim, and
  * the caller returns focus to whatever opened it.
+ *
+ * It renders into `document.body`: the work area is its own stacking context
+ * (the theme picture sits behind its content), so a sheet left inside it could
+ * never rise above the fixed bottom nav and would hide its own buttons.
  */
 const BottomSheet = ({
   title,
@@ -61,7 +66,7 @@ const BottomSheet = ({
     .filter(Boolean)
     .join(" ");
 
-  return (
+  return createPortal(
     <div
       className={`bottom-sheet ${className}`.trim()}
       onKeyDown={(event) => {
@@ -109,7 +114,8 @@ const BottomSheet = ({
           children
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

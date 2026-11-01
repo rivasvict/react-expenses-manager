@@ -11,6 +11,16 @@ const renderSheet = (onClose: () => void) =>
   );
 
 describe("BottomSheet", () => {
+  // The work area is a stacking context, so a sheet mounted inside it could
+  // never rise above the fixed bottom nav; it must live directly in <body>.
+  it("renders outside the container that mounts it, into document.body", () => {
+    const { container } = renderSheet(jest.fn());
+
+    const sheet = screen.getByRole("dialog", { name: "Pick one" });
+    expect(document.body).toContainElement(sheet);
+    expect(container).not.toContainElement(sheet);
+  });
+
   it("is a dialog named by its heading, with the heading focused", () => {
     renderSheet(jest.fn());
 
