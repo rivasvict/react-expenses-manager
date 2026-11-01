@@ -1,0 +1,1369 @@
+{
+  "screens": {
+    "dashboard.midnight-gold": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "entries.midnight-gold": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "form.midnight-gold": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.midnight-gold": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "summary.midnight-gold": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "sheet.midnight-gold": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "midnight-gold"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.all-hallows": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      }
+    },
+    "entries.all-hallows": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      }
+    },
+    "form.all-hallows": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.all-hallows": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      }
+    },
+    "summary.all-hallows": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      }
+    },
+    "sheet.all-hallows": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "all-hallows"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.catppuccin": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      }
+    },
+    "entries.catppuccin": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      }
+    },
+    "form.catppuccin": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.catppuccin": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      }
+    },
+    "summary.catppuccin": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      }
+    },
+    "sheet.catppuccin": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "catppuccin"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.digital-rain": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      }
+    },
+    "entries.digital-rain": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      }
+    },
+    "form.digital-rain": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.digital-rain": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      }
+    },
+    "summary.digital-rain": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      }
+    },
+    "sheet.digital-rain": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "digital-rain"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.flexoki-light": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      }
+    },
+    "entries.flexoki-light": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      }
+    },
+    "form.flexoki-light": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.flexoki-light": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      }
+    },
+    "summary.flexoki-light": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      }
+    },
+    "sheet.flexoki-light": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "flexoki-light"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.gruvbox": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      }
+    },
+    "entries.gruvbox": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      }
+    },
+    "form.gruvbox": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.gruvbox": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      }
+    },
+    "summary.gruvbox": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      }
+    },
+    "sheet.gruvbox": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "gruvbox"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.moon-prism": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      }
+    },
+    "entries.moon-prism": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      }
+    },
+    "form.moon-prism": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.moon-prism": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      }
+    },
+    "summary.moon-prism": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      }
+    },
+    "sheet.moon-prism": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "moon-prism"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.nord": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      }
+    },
+    "entries.nord": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      }
+    },
+    "form.nord": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.nord": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      }
+    },
+    "summary.nord": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      }
+    },
+    "sheet.nord": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "nord"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.ocarina": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      }
+    },
+    "entries.ocarina": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      }
+    },
+    "form.ocarina": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.ocarina": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      }
+    },
+    "summary.ocarina": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      }
+    },
+    "sheet.ocarina": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "ocarina"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.pumpkin-king": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      }
+    },
+    "entries.pumpkin-king": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      }
+    },
+    "form.pumpkin-king": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.pumpkin-king": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      }
+    },
+    "summary.pumpkin-king": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      }
+    },
+    "sheet.pumpkin-king": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "pumpkin-king"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.snowglobe": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      }
+    },
+    "entries.snowglobe": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      }
+    },
+    "form.snowglobe": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.snowglobe": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      }
+    },
+    "summary.snowglobe": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      }
+    },
+    "sheet.snowglobe": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "snowglobe"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.super-saiyan": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      }
+    },
+    "entries.super-saiyan": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      }
+    },
+    "form.super-saiyan": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.super-saiyan": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      }
+    },
+    "summary.super-saiyan": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      }
+    },
+    "sheet.super-saiyan": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "super-saiyan"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.tokyo-night": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      }
+    },
+    "entries.tokyo-night": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      }
+    },
+    "form.tokyo-night": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.tokyo-night": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      }
+    },
+    "summary.tokyo-night": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      }
+    },
+    "sheet.tokyo-night": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "tokyo-night"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.wisteria": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      }
+    },
+    "entries.wisteria": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      }
+    },
+    "form.wisteria": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.wisteria": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      }
+    },
+    "summary.wisteria": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      }
+    },
+    "sheet.wisteria": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "wisteria"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    },
+    "dashboard.yuletide": {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      }
+    },
+    "entries.yuletide": {
+      "route": "/expenses",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      }
+    },
+    "form.yuletide": {
+      "route": "/add-expense",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      },
+      "actions": [
+        {
+          "click": "button[type=submit]"
+        },
+        {
+          "blur": true
+        }
+      ]
+    },
+    "buckets.yuletide": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      }
+    },
+    "summary.yuletide": {
+      "route": "/summary",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      }
+    },
+    "sheet.yuletide": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 720
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.theme": "yuletide"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Language\")"
+        }
+      ]
+    }
+  }
+}
