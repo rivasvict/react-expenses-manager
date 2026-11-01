@@ -1,0 +1,31 @@
+{
+  "screens": [
+    {
+      "id": "dashboard.hidden",
+      "title": "Dashboard: figures hidden",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.hidden-es",
+      "title": "Dashboard hidden (Spanish)",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.shown",
+      "title": "Dashboard: figures shown",
+      "route": "/"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard.hidden",
+      "to": "dashboard.shown",
+      "label": "Tap the eye or the Show figures button"
+    },
+    {
+      "from": "dashboard.shown",
+      "to": "dashboard.hidden",
+      "label": "Tap the eye again, or close the app and reopen it"
+    }
+  ]
+}

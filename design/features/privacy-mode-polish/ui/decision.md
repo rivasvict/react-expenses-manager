@@ -1,10 +1,34 @@
 ---
 title: Privacy mode polish
 summary: Stop the eye crowding the blurred Savings amount and give the hidden chart area a purpose, without making the dashboard taller.
-status: exploring
+status: implemented
+chosen: d-hybrid-header-and-cta
 ---
 
 # Decision
+
+**D · Hybrid** chosen by the owner. The eye moves to the top-right of the
+Savings tile (same place hidden and shown); the hidden doughnut is replaced by a
+full-width **Show figures** button; the Add buttons stay pinned to the bottom.
+
+## For the implementer
+
+- Eye: absolutely positioned `top: 0.55rem; right: 0.55rem` over the tile (it
+  cannot sit inside the Summary link); 2.2rem visual, invisible hit area
+  `inset: -0.3rem` (>=44px). No label spacer any more. The chevron aligns to the
+  amount line (`align-items: flex-end`); the amount does not move.
+- Hidden chart area: one button (`min-height: 2.75rem`, `$accent-soft` fill,
+  `$accent` text, eye-closed icon + `privacy.show` text, margin `0.2rem 0 1.1rem`)
+  that reveals the figures, same action as the eye. The real chart is not
+  rendered while hidden. When revealing with Privacy mode on, the chart slides
+  in with `SlideReveal` (no animation under reduced motion). The old
+  `HiddenBalanceChart` and the `privacy.chartHidden` key go away.
+- No new strings: reuses `privacy.show` / `privacy.hide`.
+- Privacy mode off: unchanged from today.
+
+Approved screens: `approved/dashboard.hidden.html`, `dashboard.hidden-es.html`,
+`dashboard.shown.html` (see `flow.json`, `fixtures.json`).
+
 
 Brief: [`../feature-brief.md`](../feature-brief.md). Baseline: the hidden
 dashboard of [`privacy-mode`](../../privacy-mode/ui/approved/dashboard.hidden.html).

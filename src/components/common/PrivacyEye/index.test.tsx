@@ -8,7 +8,7 @@ import { PRIVACY_MODE_STORAGE_KEY } from "../../../privacy/privacyPreference";
 const renderEye = () =>
   render(
     <PrivacyProvider>
-      <PrivacyEye after="Savings" />
+      <PrivacyEye />
     </PrivacyProvider>
   );
 

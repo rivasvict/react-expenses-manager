@@ -21,13 +21,14 @@ import { useTranslation } from "../../../../i18n";
 import SavingsChangeBadge from "../../../common/SavingsChangeBadge";
 import SavingsTrendLink from "../../../common/SavingsTrendLink";
 import HiddenFigure from "../../../common/HiddenFigure";
-import HiddenBalanceChart from "../../../common/HiddenBalanceChart";
+import ShowFiguresButton from "../../../common/ShowFiguresButton";
+import SlideReveal from "../../../common/SlideReveal";
 import PrivacyEye from "../../../common/PrivacyEye";
 import { HIDDEN_AMOUNT, usePrivacy } from "../../../../privacy";
 
 const DashboardContent = ({ entries, match, selectedDate }) => {
   const { t } = useTranslation();
-  const { hidden } = usePrivacy();
+  const { enabled, hidden } = usePrivacy();
   const monthBalance = (entries[selectedDate.year] &&
     entries[selectedDate.year][selectedDate.month]) || {
     incomes: [],
@@ -45,6 +46,15 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
   // A zero balance stays neutral rather than reading as "positive".
   const balanceTone =
     totalSum < 0 ? "negative" : totalSum > 0 ? "positive" : "neutral";
+  const balanceChart = (
+    <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
+  );
+  // With Privacy mode on, the chart slides in when the figures are shown.
+  const chart = enabled ? (
+    <SlideReveal open={!hidden}>{balanceChart}</SlideReveal>
+  ) : (
+    balanceChart
+  );
   return (
     <MainContentContainer
       className="dashboard-content"
@@ -52,7 +62,7 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
     >
       <NavigableMonthHeader />
       <div className="balance-hero">
-        <PrivacyEye after={t("common.savings")} />
+        <PrivacyEye />
         <ContentTileSection
           title={t("common.summary")}
           to={summaryUrl}
@@ -83,13 +93,13 @@ const DashboardContent = ({ entries, match, selectedDate }) => {
           <SavingsTrendLink to={`${match.url}savings-trend`} />
         </div>
       </div>
-      <ChartContainerRowWrapper>
-        {hidden ? (
-          <HiddenBalanceChart />
-        ) : (
-          <BalanceChart incomesSum={incomesSum} expensesSum={expensesSum} />
-        )}
-      </ChartContainerRowWrapper>
+      {hidden ? (
+        <ShowFiguresButton />
+      ) : (
+        <ChartContainerRowWrapper>
+          {chart}
+        </ChartContainerRowWrapper>
+      )}
       <MonthContent {...{ entries: monthBalance, match, hidden }} />
     </MainContentContainer>
   );

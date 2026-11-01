@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.39.0] - 2026-11-01
+
+### Changed
+
+- **Privacy mode: calmer dashboard.** The eye now sits in the top-right corner of
+  the Savings tile (with a 44px tap area) instead of beside the label, so it no
+  longer crowds the blurred amount, and the tile's chevron moves down beside the
+  amount. While figures are hidden, the empty grey ring is replaced by a
+  full-width **Show figures** button, which makes the dashboard shorter. With
+  Privacy mode on, the chart slides in when the figures are shown. Design:
+  `design/features/privacy-mode-polish/`.
+
+### Removed
+
+- The `HiddenBalanceChart` component and the `privacy.chartHidden` string.
+
 ## [1.38.2] - 2026-11-01
 
 ### Added
