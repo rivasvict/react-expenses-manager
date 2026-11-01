@@ -13,6 +13,8 @@ Open `design/gallery.html`; each option has the dashboard (pictures on and
 off), the Theme sheet (a themed one and Midnight Gold, where the switch is
 disabled) and a **theme wall** with all 15 themes.
 
+The dashboard screens are the approved Savings dashboard of `design/features/privacy-mode/` with only the art layer and fonts added; the layout is unchanged. The app's work area is an opaque surface card, so the art is the **first child of the work area** (cards sit on top), not a page background.
+
 All 14 motifs are shared (`ui/shared/motifs/*.svg`): one 96px tile, monoline,
 1.5px round stroke, 2 focal shapes plus fillers. They are painted with the
 theme's `--accent` through a CSS mask, so no per-theme palette is needed and

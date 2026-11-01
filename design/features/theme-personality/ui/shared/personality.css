@@ -65,14 +65,15 @@ html[data-type="b"] :is(.mk-btn, .mk-chip) { font-family: var(--font-body), var(
 /* ---- Art models (html[data-art]); the layer is <div class="art"> ---- */
 .art { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .art::before { content: ""; position: absolute; background-color: var(--accent); }
-.art--page { position: fixed; }
-.mk-header, .mk-shell { position: relative; z-index: 1; }
+/* The app's work area is an opaque surface card, so the art lives INSIDE it (first child) and the cards sit on top. */
+.mk-work-area { position: relative; overflow: hidden; }
+.mk-work-area > :not(.art) { position: relative; z-index: 1; }
 html:not([data-art]) .art, html[data-art="off"] .art { display: none; }
 /* Light themes need more ink to read the same. */
-[data-theme="snowglobe"], [data-theme="flexoki-light"] { --art-opacity: 0.12; }
+[data-theme="snowglobe"], [data-theme="flexoki-light"] { --art-opacity: 0.2; }
 /* a: all-over tile, 7% accent */
-html[data-art="tile"] .art::before { inset: 0; opacity: var(--art-opacity, 0.07); -webkit-mask: var(--art) 0 0 / 112px 112px repeat; mask: var(--art) 0 0 / 112px 112px repeat; }
+html[data-art="tile"] .art::before { inset: 0; opacity: var(--art-opacity, 0.11); -webkit-mask: var(--art) 0 0 / 112px 112px repeat; mask: var(--art) 0 0 / 112px 112px repeat; }
 /* b: one large crest tucked into the top-right corner, 11% accent */
-html[data-art="crest"] .art::before { top: -3.5rem; right: -4.5rem; width: 21rem; height: 21rem; opacity: var(--art-opacity, 0.11); transform: rotate(-10deg); -webkit-mask: var(--art) center / contain no-repeat; mask: var(--art) center / contain no-repeat; }
+html[data-art="crest"] .art::before { top: -3.5rem; right: -4.5rem; width: 21rem; height: 21rem; opacity: var(--art-opacity, 0.15); transform: rotate(-10deg); -webkit-mask: var(--art) center / contain no-repeat; mask: var(--art) center / contain no-repeat; }
 /* c: a frieze along the bottom edge, 12% accent */
-html[data-art="frieze"] .art::before { left: 0; right: 0; bottom: 0; height: 7.5rem; opacity: var(--art-opacity, 0.12); -webkit-mask: var(--art) 0 100% / 100px 100px repeat-x; mask: var(--art) 0 100% / 100px 100px repeat-x; }
+html[data-art="frieze"] .art::before { left: 0; right: 0; bottom: 0; height: 7.5rem; opacity: var(--art-opacity, 0.16); -webkit-mask: var(--art) 0 100% / 100px 100px repeat-x; mask: var(--art) 0 100% / 100px 100px repeat-x; }
