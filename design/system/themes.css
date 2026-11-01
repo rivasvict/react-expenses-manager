@@ -144,6 +144,54 @@
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
+[data-theme="destiny"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #080b12;
+  --bg-surface: #0e131d;
+  --bg-raised: #161d2b;
+  --bg-raised-hover: #1d2638;
+  --border-subtle: rgba(200, 215, 240, 0.08);
+  --border-strong: rgba(200, 215, 240, 0.17);
+  --track: rgba(200, 215, 240, 0.1);
+  --highlight: rgba(200, 215, 240, 0.05);
+  --scrim: rgba(0, 0, 0, 0.55);
+  --accent: #b894ff;
+  --accent-hover: #cdb0ff;
+  --accent-soft: rgba(184, 148, 255, 0.13);
+  --income: #5be3a6;
+  --income-soft: rgba(91, 227, 166, 0.12);
+  --expense: #ff7a59;
+  --expense-soft: rgba(255, 122, 89, 0.12);
+  --danger: #ff5c6c;
+  --danger-soft: rgba(255, 92, 108, 0.14);
+  --warning: #ceae33;
+  --text-primary: #eef2fa;
+  --text-secondary: #b6c0d4;
+  --text-muted: #97a3ba;
+  --text-on-accent: #150a2b;
+  --text-validation: #ffa58f;
+  --brand-mark-shade: #6b46c1;
+
+  /* chart */
+  --chart-income: #45d391;
+  --chart-expense: #ff6a45;
+  --chart-warning: #ceae33;
+  --chart-categorical-1: #b894ff;
+  --chart-categorical-2: #ceae33;
+  --chart-categorical-3: #6fd8ff;
+  --chart-categorical-4: #ff7a59;
+  --chart-categorical-5: #5be3a6;
+  --chart-categorical-6: #ff6fb0;
+  --chart-categorical-7: #9fb4ff;
+  --chart-categorical-8: #d5dbe8;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
 [data-theme="digital-rain"] {
   color-scheme: dark;
 
@@ -286,6 +334,54 @@
   /* shadow */
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="harry-potter"] {
+  color-scheme: dark;
+
+  /* color */
+  --bg-page: #120a0d;
+  --bg-surface: #1a0f13;
+  --bg-raised: #26161b;
+  --bg-raised-hover: #301c22;
+  --border-subtle: rgba(255, 225, 190, 0.08);
+  --border-strong: rgba(255, 225, 190, 0.17);
+  --track: rgba(255, 225, 190, 0.1);
+  --highlight: rgba(255, 225, 190, 0.05);
+  --scrim: rgba(0, 0, 0, 0.55);
+  --accent: #e0b24a;
+  --accent-hover: #f0c866;
+  --accent-soft: rgba(224, 178, 74, 0.13);
+  --income: #4fd68a;
+  --income-soft: rgba(79, 214, 138, 0.12);
+  --expense: #ff6b7a;
+  --expense-soft: rgba(255, 107, 122, 0.12);
+  --danger: #ff5a5f;
+  --danger-soft: rgba(255, 90, 95, 0.14);
+  --warning: #f2c14e;
+  --text-primary: #f7eee3;
+  --text-secondary: #cdbcab;
+  --text-muted: #ad9b8b;
+  --text-on-accent: #241505;
+  --text-validation: #ffa89a;
+  --brand-mark-shade: #8c1d2f;
+
+  /* chart */
+  --chart-income: #3fc87a;
+  --chart-expense: #ff5468;
+  --chart-warning: #e8b53c;
+  --chart-categorical-1: #e0b24a;
+  --chart-categorical-2: #ff6b7a;
+  --chart-categorical-3: #4fd68a;
+  --chart-categorical-4: #6aa8ff;
+  --chart-categorical-5: #c4a3ff;
+  --chart-categorical-6: #ff9f5a;
+  --chart-categorical-7: #5fd3d0;
+  --chart-categorical-8: #e3d5c0;
+
+  /* shadow */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
 [data-theme="moon-prism"] {

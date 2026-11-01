@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.41.0] - 2026-11-01
+
+### Added
+
+- **Two new themes: Guardian and Hogwarts.** Guardian is inspired by Destiny 2
+  (deep space slate with Void purple and Exotic gold, Orbitron headlines, a
+  Traveler and Guardian-crest picture). Hogwarts is inspired by Harry Potter
+  (Gryffindor burgundy with golden accents and Slytherin green, Cinzel
+  Decorative headlines, a lightning-scar, glasses and Snitch picture). Both
+  have English, Spanish and French descriptions and pass the catalog's
+  contrast rules. The picker now lists seventeen themes.
+
 ## [1.40.0] - 2026-11-01
 
 ### Added

@@ -1,0 +1,67 @@
+{
+  "id": "harry-potter",
+  "name": "Hogwarts",
+  "scheme": "dark",
+  "inspiration": {
+    "en": "Harry Potter",
+    "es": "Harry Potter",
+    "fr": "Harry Potter"
+  },
+  "description": {
+    "en": "A candlelit Great Hall: Gryffindor burgundy, golden Snitch and Slytherin green.",
+    "es": "Un Gran Comedor a la luz de las velas: burdeos de Gryffindor, Snitch dorada y verde de Slytherin.",
+    "fr": "Une Grande Salle aux chandelles : bordeaux de Gryffondor, Vif d'or et vert de Serpentard."
+  },
+  "typography": {
+    "display": {
+      "family": "Cinzel Decorative",
+      "file": "cinzel-decorative"
+    },
+    "tracking": "0.03em"
+  },
+  "art": "harry-potter",
+  "color": {
+    "bg-page": "#120a0d",
+    "bg-surface": "#1a0f13",
+    "bg-raised": "#26161b",
+    "bg-raised-hover": "#301c22",
+    "border-subtle": "rgba(255, 225, 190, 0.08)",
+    "border-strong": "rgba(255, 225, 190, 0.17)",
+    "track": "rgba(255, 225, 190, 0.1)",
+    "highlight": "rgba(255, 225, 190, 0.05)",
+    "scrim": "rgba(0, 0, 0, 0.55)",
+    "accent": "#e0b24a",
+    "accent-hover": "#f0c866",
+    "accent-soft": "rgba(224, 178, 74, 0.13)",
+    "income": "#4fd68a",
+    "income-soft": "rgba(79, 214, 138, 0.12)",
+    "expense": "#ff6b7a",
+    "expense-soft": "rgba(255, 107, 122, 0.12)",
+    "danger": "#ff5a5f",
+    "danger-soft": "rgba(255, 90, 95, 0.14)",
+    "warning": "#f2c14e",
+    "text-primary": "#f7eee3",
+    "text-secondary": "#cdbcab",
+    "text-muted": "#ad9b8b",
+    "text-on-accent": "#241505",
+    "text-validation": "#ffa89a",
+    "brand-mark-shade": "#8c1d2f"
+  },
+  "chart": {
+    "chart-income": "#3fc87a",
+    "chart-expense": "#ff5468",
+    "chart-warning": "#e8b53c",
+    "chart-categorical-1": "#e0b24a",
+    "chart-categorical-2": "#ff6b7a",
+    "chart-categorical-3": "#4fd68a",
+    "chart-categorical-4": "#6aa8ff",
+    "chart-categorical-5": "#c4a3ff",
+    "chart-categorical-6": "#ff9f5a",
+    "chart-categorical-7": "#5fd3d0",
+    "chart-categorical-8": "#e3d5c0"
+  },
+  "shadow": {
+    "shadow-card": "0 1px 2px rgba(0, 0, 0, 0.35)",
+    "shadow-pop": "0 12px 32px rgba(0, 0, 0, 0.5)"
+  }
+}
