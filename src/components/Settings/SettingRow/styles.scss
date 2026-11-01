@@ -49,6 +49,8 @@
     align-items: center;
     flex: 0 0 auto;
     gap: 0.5rem;
+    // A value stays on one line; the label and hint wrap instead.
+    white-space: nowrap;
     font-size: 0.92rem;
     color: $text-secondary;
   }

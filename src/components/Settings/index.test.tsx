@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import Settings from "./index";
 import { LanguageProvider } from "../../i18n";
 import { PrivacyProvider } from "../../privacy";
+import { ThemeProvider } from "../../themes";
 import { PRIVACY_MODE_STORAGE_KEY } from "../../privacy/privacyPreference";
 import { LANGUAGE_STORAGE_KEY } from "../../i18n/languagePreference";
 import {
@@ -15,11 +16,13 @@ import {
 const renderSettings = () =>
   render(
     <LanguageProvider>
-      <PrivacyProvider>
-        <MemoryRouter>
-          <Settings />
-        </MemoryRouter>
-      </PrivacyProvider>
+      <ThemeProvider>
+        <PrivacyProvider>
+          <MemoryRouter>
+            <Settings />
+          </MemoryRouter>
+        </PrivacyProvider>
+      </ThemeProvider>
     </LanguageProvider>,
   );
 
@@ -143,5 +146,37 @@ describe("Settings", () => {
     expect(
       screen.getByRole("switch", { name: /^Modo privacidad/ }),
     ).toBeChecked();
+  });
+
+  it("shows the current theme in its row between Currency and Privacy mode", () => {
+    renderSettings();
+
+    expect(screen.getByRole("button", { name: "Theme: Midnight Gold" })).toHaveTextContent(
+      "Midnight Gold",
+    );
+    const labels = screen
+      .getAllByRole("button", { name: /^(Currency|Theme|Language)/ })
+      .map((row) => row.textContent);
+    expect(labels).toEqual([
+      expect.stringContaining("Language"),
+      expect.stringContaining("Currency"),
+      expect.stringContaining("Theme"),
+    ]);
+  });
+
+  it("keeps the Theme sheet open after a pick and returns focus to its row on close", async () => {
+    renderSettings();
+
+    await userEvent.click(screen.getByRole("button", { name: /^Theme/ }));
+    await userEvent.click(screen.getByRole("radio", { name: "Snowglobe" }));
+
+    expect(screen.getByRole("dialog", { name: "Theme" })).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Snowglobe" })).toBeChecked();
+
+    await userEvent.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    const row = screen.getByRole("button", { name: "Theme: Snowglobe" });
+    expect(row).toHaveFocus();
   });
 });

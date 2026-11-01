@@ -7,6 +7,7 @@ import {
   setBucketLimit,
   toggleCategory,
 } from "../../../../onboarding/wizardDraft";
+import { ThemeProvider } from "../../../../themes";
 import ReviewStep from ".";
 
 const empty = () => createWizardDraft({ currency: "USD", privacyMode: false });
@@ -15,10 +16,21 @@ describe("ReviewStep", () => {
   it("says so when nothing was chosen", () => {
     render(<ReviewStep draft={empty()} onEdit={() => {}} />);
     expect(screen.getByText("English · $ USD")).toBeInTheDocument();
-    expect(screen.getByText("Privacy mode off")).toBeInTheDocument();
+    expect(screen.getByText("Midnight Gold · Privacy mode off")).toBeInTheDocument();
     expect(screen.getByText("No expense categories")).toBeInTheDocument();
     expect(screen.getByText("No income categories")).toBeInTheDocument();
     expect(screen.getByText("No buckets")).toBeInTheDocument();
+  });
+
+  it("names the chosen theme beside the Privacy mode text", () => {
+    localStorage.setItem("settings.theme", "all-hallows");
+    render(
+      <ThemeProvider>
+        <ReviewStep draft={empty()} onEdit={() => {}} />
+      </ThemeProvider>
+    );
+    expect(screen.getByText("All Hallows · Privacy mode off")).toBeInTheDocument();
+    localStorage.clear();
   });
 
   it("summarises the choices, the own names and the monthly total", () => {
@@ -29,7 +41,7 @@ describe("ReviewStep", () => {
     render(<ReviewStep draft={{ ...draft, currency: "EUR", privacyMode: true }} onEdit={() => {}} />);
 
     expect(screen.getByText("English · € EUR")).toBeInTheDocument();
-    expect(screen.getByText("Privacy mode on")).toBeInTheDocument();
+    expect(screen.getByText("Midnight Gold · Privacy mode on")).toBeInTheDocument();
     expect(screen.getByText("2 expense categories")).toBeInTheDocument();
     expect(screen.getByText("Your own: Pet food")).toBeInTheDocument();
     expect(screen.getByText("2 buckets")).toBeInTheDocument();

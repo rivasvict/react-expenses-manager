@@ -67,7 +67,16 @@ const es: Translations = {
   "settings.privacy.title": "Modo privacidad",
   "settings.privacy.hint":
     "Difumina las cifras al abrir la app hasta que las muestres",
+  "settings.theme.title": "Tema",
+  "settings.theme.hint": "Colores de la app",
+  "settings.theme.description":
+    "Toca un tema para usarlo. La app cambia al instante.",
   "settings.sheet.close": "Cerrar",
+
+  // Temas (los nombres son nombres propios y no se traducen)
+  "themes.inspiredBy": "Inspirado en {{source}}",
+  "themes.original": "El aspecto original",
+  "themes.default": "Predeterminado",
   "currency.USD": "Dólar estadounidense",
   "currency.EUR": "Euro",
   "currency.GBP": "Libra esterlina",
@@ -511,7 +520,8 @@ const es: Translations = {
   "onboarding.start": "Empezar a registrar",
   "onboarding.welcome": "¡Te damos la bienvenida! Vamos a configurarlo",
   "onboarding.prefsLead":
-    "Tres elecciones rápidas. Puedes cambiarlas después en Ajustes.",
+    "Cuatro elecciones rápidas. Puedes cambiarlas después en Ajustes.",
+  "onboarding.themeHint": "toda la app cambia al elegir",
   "onboarding.currencyHint": "solo símbolo, no se convierte nada",
   "onboarding.privacy": "Privacidad",
   "onboarding.privacyHint":
