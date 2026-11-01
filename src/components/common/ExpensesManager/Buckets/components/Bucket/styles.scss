@@ -15,13 +15,21 @@ $bucket-danger: $chart-expense;
     align-items: baseline;
     margin-bottom: 0.4rem;
 
+    // The name takes what the percentage leaves and wraps (even a long word);
+    // the percentage keeps its own width instead of a rigid 50/50 split.
     .bucket-name {
+      flex: 1 1 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
       font-weight: 600;
       color: $text-primary;
     }
 
     .usage-percentage {
       @include money-figures();
+      flex: 0 0 auto;
+      width: auto;
+      padding-left: 0.75rem;
       text-align: right;
       font-weight: 700;
       font-size: 0.9rem;
@@ -82,18 +90,22 @@ $bucket-danger: $chart-expense;
     margin-top: 0.45rem;
     font-size: 0.88rem;
     color: $text-secondary;
-    // Keep Spent/Remaining on one line each; the row splits by content width
-    // instead of a rigid 50/50 that wraps large amounts.
-    flex-wrap: nowrap;
+    // Each figure stays whole; when both do not fit on one line the second
+    // drops below (right-aligned) instead of overflowing the card.
+    flex-wrap: wrap;
     justify-content: space-between;
+    column-gap: 0.75rem;
+    row-gap: 0.15rem;
 
     > .col {
       flex: 0 1 auto;
       width: auto;
+      min-width: 0;
       white-space: nowrap;
     }
 
     .rest {
+      margin-left: auto;
       text-align: right;
     }
   }
@@ -102,5 +114,7 @@ $bucket-danger: $chart-expense;
     font-size: 0.78rem;
     color: $text-muted;
     margin-top: 0.2rem;
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
   }
 }
