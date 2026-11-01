@@ -2,7 +2,11 @@
   "id": "snowglobe",
   "name": "Snowglobe",
   "scheme": "light",
-  "inspiration": "Christmas in winter",
+  "inspiration": {
+    "en": "Christmas in winter",
+    "es": "la Navidad en invierno",
+    "fr": "Noël en hiver"
+  },
   "description": {
     "en": "A snowy Christmas morning: fresh snow, glacier blue, pine and cranberry.",
     "es": "Una mañana de Navidad nevada: nieve fresca, azul glaciar, pino y arándano.",

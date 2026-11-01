@@ -2,7 +2,11 @@
   "id": "catppuccin",
   "name": "Catppuccin",
   "scheme": "dark",
-  "inspiration": "Omarchy · Catppuccin Mocha",
+  "inspiration": {
+    "en": "Omarchy’s Catppuccin Mocha",
+    "es": "Catppuccin Mocha de Omarchy",
+    "fr": "Catppuccin Mocha d’Omarchy"
+  },
   "description": {
     "en": "Soothing pastels on a warm mocha base.",
     "es": "Pasteles relajantes sobre una base moca.",

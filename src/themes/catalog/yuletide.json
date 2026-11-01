@@ -2,7 +2,11 @@
   "id": "yuletide",
   "name": "Yuletide",
   "scheme": "dark",
-  "inspiration": "Christmas",
+  "inspiration": {
+    "en": "Christmas",
+    "es": "la Navidad",
+    "fr": "Noël"
+  },
   "description": {
     "en": "A pine-green Christmas night: star gold, cranberry red and fresh snow.",
     "es": "Una noche de Navidad verde pino: oro de estrella, rojo arándano y nieve fresca.",

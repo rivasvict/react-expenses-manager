@@ -3,7 +3,11 @@
   "name": "Midnight Gold",
   "scheme": "dark",
   "default": true,
-  "inspiration": "Expenses Tracker",
+  "inspiration": {
+    "en": "Expenses Tracker",
+    "es": "Expenses Tracker",
+    "fr": "Expenses Tracker"
+  },
   "description": {
     "en": "The original calm, dark look with a single gold accent.",
     "es": "El aspecto original: oscuro, sereno y con un único acento dorado.",

@@ -2,7 +2,11 @@
   "id": "moon-prism",
   "name": "Moon Prism",
   "scheme": "dark",
-  "inspiration": "Sailor Moon",
+  "inspiration": {
+    "en": "Sailor Moon",
+    "es": "Sailor Moon",
+    "fr": "Sailor Moon"
+  },
   "description": {
     "en": "Moonlit navy, prism pink and a golden crescent.",
     "es": "Azul marino de luna, rosa prisma y una media luna dorada.",

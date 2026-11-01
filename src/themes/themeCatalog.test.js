@@ -109,12 +109,12 @@ describe("the theme catalog", () => {
   });
 
   describe.each(catalog.map((theme) => [theme.id, theme]))("%s", (id, theme) => {
-    it("has a name, a scheme and a description in every language", () => {
+    it("has a name, a scheme, and a description and inspiration in every language", () => {
       expect(theme.name).toEqual(expect.any(String));
-      expect(theme.inspiration).toEqual(expect.any(String));
       expect(["dark", "light"]).toContain(theme.scheme);
       LANGUAGES.forEach((language) => {
         expect(theme.description[language]).toEqual(expect.any(String));
+        expect(theme.inspiration[language]).toEqual(expect.any(String));
       });
     });
 

@@ -2,7 +2,11 @@
   "id": "flexoki-light",
   "name": "Flexoki Light",
   "scheme": "light",
-  "inspiration": "Omarchy · Flexoki Light",
+  "inspiration": {
+    "en": "Omarchy’s Flexoki Light",
+    "es": "Flexoki Light de Omarchy",
+    "fr": "Flexoki Light d’Omarchy"
+  },
   "description": {
     "en": "Ink on warm paper: a light theme made for reading.",
     "es": "Tinta sobre papel cálido: un tema claro pensado para leer.",

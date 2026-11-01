@@ -2,7 +2,11 @@
   "id": "ocarina",
   "name": "Ocarina",
   "scheme": "dark",
-  "inspiration": "The Legend of Zelda: Ocarina of Time",
+  "inspiration": {
+    "en": "The Legend of Zelda: Ocarina of Time",
+    "es": "The Legend of Zelda: Ocarina of Time",
+    "fr": "The Legend of Zelda: Ocarina of Time"
+  },
   "description": {
     "en": "Hyrule Field at night: forest green, ocarina blue and Triforce gold.",
     "es": "La pradera de Hyrule de noche: verde bosque, azul ocarina y oro de la Trifuerza.",

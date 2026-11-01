@@ -2,7 +2,11 @@
   "id": "gruvbox",
   "name": "Gruvbox",
   "scheme": "dark",
-  "inspiration": "Omarchy · Gruvbox",
+  "inspiration": {
+    "en": "Omarchy’s Gruvbox",
+    "es": "Gruvbox de Omarchy",
+    "fr": "Gruvbox d’Omarchy"
+  },
   "description": {
     "en": "Retro, earthy and warm, like an old terminal at dusk.",
     "es": "Retro, terroso y cálido, como una vieja terminal al atardecer.",

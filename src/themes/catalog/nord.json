@@ -2,7 +2,11 @@
   "id": "nord",
   "name": "Nord",
   "scheme": "dark",
-  "inspiration": "Omarchy · Nord",
+  "inspiration": {
+    "en": "Omarchy’s Nord",
+    "es": "Nord de Omarchy",
+    "fr": "Nord d’Omarchy"
+  },
   "description": {
     "en": "An arctic, north-bluish calm with frost accents.",
     "es": "Una calma ártica y azulada con acentos de escarcha.",

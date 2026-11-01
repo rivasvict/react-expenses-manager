@@ -2,7 +2,11 @@
   "id": "super-saiyan",
   "name": "Super Saiyan",
   "scheme": "dark",
-  "inspiration": "Dragon Ball Z",
+  "inspiration": {
+    "en": "Dragon Ball Z",
+    "es": "Dragon Ball Z",
+    "fr": "Dragon Ball Z"
+  },
   "description": {
     "en": "Turtle-school orange on a deep training-gi blue, with a golden aura.",
     "es": "Naranja de la escuela tortuga sobre el azul del gi, con un aura dorada.",

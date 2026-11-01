@@ -2,7 +2,11 @@
   "id": "tokyo-night",
   "name": "Tokyo Night",
   "scheme": "dark",
-  "inspiration": "Omarchy · Tokyo Night",
+  "inspiration": {
+    "en": "Omarchy’s Tokyo Night",
+    "es": "Tokyo Night de Omarchy",
+    "fr": "Tokyo Night d’Omarchy"
+  },
   "description": {
     "en": "Neon city lights over a deep indigo night.",
     "es": "Luces de neón sobre una noche índigo profunda.",

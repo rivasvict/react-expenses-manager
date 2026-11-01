@@ -2,7 +2,11 @@
   "id": "all-hallows",
   "name": "All Hallows",
   "scheme": "dark",
-  "inspiration": "Halloween",
+  "inspiration": {
+    "en": "Halloween",
+    "es": "Halloween",
+    "fr": "Halloween"
+  },
   "description": {
     "en": "A witching-hour purple night lit by jack-o'-lanterns.",
     "es": "Una noche morada de brujas iluminada por calabazas.",

@@ -2,7 +2,11 @@
   "id": "wisteria",
   "name": "Wisteria",
   "scheme": "dark",
-  "inspiration": "Demon Slayer",
+  "inspiration": {
+    "en": "Demon Slayer",
+    "es": "Demon Slayer",
+    "fr": "Demon Slayer"
+  },
   "description": {
     "en": "A corps-black night, checkered-haori green and wisteria in bloom.",
     "es": "Noche negra del cuerpo, verde de haori a cuadros y glicinas en flor.",

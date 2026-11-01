@@ -2,7 +2,11 @@
   "id": "digital-rain",
   "name": "Digital Rain",
   "scheme": "dark",
-  "inspiration": "The Matrix",
+  "inspiration": {
+    "en": "The Matrix",
+    "es": "Matrix",
+    "fr": "Matrix"
+  },
   "description": {
     "en": "Green code falling on a black screen. Take the red pill.",
     "es": "Código verde cayendo sobre una pantalla negra. Toma la pastilla roja.",
