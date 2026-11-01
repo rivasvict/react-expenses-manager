@@ -78,6 +78,8 @@ warning/danger separation, chart legibility). Every theme ended at **PASS**.
 | Yuletide | revise | deeper fir surfaces (too close to Ocarina), tinsel-gold accent, holly income, cranberry expense and logo shade, icy-blue first chart color | pass |
 | All Hallows | revise | chart 1 ↔ 3: witch purple leads the chart instead of Super Saiyan's cyan | pass |
 | Pumpkin King | revise | moonlit teal-black surfaces and bone-white lines (too close to the default), mint income (too close to the moon accent), teal-tinted grey text and logo | pass |
+| Snowglobe | revise | read as a generic light UI: glacier-cerulean accent instead of indigo, ice-blue ground with snow-white cards, winter-blue scrim, truer cranberry, icier chart teal | pass |
+| Digital Rain | pass | kept phosphor-green buttons with aqua income (judged better than a pale or blue-pill accent); added a faint phosphor glow under bottom sheets | pass |
 
 Declined: a forest-green income for Flexoki Light. The reviewer called it
 optional; it is not a Flexoki color, and the olive passes every rule.
