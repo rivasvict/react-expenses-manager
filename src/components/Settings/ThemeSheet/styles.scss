@@ -9,9 +9,13 @@
   padding-bottom: #{"calc(1rem + env(safe-area-inset-bottom, 0px))"};
 
   .bottom-sheet__grabber,
-  .bottom-sheet__header,
+  .bottom-sheet__header {
+    flex: none;
+  }
+
   .field-hint {
     flex: none;
+    margin-bottom: 0.4rem;
   }
 }
 

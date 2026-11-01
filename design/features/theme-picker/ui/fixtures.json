@@ -8,6 +8,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "en"
       }
     },
@@ -19,6 +20,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "en",
         "settings.theme": "all-hallows"
       }
@@ -31,6 +33,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "en",
         "settings.theme": "flexoki-light"
       }
@@ -43,6 +46,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "es",
         "settings.privacyMode": "on"
       }
@@ -55,6 +59,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "en"
       },
       "actions": [
@@ -74,6 +79,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "en"
       },
       "actions": [
@@ -102,6 +108,7 @@
       },
       "localStorage": {
         "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
         "settings.language": "es",
         "settings.privacyMode": "on"
       },
