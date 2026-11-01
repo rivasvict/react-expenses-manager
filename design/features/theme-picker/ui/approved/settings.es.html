@@ -1,0 +1,107 @@
+<!doctype html>
+<html data-theme="midnight-gold" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ajustes con la fila Tema (es)</title>
+  <link rel="stylesheet" href="../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../system/themes.css">
+  <link rel="stylesheet" href="../../../../system/mockup.css">
+  <style>
+    .mk-work-area { display: flex; flex-direction: column; }
+    .mk-header { padding-bottom: calc(0.75rem + 4px); }
+    /* The app insets this card 0.75rem less than a plain mk-card and starts it 10px below the title. */
+    .settings-card { margin: 0.625rem -0.75rem 0; padding: 1rem 1.1rem 1.1rem; }
+    .version { margin: 1.25rem 0 0; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
+    .stack { display: flex; flex-direction: column; gap: 0.625rem; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3.4rem; padding: 0.65rem 0.9rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .row__label { display: block; font-weight: 600; font-size: 0.95rem; }
+    .row__hint { display: block; color: var(--text-secondary); font-size: 0.78rem; }
+    .row__value { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.92rem; min-width: 0; }
+    .spacer { flex: 1 1 auto; }
+    .opt { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.65rem 0.85rem; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .opt--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .opt__text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+    .opt__name { display: block; font-size: 0.95rem; font-weight: 600; }
+    .opt__hint { display: block; font-size: 0.78rem; color: var(--text-secondary); }
+    .check { display: flex; align-items: center; color: var(--accent); font-size: 1.1rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .tile { min-height: 3.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .tile--sel { background-color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .tile__sym { font-weight: 700; font-size: 1rem; }
+    .tile__code { font-size: 0.74rem; color: var(--text-secondary); }
+    .scrim { position: fixed; inset: 0; background-color: var(--scrim); }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; max-width: 40rem; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; background-color: var(--bg-surface); border: 1px solid var(--border-strong); border-radius: var(--radius-shell) var(--radius-shell) 0 0; box-shadow: var(--shadow-pop); }
+    .sheet__grip { width: 2.6rem; height: 0.28rem; margin: 0.25rem auto 0.6rem; background-color: var(--border-strong); border-radius: var(--radius-control); }
+    .sheet__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.25rem; }
+    .sheet__title { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    .sheet__close { width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-control); }
+    .sheet__body { display: flex; flex-direction: column; gap: 0.4rem; }
+    .sheet .mk-hint { margin-bottom: 0.4rem; }
+    .switch { flex: 0 0 auto; width: 2.7rem; height: 1.55rem; padding: 0.2rem; display: flex; border-radius: var(--radius-pill); background-color: var(--highlight); border: 1px solid var(--border-strong); }
+    .switch::after { content: ""; width: 1.05rem; height: 1.05rem; border-radius: var(--radius-round); background-color: var(--text-secondary); }
+    .switch--on { background-color: var(--accent); border-color: var(--accent); justify-content: flex-end; }
+    .switch--on::after { background-color: var(--text-on-accent); }
+    .row__text { min-width: 0; }
+  
+    /* Theme dots in the Settings row: page, accent, income, expense of the current theme. */
+    .dots { display: inline-flex; flex: none; }
+    .dots i { width: 0.85rem; height: 0.85rem; margin-left: -0.25rem; border-radius: var(--radius-round); border: 2px solid var(--bg-surface); }
+    .dots i:first-child { margin-left: 0; }
+    .dot-page { background-color: var(--bg-page); box-shadow: inset 0 0 0 1px var(--border-strong); }
+    .dot-accent { background-color: var(--accent); } .dot-in { background-color: var(--income); } .dot-out { background-color: var(--expense); }
+    .row__value .dots i { border-color: var(--bg-surface); }
+    /* Row values stay on one line; the label and hint wrap instead. */
+    .row__value { white-space: nowrap; flex: none; }
+    /* Theme preview card: a miniature of the app drawn in that theme, its name and source. */
+    .tcard { position: relative; display: flex; flex-direction: column; gap: 0.4rem; padding: 0.4rem 0.4rem 0.55rem; text-align: left; background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); }
+    .tcard--sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+    .tcard__text { display: block; padding: 0 0.25rem; }
+    .tname { display: block; font-weight: 600; font-size: 0.9rem; line-height: 1.3; color: var(--text-primary); }
+    .tfrom { display: block; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.35; }
+    .tbadge { display: inline-block; margin-left: 0.3rem; padding: 0 0.4rem; font-size: 0.68rem; font-weight: 700; vertical-align: 0.1rem; border-radius: var(--radius-pill); color: var(--text-secondary); background-color: var(--highlight); border: 1px solid var(--border-subtle); }
+    .tick { position: absolute; top: 0.35rem; right: 0.35rem; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-round); color: var(--text-on-accent); background-color: var(--accent); box-shadow: var(--shadow-card); }
+    .tick svg { width: 0.9rem; height: 0.9rem; }
+    .tp { display: block; padding: 0.4rem; background-color: var(--bg-page); border-radius: var(--radius-control); border: 1px solid var(--border-subtle); color: var(--text-primary); font-size: 0.55rem; line-height: 1.3; }
+    .tp__top { display: flex; align-items: center; gap: 0.25rem; margin: 0 0 0.3rem; }
+    .tp__logo { width: 0.7rem; height: 0.7rem; border-radius: 0.2rem; border: 1px solid var(--accent); background: linear-gradient(160deg, var(--accent) 45%, var(--brand-mark-shade) 45%); }
+    .tp__brand { height: 0.25rem; width: 2.2rem; border-radius: var(--radius-pill); background-color: var(--text-secondary); opacity: 0.6; }
+    .tp__surface { display: block; padding: 0.3rem; background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 0.35rem; }
+    .tp__hero { display: block; padding: 0.25rem 0.35rem; margin: 0 0 0.25rem; background-color: var(--bg-raised); border-radius: 0.25rem; }
+    .tp__label { display: block; color: var(--text-secondary); font-size: 0.5rem; }
+    .tp__fig { display: block; font-weight: 700; font-size: 0.78rem; color: var(--income); letter-spacing: -0.02em; }
+    .tp__row { display: flex; align-items: center; gap: 0.25rem; margin: 0 0 0.2rem; padding: 0.15rem 0.3rem; background-color: var(--bg-raised); border-radius: 0.25rem; }
+    .tp__chip { width: 0.5rem; height: 0.5rem; flex: none; border-radius: var(--radius-round); }
+    .tp__chip--in { background-color: var(--income-soft); box-shadow: inset 0 0 0 1.5px var(--income); }
+    .tp__chip--out { background-color: var(--expense-soft); box-shadow: inset 0 0 0 1.5px var(--expense); }
+    .tp__name { flex: 1; height: 0.22rem; border-radius: var(--radius-pill); background-color: var(--text-primary); opacity: 0.55; }
+    .tp__in { color: var(--income); font-weight: 600; } .tp__out { color: var(--expense); font-weight: 600; }
+    .tp__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem; margin-top: 0.25rem; }
+    .tp__btn { height: 0.75rem; border-radius: 0.2rem; background-color: var(--accent); }
+    .tp__btn--ghost { background-color: transparent; border: 1px solid var(--border-strong); }
+    .tgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding: 0.15rem 0.15rem 0.3rem; }
+</style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo"><rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/><path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/><path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/></svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h1 class="mk-eyebrow">Ajustes</h1>
+      <section class="mk-card settings-card">
+        <div class="stack">
+          <div class="row" role="button"><span><span class="row__label">Idioma</span><span class="row__hint">Se aplica al instante</span></span><span class="row__value">Español<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+          <div class="row" role="button"><span><span class="row__label">Moneda</span><span class="row__hint">Solo símbolo y formato</span></span><span class="row__value">$ · USD<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+          <div class="row" role="button" aria-label="Tema: Midnight Gold"><span><span class="row__label">Tema</span><span class="row__hint">Colores de la app</span></span><span class="row__value"><span class="dots" data-theme="midnight-gold" aria-hidden="true"><i class="dot-page"></i><i class="dot-accent"></i><i class="dot-in"></i><i class="dot-out"></i></span>Midnight Gold<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" style="fill: none; stroke: currentColor" stroke-width="1.5"/></svg></span></div>
+          <div class="row" role="switch" aria-checked="true"><span class="row__text"><span class="row__label">Modo privacidad</span><span class="row__hint">Difumina las cifras al abrir la app hasta que las muestres</span></span><span class="switch switch--on"></span></div>
+        </div>
+      </section>
+      <p class="version">Versión 1.38.0</p>
+      <div class="spacer"></div>
+      <div class="mk-actions"><span class="mk-btn mk-btn--secondary">Volver</span></div>
+    </div>
+  </main>
+</body>
+</html>

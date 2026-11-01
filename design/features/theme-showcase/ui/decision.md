@@ -1,6 +1,6 @@
 ---
 title: Theme showcase
-summary: Every theme on the same six app screens, one option per theme; a review aid for the theme catalog, not a feature to build.
+summary: Every theme on the same six app screens, one option per theme. The owner approved all fifteen on 2026-11-01; this is the catalog's review record, not a feature to build.
 status: exploring
 ---
 
@@ -8,6 +8,10 @@ status: exploring
 
 Brief: [`../feature-brief.md`](../feature-brief.md). The picker is
 [`../../theme-picker/`](../../theme-picker/ui/decision.md).
+
+**All fifteen themes are approved** (owner, 2026-11-01) and ship with the
+[theme picker](../../theme-picker/ui/decision.md). The package stays
+`exploring` only because it has no single chosen option.
 
 There is one option per theme, in catalog order (the default first). Each
 option shows the same six screens recolored by that theme, so the gallery
