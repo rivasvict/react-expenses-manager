@@ -5,13 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.38.1] - 2026-11-01
+## [1.38.2] - 2026-11-01
 
 ### Added
 
 - **Code owners.** A `.github/CODEOWNERS` file names `@rivasvict` as the owner of
   every path, so the "Require review from Code Owners" branch rule can make that
   account's approval the only one that unlocks a merge to `master`.
+
+## [1.38.1] - 2026-11-01
+
+### Added
+
+- **Request a Claude code review on demand.** Besides the automatic review
+  when a pull request is opened, an allowlisted user can now comment
+  `@claude review` on a pull request, or add the `claude-review` label to it,
+  to run the review again (for example after new pushes or when the pull
+  request conflicted at creation and no workflow started).
 
 ## [1.38.0] - 2026-11-01
 
