@@ -1,0 +1,13 @@
+// A square box whose size comes from its width alone, so the chart never
+// depends on a parent that is still animating open (see DoughnutChart). The
+// canvas is taken out of the flow so it cannot size the box in return.
+.doughnut-chart {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+
+  canvas {
+    position: absolute;
+    inset: 0;
+  }
+}
