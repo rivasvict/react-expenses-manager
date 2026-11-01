@@ -32,12 +32,15 @@
     );
   }
 
+  // The real brand name in the theme's headline typeface, so the preview
+  // shows the font as well as the colors.
   &__brand {
-    width: 2.2rem;
-    height: 0.25rem;
-    border-radius: $radius-pill;
-    background-color: $text-secondary;
-    opacity: 0.6;
+    color: $text-primary;
+    font-size: 0.56rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    @include display-font;
   }
 
   &__surface {
@@ -46,6 +49,9 @@
     background-color: $bg-surface;
     border: 1px solid $border-subtle;
     border-radius: $radius-control * 0.55;
+    // The theme's picture, tiled finer than in the app and a little stronger so
+    // it still reads on a miniature.
+    @include theme-art(36px, 3.8);
   }
 
   &__hero {
@@ -59,7 +65,8 @@
   &__label {
     display: block;
     color: $text-secondary;
-    font-size: 0.5rem;
+    font-size: 0.56rem;
+    @include display-font;
   }
 
   &__figure {

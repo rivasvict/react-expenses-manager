@@ -12,6 +12,14 @@
     "es": "Retro, terroso y cálido, como una vieja terminal al atardecer.",
     "fr": "Rétro, terreux et chaleureux, comme un vieux terminal au crépuscule."
   },
+  "typography": {
+    "display": {
+      "family": "Righteous",
+      "file": "righteous"
+    },
+    "tracking": "0.02em"
+  },
+  "art": "gruvbox",
   "color": {
     "bg-page": "#1d2021",
     "bg-surface": "#282828",

@@ -8,7 +8,7 @@
     font-size: $h1-size-title;
     font-weight: 700;
     line-height: 1.5;
-    letter-spacing: -0.01em;
+    @include display-font;
   }
 
   &__tabs.underline-tabs {

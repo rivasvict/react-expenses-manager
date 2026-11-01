@@ -192,3 +192,33 @@ describe("the theme strip in setup", () => {
     expect(appTheme()).toBe("nord");
   });
 });
+
+describe("Background pictures in the Theme sheet", () => {
+  it("is a switch above the previews that turns every picture off, and says when a theme is plain", async () => {
+    const { user } = await openSettings();
+    await user.click(screen.getByRole("button", { name: /^Theme/ }));
+    const dialog = await screen.findByRole("dialog", { name: "Theme" });
+
+    const art = within(dialog).getByRole("switch", { name: /Background pictures/ });
+    expect(art).toBeChecked();
+    expect(art).toHaveTextContent("Midnight Gold stays plain.");
+    expect(document.documentElement.dataset.themeArt).toBeUndefined();
+
+    await user.click(within(dialog).getByRole("radio", { name: "Ocarina" }));
+    expect(art).not.toHaveTextContent("stays plain");
+
+    await user.click(art);
+    expect(art).not.toBeChecked();
+    expect(document.documentElement.dataset.themeArt).toBe("off");
+  });
+
+  it("is translated", async () => {
+    const { user } = await openSettings();
+    await pickLanguage(user, /Español/);
+    await user.click(await screen.findByRole("button", { name: /^Tema/ }));
+    const dialog = await screen.findByRole("dialog", { name: "Tema" });
+    expect(
+      within(dialog).getByRole("switch", { name: /Imágenes de fondo/ })
+    ).toHaveTextContent("Midnight Gold se queda sin dibujos.");
+  });
+});

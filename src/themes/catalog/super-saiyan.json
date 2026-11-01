@@ -12,6 +12,14 @@
     "es": "Naranja de la escuela tortuga sobre el azul del gi, con un aura dorada.",
     "fr": "Orange de l'école de la tortue sur le bleu du gi, avec une aura dorée."
   },
+  "typography": {
+    "display": {
+      "family": "Russo One",
+      "file": "russo-one"
+    },
+    "tracking": "0.02em"
+  },
+  "art": "super-saiyan",
   "color": {
     "bg-page": "#0c1228",
     "bg-surface": "#121a38",

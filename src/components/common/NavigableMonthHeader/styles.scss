@@ -24,6 +24,8 @@
     gap: 0.4rem;
     padding: 0 0.9rem;
     font: inherit;
+    // A button resets letter-spacing; keep the theme's headline tracking.
+    letter-spacing: inherit;
     color: $text-primary;
     background-color: $bg-raised;
     border: 1px solid $border-strong;

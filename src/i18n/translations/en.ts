@@ -71,6 +71,9 @@ const en = {
   "settings.theme.hint": "Colors of the app",
   "settings.theme.description":
     "Tap a theme to use it. The app changes right away.",
+  "settings.themeArt.title": "Background pictures",
+  "settings.themeArt.hint": "Faint drawings from each theme's world.",
+  "settings.themeArt.plain": "{{theme}} stays plain.",
   "settings.sheet.close": "Close",
 
   // Themes (names are proper names and are never translated)

@@ -12,6 +12,14 @@
     "es": "La pradera de Hyrule de noche: verde bosque, azul ocarina y oro de la Trifuerza.",
     "fr": "La plaine d'Hyrule la nuit : vert forêt, bleu ocarina et or de la Triforce."
   },
+  "typography": {
+    "display": {
+      "family": "Cinzel",
+      "file": "cinzel"
+    },
+    "tracking": "0.06em"
+  },
+  "art": "ocarina",
   "color": {
     "bg-page": "#0b1510",
     "bg-surface": "#111f18",

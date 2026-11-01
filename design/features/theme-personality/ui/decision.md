@@ -1,110 +1,111 @@
 ---
 title: Theme personality
-summary: Faint per-theme drawings behind the app (switchable in the Theme sheet) and a Google Fonts pairing for each theme.
-status: exploring
+summary: Faint per-theme drawings behind the app (switch in the Theme sheet) and a headline typeface per theme, shown inside the approved picker previews.
+status: implemented
+chosen: d-live-preview
 ---
 
 # Decision
 
-Nothing is approved yet. Background art and typography are **independent
-axes**: each option below pairs one of each only so there is something to look
-at, and the owner may mix them (for example "tile art, headline-voice type").
-Open `design/gallery.html`; each option has the dashboard (pictures on and
-off), the Theme sheet (a themed one and Midnight Gold, where the switch is
-disabled) and a **theme wall** with all 15 themes.
+**Approved: option D, the live preview**, which is the approved Theme picker
+with each miniature carrying its theme's picture and typeface, paired with
+**art model A** (an all-over tile on the app's work area) and **type model a**
+(headline voice only).
 
-The dashboard screens are the approved Savings dashboard of `design/features/privacy-mode/` with only the art layer and fonts added; the layout is unchanged. The app's work area is an opaque surface card, so the art is the **first child of the work area** (cards sit on top), not a page background.
+## Why
 
-All 14 motifs are shared (`ui/shared/motifs/*.svg`): one 96px tile, monoline,
-1.5px round stroke, 2 focal shapes plus fillers. They are painted with the
-theme's `--accent` through a CSS mask, so no per-theme palette is needed and
-the recolor is automatic. Midnight Gold has none. Fonts live in
-`ui/shared/fonts/` (latin subsets, SIL OFL) only so mockups stay offline.
+- The picker's miniature previews were the best part of the theme picker; D
+  keeps them untouched and makes them sell the new personality too (picture and
+  headline font are visible before a theme is picked).
+- A's tile is the calmest and the cheapest: one SVG mask per theme, no layout,
+  nothing behind the header or a figure that is not an opaque card.
+- Type model a ships one display face per theme, only on headings and the brand
+  name; body text and every money figure keep the system font, so forms, tables
+  and tabular figures are unaffected. A (crest) and C (frieze, display figures)
+  were rejected in the design review: the crest sits behind the balance and
+  crops motifs, the frieze collides with the last card and the tab bar, and
+  display faces on money break column alignment.
 
-## Options considered
+Options A, B, C (`options/`) stay as the record of the exploration.
 
-### A · Tile + headline voice
-An all-over repeating pattern at about 7% accent, fixed to the viewport.
-Display font only on titles, eyebrows and the brand name; body stays the system
-stack. *Good at:* the calmest, most "wallpaper" result; scales to any scroll
-length; cheapest in bytes (one display font per theme). *Costs:* the repeat
-grid shows on a 112px tile unless rows are offset or the tile is drawn bigger.
+## For the implementer
 
-### B · Crest + full pairing
-One large drawing tucked into the top-right corner (about 11%), and a themed
-display **and** body face everywhere. *Good at:* the most character per theme.
-*Costs:* the art sits behind the header and the balance, big crops make some
-motifs unreadable, it reads as a watermark, and body faces for 14 themes mean
-28 families to ship.
+Built to `approved/` and `flow.json`. Decisions taken when approving (flag
+them in the PR if the owner wants otherwise):
 
-### C · Frieze + headline & figures
-A horizon strip along the bottom edge (about 12%); display face on headings and
-on money figures. *Good at:* feels designed, never touches the header.
-*Costs:* collides with the last card and the tab bar, and putting display faces
-on money breaks column alignment (see the review).
+- **Fonts are self-hosted.** The files are the Google Fonts latin subsets
+  (SIL OFL) downloaded once into `src/themes/fonts/`, hashed by the build and
+  fetched on demand: a device downloads the active theme's face (and the rest
+  only while the picker is open). No runtime request to Google, so no IP is
+  sent to a third party and the service worker can cache them
+  (`workbox-config.js`, `theme-fonts`, cache-first).
+- **No separate "Theme fonts" switch** (out of scope in the brief). The one
+  switch, **Background pictures**, controls the pictures only.
+- **The 14 motifs are final** (`ui/shared/motifs/*.svg`, copied to
+  `src/themes/art/<id>.svg`): monoline, 96px tile, 1.5px round stroke,
+  `currentColor`, no trademark shapes (no Triforce, no Dragon Ball). Midnight
+  Gold has none.
+- **Catalog fields** (`src/themes/catalog/<id>.json`, optional, absent for the
+  default theme): `typography: { display: { family, file }, tracking }` and
+  `art: "<svg file name>"`. `npm run tokens:build` turns them into
+  `--font-display`, `--display-tracking`, `--art` (the SVG inlined as a data
+  URI) and `--art-opacity` (0 without art; 0.11 on dark, 0.2 on light) in
+  `themes.generated.css`, and the `@font-face` rules in `fonts.generated.css`.
+  A new theme still means one JSON file (plus its SVG and font file).
+- **Picture layer:** the `theme-art($tile-size, $strength)` mixin
+  (`src/variables.scss`) paints the accent through a CSS mask on a `::before`
+  behind the content. Used on the work area (112px tile) and on each
+  miniature's surface (36px tile, strength 3.8). `data-theme-art="off"` on
+  `<html>` hides it everywhere. It is decorative: `pointer-events: none`, not
+  in the accessibility tree (pseudo-element).
+- **Headline voice:** the `display-font` mixin / `$font-display` on page
+  titles (`h1.title`, the eyebrow above them), the brand name in the app bar,
+  bottom-sheet headings, the wizard and Categories titles, and the theme
+  card's name. Nothing else; never money figures.
+- **Preference:** `settings.themeArt` (`"off"` or absent = on) in
+  `localStorage`, read by `src/themes/artPreference.ts` and exposed by
+  `useTheme()` (`artEnabled`, `setArtEnabled`); device-only, never in the
+  entries model, backup or sync.
+- **Switch row:** reuse `SwitchRow` (new optional `className`), placed in the
+  Theme sheet between the hint and the scrolling grid, slimmer than a Settings
+  row (`.theme-sheet__art`). It stays usable on a plain theme; the hint then
+  adds "{{theme}} stays plain."
+- **Preview:** `ThemePreview` shows the app name as text (`header.appName`) in
+  the theme's headline font in place of the grey bar, and the "Savings" label
+  in the headline font; its figures stay system.
 
-### D · Live preview (picker only; pairs with art A and type a)
-Added after feedback that A/B/C's Theme sheet lost the approved picker's
-miniature previews. D keeps the approved Theme sheet exactly (the full
-miniature of the app per theme, name, "Inspired by" line, tick, Default badge)
-and changes three things: each miniature's work area carries that theme's
-art, and the miniature's brand name ("Expenses Tracker"), its "Savings" label and
-the card name are real text in the theme's display font, so the preview shows
-the typeface as well as the picture (money figures and body text stay system,
-matching type model a; with a body pairing the row labels would show it too), and
-one slim **Background pictures** row sits between the hint and the grid. The
-miniatures follow the switch (off = no art in any preview). On Midnight Gold
-the row stays usable and says "Midnight Gold stays plain." *Good at:* the
-picker still sells each theme at a glance, and now sells its personality.
-*Costs:* the sheet grows by one row (about 3.2rem), and the art in a 6rem
-miniature is necessarily faint and simplified. Screens: `theme-sheet`,
-`theme-sheet.off`, `theme-sheet.plain`. Only the sheet differs from A; the
-dashboard and the theme wall are A's.
+### New strings
 
-## Expert review (design reviewer persona) and what was done
+| Key | English | Spanish | French |
+|---|---|---|---|
+| `settings.themeArt.title` | Background pictures | Imágenes de fondo | Images d'arrière-plan |
+| `settings.themeArt.hint` | Faint drawings from each theme's world. | Dibujos tenues del mundo de cada tema. | Dessins discrets de l'univers de chaque thème. |
+| `settings.themeArt.plain` | {{theme}} stays plain. | {{theme}} se queda sin dibujos. | {{theme}} reste sobre. |
 
-Summary: **ship art A, type model a**, with these before approval.
+### Edge cases and states not drawn
 
-Applied in this exploration: Ocarina no longer draws the Triforce (an ocarina,
-mountains and a star instead); Super Saiyan no longer draws the seven-dot ball
-(aura flame and lightning); a per-scheme `--art-opacity` (light themes about
-12%).
+- **Font fails to load or is blocked:** the stack falls back to the system
+  font (`font-display: swap`); nothing breaks.
+- **Art off or a plain theme:** no picture, no empty frame (opacity 0 / layer
+  hidden).
+- **Light themes** (Snowglobe, Flexoki Light) use a stronger ink so the picture
+  reads the same.
+- **Long Spanish/French text** is unaffected: only headings change family, and
+  they already wrap.
+- **Onboarding step 1** shows the same previews (pictures and typeface) with
+  no switch; the switch lives only in Settings.
+- Known risk, accepted: Mountains of Christmas (Yuletide) has decorative
+  digits in the month title; revisit if it reads poorly.
 
-Open before `/ui-approve` (carry these into the approved screens):
-1. Offset alternate tile rows (or a 160px tile with four motifs); keep it
-   `position: fixed`. Frieze, if kept, needs `bottom: var(--tabbar-h)`.
-2. Redraw Pumpkin King (spiral hill, bow, crooked moon), Flexoki Light (quill
-   and inkwell), Wisteria (hanging raceme + ichimatsu check), Yuletide (holly,
-   bell, ornament, so it stops echoing Snowglobe), Gruvbox (70s arcs), Digital
-   Rain (aligned katakana-like columns with a bright head glyph) and Tokyo
-   Night (replace the sign with a tower or rain).
-3. **Money figures never use a display face**: tabular, lining numerals in the
-   body or system font in every theme (`font-variant-numeric: tabular-nums
-   lining-nums`). Type model C is therefore out as drawn; the monospace
-   themes are the only exception, since their figures are tabular anyway.
-4. Replace Mountains of Christmas (proportional digits, thin Latin Extended
-   coverage); use Creepster only for 20px+ titles; verify Spanish and French
-   accents (`Ñandú, ¿cuánto? ¡Hola! œuvre, çà, é`) for Almendra, Shippori
-   Mincho and Zen Kaku Gothic New, which are Japanese-first.
-5. Fonts: the owner said Google Fonts is the only external source. The review
-   recommends **downloading the woff2 files from Google Fonts and self-hosting
-   them** (GDPR: a runtime Google request sends the visitor's IP; the service
-   worker can cache them). Load only the active theme's family after first
-   paint, `font-display: swap` (`optional` for decorative faces),
-   latin + latin-ext subsets, size-adjusted fallbacks. **Owner to confirm.**
-6. Settings: one switch row at the top of the Theme sheet ("Background
-   pictures", English/Spanish/French), disabled with an explanation on
-   Midnight Gold, stored as `settings.themeArt`. The review also suggests a
-   second "Theme fonts" switch (decorative faces are hard for some readers and
-   cost network); the brief had it out of scope, so **owner to decide**.
-7. Art layer is `aria-hidden`, hidden under `forced-colors` and with Save-Data;
-   the existing theme contrast test should also run with the art composited.
+## Approved screens
 
-Not drawn (say so when approving): the **empty and error** states are trivial
-here: a font that fails to load falls back to the system stack, and a missing
-art file simply shows the plain background.
+| Screen | State | File |
+|---|---|---|
+| Theme sheet | Ocarina selected, pictures on | `approved/theme-sheet.default.html` |
+| Theme sheet | pictures off | `approved/theme-sheet.off.html` |
+| Theme sheet | Midnight Gold selected (plain) | `approved/theme-sheet.plain.html` |
+| Theme sheet | Spanish | `approved/theme-sheet.es.html` |
+| Dashboard | Ocarina, pictures on | `approved/dashboard.art.html` |
+| Dashboard | pictures off | `approved/dashboard.off.html` |
 
-## Questions for the owner
-- Which art model (A recommended) and which type model (a recommended)?
-- Self-host the Google fonts (recommended) or link Google's CSS at runtime?
-- Add a separate "Theme fonts" switch?
+The theme wall (all 15 themes) is in `options/a-tile/theme-wall.html`.

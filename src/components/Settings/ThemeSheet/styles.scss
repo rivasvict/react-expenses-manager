@@ -33,3 +33,13 @@
   // Room for the selected card's 2px ring, which would otherwise be clipped.
   padding: 0.15rem 0.15rem 0.3rem;
 }
+
+// The Background pictures switch: slimmer than a Settings row, and fixed above
+// the scrolling grid (design/features/theme-personality/ui/approved/).
+.theme-sheet__art {
+  flex: none;
+  min-height: 0;
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.8rem;
+  background-color: $bg-raised;
+}

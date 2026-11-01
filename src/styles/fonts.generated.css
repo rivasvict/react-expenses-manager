@@ -1,0 +1,99 @@
+/* GENERATED from src/themes/catalog/*.json by `npm run tokens:build` — do not edit. */
+
+@font-face {
+  font-family: "Creepster";
+  src: url("../themes/fonts/creepster.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fredoka";
+  src: url("../themes/fonts/fredoka.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Share Tech Mono";
+  src: url("../themes/fonts/share-tech-mono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Newsreader";
+  src: url("../themes/fonts/newsreader.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Righteous";
+  src: url("../themes/fonts/righteous.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Comfortaa";
+  src: url("../themes/fonts/comfortaa.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("../themes/fonts/jost.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cinzel";
+  src: url("../themes/fonts/cinzel.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Almendra";
+  src: url("../themes/fonts/almendra.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("../themes/fonts/fraunces.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Russo One";
+  src: url("../themes/fonts/russo-one.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Dots";
+  src: url("../themes/fonts/zen-dots.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Shippori Mincho";
+  src: url("../themes/fonts/shippori-mincho.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mountains of Christmas";
+  src: url("../themes/fonts/mountains-of-christmas.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}

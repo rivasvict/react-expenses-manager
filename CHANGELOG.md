@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.39.0] - 2026-11-01
+
+### Added
+
+- **Theme personality.** Each of the 14 non-default themes now has a faint,
+  monoline background picture that evokes its inspiration (an ocarina and
+  mountains for Ocarina, a skyline and Tokyo Tower for Tokyo Night, a bat and a
+  pumpkin for All Hallows, …) and a headline typeface from Google Fonts
+  (Cinzel, Creepster, Zen Dots, Fraunces, …). The picture is drawn on the work
+  area with the theme's own accent (a CSS mask, so it recolors with the theme),
+  and the typeface is used only for page titles, the app name and sheet
+  headings; body text and money figures keep the system font. Midnight Gold,
+  the default, stays exactly as it was.
+- **Background pictures switch.** A switch at the top of the Theme sheet turns
+  every picture off (on by default, stored on the device only in
+  `settings.themeArt`), in English, Spanish and French.
+- **Richer theme previews.** Each miniature in the picker shows its theme's
+  picture and draws the app name and "Savings" label in its typeface, so both
+  can be judged before picking.
+- **Catalog fields.** A theme's JSON file can carry `typography` and `art`;
+  `npm run tokens:build` generates `--font-display`, `--display-tracking`,
+  `--art` and `--art-opacity` plus `src/styles/fonts.generated.css`. The font
+  files (Google Fonts latin subsets, SIL OFL) are self-hosted in
+  `src/themes/fonts/`, fetched only when used and cached on first use by the
+  service worker.
+
 ## [1.38.2] - 2026-11-01
 
 ### Added

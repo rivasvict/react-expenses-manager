@@ -1,0 +1,82 @@
+{
+  "screens": [
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route": "/settings",
+      "external": true
+    },
+    {
+      "id": "theme-sheet.default",
+      "title": "Theme sheet (Ocarina, pictures on)",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.off",
+      "title": "Theme sheet, pictures off",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.plain",
+      "title": "Theme sheet, Midnight Gold (plain)",
+      "route": "/settings"
+    },
+    {
+      "id": "theme-sheet.es",
+      "title": "Theme sheet in Spanish",
+      "route": "/settings"
+    },
+    {
+      "id": "dashboard.art",
+      "title": "Dashboard with Ocarina pictures",
+      "route": "/"
+    },
+    {
+      "id": "dashboard.off",
+      "title": "Dashboard, pictures off",
+      "route": "/"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "settings",
+      "to": "theme-sheet.default",
+      "label": "Tap the Theme row"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "theme-sheet.off",
+      "label": "Turn Background pictures off"
+    },
+    {
+      "from": "theme-sheet.off",
+      "to": "theme-sheet.default",
+      "label": "Turn Background pictures on"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "theme-sheet.plain",
+      "label": "Tap Midnight Gold"
+    },
+    {
+      "from": "theme-sheet.plain",
+      "to": "theme-sheet.default",
+      "label": "Tap Ocarina"
+    },
+    {
+      "from": "settings",
+      "to": "theme-sheet.es",
+      "label": "Tap the Tema row (Spanish)"
+    },
+    {
+      "from": "theme-sheet.default",
+      "to": "dashboard.art",
+      "label": "Close the sheet and open Home"
+    },
+    {
+      "from": "theme-sheet.off",
+      "to": "dashboard.off",
+      "label": "Close the sheet and open Home"
+    }
+  ]
+}

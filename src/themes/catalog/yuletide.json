@@ -12,6 +12,14 @@
     "es": "Una noche de Navidad verde pino: oro de estrella, rojo arándano y nieve fresca.",
     "fr": "Une nuit de Noël vert sapin : or d'étoile, rouge canneberge et neige fraîche."
   },
+  "typography": {
+    "display": {
+      "family": "Mountains of Christmas",
+      "file": "mountains-of-christmas"
+    },
+    "tracking": "0.01em"
+  },
+  "art": "yuletide",
   "color": {
     "bg-page": "#07180f",
     "bg-surface": "#0d2418",

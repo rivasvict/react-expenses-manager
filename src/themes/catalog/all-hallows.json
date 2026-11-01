@@ -12,6 +12,14 @@
     "es": "Una noche morada de brujas iluminada por calabazas.",
     "fr": "Une nuit violette de sorcières éclairée par des citrouilles."
   },
+  "typography": {
+    "display": {
+      "family": "Creepster",
+      "file": "creepster"
+    },
+    "tracking": "0.04em"
+  },
+  "art": "all-hallows",
   "color": {
     "bg-page": "#0f0a14",
     "bg-surface": "#170f1f",

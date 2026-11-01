@@ -12,6 +12,14 @@
     "es": "Halloween Town a la luz de la luna, cosida con los retazos de Sally.",
     "fr": "Halloween Town au clair de lune, cousue avec les pièces de Sally."
   },
+  "typography": {
+    "display": {
+      "family": "Almendra",
+      "file": "almendra"
+    },
+    "tracking": "0.02em"
+  },
+  "art": "pumpkin-king",
   "color": {
     "bg-page": "#0a1114",
     "bg-surface": "#111b20",

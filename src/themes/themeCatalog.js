@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 const CATALOG_DIR = path.join(__dirname, "catalog");
+const ART_DIR = path.join(__dirname, "art");
 const THEMED_GROUPS = ["color", "chart", "shadow"];
 
 // The default theme first, then the rest by file name.
@@ -17,6 +18,18 @@ const readThemeCatalog = (tokens, dir = CATALOG_DIR) => {
     .filter((file) => file.endsWith(".json"))
     .sort()
     .map((file) => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")))
+    // A theme's background picture is src/themes/art/<art>.svg; the build reads
+    // it here (it is inlined into the generated CSS, never put in the JSON).
+    .map((theme) =>
+      theme.art
+        ? {
+            ...theme,
+            artSvg: fs
+              .readFileSync(path.join(ART_DIR, `${theme.art}.svg`), "utf8")
+              .trim(),
+          }
+        : theme
+    )
     .map((theme) =>
       theme.default
         ? {
@@ -31,4 +44,4 @@ const readThemeCatalog = (tokens, dir = CATALOG_DIR) => {
   ];
 };
 
-module.exports = { CATALOG_DIR, THEMED_GROUPS, readThemeCatalog };
+module.exports = { ART_DIR, CATALOG_DIR, THEMED_GROUPS, readThemeCatalog };

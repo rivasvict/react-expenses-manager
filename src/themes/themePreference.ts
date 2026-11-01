@@ -1,4 +1,5 @@
 import { DEFAULT_THEME_ID, THEME_CATALOG } from "./catalog.generated";
+import { applyThemeArt, getStoredThemeArt } from "./artPreference";
 import type { Theme } from "./theme.types";
 
 /**
@@ -51,6 +52,8 @@ export const applyTheme = (theme: Theme): void => {
     ?.setAttribute("content", theme.color["bg-page"]);
 };
 
-/** Applies the stored theme; called once before the first render. */
-export const applyStoredTheme = (): void =>
+/** Applies the stored theme and picture setting; called once before the first render. */
+export const applyStoredTheme = (): void => {
   applyTheme(getTheme(getStoredThemeId()));
+  applyThemeArt(getStoredThemeArt());
+};

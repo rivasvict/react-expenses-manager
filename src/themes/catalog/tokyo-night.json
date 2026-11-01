@@ -12,6 +12,14 @@
     "es": "Luces de neón sobre una noche índigo profunda.",
     "fr": "Néons de la ville sur une nuit indigo profonde."
   },
+  "typography": {
+    "display": {
+      "family": "Zen Dots",
+      "file": "zen-dots"
+    },
+    "tracking": "0.04em"
+  },
+  "art": "tokyo-night",
   "color": {
     "bg-page": "#16161e",
     "bg-surface": "#1a1b26",

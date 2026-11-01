@@ -12,6 +12,14 @@
     "es": "Tinta sobre papel cálido: un tema claro pensado para leer.",
     "fr": "De l'encre sur du papier chaud : un thème clair fait pour la lecture."
   },
+  "typography": {
+    "display": {
+      "family": "Newsreader",
+      "file": "newsreader"
+    },
+    "tracking": "0"
+  },
+  "art": "flexoki-light",
   "color": {
     "bg-page": "#e6e4d9",
     "bg-surface": "#fffcf0",

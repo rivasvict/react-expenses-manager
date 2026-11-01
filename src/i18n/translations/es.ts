@@ -71,6 +71,9 @@ const es: Translations = {
   "settings.theme.hint": "Colores de la app",
   "settings.theme.description":
     "Toca un tema para usarlo. La app cambia al instante.",
+  "settings.themeArt.title": "Imágenes de fondo",
+  "settings.themeArt.hint": "Dibujos tenues del mundo de cada tema.",
+  "settings.themeArt.plain": "{{theme}} se queda sin dibujos.",
   "settings.sheet.close": "Cerrar",
 
   // Temas (los nombres son nombres propios y no se traducen)

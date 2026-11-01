@@ -12,6 +12,14 @@
     "es": "Pasteles relajantes sobre una base moca.",
     "fr": "Pastels apaisants sur une base moka."
   },
+  "typography": {
+    "display": {
+      "family": "Fredoka",
+      "file": "fredoka"
+    },
+    "tracking": "0"
+  },
+  "art": "catppuccin",
   "color": {
     "bg-page": "#11111b",
     "bg-surface": "#1e1e2e",
