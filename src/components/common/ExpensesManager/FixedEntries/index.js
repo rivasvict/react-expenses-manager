@@ -76,7 +76,7 @@ const FixedEntries = ({ entries, selectedDate, history }) => {
         </p>
       )}
 
-      <Container fluid>
+      <Container fluid className="fixed-entries-footer">
         <Row className="vertical-standard-space">
           <Col>
             <Link

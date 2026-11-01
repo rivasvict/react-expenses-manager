@@ -10,6 +10,8 @@
   }
 
   .bottom-content {
+    @include screen-footer();
+
     .col {
       * {
         width: 100%;

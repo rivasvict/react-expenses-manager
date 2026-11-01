@@ -98,6 +98,19 @@ $font-display: var(--font-display);
   outline-offset: 2px;
 }
 
+// The trailing action area of a screen (Go Back and its companions). It is
+// never closer than 1.25rem to the content above it, even when the page is
+// full; `$pinned` also sends it to the bottom edge of a short page (the
+// "about this device" screens), otherwise it simply follows the content.
+@mixin screen-footer($pinned: false) {
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
+
+  @if $pinned {
+    margin-top: auto;
+  }
+}
+
 @mixin card {
   background-color: $bg-raised;
   border: 1px solid $border-subtle;

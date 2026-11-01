@@ -1,6 +1,12 @@
+@import '../../../../variables.scss';
+
 .fixed-entries-container {
   .fixed-entries-empty {
     margin: 1.6rem 0;
     text-align: center;
+  }
+
+  .fixed-entries-footer {
+    @include screen-footer();
   }
 }

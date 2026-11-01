@@ -1,6 +1,10 @@
 @import '../../../../variables.scss';
 
 .buckets-container {
+  .buckets-footer {
+    @include screen-footer();
+  }
+
   .cancel {
     width: 100%;
   }
