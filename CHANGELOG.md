@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.38.1] - 2026-11-01
+
+### Added
+
+- **Code owners.** A `.github/CODEOWNERS` file names `@rivasvict` as the owner of
+  every path, so the "Require review from Code Owners" branch rule can make that
+  account's approval the only one that unlocks a merge to `master`.
+
 ## [1.38.0] - 2026-11-01
 
 ### Added
