@@ -17,13 +17,16 @@
 
   .month-header__pill {
     width: 100%;
-    height: 2.5rem;
+    // Grows instead of letting the label escape when it cannot fit on one line
+    // (see useShrinkToFit, which shrinks the label first).
+    min-height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    padding: 0 0.9rem;
+    padding: 0.35rem 0.9rem;
     font: inherit;
+    line-height: 1.15;
     // A button resets letter-spacing; keep the theme's headline tracking.
     letter-spacing: inherit;
     color: $text-primary;
@@ -38,6 +41,19 @@
       color: $accent;
     }
 
+    .month-header__label {
+      flex: 0 1 auto;
+      min-width: 0;
+      text-wrap: balance;
+    }
+
+    // Narrow phones: more room for the label.
+    @media (max-width: 24rem) {
+      gap: 0.3rem;
+      padding-left: 0.55rem;
+      padding-right: 0.55rem;
+    }
+
     &:hover {
       background-color: $bg-raised-hover;
     }
@@ -50,7 +66,9 @@
   .month-header__step {
     flex: 0 0 auto;
     width: 2.5rem;
-    height: 2.5rem;
+    // Stretches with the pill when that grows.
+    align-self: stretch;
+    min-height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
