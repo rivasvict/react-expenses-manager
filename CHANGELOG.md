@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.41.1] - 2026-11-01
+## [1.41.2] - 2026-11-01
 
 ### Added
 
@@ -19,6 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - **Theming reference moved out of `CLAUDE.md`** into `docs/theming.md`
   (model, runtime, background pictures and headline typefaces); `CLAUDE.md`
   keeps a short summary and links to it and to the skill.
+
+## [1.41.1] - 2026-11-01
+
+### Fixed
+
+- **Savings doughnut stuck tiny after "Show figures".** With Privacy mode on,
+  revealing the figures could leave the dashboard's doughnut squeezed into a
+  small ring with its legend cut off, until the page was reloaded. The chart
+  was sized from the reveal animation's still-growing container, which in turn
+  took its height from the chart. The doughnut now sits in a square box sized
+  by its width alone, so it comes out the same size however the reveal is
+  timed. The Summary and entry-list doughnuts share the component and look the
+  same as before.
 
 ## [1.41.0] - 2026-11-01
 
