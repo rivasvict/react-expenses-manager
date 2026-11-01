@@ -1,7 +1,7 @@
 ---
 title: Theme picker
 summary: Pick one of fifteen themes from a preview grid in a bottom sheet (Settings) or a swipeable strip (setup step 1); the whole app recolors at once, Omarchy-style.
-status: approved
+status: implemented
 chosen: a1-grid-sheet
 ---
 
