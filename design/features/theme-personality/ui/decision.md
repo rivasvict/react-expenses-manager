@@ -43,6 +43,24 @@ on money figures. *Good at:* feels designed, never touches the header.
 *Costs:* collides with the last card and the tab bar, and putting display faces
 on money breaks column alignment (see the review).
 
+### D · Live preview (picker only; pairs with art A and type a)
+Added after feedback that A/B/C's Theme sheet lost the approved picker's
+miniature previews. D keeps the approved Theme sheet exactly (the full
+miniature of the app per theme, name, "Inspired by" line, tick, Default badge)
+and changes three things: each miniature's work area carries that theme's
+art, and the miniature's brand name ("Expenses Tracker"), its "Savings" label and
+the card name are real text in the theme's display font, so the preview shows
+the typeface as well as the picture (money figures and body text stay system,
+matching type model a; with a body pairing the row labels would show it too), and
+one slim **Background pictures** row sits between the hint and the grid. The
+miniatures follow the switch (off = no art in any preview). On Midnight Gold
+the row stays usable and says "Midnight Gold stays plain." *Good at:* the
+picker still sells each theme at a glance, and now sells its personality.
+*Costs:* the sheet grows by one row (about 3.2rem), and the art in a 6rem
+miniature is necessarily faint and simplified. Screens: `theme-sheet`,
+`theme-sheet.off`, `theme-sheet.plain`. Only the sheet differs from A; the
+dashboard and the theme wall are A's.
+
 ## Expert review (design reviewer persona) and what was done
 
 Summary: **ship art A, type model a**, with these before approval.
