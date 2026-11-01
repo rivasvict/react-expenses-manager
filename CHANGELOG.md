@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.41.6] - 2026-11-01
+
+### Changed
+
+- **Bucket cards read at a glance.** Each card now shows **Spent** beside a
+  larger **Left** (**Over**, in red, once past the limit) under the bar, with
+  one muted footnote: "Allowance CA$200.00" and, when money was carried over,
+  "Carried −CA$65.21" (red for money owed from earlier months) or "Carried
+  +CA$8.71" (green). The old "Spent: … / Remaining: …" lines no longer stagger
+  onto separate lines on a phone, the carried amount no longer breaks mid
+  phrase, and a large amount can no longer push out of the card (when Spent and
+  Left do not fit on one row, Left drops to its own line). The usage percentage
+  is shown whole (79%, not 78.75%). The labels are translated in Spanish and
+  French. Design: `design/features/bucket-card-text/`.
+
 ## [1.41.5] - 2026-11-01
 
 ### Fixed

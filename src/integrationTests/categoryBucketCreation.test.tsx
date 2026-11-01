@@ -52,7 +52,7 @@ describe("category + bucket creation (issue #100)", () => {
     // Redirected back to the buckets list with the freshly bucketed category.
     expect(await screen.findByText("Gym")).toBeInTheDocument();
     expect(screen.getByTestId("bucket-gym-remaining").textContent).toBe(
-      "Remaining: $120.00"
+      "$120.00"
     );
   });
 

@@ -40,9 +40,9 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await goToPrevMonth(user, "January 2026");
 
     expect(bucketCarryOver("bucket-food")).toBe(
-      "Allowance $200.00 + carried $0.00"
+      "Allowance $200.00"
     );
-    expect(bucketRemaining("bucket-food")).toBe("Remaining: $150.00");
+    expect(bucketRemaining("bucket-food")).toBe("$150.00");
   });
 
   it("new-format buckets display the effective limit for each month", async () => {
@@ -208,9 +208,9 @@ describe("per-month bucket limit edits (issue #102)", () => {
 
     // March: allowance 300, carry-over -50 → availability 250, spend 0 → remaining 250.
     expect(bucketCarryOver("bucket-food")).toBe(
-      "Allowance $300.00 + carried $0.00 (-$50.00)"
+      "Allowance $300.00 Carried −$50.00"
     );
-    expect(bucketRemaining("bucket-food")).toBe("Remaining: $250.00");
+    expect(bucketRemaining("bucket-food")).toBe("$250.00");
   });
 
   it("rejects a negative allowance and leaves the existing limit untouched", async () => {

@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, APRIL, MAY } from "./helpers/seed";
+import { pickLanguage } from "./helpers/settings";
 
 // Pinned to May 2026 so April is reachable as "last month" for the
 // carried-debt scenario (issue #111).
@@ -36,8 +37,11 @@ describe("bucket Spent/Remaining legend (issue #111)", () => {
     await renderApp("/buckets");
     await screen.findByText("May 2026");
 
-    expect(bucketSpentText("bucket-food")).toBe("Spent: $100.00");
-    expect(bucketRemainingText("bucket-food")).toBe("Remaining: $200.00");
+    expect(bucketSpentText("bucket-food")).toBe("$100.00");
+    expect(bucketRemainingText("bucket-food")).toBe("$200.00");
+    expect(screen.getByTestId("bucket-food-remaining-label")).toHaveTextContent(
+      "Left"
+    );
   });
 
   it("shows a negative Remaining when the current month is overspent", async () => {
@@ -50,8 +54,11 @@ describe("bucket Spent/Remaining legend (issue #111)", () => {
     await renderApp("/buckets");
     await screen.findByText("May 2026");
 
-    expect(bucketSpentText("bucket-food")).toBe("Spent: $420.00");
-    expect(bucketRemainingText("bucket-food")).toBe("Remaining: -$120.00");
+    expect(bucketSpentText("bucket-food")).toBe("$420.00");
+    expect(bucketRemainingText("bucket-food")).toBe("$120.00");
+    expect(screen.getByTestId("bucket-food-remaining-label")).toHaveTextContent(
+      "Over"
+    );
   });
 
   it("shows a negative Remaining carried in from a prior month's overspend, even with no spending this month", async () => {
@@ -65,8 +72,11 @@ describe("bucket Spent/Remaining legend (issue #111)", () => {
     await renderApp("/buckets");
     await screen.findByText("May 2026");
 
-    expect(bucketSpentText("bucket-food")).toBe("Spent: $0.00");
-    expect(bucketRemainingText("bucket-food")).toBe("Remaining: -$100.00");
+    expect(bucketSpentText("bucket-food")).toBe("$0.00");
+    expect(bucketRemainingText("bucket-food")).toBe("$100.00");
+    expect(screen.getByTestId("bucket-food-remaining-label")).toHaveTextContent(
+      "Over"
+    );
   });
 
   it("no longer shows the redundant availability figure above the bar", async () => {
@@ -78,5 +88,25 @@ describe("bucket Spent/Remaining legend (issue #111)", () => {
     await screen.findByText("May 2026");
 
     expect(screen.queryByTestId("bucket-food-availability")).toBeNull();
+  });
+
+  it("shows the card labels in Spanish, with the carried debt as a signed amount", async () => {
+    // April: allowance 300, spend 400 -> carries -100 into May; May spend 50.
+    seedEntries([
+      { date: ts(2026, APRIL), amount: "400", type: "expense", categories_path: ",food," },
+      { date: ts(2026, MAY), amount: "50", type: "expense", categories_path: ",food," },
+    ]);
+
+    const { user } = await renderApp("/settings");
+    await pickLanguage(user, /Español/);
+    await user.click(screen.getByRole("link", { name: "Límites" }));
+    await screen.findByText("Mayo 2026");
+
+    expect(screen.getByTestId("bucket-food-remaining-label")).toHaveTextContent(
+      "Disponible"
+    );
+    expect(screen.getByTestId("bucket-food-carry-over")).toHaveTextContent(
+      "Asignación $300.00 Arrastrado \u2212$100.00"
+    );
   });
 });
