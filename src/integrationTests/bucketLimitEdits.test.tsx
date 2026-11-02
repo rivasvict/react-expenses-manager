@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
-import { seedEntries, ts, JANUARY, FEBRUARY, MARCH, APRIL, MAY } from "./helpers/seed";
+import { seedEntries, ts, JANUARY, FEBRUARY } from "./helpers/seed";
 import { goToPrevMonth, goToNextMonth } from "./helpers/navigation";
 
 // Pinned to May 2026 so we can navigate from May back through earlier months.
