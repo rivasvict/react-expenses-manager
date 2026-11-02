@@ -246,7 +246,7 @@ describe("deleting a category", () => {
     await user.click(screen.getByRole("link", { name: "Buckets" }));
     expect(await screen.findByText("Food")).toBeInTheDocument();
     expect(screen.queryByText("Eating out")).not.toBeInTheDocument();
-    expect(screen.getByTestId("bucket-food-spending")).toHaveTextContent("Spent: $258.90");
+    expect(screen.getByTestId("bucket-food-spending")).toHaveTextContent("$258.90");
   });
 
   it("lets each entry go to its own category, and keeps Delete unavailable until all have one", async () => {

@@ -1,8 +1,12 @@
 @import '../../../../variables.scss';
 
 .buckets-container {
+  // The list's own card margin and the row's top margin already separate the
+  // Add button from the last card (20px, as in the approved screens), so only
+  // the bottom padding of the footer rule applies here.
   .buckets-footer {
     @include screen-footer();
+    padding-top: 0;
   }
 
   .cancel {

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buckets — c-quiet-card</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+    .tile-note{margin:0 0 0.625rem}
+    .b{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
+    .b__top{display:flex;align-items:baseline;gap:0.75rem}
+    .b__name{flex:1 1 0;min-width:0;margin:0;font-size:1rem;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+    .b__pct{flex:0 0 auto;font-size:0.9rem;font-weight:700}
+    .ok{color:var(--chart-income)}.warn{color:var(--chart-warning)}.danger{color:var(--chart-expense)}
+    .bar{height:8px;border-radius:var(--radius-pill);background-color:var(--track);overflow:hidden;margin-top:0.55rem}
+    .bar i{display:block;height:100%;border-radius:var(--radius-pill)}
+    .bar .ok{background-color:var(--chart-income)}.bar .warn{background-color:var(--chart-warning)}.bar .danger{background-color:var(--chart-expense)}
+    .nw{white-space:nowrap}
+    .allocation{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.9rem 1rem;margin:0 0 0.625rem;font-size:1.05rem;font-weight:600}
+    .month{display:flex;gap:0.5rem;align-items:center;margin:1.1em 0}
+    .month__step{flex:0 0 2.5rem;height:2.5rem;border:1px solid var(--border-subtle);border-radius:var(--radius-control);background-color:var(--bg-raised);display:flex;align-items:center;justify-content:center;color:var(--text-primary)}
+    .month__step--off{opacity:.35}
+    .month__pill{flex:1 1 auto;height:2.5rem;border:1px solid var(--border-strong);border-radius:var(--radius-pill);background-color:var(--bg-raised);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.15rem}
+
+    .c__line{display:flex;flex-wrap:wrap;gap:0.15rem 0.9rem;margin:0.6rem 0 0;font-size:0.92rem;color:var(--text-secondary)}
+    .c__line strong{color:var(--text-primary);font-weight:700}
+    .c__line strong.danger{color:var(--expense)}
+    .c__tag{display:inline-block;max-width:100%;margin-top:0.55rem;padding:0.15rem 0.6rem;border-radius:var(--radius-control);font-size:0.76rem;font-weight:600;line-height:1.35}
+    .c__tag--debt{color:var(--expense);background-color:var(--expense-soft)}
+    .c__tag--plus{color:var(--income);background-color:var(--income-soft)}
+
+  </style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+      <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+        <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+        <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+      </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+      <h3 class="mk-eyebrow">Monthly Buckets</h3>
+      <div class="month"><span class="month__step">&#8249;</span><span class="month__pill">October 2026</span><span class="month__step month__step--off">&#8250;</span></div>
+      <div class="allocation">October 2026 allocation: CA$2,120.00</div>
+      <article class="b">
+        <div class="b__top"><h2 class="b__name">Cathy bucket</h2><span class="b__pct warn">79%</span></div>
+        <div class="bar"><i class="warn" style="width:78.8%"></i></div>
+        <p class="c__line"><span class="nw"><strong>CA$28.64</strong> left</span><span class="nw">CA$106.15 spent</span></p>
+        <span class="c__tag c__tag--debt"><span class="nw">CA$65.21</span> owed from earlier months</span>
+      </article>
+      <article class="b">
+        <div class="b__top"><h2 class="b__name">Eating out</h2><span class="b__pct warn">67%</span></div>
+        <div class="bar"><i class="warn" style="width:67.0%"></i></div>
+        <p class="c__line"><span class="nw"><strong>CA$84.80</strong> left</span><span class="nw">CA$171.83 spent</span></p>
+        <span class="c__tag c__tag--debt"><span class="nw">CA$43.37</span> owed from earlier months</span>
+      </article>
+      <article class="b">
+        <div class="b__top"><h2 class="b__name">Victor bucket</h2><span class="b__pct ok">63%</span></div>
+        <div class="bar"><i class="ok" style="width:63.3%"></i></div>
+        <p class="c__line"><span class="nw"><strong>CA$76.54</strong> left</span><span class="nw">CA$132.17 spent</span></p>
+        <span class="c__tag c__tag--plus"><span class="nw">CA$8.71</span> carried over</span>
+      </article>
+      <article class="b">
+        <div class="b__top"><h2 class="b__name">Housing</h2><span class="b__pct danger">100%</span></div>
+        <div class="bar"><i class="danger" style="width:100.0%"></i></div>
+        <p class="c__line"><span class="nw"><strong class="danger">CA$5.50</strong> over</span><span class="nw">CA$1,205.50 spent</span></p>
+        
+      </article>
+      <a class="mk-btn mk-btn--primary mk-space-top" href="#">Add new bucket</a>
+      <button class="mk-btn mk-btn--secondary mk-space-top" type="button">Go Back</button>
+    </div>
+  </main>
+</body>
+</html>

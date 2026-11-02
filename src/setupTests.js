@@ -4,7 +4,6 @@ import "@testing-library/jest-dom";
 // Replace it with a no-op class so components that mount a chart don't crash.
 jest.mock("chart.js/auto", () => ({
   Chart: class {
-    constructor() {}
     update() {}
     destroy() {}
   },

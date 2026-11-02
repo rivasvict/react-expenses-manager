@@ -2,12 +2,19 @@
 // by the EN/ES translations change. Tracked in:
 // https://github.com/rivasvict/react-expenses-manager/issues/187
 import React from "react";
-import { Row, Col } from "react-bootstrap";
 import "./styles.scss";
 import { formatNumberForDisplay } from "../../../../../../helpers/entriesHelper/entriesHelper";
 import RowLink from "../../../../RowLink";
 import { useTranslation } from "../../../../../../i18n";
 
+// A true minus (U+2212): it reads as a sign next to an amount, not a hyphen.
+const MINUS = "\u2212";
+
+/**
+ * One bucket card (design/features/bucket-card-text/ui/decision.md): name and
+ * usage, the bar, Spent beside a larger Left (Over once past the limit), and a
+ * footnote with the allowance and, when there is any, what was carried over.
+ */
 const Bucket = ({
   category,
   allowance,
@@ -25,13 +32,7 @@ const Bucket = ({
         : "";
 
   const testId = `bucket-${category.toLowerCase().replace(/\s/g, "-")}`;
-
-  // A carried-over debt is shown as "$0.00 (-$10.00)": nothing is available
-  // from previous months, and the parenthesised amount makes the deficit clear.
-  const formatCarried = (value) =>
-    value < 0
-      ? `${formatNumberForDisplay(0)} (${formatNumberForDisplay(value)})`
-      : formatNumberForDisplay(value);
+  const isOver = remainder < 0;
 
   return (
     <RowLink
@@ -41,42 +42,64 @@ const Bucket = ({
       className="bucket-container"
       data-testid={testId}
     >
-      <Col>
-        <Row className="bucket-legend">
-          <Col className="bucket-name">{category}</Col>
-          <Col
+      <div className="bucket-body">
+        <div className="bucket-legend">
+          <div className="bucket-name">{category}</div>
+          <div
             className={`usage-percentage ${colorClass}`}
             data-testid={`${testId}-percentage`}
-          >{`${consuptionPercentage}%`}</Col>
-        </Row>
-        <Row>
-          <Col xs={12}>
-            <progress
-              value={consuptionPercentage}
-              max={100}
-              className={colorClass}
-            />
-          </Col>
-        </Row>
-        <Row className="bucket-figures">
-          <Col data-testid={`${testId}-spending`}>
-            {t("bucket.spent", { amount: formatNumberForDisplay(spending) })}
-          </Col>
-          <Col className="rest" data-testid={`${testId}-remaining`}>
-            {t("bucket.remaining", {
-              amount: formatNumberForDisplay(remainder),
-            })}
-          </Col>
-        </Row>
-        <Row className="bucket-carry-on">
-          <Col xs={12} data-testid={`${testId}-carry-over`}>
-            {t("bucket.carryOver", {
-              allowance: formatNumberForDisplay(allowance),
-              carried: formatCarried(carryOver),
-            })}
-          </Col>
-        </Row>
-      </Col>
+          >{`${Math.round(consuptionPercentage)}%`}</div>
+        </div>
+        <progress
+          value={consuptionPercentage}
+          max={100}
+          className={colorClass}
+        />
+        <div className="bucket-figures">
+          <div className="bucket-figure">
+            <span className="bucket-figure__label">{t("bucket.spent")}</span>
+            <strong
+              className="bucket-figure__value"
+              data-testid={`${testId}-spending`}
+            >
+              {formatNumberForDisplay(spending)}
+            </strong>
+          </div>
+          <div
+            className={`bucket-figure bucket-figure--left${isOver ? " over" : ""}`}
+          >
+            <span
+              className="bucket-figure__label"
+              data-testid={`${testId}-remaining-label`}
+            >
+              {isOver ? t("bucket.over") : t("bucket.left")}
+            </span>
+            <strong
+              className="bucket-figure__value"
+              data-testid={`${testId}-remaining`}
+            >
+              {formatNumberForDisplay(Math.abs(remainder))}
+            </strong>
+          </div>
+        </div>
+        <p className="bucket-carry-on" data-testid={`${testId}-carry-over`}>
+          <span className="bucket-carry-on__part">
+            {t("bucket.allowance")} {formatNumberForDisplay(allowance)}
+          </span>
+          {carryOver !== 0 && (
+            <span className="bucket-carry-on__part">
+              {" "}
+              {t("bucket.carried")}{" "}
+              <span
+                className={carryOver < 0 ? "carried-debt" : "carried-surplus"}
+              >
+                {carryOver < 0 ? MINUS : "+"}
+                {formatNumberForDisplay(Math.abs(carryOver))}
+              </span>
+            </span>
+          )}
+        </p>
+      </div>
     </RowLink>
   );
 };

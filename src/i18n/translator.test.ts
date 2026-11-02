@@ -12,16 +12,16 @@ describe("createTranslator", () => {
   });
 
   it("fills in {{placeholders}}", () => {
-    expect(english.t("bucket.spent", { amount: "$5.00" })).toBe(
-      "Spent: $5.00"
+    expect(english.t("buckets.allocation", { month: "May", amount: "$5.00" })).toBe(
+      "May allocation: $5.00"
     );
-    expect(spanish.t("bucket.spent", { amount: "$5.00" })).toBe(
-      "Gastado: $5.00"
+    expect(spanish.t("buckets.allocation", { month: "Mayo", amount: "$5.00" })).toBe(
+      "Asignado en Mayo: $5.00"
     );
   });
 
   it("leaves a placeholder visible when its param is missing", () => {
-    expect(english.t("bucket.spent")).toBe("Spent: {{amount}}");
+    expect(english.t("bucket.edit")).toBe("Edit {{category}}");
   });
 
   it("picks the plural form by count", () => {

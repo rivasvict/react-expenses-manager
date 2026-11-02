@@ -52,7 +52,6 @@ describe.skip("EntriesSummary", () => {
 
   describe("Unit test", () => {
     let container = null;
-    let entryComponent = null;
     let totalSumOfEntries = 30;
 
     beforeEach(() => {
@@ -61,7 +60,7 @@ describe.skip("EntriesSummary", () => {
       document.body.appendChild(container);
 
       act(() => {
-        entryComponent = render(
+        render(
           <EntriesSummary entries={entries} />,
           container,
         );

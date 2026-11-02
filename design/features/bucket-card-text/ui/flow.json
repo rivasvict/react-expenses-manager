@@ -1,0 +1,64 @@
+{
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "Dashboard",
+      "route": "/",
+      "external": true
+    },
+    {
+      "id": "buckets.default",
+      "title": "Buckets",
+      "route": "/buckets"
+    },
+    {
+      "id": "buckets.es",
+      "title": "Buckets (Spanish)",
+      "route": "/buckets"
+    },
+    {
+      "id": "buckets.stress",
+      "title": "Buckets (long names, large amounts)",
+      "route": "/buckets"
+    },
+    {
+      "id": "edit-bucket",
+      "title": "Edit bucket",
+      "route": "/edit-bucket/:bucketName",
+      "external": true
+    },
+    {
+      "id": "add-bucket",
+      "title": "Add bucket",
+      "route": "/add-bucket",
+      "external": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": "dashboard",
+      "to": "buckets.default",
+      "label": "Tap Buckets in the nav"
+    },
+    {
+      "from": "buckets.default",
+      "to": "buckets.es",
+      "label": "Switch the language to Spanish in Settings"
+    },
+    {
+      "from": "buckets.default",
+      "to": "buckets.stress",
+      "label": "Open a month with long names and large amounts"
+    },
+    {
+      "from": "buckets.default",
+      "to": "edit-bucket",
+      "label": "Tap a bucket card"
+    },
+    {
+      "from": "buckets.default",
+      "to": "add-bucket",
+      "label": "Tap Add new bucket"
+    }
+  ]
+}

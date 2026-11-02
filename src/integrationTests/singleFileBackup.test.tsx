@@ -462,13 +462,13 @@ describe("round trip — download produces a single JSON file that restores the 
     await clickNav(user, /buckets/i);
     await screen.findByText("May 2026");
     expect(screen.getByTestId("bucket-food-carry-over").textContent).toBe(
-      "Allowance $200.00 + carried $0.00"
+      "Allowance $200.00"
     );
     expect(screen.getByTestId("bucket-food-spending").textContent).toBe(
-      "Spent: $50.00"
+      "$50.00"
     );
     expect(screen.getByTestId("bucket-food-remaining").textContent).toBe(
-      "Remaining: $150.00"
+      "$150.00"
     );
 
     // The standalone category came back.

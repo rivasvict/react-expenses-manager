@@ -1,0 +1,281 @@
+{
+  "screens": {
+    "buckets.default": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 1156
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Cathy bucket": 200,
+          "Eating out": 300,
+          "Victor bucket": 200,
+          "Housing": 1200
+        },
+        "categoryLists": {
+          "expense": [
+            "Cathy bucket",
+            "Eating out",
+            "Victor bucket",
+            "Housing"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "265.21",
+            "description": "",
+            "categories_path": ",cathy bucket,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "",
+            "categories_path": ",eating out,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "191.29",
+            "description": "",
+            "categories_path": ",victor bucket,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "1200.00",
+            "description": "",
+            "categories_path": ",housing,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "106.15",
+            "description": "",
+            "categories_path": ",cathy bucket,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "171.83",
+            "description": "",
+            "categories_path": ",eating out,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e7",
+            "type": "expense",
+            "amount": "132.17",
+            "description": "",
+            "categories_path": ",victor bucket,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e8",
+            "type": "expense",
+            "amount": "1205.50",
+            "description": "",
+            "categories_path": ",housing,",
+            "date": 1791633600000
+          }
+        ]
+      }
+    },
+    "buckets.es": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 1200
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Cathy bucket": 200,
+          "Eating out": 300,
+          "Victor bucket": 200,
+          "Housing": 1200
+        },
+        "categoryLists": {
+          "expense": [
+            "Cathy bucket",
+            "Eating out",
+            "Victor bucket",
+            "Housing"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "265.21",
+            "description": "",
+            "categories_path": ",cathy bucket,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "",
+            "categories_path": ",eating out,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "191.29",
+            "description": "",
+            "categories_path": ",victor bucket,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "1200.00",
+            "description": "",
+            "categories_path": ",housing,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "106.15",
+            "description": "",
+            "categories_path": ",cathy bucket,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "171.83",
+            "description": "",
+            "categories_path": ",eating out,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e7",
+            "type": "expense",
+            "amount": "132.17",
+            "description": "",
+            "categories_path": ",victor bucket,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e8",
+            "type": "expense",
+            "amount": "1205.50",
+            "description": "",
+            "categories_path": ",housing,",
+            "date": 1791633600000
+          }
+        ]
+      }
+    },
+    "buckets.stress": {
+      "route": "/buckets",
+      "viewport": {
+        "width": 375,
+        "height": 1200
+      },
+      "now": "2026-10-15T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Groceries and household essentials for the whole family": 50000,
+          "Fun activities": 200,
+          "Transportation": 30,
+          "Baby stuff": 250
+        },
+        "categoryLists": {
+          "expense": [
+            "Groceries and household essentials for the whole family",
+            "Fun activities",
+            "Transportation",
+            "Baby stuff"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "45678.90",
+            "description": "",
+            "categories_path": ",groceries and household essentials for the whole family,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "200.00",
+            "description": "",
+            "categories_path": ",fun activities,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "30.00",
+            "description": "",
+            "categories_path": ",transportation,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "2249.99",
+            "description": "",
+            "categories_path": ",baby stuff,",
+            "date": 1789041600000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "1234.56",
+            "description": "",
+            "categories_path": ",groceries and household essentials for the whole family,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "310.00",
+            "description": "",
+            "categories_path": ",fun activities,",
+            "date": 1791633600000
+          },
+          {
+            "id": "e7",
+            "type": "expense",
+            "amount": "249.40",
+            "description": "",
+            "categories_path": ",baby stuff,",
+            "date": 1791633600000
+          }
+        ]
+      }
+    }
+  }
+}

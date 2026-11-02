@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { seedEntries, ts, MARCH, APRIL, MAY } from "./helpers/seed";
 import { selectCategory } from "./helpers/categorySelect";
@@ -47,7 +47,7 @@ describe("dashboard algebraic sum", () => {
 
 describe("edit / delete", () => {
   it("reflects updated amount after editing an expense", async () => {
-    const [seeded] = seedEntries([
+    seedEntries([
       { date: ts(2026, MAY), amount: "50", type: "expense", categories_path: ",food,", description: "Groceries" },
     ]);
 

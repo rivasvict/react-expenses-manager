@@ -6,6 +6,6 @@ import renderer from "react-test-renderer";
 
 describe.skip("EntrySummaryWithFilter", () => {
   it("snapshot: should always render the same component", () => {
-    const tree = renderer.create(<EntrySummaryWithFilter />);
+    renderer.create(<EntrySummaryWithFilter />);
   });
 });
