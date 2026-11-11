@@ -1,0 +1,82 @@
+{
+  "screens": [
+    {
+      "id": "bucket-list",
+      "title": "Buckets",
+      "route": "/buckets",
+      "external": true
+    },
+    {
+      "id": "bucket.default",
+      "title": "Edit bucket",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "bucket.es",
+      "title": "Edit bucket (Spanish)",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "bucket.ahead",
+      "title": "Edit bucket, ahead of pace",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "bucket.empty",
+      "title": "Edit bucket, nothing spent",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "allowance-sheet.default",
+      "title": "Allowance sheet",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "allowance-sheet.error",
+      "title": "Allowance sheet, invalid value",
+      "route": "/edit-bucket/eating-out"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "bucket-list",
+      "to": "bucket.default",
+      "label": "Tap a bucket"
+    },
+    {
+      "from": "bucket.default",
+      "to": "bucket.es",
+      "label": "Language set to Spanish"
+    },
+    {
+      "from": "bucket.default",
+      "to": "bucket.ahead",
+      "label": "Spending is ahead of the pace"
+    },
+    {
+      "from": "bucket.default",
+      "to": "bucket.empty",
+      "label": "Nothing spent in the month yet"
+    },
+    {
+      "from": "bucket.default",
+      "to": "allowance-sheet.default",
+      "label": "Tap Edit"
+    },
+    {
+      "from": "allowance-sheet.default",
+      "to": "allowance-sheet.error",
+      "label": "Submit 0"
+    },
+    {
+      "from": "allowance-sheet.default",
+      "to": "bucket.default",
+      "label": "Submit a valid amount or tap Cancel"
+    },
+    {
+      "from": "bucket.default",
+      "to": "bucket-list",
+      "label": "Tap Go Back"
+    }
+  ]
+}

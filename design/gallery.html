@@ -245,14 +245,65 @@
         </div>
       </details>
     </section>
-    <section class="feature" id="feature-bucket-expenses" data-status="exploring">
+    <section class="feature" id="feature-bucket-expenses" data-status="approved">
       <header class="feature__head">
         <h2>Bucket expenses</h2>
-        <span class="badge badge--exploring">Exploring</span>
+        <span class="badge badge--approved">Approved</span>
       </header>
-      <p class="summary">Show a bucket's standing and its expenses for the month on the edit-bucket screen while keeping allowance editing.</p>
-      <nav class="links" aria-label="Bucket expenses documents"><a href="features/bucket-expenses/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/bucket-expenses/ui/decision.md" target="_blank" rel="noopener">Decision</a></nav>
-      <details class="options" open>
+      <p class="summary">The edit-bucket screen shows how the bucket stands (Left, Spent, pace) and its expenses grouped by week, each week against its pace; the allowance is edited in a bottom sheet.</p>
+      <nav class="links" aria-label="Bucket expenses documents"><a href="features/bucket-expenses/feature-brief.md" target="_blank" rel="noopener">Brief</a><a href="features/bucket-expenses/ui/flow.html" target="_blank" rel="noopener">Flow</a><a href="features/bucket-expenses/ui/decision.md" target="_blank" rel="noopener">Decision</a><a href="features/bucket-expenses/ui/fixtures.json" target="_blank" rel="noopener">Fixtures</a></nav>
+      <h3>Approved screens</h3>
+      <div class="frames">
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/allowance-sheet.default.html" target="_blank" rel="noopener" aria-label="Open allowance-sheet · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/allowance-sheet.default.html" title="allowance-sheet · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>allowance-sheet · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/allowance-sheet.error.html" target="_blank" rel="noopener" aria-label="Open allowance-sheet · error full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/allowance-sheet.error.html" title="allowance-sheet · error" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>allowance-sheet · error</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/bucket.ahead.html" target="_blank" rel="noopener" aria-label="Open bucket · ahead full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/bucket.ahead.html" title="bucket · ahead" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>bucket · ahead</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/bucket.default.html" target="_blank" rel="noopener" aria-label="Open bucket · default full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/bucket.default.html" title="bucket · default" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>bucket · default</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/bucket.empty.html" target="_blank" rel="noopener" aria-label="Open bucket · empty full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/bucket.empty.html" title="bucket · empty" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>bucket · empty</figcaption>
+        </figure>
+        <figure class="frame">
+          <a class="frame__link" href="features/bucket-expenses/ui/approved/bucket.es.html" target="_blank" rel="noopener" aria-label="Open bucket · es full size">
+            <div class="frame__viewport">
+              <iframe src="features/bucket-expenses/ui/approved/bucket.es.html" title="bucket · es" loading="lazy" tabindex="-1"></iframe>
+            </div>
+          </a>
+          <figcaption>bucket · es</figcaption>
+        </figure>
+      </div>
+      <details class="options">
         <summary>Options (6)</summary>
         <div class="option">
           <h4>a-status-then-form</h4>
@@ -363,7 +414,7 @@
           </div>
         </div>
         <div class="option">
-          <h4>e-c-week-rows-pace</h4>
+          <h4>e-c-week-rows-pace <span class="badge badge--approved">Chosen</span></h4>
           <div class="frames">
         <figure class="frame">
           <a class="frame__link" href="features/bucket-expenses/ui/options/e-c-week-rows-pace/bucket.ahead.html" target="_blank" rel="noopener" aria-label="Open e-c-week-rows-pace · bucket.ahead full size">

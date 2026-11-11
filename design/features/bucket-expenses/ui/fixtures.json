@@ -1,0 +1,443 @@
+{
+  "screens": {
+    "bucket.default": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 960
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ]
+      }
+    },
+    "bucket.es": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 977
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ]
+      }
+    },
+    "bucket.ahead": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 869
+      },
+      "now": "2026-10-14T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e7",
+            "type": "expense",
+            "amount": "120.00",
+            "description": "Anniversary dinner",
+            "categories_path": ",eating out,",
+            "date": 1791892800000
+          }
+        ]
+      }
+    },
+    "bucket.empty": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 728
+      },
+      "now": "2026-10-03T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          }
+        ]
+      }
+    },
+    "allowance-sheet.default": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 960
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "[aria-label=\"Edit monthly allowance\"], [aria-label=\"Editar asignación mensual\"]"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "allowance-sheet.error": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 960
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ]
+      },
+      "actions": [
+        {
+          "click": "[aria-label=\"Edit monthly allowance\"], [aria-label=\"Editar asignación mensual\"]"
+        },
+        {
+          "fill": [
+            "#bucket-amount",
+            "0"
+          ]
+        },
+        {
+          "click": "[role=dialog] button[type=submit]"
+        },
+        {
+          "wait": 200
+        }
+      ]
+    }
+  }
+}

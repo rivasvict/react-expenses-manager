@@ -413,6 +413,23 @@ const es: Translations = {
   "editBucket.pageTitle": "Editar límite: {{name}}",
   "editBucket.hint":
     "Los cambios se aplican desde el mes que estás viendo en adelante; los meses anteriores conservan su límite.",
+  "editBucket.used": "{{percent}}% usado",
+  "editBucket.underPace": "{{amount}} por debajo del ritmo",
+  "editBucket.aheadOfPace": "{{amount}} por encima del ritmo",
+  "editBucket.expectedBy": "Previsto hasta el {{date}}: {{amount}}",
+  "editBucket.carriedFromEarlier": "Arrastrado {{amount}} de meses anteriores",
+  "editBucket.edit": "Editar",
+  "editBucket.editLabel": "Editar asignación mensual",
+  "editBucket.expensesByWeek": "Gastos por semana",
+  "editBucket.weeklyPace": "Ritmo semanal",
+  "editBucket.weekOf": "de {{amount}}",
+  "editBucket.weekRange": "{{start}} – {{end}} {{month}}",
+  "editBucket.weekDay": "{{day}} {{month}}",
+  "editBucket.showEarlier": "Mostrar semanas anteriores",
+  "editBucket.emptyTitle": "Aún no hay gastos en {{name}}",
+  "editBucket.emptyMessage": "Los gastos con la categoría {{name}} de {{month}} aparecerán aquí.",
+  "editBucket.addExpense": "Añadir un gasto",
+  "editBucket.close": "Cerrar",
 
   // Categories (category management)
   "categories.pageTitle": "Categorías",

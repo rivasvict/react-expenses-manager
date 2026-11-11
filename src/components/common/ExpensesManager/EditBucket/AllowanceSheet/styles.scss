@@ -1,0 +1,77 @@
+@import '../../../../../variables.scss';
+
+// The allowance sheet: the shared bottom sheet on the raised surface with a
+// round close chip, as the category sheets draw it.
+.bottom-sheet.allowance-sheet {
+  .bottom-sheet__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 88vh;
+    padding: 0.6rem 1rem 1rem;
+    background-color: $bg-raised;
+  }
+
+  .bottom-sheet__grabber {
+    width: 2.5rem;
+    height: 0.25rem;
+    margin: 0 auto 0.2rem;
+    border-radius: $radius-round;
+  }
+
+  .bottom-sheet__header {
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .bottom-sheet__heading {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .bottom-sheet__close {
+    @include icon-chip(2.4rem);
+    flex: none;
+    background-color: $bg-surface;
+    border: 0;
+    font-size: 1rem;
+  }
+
+  .bottom-sheet__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .field-hint {
+    margin: 0 0 0.45rem;
+  }
+
+  .form-control.text {
+    background-color: $bg-raised;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 0;
+  }
+
+  .allowance-sheet__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .allowance-sheet__input--error,
+  .allowance-sheet__input--error:focus {
+    border-color: $danger;
+    box-shadow: 0 0 0 0.2rem $danger-soft;
+  }
+
+  .allowance-sheet__error {
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    color: $danger;
+  }
+}

@@ -62,7 +62,7 @@ Node version is pinned in `.nvmrc` — one version for the frontend, the sync se
 - `/data-management` — CSV import/export
 - `/categories` — Categories (Expenses / Incomes tabs; add, rename and delete happen in bottom sheets on this screen); navigating here with router state `{ addCategory: "expense" | "income" }` opens the add sheet (AddBucket's "Add a new category" link does this)
 - `/buckets` — Buckets list
-- `/edit-bucket/:bucketName` — EditBucket
+- `/edit-bucket/:bucketName` — One bucket's screen: Left / Spent, the usage bar with a pace tick, the month's expenses grouped by week against each week's pace (`getBucketWeeks` in `src/helpers/bucketPace/`), and the monthly allowance, edited in a bottom sheet opened by Edit. Design: `design/features/bucket-expenses/`
 - `/welcome` — the first-run **onboarding wizard** (see below); only a new user is ever sent here, and it takes over the whole screen (no app bar or tab bar)
 - `/settings` — Settings (device preferences, all stored only in `localStorage`: the UI language, the display currency and the **Theme**, each a row that opens a bottom sheet — see `src/helpers/currency/currency.ts` — and **Privacy mode**, a switch row; the Theme sheet stays open after a pick so the recolored app can be judged; reached from the gear chip in the app bar)
 

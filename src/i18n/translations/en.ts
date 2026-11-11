@@ -417,6 +417,23 @@ const en = {
   "editBucket.pageTitle": "Edit bucket: {{name}}",
   "editBucket.hint":
     "Changes apply from the month you are viewing onward; earlier months keep their previous limit.",
+  "editBucket.used": "{{percent}}% used",
+  "editBucket.underPace": "{{amount}} under pace",
+  "editBucket.aheadOfPace": "{{amount}} ahead of pace",
+  "editBucket.expectedBy": "Expected by {{date}}: {{amount}}",
+  "editBucket.carriedFromEarlier": "Carried {{amount}} from earlier",
+  "editBucket.edit": "Edit",
+  "editBucket.editLabel": "Edit monthly allowance",
+  "editBucket.expensesByWeek": "Expenses by week",
+  "editBucket.weeklyPace": "Weekly pace",
+  "editBucket.weekOf": "of {{amount}}",
+  "editBucket.weekRange": "{{month}} {{start}} – {{end}}",
+  "editBucket.weekDay": "{{month}} {{day}}",
+  "editBucket.showEarlier": "Show earlier weeks",
+  "editBucket.emptyTitle": "No expenses in {{name}} yet",
+  "editBucket.emptyMessage": "Expenses with the category {{name}} in {{month}} will show up here.",
+  "editBucket.addExpense": "Add an expense",
+  "editBucket.close": "Close",
 
   // Categories (category management)
   "categories.pageTitle": "Categories",

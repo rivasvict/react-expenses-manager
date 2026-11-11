@@ -1,16 +1,126 @@
 ---
 title: Bucket expenses
-summary: Show a bucket's standing and its expenses for the month on the edit-bucket screen while keeping allowance editing.
-status: exploring
+summary: The edit-bucket screen shows how the bucket stands (Left, Spent, pace) and its expenses grouped by week, each week against its pace; the allowance is edited in a bottom sheet.
+status: approved
+chosen: e-c-week-rows-pace
 ---
 
 # Decision
 
-Not chosen yet. Data in every mockup: Eating out, October 2026, allowance
-CA$300.00, carried −CA$43.37, spent CA$171.83, left CA$84.80, six expenses
-(one with a very long description to test wrapping).
+**E · Week rows** (the pace variant of C), chosen by the owner.
 
-## Options considered
+Why E won: the weekly number sits next to the expenses that cause it, labels
+have room on a phone, the hero card stays short, and it scales to any number of
+weeks. D crowded five narrow columns, F needed a new chart type. A and B hid the
+expenses behind a long scroll or a second tab; C's unlabeled bars did not say
+what they meant. The allowance editor moves from the page into a bottom sheet
+(Edit on the hero card), as in C.
+
+## For the implementer
+
+Build to `approved/` and `flow.json`. Fixtures pin the clock, so the numbers are
+reproducible: viewed on Oct 28, 2026, bucket Eating out, allowance CA$300.00,
+carried −CA$43.37.
+
+### Screen, top to bottom
+
+1. **Eyebrow**: `editBucket.pageTitle` ("Edit bucket: Eating out").
+2. **Hero card** (raised card, the Buckets card's text styles): month name and
+   year with "67% used" (green / amber / red at the Buckets thresholds, same
+   percentage as the Buckets card); **Left** large beside **Spent** (**Over**
+   in red when negative, as on the Buckets card); the progress bar with a
+   **pace tick** (2px, `$text-primary`) at expected ÷ available; the pace line;
+   a hairline, then the **Monthly allowance** row: amount, "Carried −CA$43.37
+   from earlier" (hidden when 0; amount red for debt, green for surplus), and an
+   **Edit** secondary button (2.6rem tall) that opens the allowance sheet.
+3. **Expenses by week**: section header with the "Weekly pace" legend (tick
+   swatch). Per week, newest first, only weeks that have expenses: the week
+   label and "**CA$45.65** of CA$57.95", a thin 6px bar with the pace tick, then
+   a card listing that week's expenses (TypeChip `expense`, description, date,
+   `−amount` in `$expense`). The first two weeks show; **Show earlier weeks**
+   reveals the rest.
+4. **Go Back** (secondary).
+5. **Nothing spent**: hero as above, then a card with the TypeChip, "No expenses
+   in {{name}} yet", the hint, and **Add an expense** (secondary, to
+   `/add-expense`); no week section.
+
+### Pace rule
+
+- available = allowance + carried (the Buckets card's `availability`).
+- Month viewed is the current month: expected by today = available × today's
+  day ÷ days in the month. A past month: the whole month. A future month: no
+  pace at all (hide the tick, the pace line and every "of …").
+- Week = Monday to Sunday, clipped to the month and to today. Its pace =
+  available × the days it covers ÷ days in the month.
+- Tone: spent ≤ pace → `$chart-income` bar and "under pace" in `$income`;
+  above → `$chart-warning`, "ahead of pace" in `$chart-warning`. Never red.
+- available ≤ 0: no pace anywhere (nothing to pace); keep Over, the weeks and
+  their totals without a bar tick or "of …".
+- The bar scale in the week list is shared (the largest of any week's spent or
+  pace, plus 8% headroom so a tick never sits on the bar's end), so bars compare across weeks; the tick is positioned on that scale.
+- Expenses are those whose `categories_path` is exactly `,<bucket>,` (the match
+  `getMonthSpendingByBucket` uses), so the weeks add up to Spent.
+- No description: show the bucket name as the row title (user data).
+
+### Allowance sheet
+
+`BottomSheet` titled "Monthly allowance": the existing hint
+(`editBucket.hint`), the number field (same placeholder, validation and
+`getBucketAllowanceValidationError` as today), **Submit** (primary) and
+**Cancel**. Submit with a valid amount saves for the viewed month onward
+(unchanged `editBucket` action), closes the sheet and **stays on the screen**,
+now showing the new numbers; the invalid case keeps the sheet open with the
+message under the field. Closing returns focus to Edit.
+
+### Reuse
+
+`BottomSheet`, `TypeChip` (Categories), the Buckets card's figure styles and
+`bucket-card` tokens (`$chart-income`, `$chart-warning`, `$chart-expense`,
+`$track`), `formatDayMonth` (`helpers/shortDate`), `formatNumberForDisplay`.
+New shared components: none (the hero, week row and allowance sheet are local to
+`EditBucket/`).
+
+### Strings (new keys; Spanish and French in `es.ts` / `fr.ts`)
+
+| Key | English | Spanish |
+|---|---|---|
+| `editBucket.used` | {{percent}}% used | {{percent}}% usado |
+| `editBucket.underPace` | {{amount}} under pace | {{amount}} por debajo del ritmo |
+| `editBucket.aheadOfPace` | {{amount}} ahead of pace | {{amount}} por encima del ritmo |
+| `editBucket.expectedBy` | Expected by {{date}}: {{amount}} | Previsto hasta el {{date}}: {{amount}} |
+| `editBucket.carriedFromEarlier` | Carried {{amount}} from earlier | Arrastrado {{amount}} de meses anteriores |
+| `editBucket.edit` / `editBucket.editLabel` | Edit / Edit monthly allowance | Editar / Editar asignación mensual |
+| `editBucket.expensesByWeek` | Expenses by week | Gastos por semana |
+| `editBucket.weeklyPace` | Weekly pace | Ritmo semanal |
+| `editBucket.weekOf` | of {{amount}} | de {{amount}} |
+| `editBucket.weekRange` / `editBucket.weekDay` | {{month}} {{start}} – {{end}} / {{month}} {{day}} | {{start}} – {{end}} {{month}} / {{day}} {{month}} |
+| `editBucket.showEarlier` | Show earlier weeks | Mostrar semanas anteriores |
+| `editBucket.emptyTitle` | No expenses in {{name}} yet | Aún no hay gastos en {{name}} |
+| `editBucket.emptyMessage` | Expenses with the category {{name}} in {{month}} will show up here. | Los gastos con la categoría {{name}} de {{month}} aparecerán aquí. |
+| `editBucket.addExpense` | Add an expense | Añadir un gasto |
+| `editBucket.close` | Close | Cerrar |
+
+### Edge cases
+
+Long descriptions wrap (`overflow-wrap: anywhere`) and amounts never break; a
+bucket with no expenses this month shows the empty card; Over shows the
+absolute amount; the error state is the existing validation message.
+
+### Approved screens
+
+| Screen | State | File |
+|---|---|---|
+| Edit bucket | default (Oct 28, under pace) | `approved/bucket.default.html` |
+| Edit bucket | Spanish | `approved/bucket.es.html` |
+| Edit bucket | ahead of pace (Oct 14) | `approved/bucket.ahead.html` |
+| Edit bucket | nothing spent (Oct 3) | `approved/bucket.empty.html` |
+| Allowance sheet | default | `approved/allowance-sheet.default.html` |
+| Allowance sheet | invalid value | `approved/allowance-sheet.error.html` |
+
+French is not drawn: it follows the Spanish layout.
+
+# Options considered (round 1 and 2)
+
 
 **A · Status, expenses, then the form** (`options/a-status-then-form`).
 Today's form stays whole but moves to the bottom. Above it: a status card (the

@@ -413,6 +413,23 @@ const fr: Translations = {
   "editBucket.pageTitle": "Modifier le plafond : {{name}}",
   "editBucket.hint":
     "Les modifications s'appliquent à partir du mois affiché ; les mois précédents conservent leur ancienne limite.",
+  "editBucket.used": "{{percent}} % utilisé",
+  "editBucket.underPace": "{{amount}} sous le rythme",
+  "editBucket.aheadOfPace": "{{amount}} au-dessus du rythme",
+  "editBucket.expectedBy": "Prévu au {{date}} : {{amount}}",
+  "editBucket.carriedFromEarlier": "Report de {{amount}} des mois précédents",
+  "editBucket.edit": "Modifier",
+  "editBucket.editLabel": "Modifier le montant alloué mensuel",
+  "editBucket.expensesByWeek": "Dépenses par semaine",
+  "editBucket.weeklyPace": "Rythme hebdomadaire",
+  "editBucket.weekOf": "sur {{amount}}",
+  "editBucket.weekRange": "{{start}} – {{end}} {{month}}",
+  "editBucket.weekDay": "{{day}} {{month}}",
+  "editBucket.showEarlier": "Afficher les semaines précédentes",
+  "editBucket.emptyTitle": "Aucune dépense dans {{name}} pour l'instant",
+  "editBucket.emptyMessage": "Les dépenses de la catégorie {{name}} en {{month}} apparaîtront ici.",
+  "editBucket.addExpense": "Ajouter une dépense",
+  "editBucket.close": "Fermer",
 
   // Categories (category management)
   "categories.pageTitle": "Catégories",
