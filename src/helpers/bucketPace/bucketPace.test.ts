@@ -1,4 +1,10 @@
-import { getBucketWeeks, getElapsedDays, getExpectedSpending } from "./bucketPace";
+import {
+  getAllBucketWeeks,
+  getBucketWeeks,
+  getCumulativeSpending,
+  getElapsedDays,
+  getExpectedSpending,
+} from "./bucketPace";
 
 const OCTOBER = { year: 2026, month: 9 };
 const at = (day: number, month = 9) => new Date(2026, month, day, 12).getTime();
@@ -82,5 +88,49 @@ describe("getBucketWeeks", () => {
       today: today(28),
     });
     expect([week.startDay, week.endDay]).toEqual([26, 30]);
+  });
+});
+
+describe("getAllBucketWeeks", () => {
+  it("lists every week so far, oldest first, quiet weeks included", () => {
+    const weeks = getAllBucketWeeks({
+      expenses: [
+        { amount: "36", date: at(5) },
+        { amount: "42.5", date: at(28) },
+      ],
+      availability: 256.63,
+      selectedDate: OCTOBER,
+      today: today(28),
+    });
+    expect(weeks.map(({ startDay, endDay, spent }) => [startDay, endDay, spent])).toEqual([
+      [1, 4, 0],
+      [5, 11, 36],
+      [12, 18, 0],
+      [19, 25, 0],
+      [26, 28, 42.5],
+    ]);
+    expect(weeks[0].pace).toBeCloseTo(33.11, 2);
+    expect(weeks[2].pace).toBeCloseTo(57.95, 2);
+  });
+
+  it("is empty for a future month with nothing in it", () => {
+    expect(
+      getAllBucketWeeks({ expenses: [], availability: 100, selectedDate: OCTOBER, today: today(20, 8) })
+    ).toEqual([]);
+  });
+});
+
+describe("getCumulativeSpending", () => {
+  it("adds up by day, oldest first, one point per day with spending", () => {
+    expect(
+      getCumulativeSpending([
+        { amount: "10", date: at(12) },
+        { amount: "5", date: at(3) },
+        { amount: "2.5", date: at(12) },
+      ])
+    ).toEqual([
+      { day: 3, total: 5 },
+      { day: 12, total: 17.5 },
+    ]);
   });
 });

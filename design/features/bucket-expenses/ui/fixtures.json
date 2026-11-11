@@ -438,6 +438,242 @@
           "wait": 200
         }
       ]
+    },
+    "bucket.bars": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 1000
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ],
+        "settings.weeklyView": "bars"
+      }
+    },
+    "bucket.line": {
+      "route": "/edit-bucket/eating-out",
+      "viewport": {
+        "width": 375,
+        "height": 1000
+      },
+      "now": "2026-10-28T12:00:00",
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "CAD",
+        "buckets": {
+          "Eating out": 300
+        },
+        "categoryLists": {
+          "expense": [
+            "Eating out"
+          ],
+          "income": []
+        },
+        "balance": [
+          {
+            "id": "s1",
+            "type": "expense",
+            "amount": "343.37",
+            "description": "Dinners out",
+            "categories_path": ",eating out,",
+            "date": 1789905600000
+          },
+          {
+            "id": "e1",
+            "type": "expense",
+            "amount": "36.00",
+            "description": "Taco Tuesday",
+            "categories_path": ",eating out,",
+            "date": 1791201600000
+          },
+          {
+            "id": "e2",
+            "type": "expense",
+            "amount": "19.28",
+            "description": "Burger Joint",
+            "categories_path": ",eating out,",
+            "date": 1791806400000
+          },
+          {
+            "id": "e3",
+            "type": "expense",
+            "amount": "28.40",
+            "description": "Brunch with Ana",
+            "categories_path": ",eating out,",
+            "date": 1792238400000
+          },
+          {
+            "id": "e4",
+            "type": "expense",
+            "amount": "8.75",
+            "description": "Coffee",
+            "categories_path": ",eating out,",
+            "date": 1792411200000
+          },
+          {
+            "id": "e5",
+            "type": "expense",
+            "amount": "36.90",
+            "description": "Pizza night with the whole team after the quarterly planning offsite",
+            "categories_path": ",eating out,",
+            "date": 1792843200000
+          },
+          {
+            "id": "e6",
+            "type": "expense",
+            "amount": "42.50",
+            "description": "Sushi Zen",
+            "categories_path": ",eating out,",
+            "date": 1793188800000
+          }
+        ],
+        "settings.weeklyView": "line"
+      }
+    },
+    "settings-view.default": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "settings-view.es": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.currency": "USD",
+        "settings.theme": "midnight-gold"
+      }
+    },
+    "weekly-sheet.default": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "en",
+        "settings.currency": "USD",
+        "settings.theme": "midnight-gold"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Weekly spending\")"
+        },
+        {
+          "wait": 300
+        }
+      ]
+    },
+    "weekly-sheet.es": {
+      "route": "/settings",
+      "viewport": {
+        "width": 375,
+        "height": 900
+      },
+      "localStorage": {
+        "everShowDataDisclaimer": "0",
+        "onboarding.completed": "1",
+        "settings.language": "es",
+        "settings.currency": "USD",
+        "settings.theme": "midnight-gold"
+      },
+      "actions": [
+        {
+          "click": "button:has-text(\"Gasto semanal\")"
+        },
+        {
+          "wait": 300
+        }
+      ]
     }
   }
 }

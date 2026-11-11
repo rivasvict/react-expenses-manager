@@ -83,7 +83,7 @@
       </div>
     </section>
 
-    <h2>All screens (7)</h2>
+    <h2>All screens (14)</h2>
     <ol class="fl-strip">
         <li class="fl-step">
           <span class="fl-step__index">1</span>
@@ -134,9 +134,58 @@
           <p class="fl-route">/edit-bucket/eating-out</p>
           <p class="mk-text-muted">End of this flow</p>
         </li>
+        <li class="fl-step">
+          <span class="fl-step__index">8</span>
+          <div class="fl-thumb fl-thumb--external"><span>Existing screen<br>not designed here</span></div>
+          <h3>Settings</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Open Settings</span> → Settings with the Weekly spending row</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">9</span>
+          <div class="fl-thumb"><iframe src="approved/settings-view.default.html" title="Settings with the Weekly spending row" tabindex="-1"></iframe></div>
+          <h3>Settings with the Weekly spending row</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Language set to Spanish</span> → Settings with the Weekly spending row (Spanish)</li><li><span class="mk-text-secondary">Tap Weekly spending</span> → Weekly spending sheet</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">10</span>
+          <div class="fl-thumb"><iframe src="approved/settings-view.es.html" title="Settings with the Weekly spending row (Spanish)" tabindex="-1"></iframe></div>
+          <h3>Settings with the Weekly spending row (Spanish)</h3>
+          <p class="fl-route">/settings</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">11</span>
+          <div class="fl-thumb"><iframe src="approved/weekly-sheet.default.html" title="Weekly spending sheet" tabindex="-1"></iframe></div>
+          <h3>Weekly spending sheet</h3>
+          <p class="fl-route">/settings</p>
+          <ul class="fl-leads"><li><span class="mk-text-secondary">Language set to Spanish</span> → Weekly spending sheet (Spanish)</li><li><span class="mk-text-secondary">Pick Weekly bars, then open a bucket</span> → Edit bucket, weekly bars</li><li><span class="mk-text-secondary">Pick Month line, then open a bucket</span> → Edit bucket, month line</li><li><span class="mk-text-secondary">Pick Week rows or tap Close</span> → Settings with the Weekly spending row</li></ul>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">12</span>
+          <div class="fl-thumb"><iframe src="approved/weekly-sheet.es.html" title="Weekly spending sheet (Spanish)" tabindex="-1"></iframe></div>
+          <h3>Weekly spending sheet (Spanish)</h3>
+          <p class="fl-route">/settings</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">13</span>
+          <div class="fl-thumb"><iframe src="approved/bucket.bars.html" title="Edit bucket, weekly bars" tabindex="-1"></iframe></div>
+          <h3>Edit bucket, weekly bars</h3>
+          <p class="fl-route">/edit-bucket/eating-out</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
+        <li class="fl-step">
+          <span class="fl-step__index">14</span>
+          <div class="fl-thumb"><iframe src="approved/bucket.line.html" title="Edit bucket, month line" tabindex="-1"></iframe></div>
+          <h3>Edit bucket, month line</h3>
+          <p class="fl-route">/edit-bucket/eating-out</p>
+          <p class="mk-text-muted">End of this flow</p>
+        </li>
     </ol>
   </div>
-  <script type="application/json" id="flow-data">{"screens":[{"id":"bucket-list","title":"Buckets","route":"/buckets","external":true,"src":""},{"id":"bucket.default","title":"Edit bucket","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.default.html"},{"id":"bucket.es","title":"Edit bucket (Spanish)","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.es.html"},{"id":"bucket.ahead","title":"Edit bucket, ahead of pace","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.ahead.html"},{"id":"bucket.empty","title":"Edit bucket, nothing spent","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.empty.html"},{"id":"allowance-sheet.default","title":"Allowance sheet","route":"/edit-bucket/eating-out","external":false,"src":"approved/allowance-sheet.default.html"},{"id":"allowance-sheet.error","title":"Allowance sheet, invalid value","route":"/edit-bucket/eating-out","external":false,"src":"approved/allowance-sheet.error.html"}],"transitions":[{"from":"bucket-list","to":"bucket.default","label":"Tap a bucket"},{"from":"bucket.default","to":"bucket.es","label":"Language set to Spanish"},{"from":"bucket.default","to":"bucket.ahead","label":"Spending is ahead of the pace"},{"from":"bucket.default","to":"bucket.empty","label":"Nothing spent in the month yet"},{"from":"bucket.default","to":"allowance-sheet.default","label":"Tap Edit"},{"from":"allowance-sheet.default","to":"allowance-sheet.error","label":"Submit 0"},{"from":"allowance-sheet.default","to":"bucket.default","label":"Submit a valid amount or tap Cancel"},{"from":"bucket.default","to":"bucket-list","label":"Tap Go Back"}]}</script>
+  <script type="application/json" id="flow-data">{"screens":[{"id":"bucket-list","title":"Buckets","route":"/buckets","external":true,"src":""},{"id":"bucket.default","title":"Edit bucket","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.default.html"},{"id":"bucket.es","title":"Edit bucket (Spanish)","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.es.html"},{"id":"bucket.ahead","title":"Edit bucket, ahead of pace","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.ahead.html"},{"id":"bucket.empty","title":"Edit bucket, nothing spent","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.empty.html"},{"id":"allowance-sheet.default","title":"Allowance sheet","route":"/edit-bucket/eating-out","external":false,"src":"approved/allowance-sheet.default.html"},{"id":"allowance-sheet.error","title":"Allowance sheet, invalid value","route":"/edit-bucket/eating-out","external":false,"src":"approved/allowance-sheet.error.html"},{"id":"settings","title":"Settings","route":"/settings","external":true,"src":""},{"id":"settings-view.default","title":"Settings with the Weekly spending row","route":"/settings","external":false,"src":"approved/settings-view.default.html"},{"id":"settings-view.es","title":"Settings with the Weekly spending row (Spanish)","route":"/settings","external":false,"src":"approved/settings-view.es.html"},{"id":"weekly-sheet.default","title":"Weekly spending sheet","route":"/settings","external":false,"src":"approved/weekly-sheet.default.html"},{"id":"weekly-sheet.es","title":"Weekly spending sheet (Spanish)","route":"/settings","external":false,"src":"approved/weekly-sheet.es.html"},{"id":"bucket.bars","title":"Edit bucket, weekly bars","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.bars.html"},{"id":"bucket.line","title":"Edit bucket, month line","route":"/edit-bucket/eating-out","external":false,"src":"approved/bucket.line.html"}],"transitions":[{"from":"bucket-list","to":"bucket.default","label":"Tap a bucket"},{"from":"bucket.default","to":"bucket.es","label":"Language set to Spanish"},{"from":"bucket.default","to":"bucket.ahead","label":"Spending is ahead of the pace"},{"from":"bucket.default","to":"bucket.empty","label":"Nothing spent in the month yet"},{"from":"bucket.default","to":"allowance-sheet.default","label":"Tap Edit"},{"from":"allowance-sheet.default","to":"allowance-sheet.error","label":"Submit 0"},{"from":"allowance-sheet.default","to":"bucket.default","label":"Submit a valid amount or tap Cancel"},{"from":"bucket.default","to":"bucket-list","label":"Tap Go Back"},{"from":"settings","to":"settings-view.default","label":"Open Settings"},{"from":"settings-view.default","to":"settings-view.es","label":"Language set to Spanish"},{"from":"settings-view.default","to":"weekly-sheet.default","label":"Tap Weekly spending"},{"from":"weekly-sheet.default","to":"weekly-sheet.es","label":"Language set to Spanish"},{"from":"weekly-sheet.default","to":"bucket.bars","label":"Pick Weekly bars, then open a bucket"},{"from":"weekly-sheet.default","to":"bucket.line","label":"Pick Month line, then open a bucket"},{"from":"weekly-sheet.default","to":"settings-view.default","label":"Pick Week rows or tap Close"}]}</script>
   <script>
     (() => {
       const data = JSON.parse(document.getElementById("flow-data").textContent);

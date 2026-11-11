@@ -35,6 +35,42 @@
       "id": "allowance-sheet.error",
       "title": "Allowance sheet, invalid value",
       "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route": "/settings",
+      "external": true
+    },
+    {
+      "id": "settings-view.default",
+      "title": "Settings with the Weekly spending row",
+      "route": "/settings"
+    },
+    {
+      "id": "settings-view.es",
+      "title": "Settings with the Weekly spending row (Spanish)",
+      "route": "/settings"
+    },
+    {
+      "id": "weekly-sheet.default",
+      "title": "Weekly spending sheet",
+      "route": "/settings"
+    },
+    {
+      "id": "weekly-sheet.es",
+      "title": "Weekly spending sheet (Spanish)",
+      "route": "/settings"
+    },
+    {
+      "id": "bucket.bars",
+      "title": "Edit bucket, weekly bars",
+      "route": "/edit-bucket/eating-out"
+    },
+    {
+      "id": "bucket.line",
+      "title": "Edit bucket, month line",
+      "route": "/edit-bucket/eating-out"
     }
   ],
   "transitions": [
@@ -77,6 +113,41 @@
       "from": "bucket.default",
       "to": "bucket-list",
       "label": "Tap Go Back"
+    },
+    {
+      "from": "settings",
+      "to": "settings-view.default",
+      "label": "Open Settings"
+    },
+    {
+      "from": "settings-view.default",
+      "to": "settings-view.es",
+      "label": "Language set to Spanish"
+    },
+    {
+      "from": "settings-view.default",
+      "to": "weekly-sheet.default",
+      "label": "Tap Weekly spending"
+    },
+    {
+      "from": "weekly-sheet.default",
+      "to": "weekly-sheet.es",
+      "label": "Language set to Spanish"
+    },
+    {
+      "from": "weekly-sheet.default",
+      "to": "bucket.bars",
+      "label": "Pick Weekly bars, then open a bucket"
+    },
+    {
+      "from": "weekly-sheet.default",
+      "to": "bucket.line",
+      "label": "Pick Month line, then open a bucket"
+    },
+    {
+      "from": "weekly-sheet.default",
+      "to": "settings-view.default",
+      "label": "Pick Week rows or tap Close"
     }
   ]
 }

@@ -65,6 +65,19 @@
     background-color: $text-primary;
   }
 
+  // Without a bar the label sits right over its card, as a plain subtotal line.
+  &--plain {
+    margin-top: 0.9rem;
+
+    &:first-child {
+      margin-top: 0.25rem;
+    }
+  }
+
+  &--plain &__top {
+    margin-bottom: 0.4rem;
+  }
+
   &__list {
     @include card();
     margin: 0;

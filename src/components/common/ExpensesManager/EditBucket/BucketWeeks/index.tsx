@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BucketExpense, BucketWeek } from "../../../../../helpers/bucketPace/bucketPace";
 import { formatDayMonth } from "../../../../../helpers/shortDate/shortDate";
 import { useTranslation } from "../../../../../i18n";
+import { WeeklyView } from "../../../../../helpers/weeklyView/weeklyView";
 import WeekRow from "../WeekRow";
 import "./styles.scss";
 
@@ -13,6 +14,8 @@ interface BucketWeeksProps {
   /** 0-indexed month, as in `selectedDate`. */
   month: number;
   bucketName: string;
+  /** Week rows carry the bar and pace; the other views draw them in a chart above. */
+  view?: WeeklyView;
 }
 
 /**
@@ -20,7 +23,7 @@ interface BucketWeeksProps {
  * show, "Show earlier weeks" reveals the rest. Every bar uses one scale (the
  * largest spent or pace of any week) so weeks compare with each other.
  */
-const BucketWeeks = ({ weeks, year, month, bucketName }: BucketWeeksProps) => {
+const BucketWeeks = ({ weeks, year, month, bucketName, view = "rows" }: BucketWeeksProps) => {
   const { t, language } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   // A little headroom, so a tick at the largest value is not on the bar's end.
@@ -41,13 +44,15 @@ const BucketWeeks = ({ weeks, year, month, bucketName }: BucketWeeksProps) => {
 
   return (
     <section className="bucket-weeks">
-      <div className="bucket-weeks__head">
-        <h2 className="bucket-weeks__title">{t("editBucket.expensesByWeek")}</h2>
-        <span className="bucket-weeks__legend">
-          <i aria-hidden="true" />
-          {t("editBucket.weeklyPace")}
-        </span>
-      </div>
+      {view === "rows" && (
+        <div className="bucket-weeks__head">
+          <h2 className="bucket-weeks__title">{t("editBucket.expensesByWeek")}</h2>
+          <span className="bucket-weeks__legend">
+            <i aria-hidden="true" />
+            {t("editBucket.weeklyPace")}
+          </span>
+        </div>
+      )}
       <ul className="bucket-weeks__weeks">
         {shownWeeks.map((week) => (
           <WeekRow
@@ -58,6 +63,7 @@ const BucketWeeks = ({ weeks, year, month, bucketName }: BucketWeeksProps) => {
             scale={scale}
             expenses={week.expenses}
             fallbackTitle={bucketName}
+            showBar={view === "rows"}
           />
         ))}
       </ul>

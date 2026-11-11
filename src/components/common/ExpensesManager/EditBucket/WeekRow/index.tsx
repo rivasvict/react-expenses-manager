@@ -15,23 +15,25 @@ interface WeekRowProps {
   expenses: BucketExpense[];
   /** Shown when an expense has no description. */
   fallbackTitle: string;
+  /** Week rows draw the bar and the pace mark; the chart views leave them to the chart. */
+  showBar?: boolean;
 }
 
 /**
  * One week of a bucket: its label with "spent of pace", a thin bar with the
  * pace tick, and the card of that week's expenses.
  */
-const WeekRow = ({ label, spent, pace, scale, expenses, fallbackTitle }: WeekRowProps) => {
+const WeekRow = ({ label, spent, pace, scale, expenses, fallbackTitle, showBar = true }: WeekRowProps) => {
   const { t } = useTranslation();
   const overPace = pace !== null && spent > pace;
 
   return (
-    <li className="week-row" data-testid="week-row">
+    <li className={`week-row${showBar ? "" : " week-row--plain"}`} data-testid="week-row">
       <div className="week-row__top">
         <h3 className="week-row__label">{label}</h3>
         <span>
           <strong data-testid="week-row-spent">{formatNumberForDisplay(spent)}</strong>
-          {pace !== null && (
+          {showBar && pace !== null && (
             <span className="week-row__pace" data-testid="week-row-pace">
               {" "}
               {t("editBucket.weekOf", { amount: formatNumberForDisplay(pace) })}
@@ -39,6 +41,7 @@ const WeekRow = ({ label, spent, pace, scale, expenses, fallbackTitle }: WeekRow
           )}
         </span>
       </div>
+      {showBar && (
       <div className="week-row__bar" aria-hidden="true">
         <i
           className={overPace ? "ahead" : ""}
@@ -48,6 +51,7 @@ const WeekRow = ({ label, spent, pace, scale, expenses, fallbackTitle }: WeekRow
           <span className="week-row__tick" style={{ left: `${(pace / scale) * 100}%` }} />
         )}
       </div>
+      )}
       <ul className="week-row__list">
         {expenses.map((expense) => (
           <ExpenseRow

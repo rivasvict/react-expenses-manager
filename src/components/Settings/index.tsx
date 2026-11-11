@@ -10,6 +10,11 @@ import {
   getStoredCurrency,
   storeCurrency,
 } from "../../helpers/currency/currency";
+import {
+  getStoredWeeklyView,
+  storeWeeklyView,
+  WeeklyView,
+} from "../../helpers/weeklyView/weeklyView";
 import { usePrivacy } from "../../privacy";
 import { useTheme } from "../../themes";
 import ThemeDots from "../common/ThemeDots";
@@ -19,13 +24,15 @@ import LanguageSheet from "./LanguageSheet";
 import SettingRow from "./SettingRow";
 import SwitchRow from "./SwitchRow";
 import ThemeSheet from "./ThemeSheet";
+import WeeklyViewSheet from "./WeeklyViewSheet";
 import "./styles.scss";
 
-type OpenSheet = "language" | "currency" | "theme" | null;
+type OpenSheet = "language" | "currency" | "theme" | "weeklyView" | null;
 
 /**
  * Device-level preferences: the UI language, the display currency, the color
- * theme and Privacy mode. The first three are rows showing their current
+ * theme, how a bucket draws its weekly spending and Privacy mode. The first
+ * four are rows showing their current
  * value; tapping one opens a sheet to pick another. Privacy mode is a switch
  * row.
  * Picking one applies immediately and is remembered in this browser only, so
@@ -42,6 +49,8 @@ const Settings = () => {
   const languageRow = useRef<HTMLButtonElement>(null);
   const currencyRow = useRef<HTMLButtonElement>(null);
   const themeRow = useRef<HTMLButtonElement>(null);
+  const weeklyViewRow = useRef<HTMLButtonElement>(null);
+  const [weeklyView, setWeeklyView] = useState<WeeklyView>(getStoredWeeklyView);
   const { theme } = useTheme();
 
   const closeSheet = () => {
@@ -49,6 +58,7 @@ const Settings = () => {
       language: languageRow,
       currency: currencyRow,
       theme: themeRow,
+      weeklyView: weeklyViewRow,
     };
     if (openSheet) rows[openSheet].current?.focus();
     setOpenSheet(null);
@@ -56,6 +66,11 @@ const Settings = () => {
   const pickCurrency = (picked: Currency) => {
     storeCurrency(picked);
     setCurrency(picked);
+  };
+
+  const pickWeeklyView = (picked: WeeklyView) => {
+    storeWeeklyView(picked);
+    setWeeklyView(picked);
   };
 
   return (
@@ -90,6 +105,13 @@ const Settings = () => {
               }
               onOpen={() => setOpenSheet("theme")}
             />
+            <SettingRow
+              ref={weeklyViewRow}
+              label={t("settings.weeklyView.title")}
+              hint={t("settings.weeklyView.hint")}
+              value={t(`settings.weeklyView.${weeklyView}`)}
+              onOpen={() => setOpenSheet("weeklyView")}
+            />
             <SwitchRow
               label={t("settings.privacy.title")}
               hint={t("settings.privacy.hint")}
@@ -111,6 +133,13 @@ const Settings = () => {
       </Container>
       {openSheet === "language" && <LanguageSheet onClose={closeSheet} />}
       {openSheet === "theme" && <ThemeSheet onClose={closeSheet} />}
+      {openSheet === "weeklyView" && (
+        <WeeklyViewSheet
+          current={weeklyView}
+          onPick={pickWeeklyView}
+          onClose={closeSheet}
+        />
+      )}
       {openSheet === "currency" && (
         <CurrencySheet
           current={currency}

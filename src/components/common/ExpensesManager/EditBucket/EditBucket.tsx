@@ -10,16 +10,20 @@ import {
 } from "../../../../helpers/entriesHelper/entriesHelper";
 import {
   BucketExpense,
+  getAllBucketWeeks,
   getBucketWeeks,
   getElapsedDays,
   getExpectedSpending,
 } from "../../../../helpers/bucketPace/bucketPace";
+import { getStoredWeeklyView } from "../../../../helpers/weeklyView/weeklyView";
 import { formatDayMonth } from "../../../../helpers/shortDate/shortDate";
 import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import { useTranslation } from "../../../../i18n";
 import BucketSummary from "./BucketSummary";
 import BucketWeeks from "./BucketWeeks";
 import NoExpenses from "./NoExpenses";
+import PaceLineChart from "./PaceLineChart";
+import WeekBarsChart from "./WeekBarsChart";
 import AllowanceSheet from "./AllowanceSheet";
 import "./styles.scss";
 
@@ -52,6 +56,7 @@ const EditBucket = ({ onEditBucket, history, selectedDate, buckets, entries }) =
   const expenses = (entries?.[selectedDate.year]?.[selectedDate.month]?.expenses || [])
     .filter((entry) => entry.categories_path === path);
   const weeks = getBucketWeeks<BucketExpense>({ expenses, availability, selectedDate, today });
+  const view = getStoredWeeklyView();
   const expected = getExpectedSpending({ availability, selectedDate, today });
   const expectedDate = formatDayMonth(
     new Date(
@@ -85,13 +90,31 @@ const EditBucket = ({ onEditBucket, history, selectedDate, buckets, entries }) =
         expectedDate={expectedDate}
         editButtonRef={editButtonRef}
         onEdit={() => setIsSheetOpen(true)}
-      />
+      >
+        {weeks.length > 0 && view === "bars" && (
+          <WeekBarsChart
+            weeks={getAllBucketWeeks<BucketExpense>({ expenses, availability, selectedDate, today })}
+            year={selectedDate.year}
+            month={selectedDate.month}
+            availability={availability}
+          />
+        )}
+        {weeks.length > 0 && view === "line" && (
+          <PaceLineChart
+            expenses={expenses}
+            availability={availability}
+            selectedDate={selectedDate}
+            today={today}
+          />
+        )}
+      </BucketSummary>
       {weeks.length > 0 ? (
         <BucketWeeks
           weeks={weeks}
           year={selectedDate.year}
           month={selectedDate.month}
           bucketName={name}
+          view={view}
         />
       ) : (
         <NoExpenses bucketName={name} monthLabel={monthLabel} />

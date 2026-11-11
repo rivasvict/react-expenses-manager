@@ -112,4 +112,71 @@ const getBucketWeeks = <E extends PaceExpense>({
     .sort((a, b) => b.startDay - a.startDay);
 };
 
-export { getBucketWeeks, getElapsedDays, getExpectedSpending };
+/**
+ * Every week of the month so far, oldest first, including weeks with nothing
+ * spent: the column chart draws them all so a quiet week is visible as such.
+ */
+const getAllBucketWeeks = <E extends PaceExpense>(
+  input: PaceInput & { expenses: E[] }
+): BucketWeek<E>[] => {
+  const { availability, selectedDate, today, expenses } = input;
+  const daysInMonth = getDaysInMonth(selectedDate);
+  const spent = new Map(getBucketWeeks(input).map((week) => [week.startDay, week]));
+  const lastDay = Math.max(
+    getElapsedDays({ selectedDate, today }),
+    ...expenses.map(({ date }) => new Date(date).getDate())
+  );
+  const paced = hasPace({ availability, selectedDate, today });
+  const weeks: BucketWeek<E>[] = [];
+
+  for (let startDay = 1; startDay <= lastDay; ) {
+    const sinceMonday =
+      (new Date(selectedDate.year, selectedDate.month, startDay).getDay() + 6) % 7;
+    const fullEnd = Math.min(daysInMonth, startDay + 6 - sinceMonday);
+    weeks.push(
+      spent.get(startDay) ?? {
+        startDay,
+        endDay: Math.min(fullEnd, lastDay),
+        spent: 0,
+        pace:
+          paced
+            ? (availability * (Math.min(fullEnd, lastDay) - startDay + 1)) / daysInMonth
+            : null,
+        expenses: [],
+      }
+    );
+    startDay = fullEnd + 1;
+  }
+  return weeks;
+};
+
+export interface SpendingPoint {
+  day: number;
+  /** Total spent from the 1st through this day. */
+  total: number;
+}
+
+/** Running total of the expenses by day of the month, oldest first (one point per day with spending). */
+const getCumulativeSpending = (expenses: PaceExpense[]): SpendingPoint[] => {
+  const byDay = new Map<number, number>();
+  expenses.forEach(({ date, amount }) => {
+    const day = new Date(date).getDate();
+    byDay.set(day, (byDay.get(day) ?? 0) + parseFloat(String(amount)));
+  });
+  let total = 0;
+  return [...byDay.keys()]
+    .sort((a, b) => a - b)
+    .map((day) => {
+      total += byDay.get(day) as number;
+      return { day, total };
+    });
+};
+
+export {
+  getAllBucketWeeks,
+  getBucketWeeks,
+  getCumulativeSpending,
+  getDaysInMonth,
+  getElapsedDays,
+  getExpectedSpending,
+};

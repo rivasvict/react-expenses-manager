@@ -22,6 +22,8 @@ interface BucketSummaryProps {
   expectedDate: string;
   editButtonRef: React.RefObject<HTMLButtonElement>;
   onEdit: () => void;
+  /** A chart view's chart, between the pace line and the allowance row. */
+  children?: React.ReactNode;
 }
 
 /**
@@ -41,6 +43,7 @@ const BucketSummary = ({
   expectedDate,
   editButtonRef,
   onEdit,
+  children,
 }: BucketSummaryProps) => {
   const { t } = useTranslation();
   const tone = percentage > 85 ? "danger" : percentage >= 65 ? "warning" : "";
@@ -104,6 +107,7 @@ const BucketSummary = ({
           </span>
         </p>
       )}
+      {children}
       <div className="bucket-summary__allowance">
         <div>
           <span className="bucket-summary__caption">

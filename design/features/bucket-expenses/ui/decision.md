@@ -119,6 +119,68 @@ absolute amount; the error state is the existing validation message.
 
 French is not drawn: it follows the Spanish layout.
 
+## Weekly spending view (a device setting)
+
+Added after approval, at the owner's request: Settings lets the user choose
+how the weekly spending is drawn, and **E stays the default**. Everything else
+on the bucket screen (hero, pace line, allowance row and sheet, week lists,
+empty state) is identical in all three views; only the weekly visualization
+changes. The two other views are options D and F, promoted to approved with
+the data of `bucket.default`.
+
+### The setting
+
+- **Settings row** "Weekly spending" (hint "How a bucket draws its weeks", value
+  = the current view's name), placed after Theme and before the Privacy mode
+  switch. A `SettingRow` like Language and Currency; no new row component.
+- **Sheet** "Weekly spending" (`BottomSheet`), built like the Language sheet:
+  the description as the legend, then three radio rows (`settings-option`: name
+  over a one-line hint, gold-soft wash and a check on the current one). Picking
+  one applies at once and closes the sheet. No preview thumbnails: the hint line
+  says what each looks like, which keeps the sheet as light as its siblings.
+- **Storage:** `localStorage` key `settings.weeklyView` = `rows` | `bars` |
+  `line`; missing or unknown reads as `rows`. Device-only: never in the entries
+  model, a backup or sync.
+- **Not in onboarding:** the wizard does not mention it and its draft never
+  carries it; a new user starts on Week rows and can change it in Settings.
+
+### The views
+
+| View | Hero card | Week list |
+|---|---|---|
+| `rows` (E, default) | pace tick and line | "Expenses by week" header with the Weekly pace legend; each week has its bar, tick and "of pace" |
+| `bars` (D) | adds **Spent per week (CA$)**: a column per week so far (quiet weeks as "0"), amount and dates under each, a dashed pace line per column (a partial week's sits lower), green within pace and amber above, a legend and a one-sentence hint | no section header; each week is a plain label with its subtotal over its card |
+| `line` (F) | adds **Spending through the month**: running total as a step line against a dashed even-pace line to the available amount, "Available" rule, today marked, legend and hint | as `bars` |
+
+With no expenses this month, or no pace (nothing available, a future month), the
+chart views draw no chart: the empty card or the plain week list stands alone.
+`line` needs a pace to mean anything and is omitted without one; `bars` still
+draws the columns but without pace lines or hint.
+
+### Strings (new keys; Spanish and French in `es.ts` / `fr.ts`)
+
+| Key | English | Spanish |
+|---|---|---|
+| `settings.weeklyView.title` / `.hint` | Weekly spending / How a bucket draws its weeks | Gasto semanal / Cómo muestra un límite sus semanas |
+| `settings.weeklyView.description` | Choose how a bucket's week-by-week spending is drawn. Everything else on the bucket screen stays the same. | Elige cómo se dibuja el gasto semana a semana de un límite. El resto de la pantalla del límite no cambia. |
+| `settings.weeklyView.rows` / `.rowsHint` | Week rows / A bar and a pace mark on every week | Filas por semana / Una barra y una marca de ritmo en cada semana |
+| `settings.weeklyView.bars` / `.barsHint` | Weekly bars / A column for each week above the list | Barras semanales / Una columna por semana sobre la lista |
+| `settings.weeklyView.line` / `.lineHint` | Month line / One line of spending through the month | Línea del mes / Una línea con el gasto a lo largo del mes |
+| `editBucket.chartWeeklyTitle` | Spent per week ({{currency}}) | Gastado por semana ({{currency}}) |
+| `editBucket.chartLineTitle` | Spending through the month | Gasto a lo largo del mes |
+
+(the chart hints, legends, labels and `editBucket.weekRangeShort` are in `en.ts`,
+`es.ts` and `fr.ts`.)
+
+### Approved screens (setting and views)
+
+| Screen | State | File |
+|---|---|---|
+| Settings | with the Weekly spending row | `approved/settings-view.default.html`, `settings-view.es.html` |
+| Weekly spending sheet | default | `approved/weekly-sheet.default.html`, `weekly-sheet.es.html` |
+| Edit bucket | Weekly bars | `approved/bucket.bars.html` |
+| Edit bucket | Month line | `approved/bucket.line.html` |
+
 # Options considered (round 1 and 2)
 
 

@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.43.0] - 2026-11-11
+
+### Added
+
+- **Choose how a bucket draws its weekly spending.** Settings has a new
+  **Weekly spending** row (after Theme) that opens a sheet with three views,
+  each with a line saying what it looks like: **Week rows** (the default: a bar
+  and a pace mark on every week), **Weekly bars** (a column for each week above
+  the list, quiet weeks included, with a dashed line at each week's pace) and
+  **Month line** (one line of spending through the month against an even pace,
+  with today marked). Everything else on the bucket screen is unchanged. The
+  choice applies at once and is remembered on this device only (it never enters
+  the entries, a backup or sync), and the first-run wizard does not offer it.
+  Translated in Spanish and French. Design: `design/features/bucket-expenses/`.
+
 ## [1.42.0] - 2026-11-11
 
 ### Added
