@@ -49,3 +49,43 @@ Empty state drawn (no chart, empty note).
 - Long descriptions wrap (`overflow-wrap: anywhere`); amounts never break.
 - Error state for all: the allowance validation message, unchanged. A failure
   to load expenses would reuse the existing empty/error note card.
+
+## Round 2: C with a pace reference (D, E, F)
+
+The owner liked C but asked what the weekly bars mean and for the "expected
+spending" level to be shown properly. D, E and F are C (hero card, week-grouped
+list, Edit row and sheet unchanged) plus a pace reference. Data: viewed on
+Oct 28 (default), Oct 14 (`bucket.ahead`, spending ahead of pace) and Oct 3
+with nothing spent (`bucket.empty`). The allowance sheet is C's and is not
+redrawn.
+
+**Pace rule (proposed, all three):** available = allowance + carried
+(CA$256.63). Expected by today = available × day ÷ days in month. A week's pace
+= available × days in that week (inside the month) ÷ days in month, so partial
+first and last weeks get a lower line. Under or at pace is green, ahead is
+amber (a hint, never red). In a past month the pace is the whole month. If
+available is zero or negative, hide the pace and show only Over.
+
+All three add the same two things to C's hero: a **tick on the main bar** at the
+expected-by-today position and a line under it, "CA$59.96 under pace" with
+"Expected by Oct 28: CA$231.79". They differ in the weekly visualization.
+
+**D · Weekly bars with pace** (`options/d-c-weekly-bars-pace`). C's bars made
+legible: titled "Spent per week", each bar labelled with its amount and dates,
+a dashed pace line across each bar, green within pace and amber above, a legend
+and a one-sentence hint. Closest to C. Cost: five narrow columns with two-line
+labels; a month with six weeks gets cramped on a 320px phone.
+
+**E · Week rows** (`options/e-c-week-rows-pace`). No separate chart: each week's
+header in the expense list gets a thin bar with a pace tick and "CA$45.65 of
+CA$57.95". Labels have room, the number is next to the expenses that cause it,
+the hero card stays short, and it scales to any number of weeks. Cost: weeks
+are read one at a time, so the trend across weeks is harder to see.
+
+**F · Month pace line** (`options/f-c-month-pace-line`). Drops weeks as a
+chart: a cumulative line of spending through the month against a dashed
+straight line of even pace up to the available amount, with today marked. Best
+at answering "will this bucket last the month?" and it needs no week rule for
+the chart (the list stays week-grouped). Cost: a chart type the app does not
+use elsewhere, and more to build (SVG scales, step path); less direct for "how
+much this week".
