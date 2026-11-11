@@ -598,6 +598,18 @@ const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
 };
 
 /**
+ * How much of a bucket is used, as a percentage. Availability can be zero or
+ * negative once debt is carried over: the debt itself (allowance - availability)
+ * then counts as consumption against the allowance, on top of any new spending,
+ * so the figure is read as "how far past the 100% line" rather than clamped
+ * (issue #155).
+ */
+const getBucketConsumptionPercentage = ({ allowance, availability, spending }) =>
+  availability > 0
+    ? calculatePercentage(spending, availability)
+    : 100 + calculatePercentage(spending - availability, allowance);
+
+/**
  * Function to convert quantities in percentages
  * @param {[number]} quantities
  * @returns {[number]} percentages
@@ -658,6 +670,7 @@ export {
   getMonthSpendingByBucket,
   getRecordedMonthsUntil,
   getCarriedBucketsForMonth,
+  getBucketConsumptionPercentage,
   toYearMonth,
   getActiveLimitForMonth,
 };

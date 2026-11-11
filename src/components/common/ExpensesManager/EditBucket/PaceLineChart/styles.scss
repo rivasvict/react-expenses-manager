@@ -1,0 +1,113 @@
+@import '../../../../../variables.scss';
+
+// Sits inside the hero card, under a hairline.
+.pace-line {
+  @include money-figures();
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid $border-subtle;
+
+  &__title {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 0.5rem;
+  }
+
+  &__rule {
+    stroke: $border-strong;
+    stroke-width: 1;
+  }
+
+  &__text {
+    font-size: 9.5px;
+    fill: $text-muted;
+  }
+
+  &__even {
+    stroke: $text-primary;
+    stroke-width: 2;
+    stroke-dasharray: 5 4;
+  }
+
+  &__today {
+    stroke: $text-muted;
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+  }
+
+  &__spent {
+    fill: none;
+    stroke: $chart-income;
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+
+    &.ahead {
+      stroke: $chart-warning;
+    }
+  }
+
+  &__area {
+    fill: $chart-income;
+    opacity: 0.16;
+
+    &.ahead {
+      fill: $chart-warning;
+    }
+  }
+
+  &__dot {
+    fill: $chart-income;
+    stroke: $bg-raised;
+    stroke-width: 2;
+
+    &.ahead {
+      fill: $chart-warning;
+    }
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.8rem;
+    margin-top: 0.4rem;
+    font-size: 0.72rem;
+    color: $text-muted;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 1.1rem;
+    border-top: 2.5px solid $chart-income;
+
+    &.ahead {
+      border-top-color: $chart-warning;
+    }
+
+    &--even {
+      border-top: 2px dashed $text-primary;
+    }
+  }
+
+  &__hint {
+    margin: 0.55rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: $text-muted;
+  }
+}

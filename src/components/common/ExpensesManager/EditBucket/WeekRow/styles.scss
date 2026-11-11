@@ -1,0 +1,87 @@
+@import '../../../../../variables.scss';
+
+.week-row {
+  @include money-figures();
+  list-style: none;
+  margin: 0.7rem 0 0;
+
+  // The first week sits a little further from its section heading.
+  &:first-child {
+    margin-top: 0.825rem;
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0 0.15rem;
+
+    strong {
+      font-size: 0.85rem;
+      color: $text-primary;
+    }
+  }
+
+  &__label {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  &__pace {
+    font-size: 0.78rem;
+    color: $text-muted;
+  }
+
+  &__bar {
+    position: relative;
+    height: 6px;
+    margin: 0.45rem 0.15rem 0.45rem;
+    border-radius: $radius-pill;
+    background-color: $track;
+
+    i {
+      display: block;
+      height: 100%;
+      border-radius: $radius-pill;
+      background-color: $chart-income;
+
+      &.ahead {
+        background-color: $chart-warning;
+      }
+    }
+  }
+
+  &__tick {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    margin-left: -1px;
+    background-color: $text-primary;
+  }
+
+  // Without a bar the label sits right over its card, as a plain subtotal line.
+  &--plain {
+    margin-top: 0.9rem;
+
+    &:first-child {
+      margin-top: 0.25rem;
+    }
+  }
+
+  &--plain &__top {
+    margin-bottom: 0.4rem;
+  }
+
+  &__list {
+    @include card();
+    margin: 0;
+    padding: 0 0.9rem;
+    list-style: none;
+  }
+}
