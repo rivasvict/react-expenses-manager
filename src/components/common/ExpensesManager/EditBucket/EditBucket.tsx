@@ -1,159 +1,155 @@
-// TODO: This file has no colocated unit test; it was edited, not created,
-// by the EN/ES translations change. Tracked in:
-// https://github.com/rivasvict/react-expenses-manager/issues/187
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, useParams } from "react-router-dom";
 import { MainContentContainer } from "../../MainContentContainer";
-import { useParams } from "react-router-dom/cjs/react-router-dom";
+import { editBucket } from "../../../../redux/expensesManager/actionCreators";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import {
-  getBucket,
-  editBucket,
-} from "../../../../redux/expensesManager/actionCreators";
-import { FormButton, FormContent, InputNumber } from "../../Forms";
-import { Col, Form, Row, Button } from "react-bootstrap";
-import {
-  getActiveLimitForMonth,
-  getBucketAllowanceValidationError,
-  toYearMonth,
+  getBucketConsumptionPercentage,
+  getCarriedBucketsForMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper";
+import {
+  BucketExpense,
+  getAllBucketWeeks,
+  getBucketWeeks,
+  getElapsedDays,
+  getExpectedSpending,
+} from "../../../../helpers/bucketPace/bucketPace";
+import { getStoredWeeklyView } from "../../../../helpers/weeklyView/weeklyView";
+import { formatDayMonth } from "../../../../helpers/shortDate/shortDate";
+import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import { useTranslation } from "../../../../i18n";
+import BucketSummary from "./BucketSummary";
+import BucketWeeks from "./BucketWeeks";
+import NoExpenses from "./NoExpenses";
+import PaceLineChart from "./PaceLineChart";
+import WeekBarsChart from "./WeekBarsChart";
+import AllowanceSheet from "./AllowanceSheet";
+import "./styles.scss";
 
-const ALLOWANCE_MATCHER = /^-?\d*(\.)*\d+$/;
+// The same slug the Buckets list links with.
+const slugOf = (name: string) => name.toLowerCase().replace(/\s/g, "-");
 
-const EditBucket = ({ onGetBucket, onEditBucket, history, selectedDate }) => {
-  const translator = useTranslation();
-  const { t } = translator;
-  const params = useParams();
-  const { bucketName } = params;
-  const [bucket, setBucket] = useState<{ name: string; value: number | "" }>({ name: "", value: 0 });
-  const [error, setError] = useState<string | null>(null);
+/**
+ * How a bucket stands this month and where its money went, with its monthly
+ * allowance editable in a sheet (design/features/bucket-expenses/ui/decision.md).
+ */
+const EditBucket = ({ onEditBucket, history, selectedDate, buckets, entries }) => {
+  const { t, language } = useTranslation();
+  const { bucketName: slug } = useParams<{ bucketName: string }>();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const editButtonRef = useRef<HTMLButtonElement>(null);
+  const name = Object.keys(buckets).find((candidate) => slugOf(candidate) === slug);
 
-  useEffect(() => {
-    (async () => {
-      const bucketFromDb: Record<string, number | Array<{ from: string; limit: number }>> =
-        await onGetBucket({ bucketName });
-      const [name, bucketsHistory] = Object.entries(bucketFromDb)[0] as [
-        string,
-        number | Array<{ from: string; limit: number }>
-      ];
-      const yearMonth = toYearMonth(selectedDate.year, selectedDate.month);
-      const value = getActiveLimitForMonth(bucketsHistory, yearMonth);
-      setBucket({ name, value });
-    })();
-  }, [bucketName, onGetBucket, selectedDate]);
+  if (!name) return <MainContentContainer className="edit-bucket">{null}</MainContentContainer>;
 
-  const saveBucket = async (editedBucketValue) => {
-    try {
-      await onEditBucket({ bucket: editedBucketValue, selectedDate });
-    } catch (error) {
-      throw error;
-    }
+  const { allowance, carryOver, availability, spending, remainder } =
+    getCarriedBucketsForMonth({
+      entries,
+      buckets: { [name]: buckets[name] },
+      selectedDate,
+    })[name];
+  const today = new Date();
+  const monthName = getMonthNameDisplay(selectedDate.month, language);
+  const monthLabel = `${monthName} ${selectedDate.year}`;
+  const path = `,${name.toLowerCase()},`;
+  const expenses = (entries?.[selectedDate.year]?.[selectedDate.month]?.expenses || [])
+    .filter((entry) => entry.categories_path === path);
+  const weeks = getBucketWeeks<BucketExpense>({ expenses, availability, selectedDate, today });
+  const view = getStoredWeeklyView();
+  const expected = getExpectedSpending({ availability, selectedDate, today });
+  const expectedDate = formatDayMonth(
+    new Date(
+      selectedDate.year,
+      selectedDate.month,
+      getElapsedDays({ selectedDate, today }),
+      12
+    ).getTime(),
+    language
+  );
+
+  const closeSheet = () => {
+    setIsSheetOpen(false);
+    editButtonRef.current?.focus();
   };
 
   return (
     <MainContentContainer
       className="edit-bucket"
-      pageTitle={t("editBucket.pageTitle", { name: bucket?.name })}
+      pageTitle={t("editBucket.pageTitle", { name })}
     >
-      {/** @ts-ignore: React bootstrap's typing issue */}
-      <FormContent
-        formProps={{
-          onSubmit: (event) => {
-            event.preventDefault();
-
-            const allowanceError = getBucketAllowanceValidationError(
-              bucket.value,
-              translator
-            );
-            if (allowanceError) {
-              setError(allowanceError);
-              return;
-            }
-
-            const editedBucket = { [bucket.name]: Number(bucket.value) };
-            saveBucket(editedBucket);
-            history.goBack();
-          },
-          className: "app-form",
-        }}
-        render={() => {
-          return (
-            <>
-              <Row className="top-container container-fluid">
-                <Col xs={12} className="top-content">
-                  <Form.Group>
-                    <Form.Label htmlFor="bucket-amount">
-                      {t("bucketForm.monthlyAllowance")}
-                    </Form.Label>
-                    <p className="field-hint">{t("editBucket.hint")}</p>
-                    <InputNumber
-                      type="number"
-                      id="bucket-amount"
-                      name="amount"
-                      placeholder={t("bucketForm.amountPlaceholder")}
-                      value={bucket?.value}
-                      onChange={(event) => {
-                        const value = event?.currentTarget?.value;
-                        setError(null);
-                        if (!value) {
-                          setBucket({ name: bucket?.name, value: "" });
-                          return;
-                        }
-                        if (ALLOWANCE_MATCHER.test(value)) {
-                          setBucket({
-                            name: bucket?.name,
-                            value: parseFloat(value),
-                          });
-                        }
-                      }}
-                    ></InputNumber>
-                  </Form.Group>
-                  {error && (
-                    <p className="edit-bucket-error text-danger" role="alert">
-                      {error}
-                    </p>
-                  )}
-                </Col>
-              </Row>
-              <Row className="bottom-container container-fluid vertical-standard-space">
-                <Col xs={12} className="bottom-content">
-                  <FormButton
-                    variant="primary"
-                    name="submit"
-                    type="submit"
-                    className="vertical-standard-space"
-                  >
-                    {t("common.submit")}
-                  </FormButton>
-                  <Button
-                    variant="secondary"
-                    className="vertical-standard-space"
-                    onClick={history.goBack}
-                  >
-                    {t("common.cancel")}
-                  </Button>
-                </Col>
-              </Row>
-            </>
-          );
-        }}
-      />
+      <BucketSummary
+        monthLabel={monthLabel}
+        percentage={getBucketConsumptionPercentage({ allowance, availability, spending })}
+        spending={spending}
+        remainder={remainder}
+        availability={availability}
+        allowance={allowance}
+        carryOver={carryOver}
+        expected={expected}
+        expectedDate={expectedDate}
+        editButtonRef={editButtonRef}
+        onEdit={() => setIsSheetOpen(true)}
+      >
+        {weeks.length > 0 && view === "bars" && (
+          <WeekBarsChart
+            weeks={getAllBucketWeeks<BucketExpense>({ expenses, availability, selectedDate, today })}
+            year={selectedDate.year}
+            month={selectedDate.month}
+            availability={availability}
+          />
+        )}
+        {weeks.length > 0 && view === "line" && (
+          <PaceLineChart
+            expenses={expenses}
+            availability={availability}
+            selectedDate={selectedDate}
+            today={today}
+          />
+        )}
+      </BucketSummary>
+      {weeks.length > 0 ? (
+        <BucketWeeks
+          weeks={weeks}
+          year={selectedDate.year}
+          month={selectedDate.month}
+          bucketName={name}
+          view={view}
+        />
+      ) : (
+        <NoExpenses bucketName={name} monthLabel={monthLabel} />
+      )}
+      <Container fluid className="edit-bucket-footer">
+        <Row className="vertical-standard-space">
+          <Col>
+            <Button variant="secondary" className="cancel" onClick={history.goBack}>
+              {t("common.goBack")}
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+      {isSheetOpen && (
+        <AllowanceSheet
+          initialValue={allowance}
+          onSave={(value) =>
+            onEditBucket({ bucket: { [name]: value }, selectedDate })
+          }
+          onClose={closeSheet}
+        />
+      )}
     </MainContentContainer>
   );
 };
 
 const mapStateToProps = (state) => ({
   selectedDate: state.expensesManager.selectedDate,
+  buckets: state.expensesManager.buckets,
+  entries: state.expensesManager.entries,
 });
 
 const mapActionsToProps = (dispatch) => ({
-  onGetBucket: ({ bucketName }) => dispatch(getBucket({ bucketName })),
   onEditBucket: ({ bucket, selectedDate }) =>
     dispatch(editBucket({ bucket, selectedDate })),
 });
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(withRouter(EditBucket));
+export default connect(mapStateToProps, mapActionsToProps)(withRouter(EditBucket));

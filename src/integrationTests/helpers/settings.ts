@@ -49,3 +49,14 @@ export const pickTheme = async (
   await user.click(await screen.findByRole("button", { name: rowName }));
   await user.click(await screen.findByRole("radio", { name: themeName }));
 };
+
+/**
+ * Pick how a bucket draws its weekly spending on /settings; `rowName` defaults
+ * to the English label ("Weekly spending"), `viewName` is the option's name
+ * ("Weekly bars", "Month line", "Week rows").
+ */
+export const pickWeeklyView = (
+  user: UserEvent,
+  viewName: RegExp,
+  rowName: RegExp = /^Weekly spending/,
+) => pickFromSheet(user, rowName, viewName);

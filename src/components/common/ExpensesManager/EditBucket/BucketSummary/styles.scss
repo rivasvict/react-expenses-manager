@@ -1,0 +1,196 @@
+@import '../../../../../variables.scss';
+
+// The hero card: the Buckets card's figure styles, with a pace tick on the bar
+// and the allowance row with its Edit button.
+.bucket-summary {
+  @include card();
+  @include money-figures();
+  margin: 0 0 $vertical-standard-margin;
+  padding: 0.85rem 0.9rem;
+
+  &__top {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  &__month {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: $text-primary;
+  }
+
+  &__usage {
+    flex: 0 0 auto;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $chart-income;
+
+    &.warning {
+      color: $chart-warning;
+    }
+    &.danger {
+      color: $chart-expense;
+    }
+  }
+
+  &__figures {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.5rem 0.75rem;
+    margin-top: 0.14rem;
+  }
+
+  &__caption {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__left strong {
+    display: block;
+    white-space: nowrap;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: $text-primary;
+  }
+
+  &__left.over strong {
+    color: $expense;
+  }
+
+  &__spent {
+    margin-left: auto;
+    text-align: right;
+
+    strong {
+      display: block;
+      margin-top: 0.1rem;
+      white-space: nowrap;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+  }
+
+  &__bar {
+    position: relative;
+    margin-top: 0.55rem;
+  }
+
+  progress {
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border: none;
+    border-radius: $radius-pill;
+    background-color: $track;
+    overflow: hidden;
+
+    &::-webkit-progress-bar {
+      background-color: $track;
+      border-radius: $radius-pill;
+    }
+    &::-webkit-progress-value {
+      background-color: $chart-income;
+      border-radius: $radius-pill;
+    }
+    &.warning::-webkit-progress-value {
+      background-color: $chart-warning;
+    }
+    &.danger::-webkit-progress-value {
+      background-color: $chart-expense;
+    }
+    &::-moz-progress-bar {
+      background-color: $chart-income;
+      border-radius: $radius-pill;
+    }
+    &.warning::-moz-progress-bar {
+      background-color: $chart-warning;
+    }
+    &.danger::-moz-progress-bar {
+      background-color: $chart-expense;
+    }
+  }
+
+  // Where an even pace would be by now.
+  &__tick {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    margin-left: -1px;
+    background-color: $text-primary;
+  }
+
+  &__pace {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.1rem 0.75rem;
+    margin: 0.5rem 0 0;
+    font-size: 0.82rem;
+  }
+
+  // Under pace is good news; ahead is a hint in amber, never red.
+  &__verdict {
+    font-weight: 700;
+
+    &.under {
+      color: $chart-income;
+    }
+    &.ahead {
+      color: $chart-warning;
+    }
+  }
+
+  &__expected {
+    color: $text-muted;
+  }
+
+  &__allowance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid $border-subtle;
+
+    strong {
+      display: block;
+      font-size: 1rem;
+    }
+  }
+
+  &__carried {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.78rem;
+    color: $text-muted;
+  }
+
+  // Compact next to the figures; still a full-height touch target.
+  &__edit.btn {
+    flex: none;
+    width: auto;
+    height: 2.6rem;
+    margin: 0;
+    padding: 0 0.9rem;
+    font-size: 0.9rem;
+    gap: 0.4rem;
+  }
+}

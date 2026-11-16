@@ -50,3 +50,20 @@ describe("Entries helper", () => {
     });
   });
 });
+
+describe("getBucketConsumptionPercentage", () => {
+  const { getBucketConsumptionPercentage } = require("./entriesHelper");
+
+  it("is spending over what is available", () => {
+    expect(
+      getBucketConsumptionPercentage({ allowance: 300, availability: 256.63, spending: 171.83 })
+    ).toBeCloseTo(66.96, 2);
+  });
+
+  it("counts carried debt as consumption once nothing is available", () => {
+    // Available -50 of a 100 allowance, 20 spent: 100 + (20 + 50) / 100.
+    expect(
+      getBucketConsumptionPercentage({ allowance: 100, availability: -50, spending: 20 })
+    ).toBe(170);
+  });
+});

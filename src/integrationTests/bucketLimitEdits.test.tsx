@@ -16,6 +16,17 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
+// Opens the allowance sheet from the edit-bucket screen and saves a new value.
+async function editAllowance(user, value: string) {
+  await user.click(
+    await screen.findByRole("button", { name: /edit monthly allowance/i })
+  );
+  const input = await screen.findByPlaceholderText(/insert bucket amount/i);
+  await user.clear(input);
+  await user.type(input, value);
+  await user.click(screen.getByRole("button", { name: /submit/i }));
+}
+
 function bucketRemaining(testIdBase: string): string {
   return screen.getByTestId(`${testIdBase}-remaining`).textContent as string;
 }
@@ -109,13 +120,12 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await user.click(await screen.findByRole("link", { name: /edit food/i }));
     await screen.findByText(/edit bucket: food/i);
 
-    // Clear the current value and type the new limit.
-    const input = screen.getByPlaceholderText(/insert bucket amount/i);
-    await user.clear(input);
-    await user.type(input, "300");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    // The allowance is edited in a sheet; clear the value and type the new one.
+    await editAllowance(user, "300");
 
-    // Redirected back to the buckets page (March is still selected).
+    // The sheet closes and the screen shows the new allowance; go back to the
+    // buckets page (March is still selected).
+    await user.click(screen.getByRole("button", { name: /go back/i }));
     await screen.findByText("March 2026");
     // March: limit is now 300.
     expect(bucketCarryOver("bucket-food")).toMatch(/\$300\.00/);
@@ -159,10 +169,8 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await user.click(await screen.findByRole("link", { name: /edit food/i }));
     await screen.findByText(/edit bucket: food/i);
 
-    const input = screen.getByPlaceholderText(/insert bucket amount/i);
-    await user.clear(input);
-    await user.type(input, "150");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await editAllowance(user, "150");
+    await user.click(screen.getByRole("button", { name: /go back/i }));
 
     await screen.findByText("May 2026");
     // May: new limit 150.
@@ -228,14 +236,11 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await user.click(await screen.findByRole("link", { name: /edit food/i }));
     await screen.findByText(/edit bucket: food/i);
 
-    const input = screen.getByPlaceholderText(/insert bucket amount/i);
-    await user.clear(input);
-    await user.type(input, "-50");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await editAllowance(user, "-50");
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
 
-    // Still on the edit form, and the stored limit is untouched.
+    // The sheet stays open on its form, and the stored limit is untouched.
     expect(screen.getByPlaceholderText(/insert bucket amount/i)).toBeInTheDocument();
     expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({
       Food: [{ from: "0000-00", limit: 200 }],
@@ -257,14 +262,11 @@ describe("per-month bucket limit edits (issue #102)", () => {
     await user.click(await screen.findByRole("link", { name: /edit food/i }));
     await screen.findByText(/edit bucket: food/i);
 
-    const input = screen.getByPlaceholderText(/insert bucket amount/i);
-    await user.clear(input);
-    await user.type(input, "0");
-    await user.click(screen.getByRole("button", { name: /submit/i }));
+    await editAllowance(user, "0");
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/greater than zero/i);
 
-    // Still on the edit form, and the stored limit is untouched.
+    // The sheet stays open on its form, and the stored limit is untouched.
     expect(screen.getByPlaceholderText(/insert bucket amount/i)).toBeInTheDocument();
     expect(JSON.parse(localStorage.getItem("buckets") || "{}")).toEqual({
       Food: [{ from: "0000-00", limit: 200 }],

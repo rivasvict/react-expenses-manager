@@ -1,0 +1,99 @@
+@import '../../../../../variables.scss';
+
+// Sits inside the hero card, under a hairline.
+.week-bars {
+  @include money-figures();
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid $border-subtle;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    color: $text-muted;
+
+    i {
+      display: inline-block;
+      width: 1.1rem;
+      border-top: 2px dashed $text-primary;
+    }
+  }
+
+  &__cols {
+    display: flex;
+    gap: 0.45rem;
+    margin-top: 0.55rem;
+  }
+
+  &__col {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+
+    b {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    small {
+      display: block;
+      font-size: 0.68rem;
+      line-height: 1.2;
+      color: $text-muted;
+    }
+  }
+
+  &__plot {
+    position: relative;
+    height: 5.5rem;
+    border-bottom: 1px solid $border-strong;
+  }
+
+  &__bar {
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    bottom: 0;
+    background-color: $chart-income;
+    border-radius: $radius-control $radius-control 0 0;
+
+    &.ahead {
+      background-color: $chart-warning;
+    }
+  }
+
+  &__pace {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 2px dashed $text-primary;
+  }
+
+  &__hint {
+    margin: 0.6rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: $text-muted;
+  }
+}

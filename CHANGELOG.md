@@ -5,6 +5,46 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.43.0] - 2026-11-11
+
+### Added
+
+- **Choose how a bucket draws its weekly spending.** Settings has a new
+  **Weekly spending** row (after Theme) that opens a sheet with three views,
+  each with a line saying what it looks like: **Week rows** (the default: a bar
+  and a pace mark on every week), **Weekly bars** (a column for each week above
+  the list, quiet weeks included, with a dashed line at each week's pace) and
+  **Month line** (one line of spending through the month against an even pace,
+  with today marked). Everything else on the bucket screen is unchanged. The
+  choice applies at once and is remembered on this device only (it never enters
+  the entries, a backup or sync), and the first-run wizard does not offer it.
+  Translated in Spanish and French. Design: `design/features/bucket-expenses/`.
+
+## [1.42.0] - 2026-11-11
+
+### Added
+
+- **A bucket now shows where its money went.** Tapping a bucket opens a screen
+  with its standing and expenses for the month: **Left** (or **Over**) beside
+  **Spent**, the usage bar with a **pace tick** showing where an even spread of
+  what is available would be by today, and a line such as "CA$59.96 under pace"
+  (amber "ahead of pace" when spending runs faster; never red). Below it, the
+  month's expenses are grouped by week (Monday to Sunday), newest first, each
+  week showing what was spent against that week's pace ("CA$45.65 of CA$57.95")
+  with its own bar and tick; the first two weeks show and "Show earlier weeks"
+  reveals the rest. A bucket with no expenses this month says so and links to
+  Add an expense. A past month is compared with its whole month, a future month
+  and a bucket with nothing available show no pace. Translated in Spanish and
+  French. Design: `design/features/bucket-expenses/`.
+
+### Changed
+
+- **The allowance is edited in a sheet.** The monthly allowance field moved from
+  the bucket page into a bottom sheet opened by **Edit** on the allowance row.
+  Same field, hint and validation; **Submit** now saves, closes the sheet and
+  stays on the bucket's screen showing the new numbers (it used to go back to
+  the Buckets list), and **Cancel** closes the sheet without saving.
+
 ## [1.41.6] - 2026-11-01
 
 ### Changed

@@ -1,0 +1,13 @@
+@import '../../../../variables.scss';
+
+// The trailing Go Back, laid out like the Buckets list's.
+.edit-bucket {
+  .edit-bucket-footer {
+    @include screen-footer();
+    padding-top: 0;
+
+    .cancel {
+      width: 100%;
+    }
+  }
+}

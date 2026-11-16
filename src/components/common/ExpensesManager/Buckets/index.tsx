@@ -9,7 +9,7 @@ import ContentTileSection from "../../ContentTitleSection.js";
 import { Col, Row, Button, Container } from "react-bootstrap";
 import { getMonthNameDisplay } from "../../../../helpers/date.js";
 import {
-  calculatePercentage,
+  getBucketConsumptionPercentage,
   formatNumberForDisplay,
   getCarriedBucketsForMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper.js";
@@ -39,15 +39,11 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
     .map((bucketName) => {
       const { allowance, carryOver, availability, spending, remainder } =
         carriedBuckets[bucketName];
-      // Availability can be zero or negative once debt is carried over. In
-      // that case the debt itself (allowance - availability) already counts
-      // as consumption against the allowance, on top of any new spending, so
-      // the percentage is read as "how far past the 100% line" rather than
-      // clamped to a fixed number (issue #155).
-      const consuptionPercentage =
-        availability > 0
-          ? calculatePercentage(spending, availability)
-          : 100 + calculatePercentage(spending - availability, allowance);
+      const consuptionPercentage = getBucketConsumptionPercentage({
+        allowance,
+        availability,
+        spending,
+      });
       return {
         name: bucketName.toLowerCase(),
         label: bucketName,

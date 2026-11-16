@@ -1,0 +1,52 @@
+@import '../../../../../variables.scss';
+
+.bucket-weeks {
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0.25rem 0.15rem 0.125rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-secondary;
+  }
+
+  // The legend's swatch is the same tick the bars carry.
+  &__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-muted;
+
+    i {
+      display: inline-block;
+      width: 2px;
+      height: 0.8rem;
+      background-color: $text-primary;
+    }
+  }
+
+  &__weeks {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__more {
+    @include button-like-style();
+    width: 100%;
+    height: 2.6rem;
+    margin: 0.65rem 0 0;
+    background: transparent;
+    border: 0;
+    color: $accent;
+  }
+}

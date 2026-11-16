@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E · Week rows</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+.warn{color:var(--chart-warning)}.ok{color:var(--chart-income)}.danger{color:var(--chart-expense)}
+.nw{white-space:nowrap}
+.mk-work-area{padding-bottom:1.14rem;min-height:0}
+.card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
+.hd{display:flex;align-items:baseline;gap:0.75rem}
+.hd__name{flex:1 1 0;min-width:0;margin:0;font-size:1rem;font-weight:600;overflow-wrap:anywhere}
+.hd__pct{font-size:0.9rem;font-weight:700}
+.bar{height:8px;border-radius:var(--radius-pill);background:var(--track);overflow:hidden;margin-top:0.55rem}
+.bar i{display:block;height:100%;border-radius:var(--radius-pill)}
+.bar .ok{background-color:var(--chart-income)}.bar .warn{background-color:var(--chart-warning)}.bar .danger{background-color:var(--chart-expense)}
+.stats{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:0.5rem 0.75rem;margin-top:0.65rem}
+.stat span{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
+.stat strong{display:block;margin-top:0.1rem;white-space:nowrap;font-size:1rem;font-weight:600;line-height:1.25}
+.stat--left{text-align:right;margin-left:auto}.stat--left strong{font-size:1.3rem;font-weight:700}
+.foot{display:flex;flex-wrap:wrap;gap:0.1rem 0.9rem;margin:0.6rem 0 0;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.78rem;color:var(--text-muted)}
+.foot .debt{color:var(--expense)}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
+.sec span{font-size:0.85rem;font-weight:600}
+.list{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0 0.9rem;margin:0 0 0.625rem}
+.row{display:flex;align-items:center;gap:0.7rem;padding:0.7rem 0;border-top:1px solid var(--border-subtle)}
+.row:first-child{border-top:0}
+.row__body{flex:1 1 0;min-width:0}
+.row__desc{margin:0;font-size:0.95rem;font-weight:600;overflow-wrap:anywhere;line-height:1.3}
+.row__date{margin:0.1rem 0 0;font-size:0.78rem;color:var(--text-muted)}
+.row__amt{flex:0 0 auto;font-weight:700;font-size:0.95rem;color:var(--expense);white-space:nowrap}
+.more{display:flex;align-items:center;justify-content:center;height:2.6rem;margin:0 0 0.625rem;color:var(--accent);font-weight:600;font-size:0.9rem;text-decoration:none}
+.empty{text-align:center;padding:1.4rem 1rem 1.2rem}
+.empty p{margin:0.5rem 0 0}
+.empty .mk-btn{margin-top:0.9rem}
+.seg{display:flex;gap:0.25rem;padding:0.25rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);margin:0.8rem 0 0.8rem}
+.seg span{flex:1;height:2.4rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-pill);font-weight:600;font-size:0.92rem;color:var(--text-secondary)}
+.seg .on{background-color:var(--accent-soft);color:var(--accent)}
+.fcard{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.9rem 1rem 1rem;margin:0 0 0.625rem}
+.mini{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;font-size:0.9rem}
+.mini strong{font-size:1.1rem}
+.scrim{position:fixed;inset:0;background-color:var(--scrim)}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:40rem;margin:0 auto;padding:0.6rem 1rem 1rem;background-color:var(--bg-raised);border:1px solid var(--border-strong);border-radius:var(--radius-shell) var(--radius-shell) 0 0;box-shadow:var(--shadow-pop);display:flex;flex-direction:column;gap:0.6rem}
+.sheet__grab{width:2.5rem;height:0.25rem;margin:0 auto 0.2rem;border-radius:var(--radius-round);background-color:var(--border-strong)}
+.sheet__title{margin:0;font-size:1.05rem;font-weight:700}
+.sheet .mk-btn{margin-top:0}
+.ed{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--border-subtle)}
+.ed__txt span{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
+.ed__txt strong{font-size:1rem}
+.ed__btn{display:flex;align-items:center;gap:0.4rem;height:2.6rem;padding:0 0.9rem;border:1px solid var(--border-strong);border-radius:var(--radius-control);font-weight:600;font-size:0.9rem;color:var(--text-primary);background:transparent}
+.wk{margin:0.9rem 0.15rem 0.4rem;display:flex;justify-content:space-between;font-size:0.78rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em}
+.wk span:last-child{color:var(--text-primary)}
+.weeks{display:flex;align-items:flex-end;gap:0.5rem;height:4.2rem;margin-top:0.8rem}
+.weeks div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0.25rem;height:100%}
+.weeks i{display:block;width:100%;border-radius:0.3rem 0.3rem 0 0;background-color:var(--chart-categorical-1)}
+.weeks small{font-size:0.68rem;color:var(--text-muted)}
+.big{font-size:2rem;font-weight:700;line-height:1.1;letter-spacing:-0.02em}
+.cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:0.75rem;margin-top:0.2rem}
+.triple{display:flex;justify-content:space-between;gap:0.5rem;margin-top:0.7rem;padding-top:0.6rem;border-top:1px solid var(--border-subtle)}
+.triple strong{display:block;font-size:0.95rem;white-space:nowrap}
+
+.barwrap{position:relative;margin-top:0.55rem}.barwrap .bar{margin-top:0}
+.tick{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;border-radius:1px;background-color:var(--text-primary)}
+.pace{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.1rem 0.75rem;margin:0.5rem 0 0;font-size:0.82rem}
+.pace__v{font-weight:700}.pace__m{color:var(--text-muted)}
+.chart{margin-top:0.8rem;padding-top:0.7rem;border-top:1px solid var(--border-subtle)}
+.chart__head{display:flex;align-items:center;justify-content:space-between;gap:0.75rem}
+.legend{display:flex;flex-wrap:wrap;gap:0.1rem 0.8rem;font-size:0.72rem;color:var(--text-muted)}
+.legend span{display:inline-flex;align-items:center;gap:0.3rem;white-space:nowrap}
+.sw{display:inline-block;width:1.1rem;height:0;border-top:2px dashed var(--text-primary)}
+.sw--tick{width:2px;height:0.8rem;border:0;background-color:var(--text-primary)}
+.sw--line{border-top:2.5px solid var(--chart-warning)}
+.wcols{display:flex;gap:0.45rem;margin-top:0.55rem}
+.wcol{flex:1;min-width:0;text-align:center}
+.wplot{position:relative;height:5.5rem;border-bottom:1px solid var(--border-strong)}
+.wbar{position:absolute;left:14%;right:14%;bottom:0;border-radius:0.3rem 0.3rem 0 0}
+.wbar.ok{background-color:var(--chart-income)}.wbar.warn{background-color:var(--chart-warning)}
+.wpace{position:absolute;left:0;right:0;border-top:2px dashed var(--text-primary)}
+.wcol b{display:block;margin-top:0.3rem;font-size:0.78rem;white-space:nowrap}
+.wcol small{display:block;font-size:0.68rem;line-height:1.2;color:var(--text-muted)}
+.wr{margin:0.9rem 0.15rem 0.45rem}
+.wr__top{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;color:var(--text-secondary)}
+.wr__top b{color:var(--text-primary);text-transform:none;letter-spacing:0;font-size:0.85rem}
+.wr__top em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:500;color:var(--text-muted)}
+.wr__bar{position:relative;height:6px;margin-top:0.45rem;border-radius:var(--radius-pill);background-color:var(--track)}
+.wr__bar i{display:block;height:100%;border-radius:var(--radius-pill)}
+.wr__bar .ok{background-color:var(--chart-income)}.wr__bar .warn{background-color:var(--chart-warning)}
+.wr__tick{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background-color:var(--text-primary)}
+.line{display:block;width:100%;height:auto;margin-top:0.5rem}
+.pos{color:var(--chart-income)}.neg{color:var(--chart-warning)}
+</style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+      <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+      <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+    </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+<h3 class="mk-eyebrow">Edit bucket: Eating out</h3><section class="card">
+        <div class="hd"><h2 class="hd__name">October 2026</h2><span class="hd__pct warn">67% used</span></div>
+        <div class="hero"><div><span class="cap">Left</span><span class="big">CA$84.80</span></div><div class="stat" style="text-align:right"><span>Spent</span><strong>CA$171.83</strong></div></div>
+        <div class="barwrap"><div class="bar"><i class="warn" style="width:67%"></i></div><span class="tick" style="left:90.3%"></span></div>
+        <p class="pace"><span class="pace__v pos">CA$59.96 under pace</span><span class="pace__m">Expected by Oct 28: CA$231.79</span></p>
+        
+        <div class="ed"><div class="ed__txt"><span>Monthly allowance</span><strong>CA$300.00</strong><span style="text-transform:none;letter-spacing:0;font-weight:500;margin-top:0.15rem">Carried &minus;CA$43.37 from earlier</span></div><span class="ed__btn"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2.5l2.5 2.5L5.5 13H3v-2.5z" fill="none" stroke-width="1.5" stroke-linejoin="round" style="stroke:currentColor"/></svg>Edit</span></div>
+      </section><div class="sec"><h2>Expenses by week</h2><div class="legend"><span><i class="sw sw--tick"></i>Weekly pace</span></div></div><div class="wr"><div class="wr__top"><span>Oct 26 – 28</span><span><b>CA$42.50</b> <em>of CA$24.84</em></span></div><div class="wr__bar"><i class="warn" style="width:67.9%"></i><span class="wr__tick" style="left:39.7%"></span></div></div><div class="list" style="margin-top:0"><div class="row"><span class="mk-chip mk-chip--expense"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span><div class="row__body"><p class="row__desc">Sushi Zen</p><p class="row__date">Oct 28</p></div><span class="row__amt">&minus;CA$42.50</span></div></div><div class="wr"><div class="wr__top"><span>Oct 19 – 25</span><span><b>CA$45.65</b> <em>of CA$57.95</em></span></div><div class="wr__bar"><i class="ok" style="width:72.9%"></i><span class="wr__tick" style="left:92.6%"></span></div></div><div class="list" style="margin-top:0"><div class="row"><span class="mk-chip mk-chip--expense"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span><div class="row__body"><p class="row__desc">Pizza night with the whole team after the quarterly planning offsite</p><p class="row__date">Oct 24</p></div><span class="row__amt">&minus;CA$36.90</span></div><div class="row"><span class="mk-chip mk-chip--expense"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span><div class="row__body"><p class="row__desc">Coffee</p><p class="row__date">Oct 19</p></div><span class="row__amt">&minus;CA$8.75</span></div></div><a class="more" href="#">Show earlier weeks</a><button class="mk-btn mk-btn--secondary mk-space-top" type="button">Go Back</button>
+    </div>
+  </main>
+</body>
+</html>
