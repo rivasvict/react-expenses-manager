@@ -26,6 +26,8 @@ import {
 } from "../../../helpers/categoryChanges/categoryChanges";
 const BALANCE = "balance";
 const BUCKET = "buckets";
+// A bucket history month, 1-indexed: "2026-03".
+const YEAR_MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 // The unbudgeted expense categories from before category management. Only
 // read now, by the one-time `categoryLists` migration and by backups.
 const CATEGORIES = "categories";
@@ -270,9 +272,13 @@ const applyCategoryChangeData = async ({ change }) => {
 // Adds a bucket (a spending limit) for an existing category (issue #100). The
 // category name must be non-empty and unique among buckets (case-insensitive)
 // so we never create orphan or duplicated buckets. Existing buckets are edited
-// via editBucket.
-const addBucketData = async ({ bucket, addedBy }) => {
+// via editBucket. The bucket is recorded from `fromYearMonth` ("YYYY-MM", the
+// month it is added in), not retroactively from the first recorded month.
+const addBucketData = async ({ bucket, fromYearMonth, addedBy }) => {
   if (!bucket) throw new Error("No bucket data was set");
+  if (!YEAR_MONTH_PATTERN.test(fromYearMonth || "")) {
+    throw new Error("The month the bucket starts in was not set");
+  }
 
   const [name, value] = Object.entries(bucket)[0] || [];
   const trimmedName = (name || "").trim();
@@ -291,7 +297,7 @@ const addBucketData = async ({ bucket, addedBy }) => {
     ...storedBuckets,
     [trimmedName]: [
       {
-        from: "0000-00",
+        from: fromYearMonth,
         limit: Number(value) || 0,
         // Optional attribution for the initial history state (AC-1.6).
         ...(addedBy ? { addedBy } : {}),
@@ -441,8 +447,8 @@ const LocalStorage = () => ({
   editBucket: async ({ bucketName, limit, fromYearMonth, addedBy }) => {
     return editBucketForMonth({ bucketName, limit, fromYearMonth, addedBy });
   },
-  addBucket: async ({ bucket, addedBy }) => {
-    return addBucketData({ bucket, addedBy });
+  addBucket: async ({ bucket, fromYearMonth, addedBy }) => {
+    return addBucketData({ bucket, fromYearMonth, addedBy });
   },
   getCategoryLists: async () => getCategoryListsFromLocalStorage(),
   // The first-run wizard's result; see applyOnboardingData.

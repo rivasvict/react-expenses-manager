@@ -29,6 +29,7 @@ import {
 } from "../../../../helpers/categoryUsage/categoryUsage";
 import {
   getActiveLimitForMonth,
+  isBucketActiveInMonth,
   toYearMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper";
 import { formatCurrency } from "../../../../helpers/currency/currency";
@@ -116,7 +117,7 @@ const Categories = ({
   const bucketLimitOf = (type: CategoryType, name: string) => {
     if (type !== "expense") return undefined;
     const bucketName = findCategoryName(Object.keys(buckets || {}), name);
-    return bucketName
+    return bucketName && isBucketActiveInMonth(buckets[bucketName], thisMonth)
       ? getActiveLimitForMonth(buckets[bucketName], thisMonth)
       : undefined;
   };

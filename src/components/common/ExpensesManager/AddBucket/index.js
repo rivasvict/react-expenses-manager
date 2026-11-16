@@ -25,7 +25,13 @@ const BUCKETS_ROUTE = "/buckets";
  * AddCategory); this form only lists the categories that do not have a
  * bucket yet, since a category needs to exist before it can get one.
  */
-const AddBucket = ({ buckets, categoryLists, onAddBucket, history }) => {
+const AddBucket = ({
+  buckets,
+  categoryLists,
+  selectedDate,
+  onAddBucket,
+  history,
+}) => {
   const translator = useTranslation();
   const { t } = translator;
   const categoriesWithoutBucket = getUnbudgetedCategories({
@@ -62,6 +68,7 @@ const AddBucket = ({ buckets, categoryLists, onAddBucket, history }) => {
     try {
       await onAddBucket({
         bucket: { [categoryName]: parseFloat(allowance) },
+        selectedDate,
       });
       goToBuckets();
     } catch (submitError) {
@@ -169,10 +176,12 @@ const AddBucket = ({ buckets, categoryLists, onAddBucket, history }) => {
 const mapStateToProps = (state) => ({
   buckets: state.expensesManager.buckets,
   categoryLists: state.expensesManager.categoryLists,
+  selectedDate: state.expensesManager.selectedDate,
 });
 
 const mapActionsToProps = (dispatch) => ({
-  onAddBucket: ({ bucket }) => dispatch(addBucket({ bucket })),
+  onAddBucket: ({ bucket, selectedDate }) =>
+    dispatch(addBucket({ bucket, selectedDate })),
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(withRouter(AddBucket));

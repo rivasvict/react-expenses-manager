@@ -67,3 +67,64 @@ describe("getBucketConsumptionPercentage", () => {
     ).toBe(170);
   });
 });
+
+describe("bucket start month", () => {
+  const {
+    getActiveLimitForMonth,
+    isBucketActiveInMonth,
+    getCarriedBucketsForMonth,
+  } = require("./entriesHelper");
+  // Created in March 2026, raised in May.
+  const gym = [
+    { from: "2026-03", limit: 100 },
+    { from: "2026-05", limit: 150 },
+  ];
+
+  it("a bucket exists from its first month on, never before", () => {
+    expect(isBucketActiveInMonth(gym, "2026-02")).toBe(false);
+    expect(isBucketActiveInMonth(gym, "2026-03")).toBe(true);
+    expect(isBucketActiveInMonth(gym, "2026-06")).toBe(true);
+  });
+
+  it("old-format and from-the-beginning buckets exist in every month", () => {
+    expect(isBucketActiveInMonth(200, "1990-01")).toBe(true);
+    expect(isBucketActiveInMonth([{ from: "0000-00", limit: 200 }], "1990-01")).toBe(true);
+  });
+
+  it("has no limit before the bucket was created", () => {
+    expect(getActiveLimitForMonth(gym, "2026-02")).toBe(0);
+    expect(getActiveLimitForMonth(gym, "2026-04")).toBe(100);
+    expect(getActiveLimitForMonth(gym, "2026-05")).toBe(150);
+  });
+
+  it("carries nothing from the months before the bucket was created", () => {
+    const expense = (amount) => ({ amount, categories_path: ",gym," });
+    const entries = {
+      2026: {
+        0: { incomes: [], expenses: [expense("40")] },
+        1: { incomes: [], expenses: [expense("60")] },
+        2: { incomes: [], expenses: [expense("30")] },
+        3: { incomes: [], expenses: [] },
+      },
+    };
+    const carried = (month) =>
+      getCarriedBucketsForMonth({
+        entries,
+        buckets: { Gym: gym },
+        selectedDate: { year: 2026, month },
+      }).Gym;
+
+    // February, before the bucket: no allowance, nothing tracked.
+    expect(carried(1)).toMatchObject({ allowance: 0, carryOver: 0, spending: 0 });
+    // March, its first month: January and February spending is not debt.
+    expect(carried(2)).toEqual({
+      allowance: 100,
+      carryOver: 0,
+      availability: 100,
+      spending: 30,
+      remainder: 70,
+    });
+    // April carries March's remainder only.
+    expect(carried(3)).toMatchObject({ carryOver: 70, availability: 170 });
+  });
+});

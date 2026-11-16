@@ -12,6 +12,8 @@ import {
   getBucketConsumptionPercentage,
   formatNumberForDisplay,
   getCarriedBucketsForMonth,
+  isBucketActiveInMonth,
+  toYearMonth,
 } from "../../../../helpers/entriesHelper/entriesHelper.js";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -23,6 +25,11 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
   const { t, language } = useTranslation();
   const screenTitle = `${getMonthNameDisplay(selectedDate.month, language)} ${selectedDate.year}`;
   const hasBuckets = Object.keys(buckets).length > 0;
+  // A bucket is listed from the month it was added in, never in earlier ones.
+  const selectedYearMonth = toYearMonth(selectedDate.year, selectedDate.month);
+  const monthBucketNames = Object.keys(buckets).filter((bucketName) =>
+    isBucketActiveInMonth(buckets[bucketName], selectedYearMonth)
+  );
 
   /**
    * Carry-on buckets: each bucket's availability is the accumulation of its
@@ -35,7 +42,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
     selectedDate,
   });
 
-  const monthlyBuckets = Object.keys(buckets)
+  const monthlyBuckets = monthBucketNames
     .map((bucketName) => {
       const { allowance, carryOver, availability, spending, remainder } =
         carriedBuckets[bucketName];
@@ -59,7 +66,7 @@ const Buckets = ({ selectedDate, entries, history, buckets }) => {
       return b.consuptionPercentage - a.consuptionPercentage;
     });
 
-  const totalBucketAllocation = Object.keys(buckets).reduce(
+  const totalBucketAllocation = monthBucketNames.reduce(
     (sum, bucketName) => (carriedBuckets[bucketName]?.allowance ?? 0) + sum,
     0
   );
