@@ -322,15 +322,17 @@ const EditBucket =
 // Creates a bucket (spending limit) for an already-existing category (issue
 // #100). The storage layer validates that the category is non-empty and does
 // not already have a bucket, so the error is surfaced to the caller (the
-// AddBucket form) to display.
+// AddBucket form) to display. The bucket starts in the selected month (the
+// month it is added in), so earlier months never get it retroactively.
 const AddBucket =
   ({ storage }) =>
-  ({ bucket }) => {
+  ({ bucket, selectedDate }) => {
     return async (dispatch) => {
       dispatch(setAppLoading(true));
       try {
         const response = await storage.addBucket({
           bucket,
+          fromYearMonth: toYearMonth(selectedDate.year, selectedDate.month),
           addedBy: getAddedBy(),
         });
         dispatch({

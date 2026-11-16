@@ -1,6 +1,8 @@
 import { screen } from "@testing-library/react";
 import { renderApp } from "./helpers/renderApp";
 import { selectCategory } from "./helpers/categorySelect";
+import { seedEntries, ts, MARCH, APRIL } from "./helpers/seed";
+import { goToPrevMonth, goToNextMonth } from "./helpers/navigation";
 
 // Pinned so the navigable month header reads a stable "May 2026".
 const PINNED_DATE = new Date("2026-05-15T12:00:00Z");
@@ -54,6 +56,42 @@ describe("category + bucket creation (issue #100)", () => {
     expect(screen.getByTestId("bucket-gym-remaining").textContent).toBe(
       "$120.00"
     );
+  });
+
+  it("a new bucket is recorded from the month it is added, not in earlier months", async () => {
+    localStorage.setItem("categories", JSON.stringify(["Gym"]));
+    // Earlier spending in the category, which must not count against the bucket.
+    seedEntries([
+      { date: ts(2026, MARCH), amount: "500", type: "expense", categories_path: ",gym," },
+      { date: ts(2026, APRIL), amount: "80", type: "expense", categories_path: ",gym," },
+    ]);
+    const { user } = await renderApp("/add-bucket");
+
+    await selectCategory(user, "Gym");
+    await user.type(
+      screen.getByPlaceholderText(/insert bucket allowance/i),
+      "120"
+    );
+    await user.click(screen.getByRole("button", { name: /submit/i }));
+
+    // May, the month it was added in: the full allowance, no carried debt.
+    await screen.findByText("May 2026");
+    expect(screen.getByTestId("bucket-gym-remaining").textContent).toBe(
+      "$120.00"
+    );
+
+    // April and March: only the bucket that already existed is listed.
+    await goToPrevMonth(user, "April 2026");
+    expect(screen.queryByText("Gym")).not.toBeInTheDocument();
+    expect(screen.getByText("Food")).toBeInTheDocument();
+    expect(screen.getByText("April 2026 allocation: $200.00")).toBeInTheDocument();
+    await goToPrevMonth(user, "March 2026");
+    expect(screen.queryByText("Gym")).not.toBeInTheDocument();
+
+    // Back in May, the bucket is there again.
+    await goToNextMonth(user, "April 2026");
+    await goToNextMonth(user, "May 2026");
+    expect(await screen.findByText("Gym")).toBeInTheDocument();
   });
 
   it("a newly created category becomes selectable when adding an expense, even without a bucket", async () => {

@@ -84,7 +84,10 @@ describe("addedBy attribution in expensesManager action creators", () => {
     });
 
     it("stamps new bucket and bucket-edit history states", async () => {
-      await actionCreators.addBucket({ bucket: { Gym: 120 } })(dispatch);
+      await actionCreators.addBucket({
+        bucket: { Gym: 120 },
+        selectedDate: { year: 2026, month: 3 },
+      })(dispatch);
       await actionCreators.editBucket({
         bucket: { Gym: 150 },
         selectedDate: { year: 2026, month: 5 },
@@ -100,7 +103,10 @@ describe("addedBy attribution in expensesManager action creators", () => {
     it("adds no addedBy field anywhere", async () => {
       await actionCreators.addExpense({ entry, selectedDate: {} })(dispatch);
       await actionCreators.addFixedEntry({ entry, from: "2026-05" })(dispatch);
-      await actionCreators.addBucket({ bucket: { Gym: 120 } })(dispatch);
+      await actionCreators.addBucket({
+        bucket: { Gym: 120 },
+        selectedDate: { year: 2026, month: 3 },
+      })(dispatch);
 
       const [storedEntry] = JSON.parse(localStorage.getItem("balance"));
       const [fixed] = JSON.parse(localStorage.getItem("fixedEntries"));

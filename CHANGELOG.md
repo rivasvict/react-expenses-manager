@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.43.1] - 2026-11-16
+
+### Fixed
+
+- **A new bucket no longer appears retroactively in earlier months.** A bucket
+  added now starts in the month it is added in (the month shown on the Buckets
+  screen): earlier months no longer list it or count it in their allocation,
+  and spending in that category before then is not carried into it as debt.
+  Buckets created before this fix still apply from the beginning, as do the
+  buckets chosen in the first-run wizard.
+
 ## [1.43.0] - 2026-11-11
 
 ### Added

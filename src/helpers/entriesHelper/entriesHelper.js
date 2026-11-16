@@ -443,9 +443,8 @@ const toYearMonth = (year, month) =>
  *   - an array of `{ from: "YYYY-MM", limit: number }` entries (new format) —
  *     the most recent entry whose `from` <= `yearMonth` is used.
  *
- * If no entry is <= yearMonth (i.e. the bucket was created after the requested
- * month), the oldest entry's limit is returned so the bucket still has a
- * sensible value.
+ * A bucket only exists from the month of its first entry: for an earlier month
+ * (the bucket was created later) the limit is 0. See `isBucketActiveInMonth`.
  *
  * @param {number|Array<{from: string, limit: number}>} bucketValue
  * @param {string} yearMonth - "YYYY-MM" (1-indexed month)
@@ -456,7 +455,23 @@ const getActiveLimitForMonth = (bucketValue, yearMonth) => {
   if (!Array.isArray(bucketValue) || bucketValue.length === 0) return 0;
   const sorted = [...bucketValue].sort((a, b) => (a.from > b.from ? -1 : 1));
   const active = sorted.find((entry) => entry.from <= yearMonth);
-  return active ? active.limit : sorted[sorted.length - 1].limit;
+  return active ? active.limit : 0;
+};
+
+/**
+ * Whether a bucket exists in a given month, i.e. it was created in that month
+ * or earlier. A bucket is recorded from the month it is added, never
+ * retroactively: its first history entry's `from` is that month. Old-format
+ * (number) buckets and those created "from the beginning" (`"0000-00"`)
+ * exist in every month.
+ *
+ * @param {number|Array<{from: string, limit: number}>} bucketValue
+ * @param {string} yearMonth - "YYYY-MM" (1-indexed month)
+ * @returns {boolean}
+ */
+const isBucketActiveInMonth = (bucketValue, yearMonth) => {
+  if (!Array.isArray(bucketValue)) return true;
+  return bucketValue.some((entry) => entry.from <= yearMonth);
 };
 
 /**
@@ -530,7 +545,9 @@ const getRecordedMonthsUntil = ({ entries, until }) => {
  * (O(months * buckets)), keeping the calculation efficient.
  *
  * Months before the first recorded month default to a plain allowance with no
- * carry-on, since there is nothing to accumulate yet.
+ * carry-on, since there is nothing to accumulate yet. Months before a bucket
+ * was created (see `isBucketActiveInMonth`) are skipped for that bucket: they
+ * give it no allowance, and their spending is not carried into it.
  *
  * @param {Object} params
  * @param {Object} params.entries - The nested `entries[year][month]` tree.
@@ -572,6 +589,7 @@ const getCarriedBucketsForMonth = ({ entries, buckets, selectedDate }) => {
       year === selectedDate.year && month === selectedDate.month;
 
     bucketNames.forEach((bucketName) => {
+      if (!isBucketActiveInMonth(buckets[bucketName], yearMonth)) return;
       const allowance = getActiveLimitForMonth(buckets[bucketName], yearMonth);
       const carryOver = remainders[bucketName];
       const availability = allowance + carryOver;
@@ -673,4 +691,5 @@ export {
   getBucketConsumptionPercentage,
   toYearMonth,
   getActiveLimitForMonth,
+  isBucketActiveInMonth,
 };
