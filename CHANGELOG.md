@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.43.2] - 2026-11-17
+
+### Changed
+
+- **The automatic Claude review is deeper and runs on every push.** Its tool
+  allowlist now includes the `gh pr`/`gh issue`/`gh search` read calls the
+  `code-review` plugin uses (still an explicit list, no blanket `Bash`), the
+  turn limit is 40 instead of 20, and the review also runs on `synchronize`.
+- **CI now fails on any ESLint warning.** `npm run lint` passes
+  `--max-warnings 0`, so warnings cannot accumulate unseen.
+
 ## [1.43.1] - 2026-11-16
 
 ### Fixed
