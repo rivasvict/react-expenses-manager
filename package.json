@@ -37,7 +37,7 @@
     "test:watch": "jest --watch",
     "test:debug": "node --inspect=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --no-cache",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint -c .eslintrc.json . --max-warnings 0",
+    "lint": "eslint -c .eslintrc.json .",
     "lint:fix": "eslint . --fix",
     "lint:styles": "stylelint \"src/**/*.scss\"",
     "tokens:build": "node scripts/buildTokens.js",

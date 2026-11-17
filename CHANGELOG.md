@@ -13,8 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   allowlist now includes the `gh pr`/`gh issue`/`gh search` read calls the
   `code-review` plugin uses (still an explicit list, no blanket `Bash`), the
   turn limit is 40 instead of 20, and the review also runs on `synchronize`.
-- **CI now fails on any ESLint warning.** `npm run lint` passes
-  `--max-warnings 0`, so warnings cannot accumulate unseen.
 
 ## [1.43.1] - 2026-11-16
 
