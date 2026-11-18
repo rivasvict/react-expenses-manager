@@ -12,7 +12,7 @@
 .nw{white-space:nowrap}
 .card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
 .cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
-.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
 .sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .sec a,.link{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap}
 /* month header */
@@ -21,7 +21,7 @@
 .mh__pill{display:flex;align-items:center;gap:0.35rem;height:2.6rem;padding:0 1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);font-weight:700}
 .mh__pill small{font-weight:500;color:var(--text-muted);font-size:0.78rem}
 /* money strip */
-.triple{display:flex;justify-content:space-between;gap:0.5rem}
+.triple{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem 0.75rem}
 .triple>div{min-width:0}
 .triple strong{display:block;font-size:1rem;white-space:nowrap;margin-top:0.1rem}
 .triple .r{text-align:right}
@@ -49,7 +49,7 @@
 .prio{flex:0 0 auto;width:1.55rem;height:1.55rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--highlight);border:1px solid var(--border-strong);font-size:0.76rem;font-weight:700;color:var(--text-secondary)}
 .goal__fig{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;margin-top:0.5rem;font-size:0.88rem}
 .goal__fig b{font-size:1rem}
-.goal__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.35rem 0.75rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
+.goal__foot{display:flex;flex-direction:column;gap:0.15rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
 .goal__month{color:var(--text-secondary)}
 .goal__month b{color:var(--text-primary)}
 /* lists */
@@ -170,28 +170,36 @@
       </section>
       <div class="note note--warn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5 14 13H2z" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M8 6.5v3M8 11.3h.01" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg><div><p>September saved <b>$330.00</b> less than your goals need. In Strict mode the money goes by priority, so <b>New laptop</b> got nothing and <b>Trip to Japan</b> got part of its share.</p></div></div>
       <div class="sec"><h2>Strict mode · by priority</h2><a href="#">How it works</a></div>
+      <p class="legend" style="margin:-0.1rem 0.15rem 0.5rem"><span style="white-space:normal"><i class="sw-tick"></i>Where a steady pace to the target date would put you today</span></p>
       <section class="card">
-        <div class="goal__hd"><span class="prio" aria-label="Priority 1">1</span><h2 class="goal__name">Emergency fund</h2><span class="goal__pct t-ok">70%</span></div>
-        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:70%"></i></div><span class="tick" style="left:58.3%"></span></div>
-        <div class="goal__fig"><span><b>$4,200.00</b> <span class="t-sec">of $6,000.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
+        <div class="goal__hd"><span class="prio" aria-label="Priority 1">1</span><h2 class="goal__name">Emergency fund</h2><span class="goal__pct t-ok">63%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:63%"></i></div><span class="tick" style="left:53.1%"></span></div>
+        <div class="goal__fig"><span><b>$3,800.00</b> <span class="t-sec">of $6,000.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
         <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">Done by <b>Mar 2027</b> · target Jun 2027</span></p>
-        <div class="goal__foot"><span class="goal__month">September: <b>+$400.00</b> <span class="t-ok">· funded</span></span><span class="t-mute">$400.00 a month</span></div>
+        <div class="goal__foot"><span class="goal__month">September: <b>+$400.00</b> <span class="t-ok">· funded</span></span><span class="t-mute">$400.00 a month · priority 1</span></div>
       </section>
       <section class="card">
-        <div class="goal__hd"><span class="prio" aria-label="Priority 2">2</span><h2 class="goal__name">Trip to Japan</h2><span class="goal__pct t-ok">40%</span></div>
-        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:40%"></i></div><span class="tick" style="left:28.6%"></span></div>
-        <div class="goal__fig"><span><b>$1,404.00</b> <span class="t-sec">of $3,500.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
+        <div class="goal__hd"><span class="prio" aria-label="Priority 2">2</span><h2 class="goal__name">Trip to Japan</h2><span class="goal__pct t-ok">28%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:28%"></i></div><span class="tick" style="left:21.4%"></span></div>
+        <div class="goal__fig"><span><b>$988.00</b> <span class="t-sec">of $3,500.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
         <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">Done by <b>May 2027</b> · target Aug 2027</span></p>
-        <div class="goal__foot"><span class="goal__month">September: <b>+$220.00</b> of $400.00 <span class="t-warn">· short $180.00</span></span><span class="t-mute">8% of income</span></div>
+        <div class="goal__foot"><span class="goal__month">September: <b>+$220.00</b> of $400.00 <span class="t-warn nw">· short $180.00</span></span><span class="t-mute">8% of income · priority 2</span></div>
       </section>
       <section class="card">
-        <div class="goal__hd"><span class="prio" aria-label="Priority 3">3</span><h2 class="goal__name">New laptop</h2><span class="goal__pct t-warn">25%</span></div>
-        <div class="barwrap"><div class="bar"><i class="f-warn" style="width:25%"></i></div><span class="tick" style="left:50%"></span></div>
-        <div class="goal__fig"><span><b>$450.00</b> <span class="t-sec">of $1,800.00</span></span><span class="st st--warn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M8 5v3.2l2.2 1.4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Behind</span></div>
+        <div class="goal__hd"><span class="prio" aria-label="Priority 3">3</span><h2 class="goal__name">New laptop</h2><span class="goal__pct t-warn">17%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-warn" style="width:17%"></i></div><span class="tick" style="left:37.5%"></span></div>
+        <div class="goal__fig"><span><b>$300.00</b> <span class="t-sec">of $1,800.00</span></span><span class="st st--warn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M8 5v3.2l2.2 1.4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Behind</span></div>
         <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">At this pace <b class="t-warn">Dec 2027</b> · target Feb 2027</span></p>
-        <div class="goal__foot"><span class="goal__month">September: <b>+$0.00</b> of $150.00 <span class="t-warn">· short $150.00</span></span><span class="t-mute">$150.00 a month</span></div>
+        <div class="goal__foot"><span class="goal__month">September: <b>+$0.00</b> of $150.00 <span class="t-warn nw">· short $150.00</span></span><span class="t-mute">$150.00 a month · priority 3</span></div>
+      </section>
+      <section class="card">
+        <div class="goal__hd"><span class="prio" aria-label="Priority 4">4</span><h2 class="goal__name">Winter tires</h2><span class="goal__pct t-done">100%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-done" style="width:100%"></i></div></div>
+        <div class="goal__fig"><span><b>$900.00</b> <span class="t-sec">of $900.00</span></span><span class="st st--done"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5L10 5.6l1.5 2.6H4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Completed</span></div>
+        <div class="goal__foot"><span class="t-sec">Reached in Aug 2026. It takes no more money. Close it once you have used it.</span><span class="link" style="margin-top:0.25rem">Close goal</span></div>
       </section>
       <a class="mk-btn mk-btn--primary mk-space-top" href="#"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>&nbsp;Add a goal</a>
+      <div class="sec" style="justify-content:center"><a href="#">Closed goals (2)</a></div>
     </div>
   </main>
 

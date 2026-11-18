@@ -12,7 +12,7 @@
 .nw{white-space:nowrap}
 .card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
 .cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
-.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
 .sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .sec a,.link{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap}
 /* month header */
@@ -21,7 +21,7 @@
 .mh__pill{display:flex;align-items:center;gap:0.35rem;height:2.6rem;padding:0 1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);font-weight:700}
 .mh__pill small{font-weight:500;color:var(--text-muted);font-size:0.78rem}
 /* money strip */
-.triple{display:flex;justify-content:space-between;gap:0.5rem}
+.triple{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem 0.75rem}
 .triple>div{min-width:0}
 .triple strong{display:block;font-size:1rem;white-space:nowrap;margin-top:0.1rem}
 .triple .r{text-align:right}
@@ -49,7 +49,7 @@
 .prio{flex:0 0 auto;width:1.55rem;height:1.55rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--highlight);border:1px solid var(--border-strong);font-size:0.76rem;font-weight:700;color:var(--text-secondary)}
 .goal__fig{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;margin-top:0.5rem;font-size:0.88rem}
 .goal__fig b{font-size:1rem}
-.goal__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.35rem 0.75rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
+.goal__foot{display:flex;flex-direction:column;gap:0.15rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
 .goal__month{color:var(--text-secondary)}
 .goal__month b{color:var(--text-primary)}
 /* lists */
@@ -162,9 +162,10 @@
   </header>
   <main class="mk-shell">
     <div class="mk-work-area">
-<h1 class="mk-eyebrow">Goal: Trip to Japan</h1>
+<h1 class="mk-eyebrow">Goal</h1>
       <section class="card">
-        <div class="goal__hd"><span class="prio" aria-label="Priority 2">2</span><h2 class="goal__name"><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></h2><span class="goal__pct t-ok">40%</span></div>
+        <div class="goal__hd"><h2 class="goal__name" style="font-size:1.15rem">Trip to Japan</h2><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
+        <p class="t-sec" style="margin:0.15rem 0 0;font-size:0.82rem">Priority 2 · 8% of income · 40% there</p>
         <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:0.75rem;margin-top:0.5rem"><div><span class="cap">Saved so far</span><span class="big">$1,404.00</span></div><div style="text-align:right"><span class="cap">Left</span><strong class="mid">$2,096.00</strong></div></div>
         <div class="barwrap"><div class="bar"><i class="f-ok" style="width:40%"></i></div><span class="tick" style="left:28.6%"></span></div>
         <div class="legend"><span><i class="sw-tick"></i>Where you'd be on a straight line to Aug 2027</span></div>

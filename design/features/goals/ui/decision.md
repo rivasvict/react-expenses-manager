@@ -23,8 +23,8 @@ that fell short (saved $620.00, goals needed $950.00).
 
 - **Settings → Goals mode** (Strict / Relaxed) is a setting row that opens a
   bottom sheet, like Language and Currency. While any goal exists the row
-  shows a lock and the sheet disables the other mode, with a callout saying
-  why and how to switch (remove every goal). Drawn once, in
+  shows a lock and the sheet marks the other mode **Locked**, with an info
+  note saying why and how to switch (remove every goal, closed ones too). Drawn once, in
   `a-goal-cards/settings-mode.html`; it is the same in B and C.
 - The same rules (`feature-brief.md`): month savings fund goals when the month
   ends, the current month is "in progress", funding is recomputed from the
@@ -36,6 +36,11 @@ that fell short (saved $620.00, goals needed $950.00).
   the target needs, the resulting status) so a goal is never set up blind.
 - History of setup changes is listed on each goal ("Target raised from … to
   …").
+- A **Completed** goal (Winter tires) stays in the list with a gold flag pill
+  and a **Close goal** link until the user closes it; closed goals sit behind
+  "Closed goals (2)". Every goal can be edited and removed from its own screen.
+- The example household has 6 goals: 3 open, 1 completed but not closed, 2
+  closed. Amounts are never rounded in copy ($337.50 a month).
 
 ## Options considered
 
@@ -78,7 +83,8 @@ sheet**; adding is a tall sheet too.
   dashboard card must follow Privacy mode (hidden figures); four categorical
   colours per goal cap legibility at about 6 goals; drag-to-reorder is new
   interaction to build.
-- **States drawn:** dashboard card, October split, September short (Strict),
+- **States drawn:** dashboard card (labelled "last month"; under Privacy mode
+  it would show the bar without amounts, like the savings card), October split, September short (Strict),
   September short (Relaxed, proportional), goal sheet (Behind), add sheet.
 
 ### C · Projection first (`options/c-projection/`)

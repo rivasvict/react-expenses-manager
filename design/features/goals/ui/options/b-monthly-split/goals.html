@@ -12,7 +12,7 @@
 .nw{white-space:nowrap}
 .card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
 .cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
-.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
 .sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .sec a,.link{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap}
 /* month header */
@@ -21,7 +21,7 @@
 .mh__pill{display:flex;align-items:center;gap:0.35rem;height:2.6rem;padding:0 1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);font-weight:700}
 .mh__pill small{font-weight:500;color:var(--text-muted);font-size:0.78rem}
 /* money strip */
-.triple{display:flex;justify-content:space-between;gap:0.5rem}
+.triple{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem 0.75rem}
 .triple>div{min-width:0}
 .triple strong{display:block;font-size:1rem;white-space:nowrap;margin-top:0.1rem}
 .triple .r{text-align:right}
@@ -49,7 +49,7 @@
 .prio{flex:0 0 auto;width:1.55rem;height:1.55rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--highlight);border:1px solid var(--border-strong);font-size:0.76rem;font-weight:700;color:var(--text-secondary)}
 .goal__fig{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;margin-top:0.5rem;font-size:0.88rem}
 .goal__fig b{font-size:1rem}
-.goal__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.35rem 0.75rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
+.goal__foot{display:flex;flex-direction:column;gap:0.15rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
 .goal__month{color:var(--text-secondary)}
 .goal__month b{color:var(--text-primary)}
 /* lists */
@@ -172,26 +172,24 @@
       <div class="sec"><h2>Funded in priority order</h2><a href="#">Reorder</a></div>
       <div class="list">
         <div class="row">
-          <span class="t-mute"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4h.01M10 4h.01M6 8h.01M10 8h.01M6 12h.01M10 12h.01" fill="none" stroke-width="2.4" stroke-linecap="round" style="stroke:currentColor"/></svg></span>
           <span class="prio">1</span><span class="dot c1"></span>
-          <div class="row__body"><p class="row__t">Emergency fund</p><p class="row__s">70% of $6,000.00 · <span class="t-ok">On track</span></p></div>
+          <div class="row__body"><p class="row__t">Emergency fund</p><p class="row__s">70% of $6,000.00</p><p class="row__s" style="margin-top:0.25rem"><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></p></div>
           <span class="row__amt"><span class="t-ok">+$400.00</span><small>funded</small></span>
         </div>
         <div class="row">
-          <span class="t-mute"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4h.01M10 4h.01M6 8h.01M10 8h.01M6 12h.01M10 12h.01" fill="none" stroke-width="2.4" stroke-linecap="round" style="stroke:currentColor"/></svg></span>
           <span class="prio">2</span><span class="dot c2"></span>
-          <div class="row__body"><p class="row__t">Trip to Japan</p><p class="row__s">40% of $3,500.00 · <span class="t-ok">On track</span></p></div>
+          <div class="row__body"><p class="row__t">Trip to Japan</p><p class="row__s">40% of $3,500.00</p><p class="row__s" style="margin-top:0.25rem"><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></p></div>
           <span class="row__amt"><span class="t-ok">+$416.00</span><small>funded</small></span>
         </div>
         <div class="row">
-          <span class="t-mute"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4h.01M10 4h.01M6 8h.01M10 8h.01M6 12h.01M10 12h.01" fill="none" stroke-width="2.4" stroke-linecap="round" style="stroke:currentColor"/></svg></span>
           <span class="prio">3</span><span class="dot c3"></span>
-          <div class="row__body"><p class="row__t">New laptop</p><p class="row__s">25% of $1,800.00 · <span class="t-warn">Behind</span></p></div>
+          <div class="row__body"><p class="row__t">New laptop</p><p class="row__s">25% of $1,800.00</p><p class="row__s" style="margin-top:0.25rem"><span class="st st--warn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M8 5v3.2l2.2 1.4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Behind</span></p></div>
           <span class="row__amt"><span class="t-ok">+$150.00</span><small>funded</small></span>
         </div>
-        <div class="row"><span style="width:16px"></span><span class="dot cfree"></span><div class="row__body"><p class="row__t">Free savings</p><p class="row__s">What's left after your goals</p></div><span class="row__amt">$274.00</span></div>
+        <div class="row"><span class="prio">4</span><span class="dot" style="background-color:var(--accent)"></span><div class="row__body"><p class="row__t">Winter tires</p><p class="row__s">$900.00 of $900.00 · takes no more money</p><p class="row__s" style="margin-top:0.25rem"><span class="st st--done"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5L10 5.6l1.5 2.6H4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Completed</span> <span class="link" style="margin-left:0.4rem">Close goal</span></p></div><span class="row__amt t-mute">$0.00</span></div>
+        <div class="row"><span class="dot cfree"></span><div class="row__body"><p class="row__t">Free savings</p><p class="row__s">What's left after your goals</p></div><span class="row__amt">$274.00</span></div>
       </div>
-      <div class="sec" style="justify-content:center"><a href="#">Completed and closed (3)</a></div>
+      <div class="sec" style="justify-content:center"><a href="#">Closed goals (2)</a></div>
       <a class="mk-btn mk-btn--primary mk-space-top" href="#"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>&nbsp;Add a goal</a>
     </div>
   </main>

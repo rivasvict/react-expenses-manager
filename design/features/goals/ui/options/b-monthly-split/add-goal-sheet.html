@@ -12,7 +12,7 @@
 .nw{white-space:nowrap}
 .card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
 .cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
-.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
 .sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .sec a,.link{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap}
 /* month header */
@@ -21,7 +21,7 @@
 .mh__pill{display:flex;align-items:center;gap:0.35rem;height:2.6rem;padding:0 1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);font-weight:700}
 .mh__pill small{font-weight:500;color:var(--text-muted);font-size:0.78rem}
 /* money strip */
-.triple{display:flex;justify-content:space-between;gap:0.5rem}
+.triple{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem 0.75rem}
 .triple>div{min-width:0}
 .triple strong{display:block;font-size:1rem;white-space:nowrap;margin-top:0.1rem}
 .triple .r{text-align:right}
@@ -49,7 +49,7 @@
 .prio{flex:0 0 auto;width:1.55rem;height:1.55rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--highlight);border:1px solid var(--border-strong);font-size:0.76rem;font-weight:700;color:var(--text-secondary)}
 .goal__fig{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;margin-top:0.5rem;font-size:0.88rem}
 .goal__fig b{font-size:1rem}
-.goal__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.35rem 0.75rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
+.goal__foot{display:flex;flex-direction:column;gap:0.15rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
 .goal__month{color:var(--text-secondary)}
 .goal__month b{color:var(--text-primary)}
 /* lists */
@@ -176,11 +176,12 @@
   <div class="scrim"></div>
   <section class="sheet" role="dialog" aria-labelledby="t">
     <div class="sheet__grip"></div>
-    <div class="sheet__head"><span><span class="sheet__eyebrow">Strict mode</span><h2 class="sheet__title" id="t">Add a goal</h2></span><span class="sheet__close"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span></div>
+    <div class="sheet__head"><span><span class="sheet__eyebrow" style="display:inline-flex;gap:0.3rem;align-items:center"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Strict mode</span><h2 class="sheet__title" id="t">Add a goal</h2></span><span class="sheet__close"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span></div>
     <div class="sheet__body">
         <label class="mk-label">Name</label>
         <div class="mk-input">New bike</div>
-        <div class="two mk-field-gap"><div><label class="mk-label">Target</label><div class="affix"><i>$</i><div class="mk-input">1,200.00</div></div></div><div><label class="mk-label">By</label><div class="mk-select">August 2027<span class="mk-select__chevron"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 6 4.5 4.5L12.5 6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span></div></div></div>
+        <label class="mk-label mk-field-gap">Target</label><div class="affix"><i>$</i><div class="mk-input">1,200.00</div></div>
+        <label class="mk-label mk-field-gap">Reach it by</label><div class="mk-select">August 2027<span class="mk-select__chevron"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 6 4.5 4.5L12.5 6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span></div>
         <label class="mk-label mk-field-gap">Already saved for it <span class="opt-tag">(optional)</span></label>
         <div class="affix"><i>$</i><div class="mk-input" style="color:var(--text-muted)">0.00</div></div>
         <label class="mk-label mk-field-gap">Each month, put aside</label>
@@ -193,7 +194,7 @@
           <div class="kv"><span>Puts aside about</span><b>$156.00 a month</b></div>
           <div class="kv"><span>You need</span><b>$120.00 a month</b></div>
           <p style="margin:0.35rem 0 0"><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span> <span class="t-sec">At this rate you reach it by Jun 2027.</span></p>
-          <p class="t-mute" style="margin:0.35rem 0 0;font-size:0.78rem">Estimated from October's income of $5,200.00.</p>
+          <p class="t-mute" style="margin:0.35rem 0 0;font-size:0.78rem">Estimated from October's income ($5,200.00), if your months keep saving enough. As priority 4, it waits first in a short month.</p>
         </div>
         <div class="note note--info" style="margin-top:0.8125rem"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg><div><p>Your goals use <b>Strict mode</b>. All goals share one mode; to switch, remove every goal first.</p></div></div>
     </div>
