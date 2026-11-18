@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goals: option A, list (October, all funded)</title>
+  <link rel="stylesheet" href="../../../../../system/tokens.css">
+  <link rel="stylesheet" href="../../../../../system/mockup.css">
+  <style>
+.mk-work-area{padding-bottom:1.14rem;min-height:0}
+.ic{display:block;flex:0 0 auto}
+.nw{white-space:nowrap}
+.card{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0.85rem 0.9rem;margin:0 0 0.625rem}
+.cap{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted)}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:0.75rem;margin:1rem 0.15rem 0.45rem}
+.sec h2{margin:0;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
+.sec a,.link{color:var(--accent);font-weight:600;font-size:0.85rem;text-decoration:none;white-space:nowrap}
+/* month header */
+.mh{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin:0.35rem 0 0.7rem}
+.mh__btn{width:2.6rem;height:2.6rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-subtle);border-radius:var(--radius-round);background-color:var(--bg-raised);color:var(--text-secondary)}
+.mh__pill{display:flex;align-items:center;gap:0.35rem;height:2.6rem;padding:0 1rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised);font-weight:700}
+.mh__pill small{font-weight:500;color:var(--text-muted);font-size:0.78rem}
+/* money strip */
+.triple{display:flex;justify-content:space-between;gap:0.5rem}
+.triple>div{min-width:0}
+.triple strong{display:block;font-size:1rem;white-space:nowrap;margin-top:0.1rem}
+.triple .r{text-align:right}
+.big{font-size:1.9rem;font-weight:700;line-height:1.1;letter-spacing:-0.02em}
+.mid{font-size:1.25rem;font-weight:700;line-height:1.2}
+/* progress bar with the expected-by-now tick */
+.barwrap{position:relative;margin-top:0.55rem}
+.bar{height:8px;border-radius:var(--radius-pill);background-color:var(--track);overflow:hidden}
+.bar--thin{height:6px}
+.bar i{display:block;height:100%;border-radius:var(--radius-pill)}
+.f-ok{background-color:var(--chart-income)}.f-warn{background-color:var(--chart-warning)}.f-done{background-color:var(--accent)}.f-mute{background-color:var(--border-strong)}
+.tick{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;border-radius:1px;background-color:var(--text-primary)}
+.t-ok{color:var(--income)}.t-warn{color:var(--warning)}.t-done{color:var(--accent)}.t-exp{color:var(--expense)}.t-mute{color:var(--text-muted)}.t-sec{color:var(--text-secondary)}
+/* status pill: word + icon, never colour alone */
+.st{display:inline-flex;align-items:center;gap:0.3rem;height:1.6rem;padding:0 0.55rem;border-radius:var(--radius-pill);font-size:0.78rem;font-weight:700;white-space:nowrap}
+.st .ic{width:13px;height:13px}
+.st--ok{color:var(--income);background-color:var(--income-soft)}
+.st--warn{color:var(--warning);background-color:color-mix(in srgb,var(--warning) 14%,transparent)}
+.st--done{color:var(--accent);background-color:var(--accent-soft)}
+.st--mute{color:var(--text-secondary);background-color:var(--highlight)}
+/* goal card */
+.goal__hd{display:flex;align-items:center;gap:0.55rem}
+.goal__name{flex:1 1 0;min-width:0;margin:0;font-size:1rem;font-weight:600;overflow-wrap:anywhere;line-height:1.3}
+.goal__pct{font-weight:700;font-size:0.95rem}
+.prio{flex:0 0 auto;width:1.55rem;height:1.55rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--highlight);border:1px solid var(--border-strong);font-size:0.76rem;font-weight:700;color:var(--text-secondary)}
+.goal__fig{display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem;margin-top:0.5rem;font-size:0.88rem}
+.goal__fig b{font-size:1rem}
+.goal__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.35rem 0.75rem;margin-top:0.6rem;padding-top:0.55rem;border-top:1px solid var(--border-subtle);font-size:0.82rem}
+.goal__month{color:var(--text-secondary)}
+.goal__month b{color:var(--text-primary)}
+/* lists */
+.list{background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:0 0.9rem;margin:0 0 0.625rem}
+.row{display:flex;align-items:center;gap:0.7rem;padding:0.7rem 0;border-top:1px solid var(--border-subtle)}
+.row:first-child{border-top:0}
+.row__body{flex:1 1 0;min-width:0}
+.row__t{margin:0;font-size:0.95rem;font-weight:600;overflow-wrap:anywhere;line-height:1.3}
+.row__s{margin:0.12rem 0 0;font-size:0.8rem;color:var(--text-secondary);line-height:1.35}
+.row__amt{flex:0 0 auto;text-align:right;font-weight:700;font-size:0.95rem;white-space:nowrap}
+.row__amt small{display:block;font-weight:500;font-size:0.76rem;color:var(--text-muted)}
+.dot{flex:0 0 auto;width:0.7rem;height:0.7rem;border-radius:var(--radius-round)}
+/* history */
+.hist{margin:0;padding:0 0.9rem;list-style:none}
+.hist li{display:flex;gap:0.7rem;padding:0.6rem 0;border-top:1px solid var(--border-subtle);font-size:0.86rem;line-height:1.4}
+.hist li:first-child{border-top:0}
+.hist time{flex:0 0 3.4rem;color:var(--text-muted);font-size:0.8rem;padding-top:0.05rem}
+/* setup rows */
+.kv{display:flex;justify-content:space-between;align-items:baseline;gap:0.75rem;padding:0.45rem 0;border-top:1px solid var(--border-subtle);font-size:0.9rem}
+.kv:first-of-type{border-top:0}
+.kv span{color:var(--text-secondary)}
+.kv b{text-align:right}
+.edbtn{display:inline-flex;align-items:center;gap:0.4rem;height:2.6rem;padding:0 0.9rem;border:1px solid var(--border-strong);border-radius:var(--radius-control);font-weight:600;font-size:0.9rem;color:var(--text-primary);background:transparent}
+/* callouts / notes */
+.note{display:flex;gap:0.6rem;align-items:flex-start;padding:0.75rem 0.85rem;border-radius:var(--radius-control);font-size:0.86rem;line-height:1.45;margin:0 0 0.625rem}
+.note .ic{margin-top:0.15rem}
+.note p{margin:0}
+.note p+p{margin-top:0.35rem}
+.note--info{background-color:var(--highlight);border:1px solid var(--border-subtle);color:var(--text-secondary)}
+.note--info .ic{color:var(--text-secondary)}
+.note--warn{background-color:color-mix(in srgb,var(--warning) 10%,transparent);border:1px solid color-mix(in srgb,var(--warning) 30%,transparent);color:var(--text-primary)}
+.note--warn .ic{color:var(--warning)}
+.note--ok{background-color:var(--income-soft);border:1px solid color-mix(in srgb,var(--income) 28%,transparent);color:var(--text-primary)}
+.note--ok .ic{color:var(--income)}
+.note b{color:var(--text-primary)}
+/* forms */
+.seg{display:flex;gap:0.25rem;padding:0.25rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised)}
+.seg span{flex:1;min-height:2.4rem;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 0.5rem;border-radius:var(--radius-pill);font-weight:600;font-size:0.9rem;color:var(--text-secondary)}
+.seg .on{background-color:var(--accent-soft);color:var(--accent)}
+.seg .off{opacity:0.45}
+.affix{position:relative}
+.affix .mk-input{padding-left:1.9rem}
+.affix i{position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-style:normal;color:var(--text-secondary)}
+.affix--r .mk-input{padding-left:1.1em;padding-right:2.4rem}
+.affix--r i{left:auto;right:1rem}
+.two{display:flex;gap:0.6rem}.two>div{flex:1 1 0;min-width:0}
+.opt-tag{font-weight:500;color:var(--text-muted)}
+.preview{margin-top:0.8125rem;padding:0.8rem 0.9rem;border-radius:var(--radius-control);background-color:var(--bg-surface);border:1px dashed var(--border-strong);font-size:0.88rem;line-height:1.45}
+.preview .kv{font-size:0.88rem}
+/* sheet */
+.scrim{position:fixed;inset:0;background-color:var(--scrim)}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:40rem;margin:0 auto;padding:0.5rem 1rem 1.2rem;background-color:var(--bg-surface);border:1px solid var(--border-strong);border-radius:var(--radius-shell) var(--radius-shell) 0 0;box-shadow:var(--shadow-pop);max-height:92vh;display:flex;flex-direction:column}
+.sheet__grip{width:2.6rem;height:0.28rem;margin:0.25rem auto 0.6rem;background-color:var(--border-strong);border-radius:var(--radius-control);flex:0 0 auto}
+.sheet__head{display:flex;align-items:center;justify-content:space-between;gap:0.6rem;margin-bottom:0.5rem;flex:0 0 auto}
+.sheet__eyebrow{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted)}
+.sheet__title{margin:0;font-size:1.05rem;font-weight:700;overflow-wrap:anywhere}
+.sheet__close{flex:0 0 auto;width:2.2rem;height:2.2rem;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-control)}
+.sheet__body{overflow:auto;flex:1 1 auto;min-height:0}
+.sheet__foot{flex:0 0 auto;margin-top:0.7rem;padding-top:0.7rem;border-top:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:0.5rem}
+.sheet .mk-btn{margin:0}
+.radio{display:flex;align-items:flex-start;justify-content:space-between;gap:0.6rem;padding:0.7rem 0.85rem;background-color:var(--bg-raised);border:1px solid var(--border-subtle);border-radius:var(--radius-control);margin-bottom:0.45rem}
+.radio--sel{background-color:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.radio--dis{opacity:0.5}
+.radio__name{display:block;font-weight:600;font-size:0.95rem}
+.radio__hint{display:block;font-size:0.8rem;color:var(--text-secondary);line-height:1.4;margin-top:0.1rem}
+.radio .ic{color:var(--accent);margin-top:0.2rem}
+/* settings */
+.settings-card{margin:0.625rem -0.75rem 0;padding:1rem 1.1rem 1.1rem}
+.stack{display:flex;flex-direction:column;gap:0.625rem}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;min-height:3.4rem;padding:0.65rem 0.9rem;background-color:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-control)}
+.srow__label{display:block;font-weight:600;font-size:0.95rem}
+.srow__hint{display:block;color:var(--text-secondary);font-size:0.78rem}
+.srow__value{display:flex;align-items:center;gap:0.4rem;color:var(--text-secondary);font-size:0.92rem;white-space:nowrap}
+/* stacked split bar */
+.split{display:flex;height:14px;border-radius:var(--radius-pill);overflow:hidden;background-color:var(--track);gap:2px}
+.split i{display:block;height:100%}
+.c1{background-color:var(--chart-categorical-1)}.c2{background-color:var(--chart-categorical-2)}.c3{background-color:var(--chart-categorical-3)}.c4{background-color:var(--chart-categorical-4)}.cfree{background-color:var(--border-strong)}
+.legend{display:flex;flex-wrap:wrap;gap:0.15rem 0.8rem;margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted)}
+.legend span{display:inline-flex;align-items:center;gap:0.3rem;white-space:nowrap}
+.sw{display:inline-block;width:0.6rem;height:0.6rem;border-radius:var(--radius-round)}
+.sw-tick{display:inline-block;width:2px;height:0.8rem;background-color:var(--text-primary)}
+.sw-dash{display:inline-block;width:1.1rem;border-top:2px dashed var(--text-secondary)}
+.sw-line{display:inline-block;width:1.1rem;border-top:2.5px solid var(--chart-income)}
+.empty-art{display:flex;justify-content:center;margin:0.6rem 0 0.4rem}
+.steps{margin:0.4rem 0 0;padding:0;list-style:none;counter-reset:s}
+.steps li{position:relative;padding:0.4rem 0 0.4rem 2.1rem;font-size:0.9rem;line-height:1.45;color:var(--text-secondary)}
+.steps li b{color:var(--text-primary)}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0.4rem;width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-round);background-color:var(--accent-soft);color:var(--accent);font-weight:700;font-size:0.78rem}
+.scope{display:flex;gap:0.2rem;padding:0.2rem;margin:0.2rem auto 0.7rem;max-width:22rem;border:1px solid var(--border-subtle);border-radius:var(--radius-pill);background-color:var(--bg-raised)}
+.scope span{flex:1;height:2.2rem;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-pill);font-weight:600;font-size:0.86rem;color:var(--text-secondary)}
+.scope .on{background-color:var(--accent-soft);color:var(--accent)}
+.utabs{display:flex;border-bottom:1px solid var(--border-subtle);margin:-0.2rem -0.1rem 0.75rem}
+.utabs span{flex:1;text-align:center;padding:0.55rem 0;font-weight:600;font-size:0.9rem;color:var(--text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px}
+.utabs .on{color:var(--text-primary);border-bottom-color:var(--accent)}
+.backlink{display:flex;align-items:center;gap:0.3rem;color:var(--accent);font-weight:600;font-size:0.9rem;margin:0 0 0.6rem}
+.chart{display:block;width:100%;height:auto;margin-top:0.6rem}
+.stepbar{display:flex;gap:0.3rem;margin:0.1rem 0 0.8rem}
+.stepbar i{flex:1;height:4px;border-radius:var(--radius-pill);background-color:var(--track)}
+.stepbar .on{background-color:var(--accent)}
+</style>
+</head>
+<body class="mk">
+  <header class="mk-header">
+    <svg class="mk-header__logo" viewBox="0 0 48 48" role="img" aria-label="Expenses Tracker logo">
+      <rect x="1.5" y="1.5" width="45" height="45" rx="11" stroke-width="1.6" style="fill: var(--bg-surface); stroke: var(--accent)"/>
+      <path d="M8.5 19.6 17.6 15l21.9 7.9-9.1 4.6z" style="fill: var(--accent)"/>
+      <path d="M8.5 28.6 17.6 24l21.9 7.9-9.1 4.6z" style="fill: var(--brand-mark-shade)"/>
+    </svg>
+    <span class="mk-header__name">Expenses Tracker</span>
+  </header>
+  <main class="mk-shell">
+    <div class="mk-work-area">
+<h1 class="mk-eyebrow">Goals</h1>
+      <div class="mh"><span class="mh__btn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m10 3.5-4.5 4.5 4.5 4.5" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span><span class="mh__pill">October 2026<svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m3.5 6 4.5 4.5L12.5 6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span><span class="mh__btn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3.5 4.5 4.5L6 12.5" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg></span></div>
+      <section class="card">
+        <div class="triple"><div><span class="cap">Saved</span><strong>$1,240.00</strong></div><div><span class="cap">To goals</span><strong class="t-done">$966.00</strong></div><div class="r"><span class="cap">Free</span><strong>$274.00</strong></div></div>
+        <div class="barwrap"><div class="bar bar--thin"><i class="f-done" style="width:77.9%"></i></div></div>
+        <p style="margin:0.55rem 0 0;font-size:0.84rem" class="t-sec"><span class="t-ok">✓</span> All 3 goals funded when October ended.</p>
+      </section>
+      <div class="sec"><h2>Strict mode · by priority</h2><a href="#">How it works</a></div>
+      <section class="card">
+        <div class="goal__hd"><span class="prio" aria-label="Priority 1">1</span><h2 class="goal__name">Emergency fund</h2><span class="goal__pct t-ok">70%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:70%"></i></div><span class="tick" style="left:58.3%"></span></div>
+        <div class="goal__fig"><span><b>$4,200.00</b> <span class="t-sec">of $6,000.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
+        <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">Done by <b>Mar 2027</b> · target Jun 2027</span></p>
+        <div class="goal__foot"><span class="goal__month">October: <b>+$400.00</b> <span class="t-ok">· funded</span></span><span class="t-mute">$400.00 a month</span></div>
+      </section>
+      <section class="card">
+        <div class="goal__hd"><span class="prio" aria-label="Priority 2">2</span><h2 class="goal__name">Trip to Japan</h2><span class="goal__pct t-ok">40%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-ok" style="width:40%"></i></div><span class="tick" style="left:28.6%"></span></div>
+        <div class="goal__fig"><span><b>$1,404.00</b> <span class="t-sec">of $3,500.00</span></span><span class="st st--ok"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>On track</span></div>
+        <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">Done by <b>May 2027</b> · target Aug 2027</span></p>
+        <div class="goal__foot"><span class="goal__month">October: <b>+$416.00</b> <span class="t-ok">· funded</span></span><span class="t-mute">8% of income</span></div>
+      </section>
+      <section class="card">
+        <div class="goal__hd"><span class="prio" aria-label="Priority 3">3</span><h2 class="goal__name">New laptop</h2><span class="goal__pct t-warn">25%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-warn" style="width:25%"></i></div><span class="tick" style="left:50%"></span></div>
+        <div class="goal__fig"><span><b>$450.00</b> <span class="t-sec">of $1,800.00</span></span><span class="st st--warn"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.6" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/><path d="M8 5v3.2l2.2 1.4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Behind</span></div>
+        <p style="margin:0.3rem 0 0;font-size:0.82rem"><span class="t-sec">At this pace <b class="t-warn">Dec 2027</b> · target Feb 2027</span></p>
+        <div class="goal__foot"><span class="goal__month">October: <b>+$150.00</b> <span class="t-ok">· funded</span></span><span class="t-mute">$150.00 a month</span></div>
+      </section>
+      <section class="card">
+        <div class="goal__hd"><span class="prio" aria-label="Priority 4">4</span><h2 class="goal__name">Winter tires</h2><span class="goal__pct t-done">100%</span></div>
+        <div class="barwrap"><div class="bar"><i class="f-done" style="width:100%"></i></div></div>
+        <div class="goal__fig"><span><b>$900.00</b> <span class="t-sec">of $900.00</span></span><span class="st st--done"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2.5M4 3h7.5L10 5.6l1.5 2.6H4" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>Completed</span></div>
+        <div class="goal__foot"><span class="t-sec">Reached in Aug 2026. Close it once you have used the money.</span><span class="link">Close goal</span></div>
+      </section>
+      <a class="mk-btn mk-btn--primary mk-space-top" href="#"><svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="stroke:currentColor"/></svg>&nbsp;Add a goal</a>
+      <div class="sec" style="justify-content:center"><a href="#">Closed goals (2)</a></div>
+    </div>
+  </main>
+
+</body>
+</html>
